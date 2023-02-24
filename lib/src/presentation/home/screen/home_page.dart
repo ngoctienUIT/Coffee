@@ -1,9 +1,10 @@
-import 'package:coffee/src/data/data_app.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/build_item_product.dart';
 import '../widgets/build_selling_products.dart';
+import '../widgets/build_special_offer.dart';
+import '../widgets/description_line.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,32 +29,18 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: Column(
-        children: [
-          buildListItemProduct(),
-          Container(
-            margin: const EdgeInsets.only(left: 10),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "Sản phẩm bán chạy",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          buildListSellingProducts(),
-        ],
-      ),
-    );
-  }
-
-  Widget buildSpecialOffer() {
-    return SizedBox(
-      height: 250,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: listSellingProducts.length,
-        itemBuilder: (context, index) {
-          return buildSellingProducts(index);
-        },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            buildListItemProduct(),
+            const SizedBox(height: 20),
+            descriptionLine("Khuyến mãi"),
+            buildListSpecialOffer(),
+            const SizedBox(height: 20),
+            descriptionLine("Sản phẩm bán chạy"),
+            buildListSellingProducts(),
+          ],
+        ),
       ),
     );
   }

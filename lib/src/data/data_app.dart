@@ -47,3 +47,46 @@ List<Map<String, String>> listSellingProducts = [
     "price": "30.000đ"
   },
 ];
+
+List<Map<String, String>> listSpecialOffer = [
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+  {
+    "content": "Tặng bạn 35k",
+    "image": "assets/banner.jpg",
+    "time": "25/02 - 30/02"
+  },
+];
