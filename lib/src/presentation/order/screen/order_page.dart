@@ -2,6 +2,9 @@ import 'package:coffee/src/data/data_app.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/grid_item_order.dart';
+import '../widgets/list_item_order.dart';
+
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
 
@@ -111,13 +114,15 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                     setState(() => check = false);
                   },
                   child: Icon(
-                    Icons.apps_rounded,
+                    Icons.grid_view_rounded,
                     color: check ? Colors.grey : Colors.red,
                     size: 35,
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 10),
+            Expanded(child: check ? listItemOrder() : gridItemOrder())
           ],
         ),
       ),
