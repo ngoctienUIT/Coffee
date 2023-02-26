@@ -9,6 +9,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.red,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -25,13 +26,10 @@ class ProfilePage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Stack(
+      body: Column(
         children: const [
           HeaderProfilePage(),
-          Positioned(
-            top: 120,
-            child: BodyProfilePage(),
-          )
+          Expanded(child: BodyProfilePage()),
         ],
       ),
     );

@@ -1,20 +1,32 @@
+import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/data_app.dart';
 
-Widget listItemOrder() {
-  return ListView.builder(
-    itemCount: listSellingProducts.length,
-    itemBuilder: (context, index) {
-      return itemOrder(index);
-    },
-  );
-}
+class ListItemOrder extends StatelessWidget {
+  const ListItemOrder({Key? key}) : super(key: key);
 
-Widget itemOrder(int index) {
-  return InkWell(
-    onTap: () {},
-    child: Card(
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: listSellingProducts.length,
+      itemBuilder: (context, index) {
+        return InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductPage(index: index),
+                ));
+          },
+          child: itemOrder(index),
+        );
+      },
+    );
+  }
+
+  Widget itemOrder(int index) {
+    return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
@@ -55,6 +67,6 @@ Widget itemOrder(int index) {
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }

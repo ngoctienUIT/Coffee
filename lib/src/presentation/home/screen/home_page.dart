@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        // elevation: 0,
         leading: InkWell(
           onTap: () {},
           borderRadius: BorderRadius.circular(90),
@@ -32,6 +33,7 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 10),
             buildListItemProduct(),
             const SizedBox(height: 20),
             descriptionLine("Khuyến mãi"),

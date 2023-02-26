@@ -1,6 +1,8 @@
 import 'package:coffee/src/data/data_app.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../widgets/grid_item_order.dart';
 import '../widgets/list_item_order.dart';
@@ -16,13 +18,18 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   late TabController _productController;
   bool check = true;
 
+  final List<String> items = [
+    'Tại bàn',
+    'Mang về',
+  ];
+
+  String? selectedValue;
+
   @override
   void initState() {
     _productController =
         TabController(length: listItemProduct.length, vsync: this);
-    _productController.addListener(() {
-      setState(() {});
-    });
+    _productController.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -122,7 +129,44 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
               ],
             ),
             const SizedBox(height: 10),
-            Expanded(child: check ? listItemOrder() : gridItemOrder())
+            Expanded(child: check ? const ListItemOrder() : gridItemOrder()),
+            const SizedBox(height: 56),
+          ],
+        ),
+      ),
+      bottomSheet: Container(
+        width: double.infinity,
+        height: 56,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: const BoxDecoration(color: Colors.red),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.location_on,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 10),
+            CustomDropdownButton2(
+              hint: 'Tại bàn',
+              icon: const Icon(
+                Icons.keyboard_arrow_down_outlined,
+                color: Colors.white,
+              ),
+              iconSize: 25,
+              dropdownItems: items,
+              value: selectedValue,
+              onChanged: (value) {
+                setState(() => selectedValue = value);
+              },
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: () {},
+              child: const Icon(
+                FontAwesomeIcons.basketShopping,
+                color: Colors.white,
+              ),
+            )
           ],
         ),
       ),

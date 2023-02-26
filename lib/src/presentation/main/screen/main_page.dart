@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/on_will_pop.dart';
-import '../../activate/screen/activate_page.dart';
+import '../../activity/screen/activate_page.dart';
 import '../../home/screen/home_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> screens = [
     const HomePage(),
     const OrderPage(),
-    const ActivatePage(),
+    const ActivityPage(),
     const StorePage(),
     const OtherPage(),
   ];

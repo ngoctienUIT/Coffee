@@ -14,14 +14,12 @@ class _OtherPageState extends State<OtherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.red,
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: const [
             HeaderOtherPage(),
-            Positioned(
-              top: 160,
-              child: BodyOtherPage(),
-            )
+            Expanded(child: BodyOtherPage()),
           ],
         ),
       ),
