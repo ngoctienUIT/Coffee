@@ -1,4 +1,5 @@
 import 'package:coffee/src/data/data_app.dart';
+import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -163,7 +164,13 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
             ),
             const Spacer(),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CartPage(),
+                    ));
+              },
               child: const Icon(
                 FontAwesomeIcons.basketShopping,
                 color: Colors.white,

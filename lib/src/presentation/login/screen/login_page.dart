@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/forgot_password/screen/forgot_password_page.dart';
 import 'package:coffee/src/presentation/login/widgets/social_login_button.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,13 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordPage(),
+                            ));
+                      },
                       child: const Text("Quên mật khẩu?"),
                     )
                   ],

@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../other/widgets/group_item_other.dart';
@@ -33,7 +34,13 @@ class SettingPage extends StatelessWidget {
               itemOther("Xóa tài khoản", Icons.delete_forever, () {}),
             ]),
             groupItemOther("Bảo Mật", [
-              itemOther("Thay đổi mật khẩu", Icons.lock, () {}),
+              itemOther("Thay đổi mật khẩu", Icons.lock, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChangePasswordPage(),
+                    ));
+              }),
             ]),
           ],
         ),
