@@ -9,6 +9,7 @@ class ListItemOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: listSellingProducts.length,
       itemBuilder: (context, index) {
         return InkWell(

@@ -5,6 +5,7 @@ import '../../product/screen/product_page.dart';
 
 Widget gridItemOrder() {
   return GridView.builder(
+    physics: const BouncingScrollPhysics(),
     gridDelegate:
         const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
     itemCount: listSellingProducts.length,
@@ -31,10 +32,13 @@ Widget itemOrder(int index) {
     child: Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            listSellingProducts[index]["image"]!,
-            width: 80,
+          Center(
+            child: Image.asset(
+              listSellingProducts[index]["image"]!,
+              width: 80,
+            ),
           ),
           const Spacer(),
           Text(

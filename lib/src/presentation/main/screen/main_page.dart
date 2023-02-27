@@ -68,8 +68,9 @@ class _MainPageState extends State<MainPage> {
         selectedItemColor: const Color.fromRGBO(173, 149, 121, 1),
         unselectedItemColor: Colors.grey,
         iconSize: 20,
+        backgroundColor: Colors.white,
         onTap: (value) => setState(() => currentTab = value),
-        elevation: 5,
+        elevation: 10,
       ),
     );
   }

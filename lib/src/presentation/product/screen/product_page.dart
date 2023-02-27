@@ -144,7 +144,7 @@ class _ProductPageState extends State<ProductPage> {
             const SizedBox(height: 10),
             TextFormField(
               decoration: const InputDecoration(
-                hintText: "Họ",
+                hintText: "Ghi chú",
                 border: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12)),
                 filled: true,
