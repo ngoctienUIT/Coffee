@@ -47,7 +47,7 @@ Widget buildSellingProducts(int index) {
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                     decoration: BoxDecoration(
-                      color: Colors.orange,
+                      color: const Color.fromRGBO(241, 233, 222, 1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(

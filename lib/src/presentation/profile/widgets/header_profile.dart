@@ -11,7 +11,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
+      color: const Color.fromRGBO(177, 40, 48, 1),
       child: Column(
         children: [
           const SizedBox(height: 20),

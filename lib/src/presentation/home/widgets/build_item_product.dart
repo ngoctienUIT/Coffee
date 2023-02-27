@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../data/data_app.dart';
 
 Widget buildListItemProduct() {
-  return SizedBox(
+  return Container(
+    color: Colors.white,
     height: 150,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,

@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
         // elevation: 0,
         leading: InkWell(
           onTap: () {},
@@ -31,6 +31,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             const SizedBox(height: 10),
@@ -41,8 +42,14 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             descriptionLine("Sản phẩm bán chạy"),
             buildListSellingProducts(),
+            const SizedBox(height: 100),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+        child: const Icon(FontAwesomeIcons.basketShopping),
       ),
     );
   }

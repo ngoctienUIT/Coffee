@@ -10,7 +10,7 @@ class BodyProfilePage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: Colors.white,
+        color: Color.fromRGBO(241, 241, 241, 1),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

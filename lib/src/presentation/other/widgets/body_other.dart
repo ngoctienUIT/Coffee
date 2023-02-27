@@ -15,7 +15,7 @@ class BodyOtherPage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: Colors.white,
+        color: Color.fromRGBO(241, 241, 241, 1),
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -63,6 +63,7 @@ class BodyOtherPage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
+                    backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
                   ),
                   onPressed: () {},
                   child: const Text("Đăng xuất"),

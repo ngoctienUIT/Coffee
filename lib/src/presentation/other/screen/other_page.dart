@@ -14,7 +14,7 @@ class _OtherPageState extends State<OtherPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
+      backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
       body: SafeArea(
         child: Column(
           children: const [

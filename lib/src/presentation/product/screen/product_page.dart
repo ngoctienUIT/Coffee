@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/product/widgets/choose_size.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,6 +15,7 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   final _controller = ScrollController();
   bool isTop = true;
+  int sizeIndex = 0;
 
   @override
   void initState() {
@@ -50,11 +52,12 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget appBar() {
     return SliverAppBar(
-      backgroundColor: Colors.white,
+      backgroundColor:
+          isTop ? Colors.white : const Color.fromRGBO(177, 40, 48, 1),
       elevation: 0,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
-        icon: const Icon(Icons.close, color: Colors.black),
+        icon: Icon(Icons.close, color: isTop ? Colors.black : Colors.white),
       ),
       expandedHeight: 0,
       pinned: true,
@@ -64,7 +67,7 @@ class _ProductPageState extends State<ProductPage> {
           duration: const Duration(milliseconds: 300),
           child: Text(
             listSellingProducts[widget.index]["name"]!,
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
         centerTitle: true,
@@ -81,7 +84,7 @@ class _ProductPageState extends State<ProductPage> {
           borderRadius: isTop
               ? const BorderRadius.vertical(top: Radius.circular(20))
               : null,
-          color: Colors.grey,
+          color: const Color.fromRGBO(241, 241, 241, 1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         duration: const Duration(milliseconds: 300),
@@ -111,65 +114,43 @@ class _ProductPageState extends State<ProductPage> {
             const SizedBox(height: 20),
             Row(
               children: [
-                SizedBox(
-                  height: 50,
-                  width: 90,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      "S",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
+                chooseSize("S", sizeIndex == 0, () {
+                  setState(() => sizeIndex = 0);
+                }),
                 const SizedBox(width: 10),
-                SizedBox(
-                  height: 50,
-                  width: 90,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      "M",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
+                chooseSize("M", sizeIndex == 1, () {
+                  setState(() => sizeIndex = 1);
+                }),
                 const SizedBox(width: 10),
-                SizedBox(
-                  height: 50,
-                  width: 90,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: const Text(
-                      "L",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                )
+                chooseSize("L", sizeIndex == 2, () {
+                  setState(() => sizeIndex = 2);
+                }),
               ],
             ),
-            const Divider(),
+            const SizedBox(height: 10),
+            const Divider(color: Colors.black),
+            Row(
+              children: const [
+                Icon(FontAwesomeIcons.fileLines),
+                SizedBox(width: 5),
+                Text(
+                  "Ghi chú",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(width: 5),
+                Text("Không bắt buộc"),
+              ],
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              decoration: const InputDecoration(
+                hintText: "Họ",
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black12)),
+                filled: true,
+                fillColor: Colors.white,
+              ),
+            ),
           ],
         ),
       ),
@@ -205,7 +186,7 @@ class _ProductPageState extends State<ProductPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(90),
                   ),

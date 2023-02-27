@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/store.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -7,6 +8,7 @@ class StorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -70,6 +72,82 @@ class StorePage extends StatelessWidget {
                   label: const Text("Bản đồ"),
                 ),
                 const SizedBox(width: 10),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 15,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {},
+                    child: itemStore(),
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget itemStore() {
+    final store = Store(
+      image:
+          "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+      name: "Sala 2",
+      address: "Quận 2 - Hồ Chí Minh",
+      phone: "0334168888",
+      startDay: const TimeOfDay(hour: 7, minute: 0),
+      endDay: const TimeOfDay(hour: 22, minute: 0),
+    );
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Image.network(
+              store.image,
+              height: 100,
+              width: 100,
+              fit: BoxFit.fitHeight,
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  store.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(store.address),
+                Row(
+                  children: [
+                    const Icon(Icons.phone),
+                    const SizedBox(width: 5),
+                    Text(store.phone),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(52, 175, 84, 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text(store.checkOpen() ? "Mở" : "Đóng"),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(store.rangeTime())
+                  ],
+                ),
               ],
             )
           ],

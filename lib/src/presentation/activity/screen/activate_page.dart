@@ -22,6 +22,7 @@ class _ActivityPageState extends State<ActivityPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
