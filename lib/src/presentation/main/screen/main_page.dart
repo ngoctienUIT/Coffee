@@ -20,11 +20,11 @@ class _MainPageState extends State<MainPage> {
   DateTime? currentBackPressTime;
   int currentTab = 0;
   List<Widget> screens = [
-    const HomePage(),
-    const OrderPage(),
-    const ActivityPage(),
-    const StorePage(),
-    const OtherPage(),
+    const HomePage(key: PageStorageKey<String>('HomePage')),
+    const OrderPage(key: PageStorageKey<String>('OrderPage')),
+    const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
+    const StorePage(key: PageStorageKey<String>('StorePage')),
+    const OtherPage(key: PageStorageKey<String>('OtherPage')),
   ];
 
   @override

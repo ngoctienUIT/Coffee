@@ -96,7 +96,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
               child: Row(
                 children: [
                   descriptionLine(
-                    listItemProduct[_productController.index]["name"]!
+                    text: listItemProduct[_productController.index]["name"]!
                         .toUpperCase(),
                   ),
                   const Spacer(),

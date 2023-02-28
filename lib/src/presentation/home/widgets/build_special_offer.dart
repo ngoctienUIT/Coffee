@@ -52,6 +52,9 @@ Widget buildSpecialOffer(int index) {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     listSpecialOffer[index]["time"]!,
+                    style: const TextStyle(
+                      color: Color.fromRGBO(122, 122, 122, 1),
+                    ),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                   ),

@@ -35,9 +35,11 @@ Widget buildItemProduct(int index) {
         Image.asset(listItemProduct[index]["image"]!, height: 70),
         const SizedBox(height: 5),
         Text(
-          listItemProduct[index]["name"]!,
+          listItemProduct[index]["name"]!.toUpperCase(),
           maxLines: 2,
           textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: Color.fromRGBO(80, 45, 30, 1)),
         ),
       ],
     ),

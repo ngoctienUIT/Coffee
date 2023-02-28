@@ -37,19 +37,35 @@ class BottomSheetOrder extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          TextButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const CartPage(),
                   ));
             },
-            child: const Icon(
-              FontAwesomeIcons.basketShopping,
-              color: Colors.white,
+            child: Container(
+              height: double.infinity,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const Icon(
+                    FontAwesomeIcons.basketShopping,
+                    color: Colors.white,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text("0"),
+                  ),
+                ],
+              ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -70,22 +86,26 @@ class BottomSheetOrder extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Icon(Icons.close, size: 35),
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        "Chọn phương thức giao hàng",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const Text(
+                      "Chọn phương thức giao hàng",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Positioned(
+                      left: 0,
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Icon(Icons.close, size: 35),
                       ),
                     ),
-                  )
-                ],
+                  ],
+                ),
               ),
               InkWell(
                 onTap: () {},

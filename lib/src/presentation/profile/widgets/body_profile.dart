@@ -1,8 +1,23 @@
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
+import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
+import 'package:coffee/src/presentation/profile/widgets/gender_widget.dart';
+import 'package:coffee/src/presentation/profile/widgets/text_input_profile.dart';
 import 'package:flutter/material.dart';
 
-class BodyProfilePage extends StatelessWidget {
+class BodyProfilePage extends StatefulWidget {
   const BodyProfilePage({Key? key}) : super(key: key);
+
+  @override
+  State<BodyProfilePage> createState() => _BodyProfilePageState();
+}
+
+class _BodyProfilePageState extends State<BodyProfilePage> {
+  final TextEditingController surnameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+  bool checkEdit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,87 +34,132 @@ class BodyProfilePage extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                descriptionLine("Thông Tin Chung"),
+                descriptionLine(text: "Thông Tin Chung"),
                 const Spacer(),
-                TextButton(onPressed: () {}, child: const Text("Sửa")),
+                TextButton(
+                  onPressed: () {
+                    setState(() => checkEdit = !checkEdit);
+                  },
+                  child: Text(checkEdit ? "Lưu" : "Sửa"),
+                ),
               ],
             ),
             Row(
               children: [
                 Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: "Họ",
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black12)),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
+                  child: textInputProfile(
+                    controller: surnameController,
+                    hint: "Họ",
+                    checkEdit: checkEdit,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: "Tên",
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black12)),
-                      filled: true,
-                      fillColor: Colors.white,
-                    ),
+                  child: textInputProfile(
+                    controller: nameController,
+                    hint: "Tên",
+                    checkEdit: checkEdit,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "Giới Tính",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            CustomPickerWidget(
+              checkEdit: checkEdit,
+              text: "Giới tính",
+              onPress: () => showMyBottomSheet(context),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "11/02/2002",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            CustomPickerWidget(
+              checkEdit: checkEdit,
+              text: "Ngày sinh",
+              onPress: () => selectDate(),
             ),
             const SizedBox(height: 10),
-            descriptionLine("Số Điện Thoại"),
+            descriptionLine(text: "Số Điện Thoại"),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "11/02/2002",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            textInputProfile(
+              controller: phoneController,
+              hint: "Số điện thoại",
+              checkEdit: checkEdit,
+              keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 10),
-            descriptionLine("Email"),
+            descriptionLine(text: "Email"),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "11/02/2002",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            textInputProfile(
+              controller: emailController,
+              hint: "Email",
+              checkEdit: checkEdit,
+              keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 10),
-            descriptionLine("Tài Khoản Liên Kết"),
+            descriptionLine(text: "Tài Khoản Liên Kết"),
           ],
         ),
       ),
+    );
+  }
+
+  void selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() => selectedDate = picked);
+    }
+  }
+
+  void showMyBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 250,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const Text(
+                      "Chọn giới tính",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Positioned(
+                      left: 0,
+                      child: TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Icon(Icons.close, size: 35),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(color: Colors.black),
+              genderWidget("Nam", "assets/male.png", () {
+                Navigator.pop(context);
+              }),
+              genderWidget("Nữ", "assets/female.png", () {
+                Navigator.pop(context);
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 }

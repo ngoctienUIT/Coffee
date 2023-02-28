@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
-Widget descriptionLine(String text) {
+Widget descriptionLine({required String text, Color? color}) {
   return Container(
     margin: const EdgeInsets.only(left: 10),
     alignment: Alignment.centerLeft,
     child: Text(
       text,
-      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color),
     ),
   );
 }
