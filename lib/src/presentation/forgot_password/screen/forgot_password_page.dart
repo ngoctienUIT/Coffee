@@ -1,7 +1,15 @@
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 
-class ForgotPasswordPage extends StatelessWidget {
+class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+}
+
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,47 +25,45 @@ class ForgotPasswordPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Image.asset(
-                "assets/coffee_logo.jpg",
-                height: 200,
-              ),
-            ),
-            const Text("Quên mật khẩu của bạn"),
-            const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "Email/Số điện thoại",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-                "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"),
-            const SizedBox(height: 50),
-            SizedBox(
-              height: 50,
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  "assets/coffee_logo.jpg",
+                  height: 200,
                 ),
-                onPressed: () {},
-                child: const Text("Tiếp tục"),
               ),
-            ),
-          ],
+              const Text("Quên mật khẩu của bạn"),
+              const SizedBox(height: 20),
+              customTextInput(
+                controller: controller,
+                hint: "Email/Số điện thoại",
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                  "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"),
+              const SizedBox(height: 50),
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+                  ),
+                  onPressed: () {},
+                  child: const Text("Tiếp tục"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

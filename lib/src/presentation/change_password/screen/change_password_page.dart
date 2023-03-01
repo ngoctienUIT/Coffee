@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
 import 'package:flutter/material.dart';
 
 class ChangePasswordPage extends StatefulWidget {
@@ -8,6 +9,9 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   bool hide = true;
 
   @override
@@ -36,50 +40,25 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             const SizedBox(height: 10),
             const Text("Mật khẩu cần dài ít nhất 8 ký tự"),
             const SizedBox(height: 10),
-            TextFormField(
-              obscureText: hide,
-              decoration: InputDecoration(
-                hintText: "Nhập mật khẩu cũ",
-                border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => hide = !hide),
-                  icon: Icon(hide ? Icons.visibility : Icons.visibility_off),
-                ),
-              ),
+            customPasswordInput(
+              controller: oldPasswordController,
+              hint: "Nhập mật khẩu cũ",
+              hide: hide,
+              onPress: () => setState(() => hide = !hide),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              obscureText: hide,
-              decoration: InputDecoration(
-                hintText: "Mật khẩu mới",
-                border: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => hide = !hide),
-                  icon: Icon(hide ? Icons.visibility : Icons.visibility_off),
-                ),
-              ),
+            customPasswordInput(
+              controller: newPasswordController,
+              hint: "Nhập mật khẩu mới",
+              hide: hide,
+              onPress: () => setState(() => hide = !hide),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              obscureText: hide,
-              decoration: InputDecoration(
-                hintText: "Xác nhập mật khẩu",
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                suffixIcon: IconButton(
-                  onPressed: () => setState(() => hide = !hide),
-                  icon: Icon(hide ? Icons.visibility : Icons.visibility_off),
-                ),
-              ),
+            customPasswordInput(
+              controller: confirmPasswordController,
+              hint: "Xác nhận mật khẩu",
+              hide: hide,
+              onPress: () => setState(() => hide = !hide),
             ),
             const Spacer(),
             SizedBox(

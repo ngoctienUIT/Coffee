@@ -14,7 +14,7 @@ class HeaderProfilePage extends StatefulWidget {
 }
 
 class _HeaderProfilePageState extends State<HeaderProfilePage> {
-  XFile? image;
+  File? image;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                 child: ClipOval(
                   child: image == null
                       ? Image.asset("assets/coffee_logo.jpg", height: 80)
-                      : Image.file(File(image!.path), height: 80),
+                      : Image.file(image!, height: 80),
                 ),
               ),
               const SizedBox(width: 10),
@@ -127,7 +127,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           aspectRatioPresets: [CropAspectRatioPreset.square],
         );
         if (cropImage != null) {
-          setState(() => image = XFile(cropImage.path));
+          setState(() => image = File(cropImage.path));
         }
       }
     } on PlatformException catch (_) {}

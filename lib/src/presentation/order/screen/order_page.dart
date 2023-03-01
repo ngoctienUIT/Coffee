@@ -36,7 +36,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
               child: TextField(
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide:
@@ -63,6 +63,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
               height: 115,
               child: TabBar(
                 controller: _productController,
+                physics: const BouncingScrollPhysics(),
                 isScrollable: true,
                 labelColor: Colors.black87,
                 // labelStyle: const TextStyle(fontWeight: FontWeight.bold),

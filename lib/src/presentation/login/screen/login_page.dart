@@ -1,6 +1,8 @@
 import 'package:coffee/src/presentation/forgot_password/screen/forgot_password_page.dart';
+import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
 import 'package:coffee/src/presentation/login/widgets/social_login_button.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,6 +19,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool hide = true;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: const Color.fromRGBO(241, 227, 178, 1),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -38,31 +42,20 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
+                customTextInput(
                   controller: phoneController,
+                  hint: "Số điện thoại",
+                  keyboardType: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                   ],
-                  style: const TextStyle(fontSize: 16),
-                  keyboardType: TextInputType.phone,
-                  decoration: const InputDecoration(
-                    hintText: "Số Điện Thoại",
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
                 ),
                 const SizedBox(height: 10),
-                TextFormField(
+                customPasswordInput(
                   controller: passwordController,
-                  style: const TextStyle(fontSize: 16),
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    hintText: "Mật Khẩu",
-                    border: InputBorder.none,
-                    filled: true,
-                    fillColor: Colors.white,
-                  ),
+                  hint: "Mật khẩu",
+                  onPress: () => setState(() => hide = !hide),
+                  hide: hide,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

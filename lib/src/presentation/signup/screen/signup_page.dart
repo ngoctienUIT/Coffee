@@ -1,4 +1,5 @@
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: const Color.fromRGBO(241, 227, 178, 1),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -78,20 +80,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: TextFormField(
+                      child: customTextInput(
                         controller: phoneController,
+                        hint: "Số điện thoại",
+                        keyboardType: TextInputType.phone,
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                              RegExp("[0-9a-zA-Z]"))
+                              RegExp("[0-9a-zA-Z]")),
                         ],
-                        style: const TextStyle(fontSize: 16),
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          hintText: "Số Điện Thoại",
-                          border: InputBorder.none,
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
                       ),
                     ),
                   ],

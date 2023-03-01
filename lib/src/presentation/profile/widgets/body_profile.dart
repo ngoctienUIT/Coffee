@@ -1,7 +1,7 @@
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
 import 'package:coffee/src/presentation/profile/widgets/gender_widget.dart';
-import 'package:coffee/src/presentation/profile/widgets/text_input_profile.dart';
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 
 class BodyProfilePage extends StatefulWidget {
@@ -47,7 +47,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             Row(
               children: [
                 Expanded(
-                  child: textInputProfile(
+                  child: customTextInput(
                     controller: surnameController,
                     hint: "Họ",
                     checkEdit: checkEdit,
@@ -55,7 +55,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: textInputProfile(
+                  child: customTextInput(
                     controller: nameController,
                     hint: "Tên",
                     checkEdit: checkEdit,
@@ -78,7 +78,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             const SizedBox(height: 10),
             descriptionLine(text: "Số Điện Thoại"),
             const SizedBox(height: 10),
-            textInputProfile(
+            customTextInput(
               controller: phoneController,
               hint: "Số điện thoại",
               checkEdit: checkEdit,
@@ -87,7 +87,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             const SizedBox(height: 10),
             descriptionLine(text: "Email"),
             const SizedBox(height: 10),
-            textInputProfile(
+            customTextInput(
               controller: emailController,
               hint: "Email",
               checkEdit: checkEdit,

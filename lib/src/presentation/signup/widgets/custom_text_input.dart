@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-Widget textInputProfile({
+Widget customTextInput({
   required TextEditingController controller,
   required String hint,
-  required bool checkEdit,
+  bool checkEdit = true,
   TextInputType? keyboardType,
+  List<TextInputFormatter>? inputFormatters,
 }) {
   return TextFormField(
     controller: controller,
     enabled: checkEdit,
     keyboardType: keyboardType,
+    inputFormatters: inputFormatters,
     decoration: InputDecoration(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       hintText: hint,
