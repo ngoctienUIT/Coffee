@@ -102,9 +102,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                   ),
                   const Spacer(),
                   InkWell(
-                    onTap: () {
-                      setState(() => check = true);
-                    },
+                    onTap: () => setState(() => check = true),
                     child: Icon(
                       Icons.menu,
                       color: check ? Colors.red : Colors.grey,
@@ -112,9 +110,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      setState(() => check = false);
-                    },
+                    onTap: () => setState(() => check = false),
                     child: Icon(
                       Icons.grid_view_rounded,
                       color: check ? Colors.grey : Colors.red,

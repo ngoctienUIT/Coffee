@@ -1,6 +1,9 @@
+import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
+import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../controls/route_function.dart';
 import '../../cart/screen/cart_page.dart';
 
 class BottomSheetOrder extends StatelessWidget {
@@ -39,11 +42,10 @@ class BottomSheetOrder extends StatelessWidget {
           const Spacer(),
           InkWell(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CartPage(),
-                  ));
+              Navigator.of(context).push(createRoute(
+                screen: const CartPage(),
+                begin: const Offset(1, 0),
+              ));
             },
             child: Container(
               height: double.infinity,
@@ -86,92 +88,26 @@ class BottomSheetOrder extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Text(
-                      "Chọn phương thức giao hàng",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Positioned(
-                      left: 0,
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Icon(Icons.close, size: 35),
-                      ),
-                    ),
-                  ],
+              titleBottomSheet(
+                "Chọn phương thức giao hàng",
+                () => Navigator.pop(context),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: itemBottomSheet(
+                  title: "Tại bàn",
+                  content: "Vui lòng chọn quán",
+                  image: "assets/coffee_logo.jpg",
+                  onPress: () {},
                 ),
               ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  height: 100,
-                  margin: const EdgeInsets.all(20),
-                  padding: const EdgeInsets.all(5),
-                  child: Row(
-                    children: [
-                      Image.asset("assets/coffee_logo.jpg", height: 90),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            SizedBox(height: 10),
-                            Text(
-                              "Tại bàn",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Spacer(),
-                            Text("Vui lòng chọn quán"),
-                            SizedBox(height: 10),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                height: 100,
-                margin: const EdgeInsets.all(20),
-                padding: const EdgeInsets.all(5),
-                child: Row(
-                  children: [
-                    Image.asset("assets/coffee_logo.jpg", height: 90),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          SizedBox(height: 10),
-                          Text(
-                            "Mang về",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Spacer(),
-                          Text("Vui lòng chọn quán"),
-                          SizedBox(height: 10),
-                        ],
-                      ),
-                    )
-                  ],
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: itemBottomSheet(
+                  title: "Mang về",
+                  content: "Vui lòng chọn quán",
+                  image: "assets/coffee_logo.jpg",
+                  onPress: () {},
                 ),
               ),
             ],

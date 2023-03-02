@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../controls/route_function.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/or_widget.dart';
 import '../../login/widgets/social_login_button.dart';
@@ -21,12 +22,25 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String selectedValue = "+84";
+  bool isContinue = false;
   final List<String> items = [
     '+84',
     '+85',
     '+86',
     '+87',
   ];
+
+  @override
+  void initState() {
+    phoneController.addListener(() {
+      if (phoneController.text.isNotEmpty) {
+        setState(() => isContinue = true);
+      } else {
+        setState(() => isContinue = false);
+      }
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -86,15 +100,18 @@ class _SignUpPageState extends State<SignUpPage> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  customButton("TIẾP TỤC", () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainPage(),
-                          ));
-                    }
-                  }),
+                  customButton(
+                    text: "TIẾP TỤC",
+                    isOnPress: isContinue,
+                    onPress: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).pushReplacement(createRoute(
+                          screen: const MainPage(),
+                          begin: const Offset(0, 1),
+                        ));
+                      }
+                    },
+                  ),
                   const SizedBox(height: 20),
                   orWidget(),
                   const SizedBox(height: 20),
@@ -120,11 +137,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       const Text("Đã có tài khoản?"),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginPage(),
-                              ));
+                          Navigator.of(context).pushReplacement(createRoute(
+                            screen: const LoginPage(),
+                            begin: const Offset(0, 1),
+                          ));
                         },
                         child: const Text("Đăng nhập"),
                       )

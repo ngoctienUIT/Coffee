@@ -6,12 +6,16 @@ Widget customPasswordInput({
   required VoidCallback onPress,
   bool hide = true,
   TextInputType? keyboardType,
+  String? confirmPassword,
 }) {
   return TextFormField(
     controller: controller,
     obscureText: hide,
     keyboardType: keyboardType,
     validator: (value) {
+      if (confirmPassword != null && confirmPassword != value) {
+        return "Mật khẩu xác nhận không trùng khớp";
+      }
       if (value!.isEmpty) {
         return "Vui lòng nhập vào mật khẩu";
       }

@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 
@@ -58,21 +59,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 const Text(
                     "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"),
                 const SizedBox(height: 50),
-                SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
-                    },
-                    child: const Text("Tiếp tục"),
-                  ),
+                customButton(
+                  text: "Tiếp tục",
+                  onPress: () {
+                    if (_formKey.currentState!.validate()) {}
+                  },
+                  isOnPress: true,
                 ),
               ],
             ),

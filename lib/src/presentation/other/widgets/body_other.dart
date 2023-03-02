@@ -3,6 +3,7 @@ import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../../controls/route_function.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../profile/screen/profile_page.dart';
 import 'group_item_other.dart';
@@ -25,19 +26,17 @@ class BodyOtherPage extends StatelessWidget {
           children: [
             groupItemOther("Tài khoản", [
               itemOther("Hồ sơ", Icons.person, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfilePage(),
-                    ));
+                Navigator.of(context).push(createRoute(
+                  screen: const ProfilePage(),
+                  begin: const Offset(1, 0),
+                ));
               }),
               const Divider(),
               itemOther("Cài đặt", Icons.settings, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SettingPage(),
-                    ));
+                Navigator.of(context).push(createRoute(
+                  screen: const SettingPage(),
+                  begin: const Offset(1, 0),
+                ));
               })
             ]),
             groupItemOther("Tương tác", [
@@ -47,23 +46,25 @@ class BodyOtherPage extends StatelessWidget {
               itemOther("Chính sách", Icons.file_copy, () {}),
               const Divider(),
               itemOther("Thông tin ứng dụng", Icons.info, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const InfoPage(),
-                    ));
+                Navigator.of(context).push(createRoute(
+                  screen: const InfoPage(),
+                  begin: const Offset(1, 0),
+                ));
               })
             ]),
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: customButton("Đăng xuất", () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LoginPage(),
-                    ));
-              }),
+              child: customButton(
+                text: "Đăng xuất",
+                isOnPress: true,
+                onPress: () {
+                  Navigator.of(context).pushReplacement(createRoute(
+                    screen: const LoginPage(),
+                    begin: const Offset(0, 1),
+                  ));
+                },
+              ),
             ),
             const SizedBox(height: 10),
           ],

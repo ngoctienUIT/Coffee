@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../controls/route_function.dart';
 import '../../profile/screen/profile_page.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -30,11 +31,10 @@ class _ActivityPageState extends State<ActivityPage>
         elevation: 0,
         leading: InkWell(
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfilePage(),
-                ));
+            Navigator.of(context).push(createRoute(
+              screen: const ProfilePage(),
+              begin: const Offset(1, 0),
+            ));
           },
           borderRadius: BorderRadius.circular(90),
           child: ClipOval(child: Image.asset("assets/coffee_logo.jpg")),

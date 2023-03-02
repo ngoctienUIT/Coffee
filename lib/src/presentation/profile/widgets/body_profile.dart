@@ -1,4 +1,5 @@
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
+import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
 import 'package:coffee/src/presentation/profile/widgets/gender_widget.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
@@ -19,6 +20,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   bool checkEdit = false;
+  bool isPick = true;
 
   @override
   Widget build(BuildContext context) {
@@ -143,34 +145,29 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Text(
-                      "Chọn giới tính",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Positioned(
-                      left: 0,
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Icon(Icons.close, size: 35),
-                      ),
-                    ),
-                  ],
-                ),
+              titleBottomSheet(
+                "Chọn giới tính",
+                () => Navigator.pop(context),
               ),
               const Divider(color: Colors.black),
-              genderWidget("Nam", "assets/male.png", () {
-                Navigator.pop(context);
-              }),
-              genderWidget("Nữ", "assets/female.png", () {
-                Navigator.pop(context);
-              }),
+              genderWidget(
+                gender: "Nam",
+                image: "assets/male.png",
+                onPress: () {
+                  setState(() => isPick = true);
+                  Navigator.pop(context);
+                },
+                isPick: isPick,
+              ),
+              genderWidget(
+                gender: "Nữ",
+                image: "assets/female.png",
+                onPress: () {
+                  setState(() => isPick = false);
+                  Navigator.pop(context);
+                },
+                isPick: !isPick,
+              ),
             ],
           ),
         );

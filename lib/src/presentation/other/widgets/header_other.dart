@@ -1,3 +1,6 @@
+import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
+import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
+import 'package:coffee/src/presentation/other/widgets/language_widget.dart';
 import 'package:flutter/material.dart';
 
 class HeaderOtherPage extends StatelessWidget {
@@ -113,66 +116,29 @@ class HeaderOtherPage extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Text(
-                      "Lựa chọn ngôn ngữ",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Positioned(
-                      left: 0,
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Icon(Icons.close, size: 35),
-                      ),
-                    ),
-                  ],
-                ),
+              titleBottomSheet(
+                "Lựa chọn ngôn ngữ",
+                () => Navigator.pop(context),
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   const SizedBox(width: 20),
                   Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Image.asset("assets/vietnam.png", height: 90),
-                            const Text("Tiếng Việt"),
-                          ],
-                        ),
-                      ),
+                    child: languageWidget(
+                      image: "assets/vietnam.png",
+                      text: "Tiếng Việt",
+                      onPress: () {},
+                      isPick: true,
                     ),
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Image.asset("assets/english.png", height: 90),
-                            const Text("English"),
-                          ],
-                        ),
-                      ),
+                    child: languageWidget(
+                      image: "assets/english.png",
+                      text: "English",
+                      onPress: () {},
+                      isPick: false,
                     ),
                   ),
                   const SizedBox(width: 20),
@@ -181,19 +147,10 @@ class HeaderOtherPage extends StatelessWidget {
               const SizedBox(height: 50),
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: SizedBox(
-                  height: 50,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
-                    ),
-                    onPressed: () {},
-                    child: const Text("Đồng ý"),
-                  ),
+                child: customButton(
+                  text: "Đồng ý",
+                  isOnPress: true,
+                  onPress: () {},
                 ),
               ),
             ],

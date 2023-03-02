@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../controls/route_function.dart';
 import '../../../data/data_app.dart';
 import '../../product/screen/product_page.dart';
 
@@ -12,11 +13,10 @@ Widget gridItemOrder() {
     itemBuilder: (context, index) {
       return InkWell(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ProductPage(index: index),
-              ));
+          Navigator.of(context).push(createRoute(
+            screen: ProductPage(index: index),
+            begin: const Offset(0, 1),
+          ));
         },
         child: itemOrder(index),
       );

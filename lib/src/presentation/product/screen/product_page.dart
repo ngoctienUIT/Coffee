@@ -32,6 +32,7 @@ class _ProductPageState extends State<ProductPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: CustomScrollView(
+          // physics: const BouncingScrollPhysics(),
           controller: _controller,
           slivers: [
             appBar(),

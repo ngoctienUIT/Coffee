@@ -1,6 +1,7 @@
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../../controls/route_function.dart';
 import '../../other/widgets/group_item_other.dart';
 import '../../other/widgets/item_other.dart';
 
@@ -35,11 +36,10 @@ class SettingPage extends StatelessWidget {
             ]),
             groupItemOther("Bảo Mật", [
               itemOther("Thay đổi mật khẩu", Icons.lock, () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChangePasswordPage(),
-                    ));
+                Navigator.of(context).push(createRoute(
+                  screen: const ChangePasswordPage(),
+                  begin: const Offset(1, 0),
+                ));
               }),
             ]),
           ],

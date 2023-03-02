@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-Widget genderWidget(String gender, String image, VoidCallback onPress) {
+Widget genderWidget({
+  required String gender,
+  required String image,
+  required VoidCallback onPress,
+  required bool isPick,
+}) {
   return Padding(
     padding: const EdgeInsets.all(10),
     child: InkWell(
@@ -26,24 +31,25 @@ Widget genderWidget(String gender, String image, VoidCallback onPress) {
               ),
             ),
           ),
-          Positioned(
-            right: 5,
-            top: 5,
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5,
-              ),
-              decoration: const BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
+          if (isPick)
+            Positioned(
+              right: 5,
+              top: 5,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
                 ),
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                ),
+                child: const Text("Lựa chọn hiện tại"),
               ),
-              child: const Text("Lựa chọn hiện tại"),
-            ),
-          )
+            )
         ],
       ),
     ),

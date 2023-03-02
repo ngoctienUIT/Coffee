@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../controls/route_function.dart';
 import '../../main/screen/main_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +23,23 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isContinue = false;
   bool hide = true;
+
+  @override
+  void initState() {
+    passwordController.addListener(() => checkEmpty());
+    phoneController.addListener(() => checkEmpty());
+    super.initState();
+  }
+
+  void checkEmpty() {
+    if (phoneController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+      setState(() => isContinue = true);
+    } else {
+      setState(() => isContinue = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -75,27 +92,28 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ForgotPasswordPage(),
-                              ));
+                          Navigator.of(context).push(createRoute(
+                            screen: const ForgotPasswordPage(),
+                            begin: const Offset(1, 0),
+                          ));
                         },
                         child: const Text("Quên mật khẩu?"),
                       )
                     ],
                   ),
                   const SizedBox(height: 10),
-                  customButton("TIẾP TỤC", () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainPage(),
-                          ));
-                    }
-                  }),
+                  customButton(
+                    text: "TIẾP TỤC",
+                    isOnPress: isContinue,
+                    onPress: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).pushReplacement(createRoute(
+                          screen: const MainPage(),
+                          begin: const Offset(0, 1),
+                        ));
+                      }
+                    },
+                  ),
                   const SizedBox(height: 20),
                   orWidget(),
                   const SizedBox(height: 20),
@@ -120,11 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                       const Text("Khách hàng mới?"),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const SignUpPage(),
-                              ));
+                          Navigator.of(context).pushReplacement(createRoute(
+                            screen: const SignUpPage(),
+                            begin: const Offset(0, 1),
+                          ));
                         },
                         child: const Text("Tạo một tài khoản"),
                       )
