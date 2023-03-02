@@ -11,6 +11,15 @@ Widget customPasswordInput({
     controller: controller,
     obscureText: hide,
     keyboardType: keyboardType,
+    validator: (value) {
+      if (value!.isEmpty) {
+        return "Vui lòng nhập vào mật khẩu";
+      }
+      if (value.length < 8) {
+        return "Độ dài mật khẩu ít nhất là 8 ký tự";
+      }
+      return null;
+    },
     decoration: InputDecoration(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10),
       hintText: hint,

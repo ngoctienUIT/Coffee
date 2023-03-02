@@ -1,7 +1,9 @@
 import 'package:coffee/src/presentation/info/screen/info_page.dart';
+import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../login/widgets/custom_button.dart';
 import '../../profile/screen/profile_page.dart';
 import 'group_item_other.dart';
 import 'item_other.dart';
@@ -55,20 +57,13 @@ class BodyOtherPage extends StatelessWidget {
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: SizedBox(
-                height: 50,
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
-                  ),
-                  onPressed: () {},
-                  child: const Text("Đăng xuất"),
-                ),
-              ),
+              child: customButton("Đăng xuất", () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ));
+              }),
             ),
             const SizedBox(height: 10),
           ],

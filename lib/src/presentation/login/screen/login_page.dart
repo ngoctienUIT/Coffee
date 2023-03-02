@@ -1,5 +1,7 @@
 import 'package:coffee/src/presentation/forgot_password/screen/forgot_password_page.dart';
+import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
+import 'package:coffee/src/presentation/login/widgets/or_widget.dart';
 import 'package:coffee/src/presentation/login/widgets/social_login_button.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
@@ -19,7 +21,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   bool hide = true;
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,116 +40,98 @@ class _LoginPageState extends State<LoginPage> {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                ClipOval(
-                  child: Image.asset("assets/coffee_logo.jpg", height: 200),
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Chào mừng trở lại",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                customTextInput(
-                  controller: phoneController,
-                  hint: "Số điện thoại",
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                customPasswordInput(
-                  controller: passwordController,
-                  hint: "Mật khẩu",
-                  onPress: () => setState(() => hide = !hide),
-                  hide: hide,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordPage(),
-                            ));
-                      },
-                      child: const Text("Quên mật khẩu?"),
-                    )
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  ClipOval(
+                    child: Image.asset("assets/coffee_logo.jpg", height: 200),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Chào mừng trở lại",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  customTextInput(
+                    controller: phoneController,
+                    hint: "Số điện thoại",
+                    keyboardType: TextInputType.phone,
+                    typeInput: [TypeInput.phone],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  customPasswordInput(
+                    controller: passwordController,
+                    hint: "Mật khẩu",
+                    onPress: () => setState(() => hide = !hide),
+                    hide: hide,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordPage(),
+                              ));
+                        },
+                        child: const Text("Quên mật khẩu?"),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  customButton("TIẾP TỤC", () {
+                    if (_formKey.currentState!.validate()) {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const MainPage(),
                           ));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                    }
+                  }),
+                  const SizedBox(height: 20),
+                  orWidget(),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SocialLoginButton(
+                        icon: FontAwesomeIcons.google,
+                        color: Colors.red,
+                        onPress: () {},
                       ),
-                    ),
-                    child: const Text(
-                      "TIẾP TỤC",
-                      style: TextStyle(fontSize: 20),
-                    ),
+                      SocialLoginButton(
+                        icon: FontAwesomeIcons.facebook,
+                        color: Colors.blue,
+                        onPress: () {},
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: const [
-                    Expanded(
-                        child: Divider(thickness: 1, color: Colors.black54)),
-                    SizedBox(width: 10),
-                    Text("Hoặc"),
-                    SizedBox(width: 10),
-                    Expanded(
-                        child: Divider(thickness: 1, color: Colors.black54)),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SocialLoginButton(
-                      icon: FontAwesomeIcons.google,
-                      color: Colors.red,
-                      onPress: () {},
-                    ),
-                    SocialLoginButton(
-                      icon: FontAwesomeIcons.facebook,
-                      color: Colors.blue,
-                      onPress: () {},
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Khách hàng mới?"),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
-                            ));
-                      },
-                      child: const Text("Tạo một tài khoản"),
-                    )
-                  ],
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Khách hàng mới?"),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignUpPage(),
+                              ));
+                        },
+                        child: const Text("Tạo một tài khoản"),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

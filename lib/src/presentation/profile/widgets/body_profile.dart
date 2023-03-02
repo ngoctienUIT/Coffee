@@ -16,6 +16,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   bool checkEdit = false;
 
@@ -29,73 +30,87 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                descriptionLine(text: "Thông Tin Chung"),
-                const Spacer(),
-                TextButton(
-                  onPressed: () {
-                    setState(() => checkEdit = !checkEdit);
-                  },
-                  child: Text(checkEdit ? "Lưu" : "Sửa"),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: customTextInput(
-                    controller: surnameController,
-                    hint: "Họ",
-                    checkEdit: checkEdit,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  descriptionLine(text: "Thông Tin Chung"),
+                  const Spacer(),
+                  TextButton(
+                    onPressed: () {
+                      if (checkEdit) {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() => checkEdit = !checkEdit);
+                        }
+                      } else {
+                        setState(() => checkEdit = !checkEdit);
+                      }
+                    },
+                    child: Text(checkEdit ? "Lưu" : "Sửa"),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: customTextInput(
-                    controller: nameController,
-                    hint: "Tên",
-                    checkEdit: checkEdit,
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: customTextInput(
+                        controller: surnameController,
+                        hint: "Họ",
+                        typeInput: [TypeInput.text],
+                        checkEdit: checkEdit,
+                        title: "họ"),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            CustomPickerWidget(
-              checkEdit: checkEdit,
-              text: "Giới tính",
-              onPress: () => showMyBottomSheet(context),
-            ),
-            const SizedBox(height: 10),
-            CustomPickerWidget(
-              checkEdit: checkEdit,
-              text: "Ngày sinh",
-              onPress: () => selectDate(),
-            ),
-            const SizedBox(height: 10),
-            descriptionLine(text: "Số Điện Thoại"),
-            const SizedBox(height: 10),
-            customTextInput(
-              controller: phoneController,
-              hint: "Số điện thoại",
-              checkEdit: checkEdit,
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 10),
-            descriptionLine(text: "Email"),
-            const SizedBox(height: 10),
-            customTextInput(
-              controller: emailController,
-              hint: "Email",
-              checkEdit: checkEdit,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 10),
-            descriptionLine(text: "Tài Khoản Liên Kết"),
-          ],
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: customTextInput(
+                      controller: nameController,
+                      hint: "Tên",
+                      title: "tên",
+                      typeInput: [TypeInput.text],
+                      checkEdit: checkEdit,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              CustomPickerWidget(
+                checkEdit: checkEdit,
+                text: "Giới tính",
+                onPress: () => showMyBottomSheet(context),
+              ),
+              const SizedBox(height: 10),
+              CustomPickerWidget(
+                checkEdit: checkEdit,
+                text: "Ngày sinh",
+                onPress: () => selectDate(),
+              ),
+              const SizedBox(height: 10),
+              descriptionLine(text: "Số Điện Thoại"),
+              const SizedBox(height: 10),
+              customTextInput(
+                controller: phoneController,
+                hint: "Số điện thoại",
+                typeInput: [TypeInput.phone],
+                checkEdit: checkEdit,
+                keyboardType: TextInputType.phone,
+              ),
+              const SizedBox(height: 10),
+              descriptionLine(text: "Email"),
+              const SizedBox(height: 10),
+              customTextInput(
+                controller: emailController,
+                typeInput: [TypeInput.email],
+                hint: "Email",
+                checkEdit: checkEdit,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 10),
+              descriptionLine(text: "Tài Khoản Liên Kết"),
+            ],
+          ),
         ),
       ),
     );
