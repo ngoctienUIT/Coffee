@@ -1,12 +1,27 @@
 import 'package:coffee/src/data/models/store.dart';
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/route_function.dart';
 import '../../profile/screen/profile_page.dart';
+import '../../search/screen/search_page.dart';
 
-class StorePage extends StatelessWidget {
+class StorePage extends StatefulWidget {
   const StorePage({Key? key}) : super(key: key);
+
+  @override
+  State<StorePage> createState() => _StorePageState();
+}
+
+class _StorePageState extends State<StorePage> {
+  TextEditingController searchAddressController = TextEditingController();
+
+  @override
+  void dispose() {
+    searchAddressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +42,12 @@ class StorePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(createRoute(
+                screen: const SearchPage(),
+                begin: const Offset(1, 0),
+              ));
+            },
             icon: const Icon(
               FontAwesomeIcons.magnifyingGlass,
               color: Colors.grey,
@@ -43,33 +63,19 @@ class StorePage extends StatelessWidget {
               children: [
                 const SizedBox(width: 10),
                 Expanded(
-                  child: TextField(
-                    textInputAction: TextInputAction.search,
-                    decoration: InputDecoration(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 10),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 0.0),
+                  child: SizedBox(
+                    height: 40,
+                    child: customTextInput(
+                      controller: searchAddressController,
+                      hint: "Tìm kiếm địa chỉ",
+                      radius: 90,
+                      contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      textInputAction: TextInputAction.search,
+                      textStyle: const TextStyle(fontSize: 13),
+                      suffixIcon: const Icon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        color: Colors.grey,
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 2),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 2),
-                      ),
-                      hintText: "Tìm kiếm tên món ăn",
-                      suffixIcon: const Icon(Icons.search),
                     ),
                   ),
                 ),

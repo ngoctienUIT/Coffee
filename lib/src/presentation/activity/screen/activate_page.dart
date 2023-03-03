@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/route_function.dart';
 import '../../profile/screen/profile_page.dart';
+import '../../search/screen/search_page.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({Key? key}) : super(key: key);
@@ -41,7 +42,12 @@ class _ActivityPageState extends State<ActivityPage>
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(createRoute(
+                screen: const SearchPage(),
+                begin: const Offset(1, 0),
+              ));
+            },
             icon: const Icon(
               FontAwesomeIcons.magnifyingGlass,
               color: Colors.grey,

@@ -2,7 +2,11 @@ import 'package:coffee/src/data/data_app.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../controls/route_function.dart';
+import '../../search/screen/search_page.dart';
+import '../../signup/widgets/custom_text_input.dart';
 import '../widgets/grid_item_order.dart';
 import '../widgets/list_item_order.dart';
 
@@ -14,8 +18,15 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
+  TextEditingController searchFoodController = TextEditingController();
   late TabController _productController;
   bool check = true;
+
+  @override
+  void dispose() {
+    searchFoodController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -28,34 +39,32 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                textInputAction: TextInputAction.search,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide:
-                        const BorderSide(color: Colors.black, width: 0.0),
+              padding: const EdgeInsets.all(15),
+              child: SizedBox(
+                height: 40,
+                child: customTextInput(
+                  controller: searchFoodController,
+                  hint: "Tìm kiếm tên món ăn",
+                  radius: 90,
+                  contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  textInputAction: TextInputAction.search,
+                  textStyle: const TextStyle(fontSize: 13),
+                  backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+                  onPress: () {
+                    Navigator.of(context).push(createRoute(
+                      screen: const SearchPage(),
+                      begin: const Offset(1, 0),
+                    ));
+                  },
+                  suffixIcon: const Icon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.grey,
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.black, width: 2),
-                  ),
-                  hintText: "Tìm kiếm tên món ăn",
-                  suffixIcon: const Icon(Icons.search),
                 ),
               ),
             ),

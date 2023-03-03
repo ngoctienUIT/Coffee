@@ -1,4 +1,5 @@
 import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
+import 'package:coffee/src/presentation/search/screen/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,8 +16,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+        backgroundColor: Colors.white,
         // elevation: 0,
         leading: InkWell(
           onTap: () {
@@ -30,7 +32,12 @@ class HomePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(createRoute(
+                screen: const SearchPage(),
+                begin: const Offset(1, 0),
+              ));
+            },
             icon: const Icon(
               FontAwesomeIcons.magnifyingGlass,
               color: Colors.grey,
