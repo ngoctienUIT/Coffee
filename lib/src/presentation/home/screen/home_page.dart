@@ -1,4 +1,5 @@
 import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
+import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/search/screen/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -75,7 +76,7 @@ class HomePage extends StatelessWidget {
           ));
         },
         backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
-        child: const Icon(FontAwesomeIcons.basketShopping),
+        child: cartNumber(1),
       ),
     );
   }

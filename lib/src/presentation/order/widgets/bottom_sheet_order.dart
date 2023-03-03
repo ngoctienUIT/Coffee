@@ -1,7 +1,7 @@
+import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/route_function.dart';
 import '../../cart/screen/cart_page.dart';
@@ -47,25 +47,9 @@ class BottomSheetOrder extends StatelessWidget {
                 begin: const Offset(1, 0),
               ));
             },
-            child: Container(
+            child: SizedBox(
               height: double.infinity,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const Icon(
-                    FontAwesomeIcons.basketShopping,
-                    color: Colors.white,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Text("0"),
-                  ),
-                ],
-              ),
+              child: cartNumber(1),
             ),
           ),
         ],

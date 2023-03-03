@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 enum TypeInput { text, email, phone }
 
 Widget customTextInput({
-  required TextEditingController controller,
+  TextEditingController? controller,
   required String hint,
   bool checkEdit = true,
   TextInputType? keyboardType,
