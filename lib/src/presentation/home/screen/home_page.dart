@@ -1,5 +1,6 @@
 import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
+import 'package:coffee/src/presentation/home/widgets/membership_card.dart';
 import 'package:coffee/src/presentation/search/screen/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,6 +51,7 @@ class HomePage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            membershipCard(),
             const SizedBox(height: 10),
             buildListItemProduct(),
             const SizedBox(height: 20),
