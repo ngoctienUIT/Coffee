@@ -9,20 +9,23 @@ class ListItemOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: listSellingProducts.length,
-      itemBuilder: (context, index) {
-        return InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(
-              screen: ProductPage(index: index),
-              begin: const Offset(0, 1),
-            ));
-          },
-          child: itemOrder(index),
-        );
-      },
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: listSellingProducts.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              Navigator.of(context).push(createRoute(
+                screen: ProductPage(index: index),
+                begin: const Offset(0, 1),
+              ));
+            },
+            child: itemOrder(index),
+          );
+        },
+      ),
     );
   }
 

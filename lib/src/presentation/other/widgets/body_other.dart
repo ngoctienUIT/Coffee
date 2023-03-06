@@ -1,6 +1,7 @@
 import 'package:coffee/src/presentation/info/screen/info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
+import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controls/route_function.dart';
@@ -40,7 +41,13 @@ class BodyOtherPage extends StatelessWidget {
               })
             ]),
             groupItemOther("Tương tác", [
-              itemOther("Hoạt động", Icons.local_activity, () {}),
+              itemOther("Ưu đãi", Icons.local_activity, () {
+                Navigator.of(context).push(createRoute(
+                  screen: const VoucherPage(),
+                  begin: const Offset(1, 0),
+                ));
+              }),
+              itemOther("Hoạt động", Icons.card_giftcard_rounded, () {}),
             ]),
             groupItemOther("Thông tin chung", [
               itemOther("Chính sách", Icons.file_copy, () {}),

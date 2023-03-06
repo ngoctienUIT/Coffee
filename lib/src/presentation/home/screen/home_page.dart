@@ -47,27 +47,30 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            membershipCard(),
-            const SizedBox(height: 10),
-            buildListItemProduct(),
-            const SizedBox(height: 20),
-            descriptionLine(
-              text: "Khuyến mãi",
-              color: const Color.fromRGBO(80, 45, 30, 1),
-            ),
-            buildListSpecialOffer(),
-            const SizedBox(height: 20),
-            descriptionLine(
-              text: "Sản phẩm bán chạy",
-              color: const Color.fromRGBO(80, 45, 30, 1),
-            ),
-            buildListSellingProducts(),
-            const SizedBox(height: 100),
-          ],
+      body: RefreshIndicator(
+        onRefresh: () async {},
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              membershipCard(),
+              const SizedBox(height: 10),
+              buildListItemProduct(),
+              const SizedBox(height: 20),
+              descriptionLine(
+                text: "Khuyến mãi",
+                color: const Color.fromRGBO(80, 45, 30, 1),
+              ),
+              buildListSpecialOffer(),
+              const SizedBox(height: 20),
+              descriptionLine(
+                text: "Sản phẩm bán chạy",
+                color: const Color.fromRGBO(80, 45, 30, 1),
+              ),
+              buildListSellingProducts(),
+              const SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
