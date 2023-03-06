@@ -1,3 +1,5 @@
+import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
+import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controls/route_function.dart';
@@ -30,6 +32,20 @@ class BodyOtherPage extends StatelessWidget {
                 ));
               })
             ]),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: customButton(
+                text: "Đăng xuất",
+                isOnPress: true,
+                onPress: () {
+                  Navigator.of(context).pushReplacement(createRoute(
+                    screen: const LoginPage(),
+                    begin: const Offset(0, 1),
+                  ));
+                },
+              ),
+            ),
             const SizedBox(height: 10),
           ],
         ),

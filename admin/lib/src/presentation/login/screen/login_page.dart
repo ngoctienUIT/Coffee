@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/route_function.dart';
 import '../../main/screen/main_page.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_password_input.dart';
 import '../widgets/custom_text_input.dart';
-import '../widgets/or_widget.dart';
-import '../widgets/social_login_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -62,13 +59,13 @@ class _LoginPageState extends State<LoginPage> {
                   ClipOval(
                     child: Image.asset("assets/coffee_logo.jpg", height: 200),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
                   const Text(
                     "Chào mừng Admin",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   customTextInput(
                     controller: phoneController,
                     hint: "Username",
@@ -96,24 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                         ));
                       }
                     },
-                  ),
-                  const SizedBox(height: 20),
-                  orWidget(),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SocialLoginButton(
-                        icon: FontAwesomeIcons.google,
-                        color: Colors.red,
-                        onPress: () {},
-                      ),
-                      SocialLoginButton(
-                        icon: FontAwesomeIcons.facebook,
-                        color: Colors.blue,
-                        onPress: () {},
-                      ),
-                    ],
                   ),
                 ],
               ),

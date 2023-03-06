@@ -61,7 +61,7 @@ class BodyOtherPage extends StatelessWidget {
             ]),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: customButton(
                 text: "Đăng xuất",
                 isOnPress: true,
