@@ -39,6 +39,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

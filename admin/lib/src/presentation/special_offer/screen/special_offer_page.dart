@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/presentation/add_special_offer/screen/add_speci
 import 'package:flutter/material.dart';
 
 import '../../../controls/route_function.dart';
+import '../widgets/build_special_offer.dart';
 
 class SpecialOfferPage extends StatelessWidget {
   const SpecialOfferPage({Key? key}) : super(key: key);
@@ -9,6 +10,17 @@ class SpecialOfferPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      appBar: AppBar(
+        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "Tất cả khuyến mãi",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+      body: const BuildGridSpecialOffer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(createRoute(

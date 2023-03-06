@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/on_will_pop.dart';
+import '../../other/screen/other_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _MainPageState extends State<MainPage> {
     const ProductPage(key: PageStorageKey<String>('OrderPage')),
     const VoucherPage(key: PageStorageKey<String>('ActivityPage')),
     const SpecialOfferPage(key: PageStorageKey<String>('StorePage')),
+    const OtherPage(key: PageStorageKey<String>('OtherPage')),
   ];
 
   @override
@@ -55,6 +57,10 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.gifts),
             label: 'Khuyến mãi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.bars),
+            label: 'Khác',
           ),
         ],
         type: BottomNavigationBarType.fixed,
