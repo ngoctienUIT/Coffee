@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../main/screen/main_page.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_password_input.dart';

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../data/data_app.dart';
 import 'description_line.dart';
-import 'list_item_order.dart';
+import 'list_item_product.dart';
 
-class BodyOrderPage extends StatelessWidget {
-  const BodyOrderPage({Key? key, required this.index}) : super(key: key);
+class BodyProductPage extends StatelessWidget {
+  const BodyProductPage({Key? key, required this.index}) : super(key: key);
 
   final int index;
 
@@ -28,7 +28,7 @@ class BodyOrderPage extends StatelessWidget {
         const Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
-            child: ListItemOrder(),
+            child: ListItemProduct(),
           ),
         ),
       ],

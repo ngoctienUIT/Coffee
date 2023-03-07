@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../add_voucher/screen/add_voucher_page.dart';
 import '../widgets/ticket_widget.dart';
 

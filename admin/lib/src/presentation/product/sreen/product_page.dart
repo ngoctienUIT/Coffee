@@ -1,10 +1,10 @@
 import 'package:coffee_admin/src/presentation/add_product/screen/add_product_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../../data/data_app.dart';
-import '../widgets/body_order.dart';
-import '../widgets/header_order.dart';
+import '../widgets/body_product.dart';
+import '../widgets/header_product.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key}) : super(key: key);
@@ -28,12 +28,13 @@ class _ProductPageState extends State<ProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
       body: SafeArea(
         child: Column(
           children: [
-            HeaderOrderPage(tabController: _productController),
+            HeaderProductPage(tabController: _productController),
             const SizedBox(height: 20),
-            Expanded(child: BodyOrderPage(index: _productController.index)),
+            Expanded(child: BodyProductPage(index: _productController.index)),
           ],
         ),
       ),

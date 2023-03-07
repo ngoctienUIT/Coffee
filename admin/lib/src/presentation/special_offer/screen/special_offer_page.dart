@@ -1,7 +1,7 @@
 import 'package:coffee_admin/src/presentation/add_special_offer/screen/add_special_offer.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../widgets/build_special_offer.dart';
 
 class SpecialOfferPage extends StatelessWidget {

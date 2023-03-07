@@ -5,7 +5,7 @@ import 'package:coffee_admin/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/on_will_pop.dart';
+import '../../../controls/function/on_will_pop.dart';
 import '../../other/screen/other_page.dart';
 
 class MainPage extends StatefulWidget {

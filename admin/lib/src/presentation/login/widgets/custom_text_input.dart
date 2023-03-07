@@ -11,7 +11,7 @@ Widget customTextInput({
   TextInputType? keyboardType,
   List<TextInputFormatter>? inputFormatters,
   TextCapitalization textCapitalization = TextCapitalization.none,
-  List<TypeInput>? typeInput,
+  List<TypeInput> typeInput = const [TypeInput.text],
   String? title,
   double? radius,
   EdgeInsetsGeometry contentPadding =
@@ -21,6 +21,7 @@ Widget customTextInput({
   TextStyle? textStyle,
   VoidCallback? onPress,
   Color backgroundColor = Colors.white,
+  int? maxLines,
 }) {
   return TextFormField(
     onTap: onPress,
@@ -30,11 +31,9 @@ Widget customTextInput({
     keyboardType: keyboardType,
     inputFormatters: inputFormatters,
     textCapitalization: textCapitalization,
+    maxLines: maxLines,
     validator: (value) {
-      if (typeInput != null) {
-        return showError(value, title, typeInput);
-      }
-      return null;
+      return showError(value, title, typeInput);
     },
     style: textStyle,
     textInputAction: textInputAction,

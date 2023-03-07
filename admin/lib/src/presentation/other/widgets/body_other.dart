@@ -2,7 +2,7 @@ import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../info/screen/info_page.dart';
 import 'group_item_other.dart';
 import 'item_other.dart';
