@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../../controls/route_function.dart';
 import '../../profile/screen/profile_page.dart';
@@ -75,6 +76,56 @@ class _ActivityPageState extends State<ActivityPage>
                 ],
               ),
             ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {},
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return InkWell(onTap: () {}, child: itemActivity());
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget itemActivity() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            Image.asset("assets/tea.png", height: 50),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    children: const [
+                      Text("Tại cửa hàng"),
+                      Spacer(),
+                      Text("105.000đ"),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Text("Tại cửa hàng"),
+                      const Spacer(),
+                      Text(
+                        DateFormat("hh:mm - dd/MM/yyyy").format(DateTime.now()),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios_outlined)
           ],
         ),
       ),

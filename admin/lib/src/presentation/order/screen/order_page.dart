@@ -16,7 +16,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _orderController = TabController(length: 3, vsync: this);
+    _orderController = TabController(length: 5, vsync: this);
     _orderController.addListener(() => setState(() {}));
     super.initState();
   }
@@ -35,6 +35,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                 onRefresh: () async {},
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return InkWell(
@@ -57,77 +58,88 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   }
 
   Widget itemOrder() {
-    return Container(
-      color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Image.asset("assets/tea.png", height: 40),
-              const SizedBox(width: 10),
-              const Text(
-                "Tên cửa hàng",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Container(
+        // margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Image.asset("assets/vietnam.png", height: 40),
+                const SizedBox(width: 10),
+                const Text(
+                  "Tên cửa hàng",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const Divider(),
-          Row(
-            children: [
-              Image.asset("assets/tea.png", height: 100),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Tên khách hàng",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text("Số lượng x10"),
-                    ),
-                    SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text("Tổng đơn: 500.000đ"),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const Divider(),
-          const SizedBox(height: 10),
-          const Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "Thành tiền: 500.000đ",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              ],
             ),
-          ),
-          const SizedBox(height: 10),
-          const Divider(),
-          const SizedBox(height: 10),
-          Row(
-            children: const [
-              Text("Tình trạng giao hàng"),
-              Spacer(),
-              Text("ĐÃ GIAO"),
-            ],
-          ),
-          const SizedBox(height: 10),
-        ],
+            const Divider(),
+            Row(
+              children: [
+                Image.asset("assets/tea.png", height: 100),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Tên khách hàng",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("Số lượng x10"),
+                      ),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text("Tổng đơn: 500.000đ"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const Divider(),
+            const SizedBox(height: 10),
+            const Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "Thành tiền: 500.000đ",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Divider(),
+            const SizedBox(height: 10),
+            Row(
+              children: const [
+                Text("Tình trạng giao hàng"),
+                Spacer(),
+                Text(
+                  "ĐÃ GIAO",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }

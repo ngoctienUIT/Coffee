@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class VoucherPage extends StatelessWidget {
   const VoucherPage({Key? key, this.onPress}) : super(key: key);
 
-  final VoidCallback? onPress;
+  final Function(String id)? onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class VoucherPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: TicketWidget(
                 onPress: () {
-                  onPress!();
+                  onPress!("id");
                 },
                 title: "Mua 1 tặng 1",
                 image: "assets/banner.jpg",

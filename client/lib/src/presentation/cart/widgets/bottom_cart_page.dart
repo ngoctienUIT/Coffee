@@ -6,41 +6,33 @@ Widget bottomCartPage() {
   return Container(
     height: 150,
     color: Colors.white,
+    padding: const EdgeInsets.symmetric(horizontal: 10),
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        IntrinsicHeight(
-          child: Row(
-            children: [
-              Expanded(
-                child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.credit_card_rounded),
-                  label: const Text("Thẻ nội địa"),
-                ),
+        Row(
+          children: const [
+            Text(
+              "Tổng cộng",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
-              const VerticalDivider(
-                color: Colors.black,
-                indent: 5,
-                endIndent: 5,
+            ),
+            Spacer(),
+            Text(
+              "54.000đ",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
-              Expanded(
-                child: TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.card_membership),
-                  label: const Text("Khuyến mãi"),
-                ),
-              ),
-            ],
-          ),
+            )
+          ],
         ),
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: customButton(
-            text: "Đặt hàng (54.000đ)",
-            onPress: () {},
-            isOnPress: true,
-          ),
+        customButton(
+          text: "Đặt hàng",
+          onPress: () {},
+          isOnPress: true,
         ),
       ],
     ),

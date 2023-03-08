@@ -1,7 +1,9 @@
+import 'package:coffee/src/presentation/cart/widgets/add_coupons.dart';
 import 'package:coffee/src/presentation/cart/widgets/bottom_cart_page.dart';
 import 'package:coffee/src/presentation/cart/widgets/info_cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/list_product.dart';
-import 'package:coffee/src/presentation/cart/widgets/temporary_money.dart';
+import 'package:coffee/src/presentation/cart/widgets/payment_methods.dart';
+import 'package:coffee/src/presentation/cart/widgets/total_payment.dart';
 import 'package:flutter/material.dart';
 
 class CartPage extends StatelessWidget {
@@ -38,26 +40,13 @@ class CartPage extends StatelessWidget {
             children: [
               infoCart(),
               const SizedBox(height: 10),
-              listProduct(),
+              const ListProduct(),
               const SizedBox(height: 10),
-              temporaryMoney(),
+              const AddCoupons(),
               const SizedBox(height: 10),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  child: Row(
-                    children: const [
-                      Text("Tổng cộng"),
-                      Spacer(),
-                      Text("54.000đ")
-                    ],
-                  ),
-                ),
-              ),
+              const TotalPayment(),
+              const SizedBox(height: 10),
+              const PaymentMethods(),
               const SizedBox(height: 200),
             ],
           ),

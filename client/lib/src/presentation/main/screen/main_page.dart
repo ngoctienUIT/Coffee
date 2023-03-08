@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/on_will_pop.dart';
-import '../../activity/screen/activate_page.dart';
+import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
 
 class MainPage extends StatefulWidget {
