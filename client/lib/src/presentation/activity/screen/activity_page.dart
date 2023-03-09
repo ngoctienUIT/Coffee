@@ -80,6 +80,7 @@ class _ActivityPageState extends State<ActivityPage>
               child: RefreshIndicator(
                 onRefresh: () async {},
                 child: ListView.builder(
+                  padding: EdgeInsets.all(10),
                   physics: const BouncingScrollPhysics(),
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -96,6 +97,9 @@ class _ActivityPageState extends State<ActivityPage>
 
   Widget itemActivity() {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -107,15 +111,27 @@ class _ActivityPageState extends State<ActivityPage>
                 children: [
                   Row(
                     children: const [
-                      Text("Tại cửa hàng"),
+                      Text(
+                        "Tại cửa hàng",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Spacer(),
-                      Text("105.000đ"),
+                      Text(
+                        "105.000đ",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Text("Tại cửa hàng"),
+                      const Text("Đang giao"),
                       const Spacer(),
                       Text(
                         DateFormat("hh:mm - dd/MM/yyyy").format(DateTime.now()),

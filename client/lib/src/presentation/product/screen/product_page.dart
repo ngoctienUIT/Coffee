@@ -1,8 +1,11 @@
 import 'package:coffee/src/presentation/product/widgets/choose_size.dart';
+import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/data_app.dart';
+import '../widgets/choose_quantity.dart';
 
 class ProductPage extends StatefulWidget {
   const ProductPage({Key? key, required this.index}) : super(key: key);
@@ -13,9 +16,12 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  TextEditingController noteController = TextEditingController();
+  final numberFormat = NumberFormat.currency(locale: "vi_VI");
   final _controller = ScrollController();
-  bool isTop = true;
   int sizeIndex = 0;
+  bool isTop = true;
+  int number = 1;
 
   @override
   void initState() {
@@ -143,14 +149,10 @@ class _ProductPageState extends State<ProductPage> {
               ],
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: "Ghi chú",
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12)),
-                filled: true,
-                fillColor: Colors.white,
-              ),
+            customTextInput(
+              controller: noteController,
+              hint: "Ghi chú",
+              colorBorder: Colors.black87,
             ),
           ],
         ),
@@ -164,23 +166,7 @@ class _ProductPageState extends State<ProductPage> {
       height: 75,
       child: Row(
         children: [
-          SizedBox(
-            width: 50,
-            height: 50,
-            child: OutlinedButton(
-              onPressed: () {},
-              child: const Icon(FontAwesomeIcons.minus),
-            ),
-          ),
-          const SizedBox(width: 50, child: Center(child: Text("1"))),
-          SizedBox(
-            width: 50,
-            height: 50,
-            child: OutlinedButton(
-              onPressed: () {},
-              child: const Icon(FontAwesomeIcons.plus),
-            ),
-          ),
+          chooseQuantity(number, (value) => setState(() => number = value)),
           const SizedBox(width: 20),
           Expanded(
             child: SizedBox(
@@ -193,7 +179,7 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                 ),
                 onPressed: () {},
-                child: const Text("Thêm 35.000đ"),
+                child: Text("Thêm ${numberFormat.format(number * 30000)}"),
               ),
             ),
           )

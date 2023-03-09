@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../login/widgets/custom_button.dart';
 
-Widget bottomCartPage() {
+Widget bottomCartPage(Function onPress) {
   return Container(
     height: 150,
     color: Colors.white,

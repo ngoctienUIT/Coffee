@@ -1,12 +1,13 @@
-import 'package:coffee/src/presentation/cart/widgets/custom_button_quantity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../data/data_app.dart';
+import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
-  const ListProduct({Key? key}) : super(key: key);
+  const ListProduct({Key? key, required this.onChange}) : super(key: key);
+  final Function(int total) onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -53,77 +54,12 @@ class ListProduct extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: ItemProduct(index: index),
+                child: ItemProduct(
+                  index: index,
+                  onChange: (value) {},
+                ),
               );
             },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ItemProduct extends StatefulWidget {
-  const ItemProduct({Key? key, required this.index}) : super(key: key);
-
-  final int index;
-
-  @override
-  State<ItemProduct> createState() => _ItemProductState();
-}
-
-class _ItemProductState extends State<ItemProduct> {
-  int number = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (widget.index != 0) const Divider(indent: 10, endIndent: 10),
-          Row(
-            children: [
-              Image.asset("assets/tea.png", height: 50, width: 50),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(height: 5),
-                    Text(
-                      listSellingProducts[widget.index]["name"]!,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(listSellingProducts[widget.index]["price"]!),
-                  ],
-                ),
-              ),
-              Container(
-                color: const Color.fromRGBO(241, 241, 241, 1),
-                child: Row(
-                  children: [
-                    customButtonQuantity(() {
-                      setState(() => number++);
-                    }, Icons.remove),
-                    const SizedBox(width: 10),
-                    Text("$number"),
-                    const SizedBox(width: 10),
-                    customButtonQuantity(() {
-                      setState(() => number++);
-                    }, Icons.add),
-                  ],
-                ),
-              ),
-            ],
           ),
         ],
       ),

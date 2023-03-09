@@ -5,74 +5,63 @@ import 'package:flutter/services.dart';
 enum TypeInput { text, email, phone }
 
 Widget customTextInput({
-  TextEditingController? controller,
-  required String hint,
-  bool checkEdit = true,
-  TextInputType? keyboardType,
-  List<TextInputFormatter>? inputFormatters,
-  TextCapitalization textCapitalization = TextCapitalization.none,
-  List<TypeInput>? typeInput,
   String? title,
   double? radius,
+  Widget? suffixIcon,
+  TextStyle? textStyle,
+  required String hint,
+  bool checkEdit = true,
+  VoidCallback? onPress,
+  List<TypeInput>? typeInput,
+  TextInputType? keyboardType,
+  TextInputAction? textInputAction,
+  TextEditingController? controller,
+  Color backgroundColor = Colors.white,
+  List<TextInputFormatter>? inputFormatters,
+  Color colorBorder = const Color.fromRGBO(220, 220, 220, 1),
+  TextCapitalization textCapitalization = TextCapitalization.none,
   EdgeInsetsGeometry contentPadding =
       const EdgeInsets.symmetric(horizontal: 10),
-  Widget? suffixIcon,
-  TextInputAction? textInputAction,
-  TextStyle? textStyle,
-  VoidCallback? onPress,
-  Color backgroundColor = Colors.white,
 }) {
   return TextFormField(
     onTap: onPress,
-    readOnly: onPress == null ? false : true,
-    controller: controller,
+    style: textStyle,
     enabled: checkEdit,
+    controller: controller,
     keyboardType: keyboardType,
+    textInputAction: textInputAction,
     inputFormatters: inputFormatters,
     textCapitalization: textCapitalization,
+    readOnly: onPress == null ? false : true,
+    decoration: InputDecoration(
+      filled: true,
+      hintText: hint,
+      suffixIcon: suffixIcon,
+      fillColor: backgroundColor,
+      contentPadding: contentPadding,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+        borderSide: BorderSide(color: colorBorder, width: 0.7),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+        borderSide: BorderSide(color: colorBorder, width: 0.7),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+        borderSide: BorderSide(color: colorBorder, width: 0.7),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+        borderSide: BorderSide(color: colorBorder, width: 0.7),
+      ),
+    ),
     validator: (value) {
       if (typeInput != null) {
         return showError(value, title, typeInput);
       }
       return null;
     },
-    style: textStyle,
-    textInputAction: textInputAction,
-    decoration: InputDecoration(
-      contentPadding: contentPadding,
-      hintText: hint,
-      suffixIcon: suffixIcon,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: const BorderSide(
-          color: Color.fromRGBO(220, 220, 220, 1),
-          width: 0.7,
-        ),
-      ),
-      filled: true,
-      fillColor: backgroundColor,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: const BorderSide(
-          color: Color.fromRGBO(220, 220, 220, 1),
-          width: 0.7,
-        ),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: const BorderSide(
-          color: Color.fromRGBO(220, 220, 220, 1),
-          width: 0.7,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: const BorderSide(
-          color: Color.fromRGBO(220, 220, 220, 1),
-          width: 0.7,
-        ),
-      ),
-    ),
   );
 }
 

@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/add_coupons.dart';
 import 'package:coffee/src/presentation/cart/widgets/bottom_cart_page.dart';
 import 'package:coffee/src/presentation/cart/widgets/info_cart.dart';
@@ -6,8 +7,15 @@ import 'package:coffee/src/presentation/cart/widgets/payment_methods.dart';
 import 'package:coffee/src/presentation/cart/widgets/total_payment.dart';
 import 'package:flutter/material.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  Cart cart = Cart(time: DateTime.now(), listProduct: []);
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +46,9 @@ class CartPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              infoCart(),
+              const InfoCart(),
               const SizedBox(height: 10),
-              const ListProduct(),
+              ListProduct(onChange: (total) {}),
               const SizedBox(height: 10),
               const AddCoupons(),
               const SizedBox(height: 10),
@@ -52,7 +60,7 @@ class CartPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: bottomCartPage(),
+      bottomSheet: bottomCartPage(() {}),
     );
   }
 }
