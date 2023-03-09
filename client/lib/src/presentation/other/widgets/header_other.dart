@@ -1,10 +1,50 @@
+import 'dart:io';
+
+import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/language/bloc/language_cubit.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:coffee/src/presentation/other/widgets/language_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HeaderOtherPage extends StatelessWidget {
+class HeaderOtherPage extends StatefulWidget {
   const HeaderOtherPage({Key? key}) : super(key: key);
+
+  @override
+  State<HeaderOtherPage> createState() => _HeaderOtherPageState();
+}
+
+class _HeaderOtherPageState extends State<HeaderOtherPage> {
+  int language = 0;
+
+  @override
+  void initState() {
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        language = value.getInt('language') ??
+            (Platform.localeName.split('_')[0] == "vi" ? 0 : 1);
+      });
+    });
+    super.initState();
+  }
+
+  Future changeLanguage(int lang) async {
+    if (lang != language) {
+      if (lang == 0) {
+        BlocProvider.of<LanguageCubit>(context).toVietnamese();
+      } else {
+        BlocProvider.of<LanguageCubit>(context).toEnglish();
+      }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('language', lang);
+      if (!mounted) return;
+      setState(() => language = lang);
+    }
+    if (!mounted) return;
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +70,12 @@ class HeaderOtherPage extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Text(
-                        "Tiếng Việt",
-                        style: TextStyle(color: Colors.white),
+                        language == 0 ? "Tiếng Việt" : "English",
+                        style: const TextStyle(color: Colors.white),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.keyboard_arrow_down_outlined,
                         color: Colors.white,
                       ),
@@ -62,23 +102,23 @@ class HeaderOtherPage extends StatelessWidget {
                 children: [
                   IntrinsicHeight(
                     child: Row(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "Trần Ngọc Tiến",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        VerticalDivider(
+                        const SizedBox(width: 10),
+                        const VerticalDivider(
                           color: Colors.white,
                           width: 2,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
-                          "THÀNH VIÊN",
-                          style: TextStyle(
+                          "member".translate(context),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -102,6 +142,8 @@ class HeaderOtherPage extends StatelessWidget {
   }
 
   void showMyBottomSheet(BuildContext context) {
+    bool isVN = language == 0;
+
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -113,47 +155,51 @@ class HeaderOtherPage extends StatelessWidget {
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              titleBottomSheet(
-                "Lựa chọn ngôn ngữ",
-                () => Navigator.pop(context),
-              ),
-              const SizedBox(height: 10),
-              Row(
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
                 children: [
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: languageWidget(
-                      image: "assets/vietnam.png",
-                      text: "Tiếng Việt",
-                      onPress: () {},
-                      isPick: true,
+                  const SizedBox(height: 10),
+                  titleBottomSheet(
+                    "language_selection".translate(context),
+                    () => Navigator.pop(context),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: languageWidget(
+                          image: "assets/vietnam.png",
+                          text: "Tiếng Việt",
+                          onPress: () => setState(() => isVN = true),
+                          isPick: isVN,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: languageWidget(
+                          image: "assets/english.png",
+                          text: "English",
+                          onPress: () => setState(() => isVN = false),
+                          isPick: !isVN,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                    ],
+                  ),
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: customButton(
+                      text: 'ok'.translate(context),
+                      isOnPress: true,
+                      onPress: () => changeLanguage(isVN ? 0 : 1),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: languageWidget(
-                      image: "assets/english.png",
-                      text: "English",
-                      onPress: () {},
-                      isPick: false,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
                 ],
-              ),
-              const SizedBox(height: 50),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: customButton(
-                  text: "Đồng ý",
-                  isOnPress: true,
-                  onPress: () {},
-                ),
-              ),
-            ],
+              );
+            },
           ),
         );
       },

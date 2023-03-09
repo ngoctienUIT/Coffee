@@ -51,25 +51,22 @@ class _ViewProductPageState extends State<ViewProductPage> {
   Widget appBar() {
     return SliverAppBar(
       backgroundColor:
-          isTop ? Colors.white : const Color.fromRGBO(177, 40, 48, 1),
+          isTop ? Colors.transparent : const Color.fromRGBO(177, 40, 48, 1),
       elevation: 0,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
-        icon: Icon(Icons.close, color: isTop ? Colors.black : Colors.white),
+        icon: Icon(
+          Icons.close,
+          color: isTop ? Colors.black : Colors.white,
+          size: 30,
+        ),
       ),
       actions: [
         IconButton(
           onPressed: () {},
           icon: Icon(
-            Icons.delete_forever,
-            color: isTop ? Colors.black : Colors.white,
-          ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
             Icons.edit,
-            color: isTop ? Colors.black : Colors.white,
+            color: isTop ? const Color.fromRGBO(177, 40, 48, 1) : Colors.white,
           ),
         ),
       ],

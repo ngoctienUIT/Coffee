@@ -43,6 +43,7 @@ dependencies:
   permission_handler: ^10.2.0
   image_cropper: ^3.0.1
   cached_network_image: ^3.2.3
+  flutter_slidable: ^2.0.0
 
 dev_dependencies:
   flutter_test:

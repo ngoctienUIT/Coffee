@@ -1,3 +1,7 @@
+import 'package:flutter/cupertino.dart';
+
+import '../../language/localization/app_localizations.dart';
+
 extension EmailValidator on String {
   bool isValidEmail() {
     return RegExp(
@@ -11,5 +15,9 @@ extension EmailValidator on String {
 
   bool isOnlyNumbers() {
     return RegExp(r"\d+$").hasMatch(this);
+  }
+
+  String translate(BuildContext context) {
+    return AppLocalizations.of(context).translate(this);
   }
 }

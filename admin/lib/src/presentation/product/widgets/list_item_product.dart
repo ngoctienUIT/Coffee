@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/function/route_function.dart';
 import '../../../data/data_app.dart';
@@ -22,7 +24,22 @@ class ListItemProduct extends StatelessWidget {
                 begin: const Offset(0, 1),
               ));
             },
-            child: itemOrder(index),
+            child: Slidable(
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                extentRatio: 0.2,
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {},
+                    backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+                    foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                    icon: FontAwesomeIcons.trash,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ],
+              ),
+              child: itemOrder(index),
+            ),
           );
         },
       ),

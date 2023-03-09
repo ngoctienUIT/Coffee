@@ -1,6 +1,7 @@
 import 'package:coffee_admin/src/presentation/order/widgets/header_order.dart';
 import 'package:coffee_admin/src/presentation/view_order/screen/view_order_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../controls/function/route_function.dart';
 
@@ -92,21 +93,22 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Tên khách hàng",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 20),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Text("Số lượng x10"),
+                        child: Text(DateFormat("hh:mm - dd/MM/yyyy")
+                            .format(DateTime.now())),
                       ),
-                      SizedBox(height: 10),
-                      Align(
+                      const SizedBox(height: 10),
+                      const Align(
                         alignment: Alignment.centerRight,
                         child: Text("Tổng đơn: 500.000đ"),
                       ),

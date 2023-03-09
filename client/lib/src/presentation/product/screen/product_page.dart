@@ -60,7 +60,7 @@ class _ProductPageState extends State<ProductPage> {
   Widget appBar() {
     return SliverAppBar(
       backgroundColor:
-          isTop ? Colors.white : const Color.fromRGBO(177, 40, 48, 1),
+          isTop ? Colors.transparent : const Color.fromRGBO(177, 40, 48, 1),
       elevation: 0,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),

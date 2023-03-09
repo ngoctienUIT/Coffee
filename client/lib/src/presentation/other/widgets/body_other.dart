@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/info/screen/info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
@@ -25,34 +26,35 @@ class BodyOtherPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            groupItemOther("Tài khoản", [
-              itemOther("Hồ sơ", Icons.person, () {
+            groupItemOther("account".translate(context), [
+              itemOther("profile".translate(context), Icons.person, () {
                 Navigator.of(context).push(createRoute(
                   screen: const ProfilePage(),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("Cài đặt", Icons.settings, () {
+              itemOther("setting".translate(context), Icons.settings, () {
                 Navigator.of(context).push(createRoute(
                   screen: const SettingPage(),
                   begin: const Offset(1, 0),
                 ));
               })
             ]),
-            groupItemOther("Tương tác", [
-              itemOther("Ưu đãi", Icons.local_activity, () {
+            groupItemOther("interact".translate(context), [
+              itemOther("voucher".translate(context), Icons.local_activity, () {
                 Navigator.of(context).push(createRoute(
                   screen: const VoucherPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
-              itemOther("Hoạt động", Icons.card_giftcard_rounded, () {}),
+              itemOther("activity".translate(context),
+                  Icons.card_giftcard_rounded, () {}),
             ]),
-            groupItemOther("Thông tin chung", [
-              itemOther("Chính sách", Icons.file_copy, () {}),
+            groupItemOther("general_info".translate(context), [
+              itemOther("policy".translate(context), Icons.file_copy, () {}),
               const Divider(),
-              itemOther("Thông tin ứng dụng", Icons.info, () {
+              itemOther("app_info".translate(context), Icons.info, () {
                 Navigator.of(context).push(createRoute(
                   screen: const InfoPage(),
                   begin: const Offset(1, 0),
@@ -63,7 +65,7 @@ class BodyOtherPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: customButton(
-                text: "Đăng xuất",
+                text: "logout".translate(context),
                 isOnPress: true,
                 onPress: () {
                   Navigator.of(context).pushReplacement(createRoute(
