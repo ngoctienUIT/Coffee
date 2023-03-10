@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.4"
+  dvhcvn:
+    dependency: "direct main"
+    description:
+      name: dvhcvn
+      sha256: f5484ba1369bd10d8434c65171626704b7623f4f7e6a34724e1a3eb058e1d9d8
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.20221001"
   equatable:
     dependency: "direct main"
     description:

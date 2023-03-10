@@ -9,6 +9,7 @@ Widget customTextInput({
   double? radius,
   Widget? suffixIcon,
   TextStyle? textStyle,
+  bool isBorder = true,
   required String hint,
   bool checkEdit = true,
   VoidCallback? onPress,
@@ -39,22 +40,30 @@ Widget customTextInput({
       suffixIcon: suffixIcon,
       fillColor: backgroundColor,
       contentPadding: contentPadding,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: BorderSide(color: colorBorder, width: 0.7),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: BorderSide(color: colorBorder, width: 0.7),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: BorderSide(color: colorBorder, width: 0.7),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-        borderSide: BorderSide(color: colorBorder, width: 0.7),
-      ),
+      border: !isBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+              borderSide: BorderSide(color: colorBorder, width: 0.7),
+            ),
+      focusedBorder: !isBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+              borderSide: BorderSide(color: colorBorder, width: 0.7),
+            ),
+      disabledBorder: !isBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+              borderSide: BorderSide(color: colorBorder, width: 0.7),
+            ),
+      enabledBorder: !isBorder
+          ? InputBorder.none
+          : OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
+              borderSide: BorderSide(color: colorBorder, width: 0.7),
+            ),
     ),
     validator: (value) {
       if (typeInput != null) {

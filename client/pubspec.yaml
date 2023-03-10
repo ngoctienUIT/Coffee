@@ -49,6 +49,7 @@ dependencies:
   equatable: ^2.0.5
   cached_network_image: ^3.2.3
   flutter_slidable: ^2.0.0
+  dvhcvn: ^2.0.20221001
 
 dev_dependencies:
   flutter_test:

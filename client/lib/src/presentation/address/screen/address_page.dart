@@ -51,37 +51,53 @@ class AddressPage extends StatelessWidget {
             ),
             const Divider(),
             Expanded(
-                child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 10),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Column(
                     children: [
-                      Row(
-                        children: [
-                          const Text("Trần Ngọc Tiến"),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(createRoute(
-                                screen: const AddAddressPage(),
-                                begin: const Offset(1, 0),
-                              ));
-                            },
-                            child: const Text("Chỉnh sửa"),
-                          ),
-                        ],
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Trần Ngọc Tiến",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const Spacer(),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(createRoute(
+                                      screen: const AddAddressPage(),
+                                      begin: const Offset(1, 0),
+                                    ));
+                                  },
+                                  child: const Text("Chỉnh sửa"),
+                                ),
+                              ],
+                            ),
+                            const Text("0334161287"),
+                            const SizedBox(height: 5),
+                            const Text("Lê Văn Việt"),
+                            const SizedBox(height: 5),
+                            const Text("Hồ Chí Minh, Việt Nam"),
+                          ],
+                        ),
                       ),
-                      const Text("0334161287"),
-                      const Text("Lê Văn Việt"),
-                      const Text("Hồ Chí Minh, Việt Nam"),
+                      const Divider(color: Colors.black26, height: 1),
                     ],
-                  ),
-                );
-              },
-            ))
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
