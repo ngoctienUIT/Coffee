@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/view_order/screen/view_order_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -80,11 +81,19 @@ class _ActivityPageState extends State<ActivityPage>
               child: RefreshIndicator(
                 onRefresh: () async {},
                 child: ListView.builder(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   physics: const BouncingScrollPhysics(),
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return InkWell(onTap: () {}, child: itemActivity());
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(createRoute(
+                          screen: const ViewOrderPage(),
+                          begin: const Offset(0, 1),
+                        ));
+                      },
+                      child: itemActivity(),
+                    );
                   },
                 ),
               ),

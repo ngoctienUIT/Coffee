@@ -1,5 +1,9 @@
+import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../controls/route_function.dart';
+import '../../address/screen/address_page.dart';
 
 class InfoCart extends StatefulWidget {
   const InfoCart({Key? key}) : super(key: key);
@@ -63,17 +67,29 @@ class _InfoCartState extends State<InfoCart> {
             ),
           ),
           const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: const [
-                Icon(Icons.alarm),
-                SizedBox(width: 5),
-                Text("Hôm nay - 17:15"),
-                Spacer(),
-                Icon(Icons.arrow_forward_ios_rounded)
-              ],
-            ),
+          InkWell(
+            onTap: () {},
+            child: itemInfo(Icons.alarm, "Hôm nay - 17:15"),
+          ),
+          const Divider(),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(createRoute(
+                screen: const AddressPage(),
+                begin: const Offset(1, 0),
+              ));
+            },
+            child: itemInfo(Icons.phone, "0334161287"),
+          ),
+          const Divider(),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(createRoute(
+                screen: const AddressPage(),
+                begin: const Offset(1, 0),
+              ));
+            },
+            child: itemInfo(Icons.location_on, "Hồ Chí Minh, Việt Nam"),
           ),
           const Divider(),
           Padding(
