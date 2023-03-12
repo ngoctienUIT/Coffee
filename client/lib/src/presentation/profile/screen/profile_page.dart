@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/profile/widgets/header_profile.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,9 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Hồ Sơ",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "profile".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(

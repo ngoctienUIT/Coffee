@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -40,23 +41,20 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                 children: [
                   IntrinsicHeight(
                     child: Row(
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "DRIPS: 0",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        VerticalDivider(
-                          color: Colors.white,
-                          width: 2,
-                        ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
+                        const VerticalDivider(color: Colors.white, width: 2),
+                        const SizedBox(width: 10),
                         Text(
-                          "THÀNH VIÊN",
-                          style: TextStyle(
+                          "member".translate(context).toUpperCase(),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -88,7 +86,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           ),
           child: Column(
             children: [
-              itemAction("Chụp hình", () async {
+              itemAction("take_photo".translate(context), () async {
                 Navigator.pop(context);
                 var status = await Permission.camera.status;
                 if (status.isDenied) {
@@ -97,7 +95,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                 status = await Permission.camera.status;
                 if (status.isGranted) pickAvatar(true);
               }),
-              itemAction("Chọn hình từ thư viện", () async {
+              itemAction("select_image_gallery".translate(context), () async {
                 Navigator.pop(context);
                 var status = await Permission.storage.status;
                 if (status.isDenied) {
@@ -106,9 +104,12 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                 status = await Permission.storage.status;
                 if (status.isGranted) pickAvatar(false);
               }),
-              itemAction("Xem hình trang cá nhân", () {}),
-              itemAction("Xóa hình trang cá nhân", () {}),
-              itemAction("Hủy", () => Navigator.pop(context)),
+              itemAction("view_profile_picture".translate(context), () {}),
+              itemAction("delete_profile_picture".translate(context), () {}),
+              itemAction(
+                "cancel".translate(context),
+                () => Navigator.pop(context),
+              ),
             ],
           ),
         );
@@ -142,10 +143,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
         child: Center(
           child: Text(
             text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
@@ -39,7 +40,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  descriptionLine(text: "Thông Tin Chung"),
+                  descriptionLine(text: "general_info".translate(context)),
                   const Spacer(),
                   TextButton(
                     onPressed: () {
@@ -51,27 +52,30 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                         setState(() => checkEdit = !checkEdit);
                       }
                     },
-                    child: Text(checkEdit ? "Lưu" : "Sửa"),
+                    child: Text(
+                      (checkEdit ? "save" : "edit").translate(context),
+                    ),
                   ),
                 ],
               ),
               Row(
                 children: [
                   Expanded(
-                    child: customTextInput(
-                        controller: surnameController,
-                        hint: "Họ",
-                        typeInput: [TypeInput.text],
-                        checkEdit: checkEdit,
-                        title: "họ"),
+                    child: CustomTextInput(
+                      controller: surnameController,
+                      hint: "surname".translate(context),
+                      typeInput: const [TypeInput.text],
+                      checkEdit: checkEdit,
+                      title: "surname".translate(context).toLowerCase(),
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: customTextInput(
+                    child: CustomTextInput(
                       controller: nameController,
-                      hint: "Tên",
-                      title: "tên",
-                      typeInput: [TypeInput.text],
+                      hint: "name".translate(context),
+                      title: "name".translate(context).toLowerCase(),
+                      typeInput: const [TypeInput.text],
                       checkEdit: checkEdit,
                     ),
                   ),
@@ -80,37 +84,37 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               const SizedBox(height: 10),
               CustomPickerWidget(
                 checkEdit: checkEdit,
-                text: "Giới tính",
+                text: "gender".translate(context),
                 onPress: () => showMyBottomSheet(context),
               ),
               const SizedBox(height: 10),
               CustomPickerWidget(
                 checkEdit: checkEdit,
-                text: "Ngày sinh",
+                text: "birthday".translate(context),
                 onPress: () => selectDate(),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Số Điện Thoại"),
+              descriptionLine(text: "phone_number".translate(context)),
               const SizedBox(height: 10),
-              customTextInput(
+              CustomTextInput(
                 controller: phoneController,
-                hint: "Số điện thoại",
-                typeInput: [TypeInput.phone],
+                hint: "phone_number".translate(context),
+                typeInput: const [TypeInput.phone],
                 checkEdit: checkEdit,
                 keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: 10),
               descriptionLine(text: "Email"),
               const SizedBox(height: 10),
-              customTextInput(
+              CustomTextInput(
                 controller: emailController,
-                typeInput: [TypeInput.email],
+                typeInput: const [TypeInput.email],
                 hint: "Email",
                 checkEdit: checkEdit,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Tài Khoản Liên Kết"),
+              descriptionLine(text: "affiliate_account".translate(context)),
             ],
           ),
         ),
@@ -146,12 +150,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             children: [
               const SizedBox(height: 10),
               titleBottomSheet(
-                "Chọn giới tính",
+                "choose_gender".translate(context),
                 () => Navigator.pop(context),
               ),
               const Divider(color: Colors.black),
-              genderWidget(
-                gender: "Nam",
+              GenderWidget(
+                gender: "male".translate(context),
                 image: "assets/male.png",
                 onPress: () {
                   setState(() => isPick = true);
@@ -159,8 +163,8 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                 },
                 isPick: isPick,
               ),
-              genderWidget(
-                gender: "Nữ",
+              GenderWidget(
+                gender: "female".translate(context),
                 image: "assets/female.png",
                 onPress: () {
                   setState(() => isPick = false);

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/product/widgets/choose_size.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
@@ -137,21 +138,21 @@ class _ProductPageState extends State<ProductPage> {
             const SizedBox(height: 10),
             const Divider(color: Colors.black),
             Row(
-              children: const [
-                Icon(FontAwesomeIcons.fileLines),
-                SizedBox(width: 5),
+              children: [
+                const Icon(FontAwesomeIcons.fileLines),
+                const SizedBox(width: 5),
                 Text(
-                  "Ghi chú",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "note".translate(context),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 5),
-                Text("Không bắt buộc"),
+                const SizedBox(width: 5),
+                Text("optional".translate(context)),
               ],
             ),
             const SizedBox(height: 10),
-            customTextInput(
+            CustomTextInput(
               controller: noteController,
-              hint: "Ghi chú",
+              hint: "note".translate(context),
               colorBorder: Colors.black87,
             ),
           ],
@@ -179,7 +180,9 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                 ),
                 onPressed: () {},
-                child: Text("Thêm ${numberFormat.format(number * 30000)}"),
+                child: Text(
+                  "${"add".translate(context)} ${numberFormat.format(number * 30000)}",
+                ),
               ),
             ),
           )

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
@@ -27,12 +28,12 @@ class BottomSheetOrder extends StatelessWidget {
             onTap: () => showMyBottomSheet(context),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
-                  "Tại bàn",
-                  style: TextStyle(color: Colors.white),
+                  "at_table".translate(context),
+                  style: const TextStyle(color: Colors.white),
                 ),
-                Icon(
+                const Icon(
                   Icons.keyboard_arrow_down_outlined,
                   color: Colors.white,
                 ),
@@ -73,14 +74,14 @@ class BottomSheetOrder extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               titleBottomSheet(
-                "Chọn phương thức giao hàng",
+                "choose_delivery_method".translate(context),
                 () => Navigator.pop(context),
               ),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: itemBottomSheet(
-                  title: "Tại bàn",
-                  content: "Vui lòng chọn quán",
+                  title: "at_table".translate(context),
+                  content: "please_select_store".translate(context),
                   image: "assets/coffee_logo.jpg",
                   onPress: () {},
                 ),
@@ -88,8 +89,8 @@ class BottomSheetOrder extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: itemBottomSheet(
-                  title: "Mang về",
-                  content: "Vui lòng chọn quán",
+                  title: "bring_back".translate(context),
+                  content: "please_select_store".translate(context),
                   image: "assets/coffee_logo.jpg",
                   onPress: () {},
                 ),

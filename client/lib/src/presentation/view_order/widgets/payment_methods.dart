@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'item_payment.dart';
@@ -16,11 +17,11 @@ class PaymentMethods extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
             child: Text(
-              "Phương thức thanh toán",
-              style: TextStyle(fontSize: 16),
+              "payment_methods".translate(context),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
           const Divider(),
@@ -28,13 +29,13 @@ class PaymentMethods extends StatelessWidget {
             value: 0,
             groupValue: value,
             image: "assets/momo.png",
-            title: "Ví điện tử Momo",
+            title: "momo_wallet".translate(context),
           ),
           itemPayment(
             value: 1,
             groupValue: value,
             image: "assets/cod.png",
-            title: "Thanh toán khi nhận hàng",
+            title: "payment_delivery".translate(context),
           ),
           const SizedBox(height: 5),
         ],

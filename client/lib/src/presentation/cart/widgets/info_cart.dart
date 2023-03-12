@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,7 +31,7 @@ class _InfoCartState extends State<InfoCart> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                const Text("Phương thức:"),
+                Text("${"method".translate(context)}:"),
                 const Spacer(),
                 SizedBox(
                   height: 40,
@@ -44,7 +45,7 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? unselectedColor : selectedColor,
                     ),
                     onPressed: () => setState(() => isBringBack = false),
-                    child: const Text("Tại Bàn"),
+                    child: Text("at_table".translate(context)),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -60,7 +61,7 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? selectedColor : unselectedColor,
                     ),
                     onPressed: () => setState(() => isBringBack = true),
-                    child: const Text("Mang về"),
+                    child: Text("bring_back".translate(context)),
                   ),
                 )
               ],
@@ -101,8 +102,8 @@ class _InfoCartState extends State<InfoCart> {
                 Expanded(
                   child: TextField(
                     controller: noteController,
-                    decoration: const InputDecoration(
-                      hintText: "Ghi chú đơn hàng",
+                    decoration: InputDecoration(
+                      hintText: "order_notes".translate(context),
                       border: InputBorder.none,
                     ),
                   ),

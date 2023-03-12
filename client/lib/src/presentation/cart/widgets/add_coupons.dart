@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 
@@ -29,12 +30,12 @@ class _AddCouponsState extends State<AddCoupons> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
               child: Row(
-                children: const [
-                  Icon(Icons.local_activity, color: Colors.red),
-                  SizedBox(width: 10),
-                  Text("Mã khuyến mãi"),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios_outlined),
+                children: [
+                  const Icon(Icons.local_activity, color: Colors.red),
+                  const SizedBox(width: 10),
+                  Text("promo_code".translate(context)),
+                  const Spacer(),
+                  const Icon(Icons.arrow_forward_ios_outlined),
                 ],
               ),
             ),
@@ -57,7 +58,7 @@ class _AddCouponsState extends State<AddCoupons> {
                   ],
                 ),
                 const Spacer(),
-                const Text("Đã áp dụng")
+                Text("already_applied".translate(context))
               ],
             ),
           )

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -19,8 +20,8 @@ class HeaderOrderPage extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           child: SizedBox(
             height: 40,
-            child: customTextInput(
-              hint: "Tìm kiếm tên món ăn",
+            child: CustomTextInput(
+              hint: "search_name_dish".translate(context),
               radius: 90,
               contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               textStyle: const TextStyle(fontSize: 13),

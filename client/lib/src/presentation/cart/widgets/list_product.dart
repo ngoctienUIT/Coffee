@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,14 +22,14 @@ class ListProduct extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: Row(
               children: [
-                const Text(
-                  "Danh sách sản phẩm",
-                  style: TextStyle(fontSize: 16),
+                Text(
+                  "list_products".translate(context),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const Spacer(),
                 TextButton(
                   onPressed: () {},
-                  child: const Text("Thêm sản phẩm"),
+                  child: Text("add_product".translate(context)),
                 )
               ],
             ),

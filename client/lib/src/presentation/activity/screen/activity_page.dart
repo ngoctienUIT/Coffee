@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/view_order/screen/view_order_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -71,9 +72,9 @@ class _ActivityPageState extends State<ActivityPage>
                 unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
                 unselectedLabelStyle: const TextStyle(fontSize: 16),
                 indicatorColor: Colors.green,
-                tabs: const [
-                  Tab(text: "Đang diễn ra"),
-                  Tab(text: "Lịch sử đặt hàng")
+                tabs: [
+                  Tab(text: "going_on".translate(context)),
+                  Tab(text: "order_history".translate(context)),
                 ],
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:coffee/src/presentation/signup/widgets/pick_country_number.dart';
@@ -7,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/route_function.dart';
 import '../../login/widgets/custom_button.dart';
-import '../../login/widgets/or_widget.dart';
 import '../../login/widgets/social_login_button.dart';
 import '../../main/screen/main_page.dart';
 
@@ -65,10 +65,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Image.asset("assets/coffee_logo.jpg", height: 200),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "Bắt đầu cuộc hành trình của bạn",
+                  Text(
+                    "start_journey".translate(context),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -86,10 +89,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: customTextInput(
+                        child: CustomTextInput(
                           controller: phoneController,
-                          hint: "Số điện thoại",
-                          typeInput: [TypeInput.phone],
+                          hint: "phone_number".translate(context),
+                          typeInput: const [TypeInput.phone],
                           keyboardType: TextInputType.phone,
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
@@ -101,7 +104,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   const SizedBox(height: 20),
                   customButton(
-                    text: "TIẾP TỤC",
+                    text: "continue".translate(context),
                     isOnPress: isContinue,
                     onPress: () {
                       if (_formKey.currentState!.validate()) {
@@ -113,7 +116,19 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  orWidget(),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Divider(thickness: 1, color: Colors.black54),
+                      ),
+                      const SizedBox(width: 10),
+                      Text("or".translate(context)),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Divider(thickness: 1, color: Colors.black54),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +149,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Đã có tài khoản?"),
+                      Text("${"already_have_account".translate(context)}?"),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pushReplacement(createRoute(
@@ -142,7 +157,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             begin: const Offset(0, 1),
                           ));
                         },
-                        child: const Text("Đăng nhập"),
+                        child: Text("login".translate(context)),
                       )
                     ],
                   ),

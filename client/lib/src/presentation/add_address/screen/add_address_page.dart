@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/add_address/widgets/country_dropdown.dart';
 import 'package:coffee/src/presentation/add_address/widgets/province_dropdown.dart';
 import 'package:coffee/src/presentation/add_address/widgets/ward_dropdown.dart';
@@ -32,9 +33,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
         elevation: 1,
-        title: const Text(
-          "Chỉnh sửa địa chỉ",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "edit_address".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -59,9 +60,10 @@ class _AddAddressPageState extends State<AddAddressPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Thông tin liên hệ",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  "contact_info".translate(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Card(
@@ -72,15 +74,15 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        customTextInput(
+                        CustomTextInput(
                           controller: nameController,
-                          hint: "Họ tên",
+                          hint: "full_name".translate(context),
                           isBorder: false,
                         ),
                         const Divider(color: Colors.black26, height: 1),
-                        customTextInput(
+                        CustomTextInput(
                           controller: phoneController,
-                          hint: "Số điện thoại",
+                          hint: "phone_number".translate(context),
                           isBorder: false,
                         ),
                         const Divider(color: Colors.black26, height: 1),
@@ -89,9 +91,10 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  "Thông tin địa chỉ",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  "edit_address".translate(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Card(
@@ -102,9 +105,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Column(
                       children: [
-                        countryDropdown(),
+                        const CountryDropdown(),
                         const Divider(color: Colors.black26, height: 1),
-                        provinceDropdown(
+                        ProvinceDropdown(
                           selectedValue:
                               province != null ? province!.name : null,
                           onChange: (value) {
@@ -116,7 +119,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                           },
                         ),
                         const Divider(color: Colors.black26, height: 1),
-                        districtDropdown(
+                        DistrictDropdown(
                           provinceID: province != null ? province!.id : null,
                           selectedValue:
                               district != null ? district!.name : null,
@@ -128,7 +131,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                           },
                         ),
                         const Divider(color: Colors.black26, height: 1),
-                        wardDropdown(
+                        WardDropdown(
                           provinceID: province != null ? province!.id : null,
                           districtID: district != null ? district!.id : null,
                           selectedValue: ward != null ? ward!.name : null,
@@ -137,10 +140,10 @@ class _AddAddressPageState extends State<AddAddressPage> {
                           },
                         ),
                         const Divider(color: Colors.black26, height: 1),
-                        customTextInput(
+                        CustomTextInput(
                           contentPadding: const EdgeInsets.only(left: 15),
                           controller: addressController,
-                          hint: "Địa chỉ",
+                          hint: "address".translate(context),
                           isBorder: false,
                         ),
                         const Divider(color: Colors.black26, height: 1),
@@ -149,9 +152,10 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  "Cài đặt",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  "setting".translate(context),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
                 Card(
@@ -161,9 +165,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   child: Row(
                     children: [
                       const SizedBox(width: 10),
-                      const Text(
-                        "Đặt làm mặc định",
-                        style: TextStyle(
+                      Text(
+                        "set_default".translate(context),
+                        style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
@@ -187,7 +191,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Center(
           child: customButton(
-            text: "Lưu",
+            text: "save".translate(context),
             isOnPress: true,
             onPress: () {},
           ),

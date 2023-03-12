@@ -20,11 +20,8 @@ class PickCountryNumber extends StatelessWidget {
         buttonDecoration: const BoxDecoration(color: Colors.white),
         isExpanded: true,
         hint: Text(
-          'Select Item',
-          style: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).hintColor,
-          ),
+          '+84',
+          style: TextStyle(fontSize: 14, color: Theme.of(context).hintColor),
         ),
         items: _addDividersAfterItems(items),
         customItemsHeights: _getCustomItemsHeights(),
@@ -71,10 +68,7 @@ class PickCountryNumber extends StatelessWidget {
           ),
           //If it's last item, we will not add Divider after it.
           if (item != items.last)
-            const DropdownMenuItem<String>(
-              enabled: false,
-              child: Divider(),
-            ),
+            const DropdownMenuItem<String>(enabled: false, child: Divider()),
         ],
       );
     }

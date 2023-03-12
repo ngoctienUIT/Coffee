@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 class CustomPickerWidget extends StatelessWidget {
@@ -33,9 +34,9 @@ class CustomPickerWidget extends StatelessWidget {
             ),
             const Spacer(),
             if (checkEdit)
-              const Text(
-                "chọn",
-                style: TextStyle(color: Colors.blue),
+              Text(
+                "select".translate(context),
+                style: const TextStyle(color: Colors.blue),
               ),
           ],
         ),

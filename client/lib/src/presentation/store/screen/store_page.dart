@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/data/models/store.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
@@ -65,9 +66,9 @@ class _StorePageState extends State<StorePage> {
                 Expanded(
                   child: SizedBox(
                     height: 40,
-                    child: customTextInput(
+                    child: CustomTextInput(
                       controller: searchAddressController,
-                      hint: "Tìm kiếm địa chỉ",
+                      hint: "address_search".translate(context),
                       radius: 90,
                       contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       textInputAction: TextInputAction.search,
@@ -83,7 +84,7 @@ class _StorePageState extends State<StorePage> {
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.map),
-                  label: const Text("Bản đồ"),
+                  label: Text("map".translate(context)),
                 ),
                 const SizedBox(width: 10),
               ],
@@ -117,6 +118,7 @@ class _StorePageState extends State<StorePage> {
       startDay: const TimeOfDay(hour: 7, minute: 0),
       endDay: const TimeOfDay(hour: 22, minute: 0),
     );
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -157,7 +159,11 @@ class _StorePageState extends State<StorePage> {
                         color: const Color.fromRGBO(52, 175, 84, 1),
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Text(store.checkOpen() ? "Mở" : "Đóng"),
+                      child: Text(
+                        store.checkOpen()
+                            ? "open".translate(context)
+                            : "close".translate(context),
+                      ),
                     ),
                     const SizedBox(width: 5),
                     Text(store.rangeTime())

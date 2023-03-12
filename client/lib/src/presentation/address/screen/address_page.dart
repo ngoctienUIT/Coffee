@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controls/route_function.dart';
@@ -12,9 +13,9 @@ class AddressPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 1,
         backgroundColor: Colors.white,
-        title: const Text(
-          "Địa chỉ của bạn",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "your_address".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -39,12 +40,12 @@ class AddressPage extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 child: Row(
-                  children: const [
-                    Icon(Icons.add),
-                    SizedBox(width: 10),
-                    Text("Thêm địa chỉ"),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios_outlined)
+                  children: [
+                    const Icon(Icons.add),
+                    const SizedBox(width: 10),
+                    Text("add_address".translate(context)),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios_outlined)
                   ],
                 ),
               ),
@@ -80,7 +81,7 @@ class AddressPage extends StatelessWidget {
                                       begin: const Offset(1, 0),
                                     ));
                                   },
-                                  child: const Text("Chỉnh sửa"),
+                                  child: Text("edit".translate(context)),
                                 ),
                               ],
                             ),

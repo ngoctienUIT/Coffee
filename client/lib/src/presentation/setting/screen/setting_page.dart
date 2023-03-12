@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +15,9 @@ class SettingPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Cài Đặt",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "setting".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -31,16 +32,24 @@ class SettingPage extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            groupItemOther("Cài Đặ̣t Tài Khoản", [
-              itemOther("Xóa tài khoản", Icons.delete_forever, () {}),
+            groupItemOther("account_settings".translate(context), [
+              itemOther(
+                "delete_account".translate(context),
+                Icons.delete_forever,
+                () {},
+              ),
             ]),
-            groupItemOther("Bảo Mật", [
-              itemOther("Thay đổi mật khẩu", Icons.lock, () {
-                Navigator.of(context).push(createRoute(
-                  screen: const ChangePasswordPage(),
-                  begin: const Offset(1, 0),
-                ));
-              }),
+            groupItemOther("security".translate(context), [
+              itemOther(
+                "change_password".translate(context),
+                Icons.lock,
+                () {
+                  Navigator.of(context).push(createRoute(
+                    screen: const ChangePasswordPage(),
+                    begin: const Offset(1, 0),
+                  ));
+                },
+              ),
             ]),
           ],
         ),

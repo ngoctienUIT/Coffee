@@ -1,40 +1,48 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../login/widgets/custom_button.dart';
 
-Widget bottomCartPage(Function onPress) {
-  return Container(
-    height: 150,
-    color: Colors.white,
-    padding: const EdgeInsets.symmetric(horizontal: 10),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Row(
-          children: const [
-            Text(
-              "Tổng cộng",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+class BottomCartPage extends StatelessWidget {
+  const BottomCartPage({Key? key, required this.onPress}) : super(key: key);
+
+  final VoidCallback onPress;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            children: [
+              Text(
+                "total".translate(context),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
-            ),
-            Spacer(),
-            Text(
-              "54.000đ",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            )
-          ],
-        ),
-        customButton(
-          text: "Hủy đơn",
-          onPress: () {},
-          isOnPress: true,
-        ),
-      ],
-    ),
-  );
+              const Spacer(),
+              const Text(
+                "54.000đ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              )
+            ],
+          ),
+          customButton(
+            text: "cancel_order".translate(context),
+            onPress: onPress,
+            isOnPress: true,
+          ),
+        ],
+      ),
+    );
+  }
 }

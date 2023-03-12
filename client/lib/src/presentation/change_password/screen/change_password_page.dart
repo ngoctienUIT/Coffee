@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
 import 'package:flutter/material.dart';
@@ -54,37 +55,38 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Thay đổi mật khẩu",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              Text(
+                "change_password".translate(context),
+                style:
+                    const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              const Text("Mật khẩu cần dài ít nhất 8 ký tự"),
+              Text("password_needs_characters".translate(context)),
               const SizedBox(height: 10),
-              customPasswordInput(
+              CustomPasswordInput(
                 controller: oldPasswordController,
-                hint: "Nhập mật khẩu cũ",
+                hint: "enter_old_password".translate(context),
                 hide: hide,
                 onPress: () => setState(() => hide = !hide),
               ),
               const SizedBox(height: 10),
-              customPasswordInput(
+              CustomPasswordInput(
                 controller: newPasswordController,
-                hint: "Nhập mật khẩu mới",
+                hint: "enter_new_password".translate(context),
                 hide: hide,
                 onPress: () => setState(() => hide = !hide),
               ),
               const SizedBox(height: 10),
-              customPasswordInput(
+              CustomPasswordInput(
                 controller: confirmPasswordController,
                 confirmPassword: newPasswordController.text,
-                hint: "Xác nhận mật khẩu",
+                hint: "confirm_password".translate(context),
                 hide: hide,
                 onPress: () => setState(() => hide = !hide),
               ),
               const Spacer(),
               customButton(
-                text: "Thay đổi mật khẩu",
+                text: "change_password".translate(context),
                 isOnPress: isContinue,
                 onPress: () {
                   if (_formKey.currentState!.validate()) {

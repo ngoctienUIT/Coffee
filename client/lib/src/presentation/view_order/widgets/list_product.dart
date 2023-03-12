@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/data_app.dart';
@@ -16,11 +17,11 @@ class ListProduct extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: Text(
-              "Danh sách sản phẩm",
-              style: TextStyle(fontSize: 16),
+              "list_products".translate(context),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
           const Divider(),

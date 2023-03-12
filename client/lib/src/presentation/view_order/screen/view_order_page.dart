@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/add_coupons.dart';
@@ -16,9 +17,9 @@ class ViewOrderPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Tên khách hàng",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "customer_name".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -49,7 +50,7 @@ class ViewOrderPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: bottomCartPage(() {}),
+      bottomSheet: BottomCartPage(onPress: () {}),
     );
   }
 }

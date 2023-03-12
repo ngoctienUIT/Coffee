@@ -12,14 +12,15 @@ Widget buildListSpecialOffer() {
       itemCount: listSpecialOffer.length,
       itemBuilder: (context, index) {
         return InkWell(
-            borderRadius: BorderRadius.circular(15),
-            onTap: () {
-              Navigator.of(context).push(createRoute(
-                screen: ViewSpecialOfferPage(index: index),
-                begin: const Offset(0, 1),
-              ));
-            },
-            child: buildSpecialOffer(index));
+          borderRadius: BorderRadius.circular(15),
+          onTap: () {
+            Navigator.of(context).push(createRoute(
+              screen: ViewSpecialOfferPage(index: index),
+              begin: const Offset(0, 1),
+            ));
+          },
+          child: buildSpecialOffer(index),
+        );
       },
     ),
   );

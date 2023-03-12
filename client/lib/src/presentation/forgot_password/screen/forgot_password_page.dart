@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
@@ -48,19 +49,18 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     height: 200,
                   ),
                 ),
-                const Text("Quên mật khẩu của bạn"),
+                Text("forgot_your_password".translate(context)),
                 const SizedBox(height: 20),
-                customTextInput(
+                CustomTextInput(
                   controller: controller,
-                  hint: "Email/Số điện thoại",
-                  typeInput: [TypeInput.phone, TypeInput.email],
+                  hint: "email_phone_number".translate(context),
+                  typeInput: const [TypeInput.phone, TypeInput.email],
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                    "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"),
+                Text("enter_email_phone_reset_password".translate(context)),
                 const SizedBox(height: 50),
                 customButton(
-                  text: "Tiếp tục",
+                  text: "continue".translate(context),
                   onPress: () {
                     if (_formKey.currentState!.validate()) {}
                   },

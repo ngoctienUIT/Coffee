@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/home/widgets/membership_card.dart';
@@ -53,18 +54,18 @@ class HomePage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              membershipCard(),
+              const MembershipCard(),
               const SizedBox(height: 10),
               buildListItemProduct(),
               const SizedBox(height: 20),
               descriptionLine(
-                text: "Khuyến mãi",
+                text: "promotion".translate(context),
                 color: const Color.fromRGBO(80, 45, 30, 1),
               ),
               buildListSpecialOffer(),
               const SizedBox(height: 20),
               descriptionLine(
-                text: "Sản phẩm bán chạy",
+                text: "selling_products".translate(context),
                 color: const Color.fromRGBO(80, 45, 30, 1),
               ),
               buildListSellingProducts(),

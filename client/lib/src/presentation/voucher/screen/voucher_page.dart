@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/voucher/widgets/ticket_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,9 @@ class VoucherPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Ưu đãi của bạn",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "your_offer".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(

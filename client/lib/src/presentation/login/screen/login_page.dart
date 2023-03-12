@@ -1,7 +1,7 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/forgot_password/screen/forgot_password_page.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
-import 'package:coffee/src/presentation/login/widgets/or_widget.dart';
 import 'package:coffee/src/presentation/login/widgets/social_login_button.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
@@ -65,25 +65,28 @@ class _LoginPageState extends State<LoginPage> {
                     child: Image.asset("assets/coffee_logo.jpg", height: 200),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Chào mừng trở lại",
+                  Text(
+                    "welcome_back".translate(context),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  customTextInput(
+                  CustomTextInput(
                     controller: phoneController,
-                    hint: "Số điện thoại",
+                    hint: "phone_number".translate(context),
                     keyboardType: TextInputType.phone,
-                    typeInput: [TypeInput.phone],
+                    typeInput: const [TypeInput.phone],
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  customPasswordInput(
+                  CustomPasswordInput(
                     controller: passwordController,
-                    hint: "Mật khẩu",
+                    hint: "password".translate(context),
                     onPress: () => setState(() => hide = !hide),
                     hide: hide,
                   ),
@@ -97,13 +100,13 @@ class _LoginPageState extends State<LoginPage> {
                             begin: const Offset(1, 0),
                           ));
                         },
-                        child: const Text("Quên mật khẩu?"),
+                        child: Text("${"forgot_password".translate(context)}?"),
                       )
                     ],
                   ),
                   const SizedBox(height: 10),
                   customButton(
-                    text: "TIẾP TỤC",
+                    text: "continue".translate(context).toUpperCase(),
                     isOnPress: isContinue,
                     onPress: () {
                       if (_formKey.currentState!.validate()) {
@@ -115,7 +118,19 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  orWidget(),
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Divider(thickness: 1, color: Colors.black54),
+                      ),
+                      const SizedBox(width: 10),
+                      Text("or".translate(context)),
+                      const SizedBox(width: 10),
+                      const Expanded(
+                        child: Divider(thickness: 1, color: Colors.black54),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -135,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Khách hàng mới?"),
+                      Text("${"new_customer".translate(context)}?"),
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pushReplacement(createRoute(
@@ -143,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                             begin: const Offset(0, 1),
                           ));
                         },
-                        child: const Text("Tạo một tài khoản"),
+                        child: Text("create_account".translate(context)),
                       )
                     ],
                   ),

@@ -1,3 +1,4 @@
+import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/data/models/cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/add_coupons.dart';
 import 'package:coffee/src/presentation/cart/widgets/bottom_cart_page.dart';
@@ -24,9 +25,9 @@ class _CartPageState extends State<CartPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
         elevation: 0,
-        title: const Text(
-          "Giỏ hàng",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "cart".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -37,7 +38,10 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () {}, child: const Text("Xóa giỏ hàng")),
+          TextButton(
+            onPressed: () {},
+            child: Text("clear_cart".translate(context)),
+          ),
         ],
       ),
       body: Padding(
@@ -60,7 +64,7 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ),
-      bottomSheet: bottomCartPage(() {}),
+      bottomSheet: BottomCartPage(onPress: () {}),
     );
   }
 }
