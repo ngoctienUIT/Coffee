@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,10 @@ class BodyOtherPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            groupItemOther("Thông tin chung", [
-              itemOther("Chính sách", Icons.file_copy, () {}),
+            groupItemOther("general_info".translate(context), [
+              itemOther("policy".translate(context), Icons.file_copy, () {}),
               const Divider(),
-              itemOther("Thông tin ứng dụng", Icons.info, () {
+              itemOther("app_info".translate(context), Icons.info, () {
                 Navigator.of(context).push(createRoute(
                   screen: const InfoPage(),
                   begin: const Offset(1, 0),
@@ -36,7 +37,7 @@ class BodyOtherPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: customButton(
-                text: "Đăng xuất",
+                text: "logout".translate(context),
                 isOnPress: true,
                 onPress: () {
                   Navigator.of(context).pushReplacement(createRoute(

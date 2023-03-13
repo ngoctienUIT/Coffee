@@ -49,7 +49,7 @@ class ViewOrderPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: bottomCartPage(() {}),
+      bottomSheet: BottomCartPage(onPress: () {}),
     );
   }
 }

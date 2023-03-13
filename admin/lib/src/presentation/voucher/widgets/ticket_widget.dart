@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -73,7 +74,7 @@ class TicketWidget extends StatelessWidget {
                         Text(title),
                         const Spacer(),
                         Text(
-                          "Hết hạn ${DateFormat("dd/MM/yyyy").format(date)}",
+                          "${"expired".translate(context)} ${DateFormat("dd/MM/yyyy").format(date)}",
                         ),
                       ],
                     ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -20,7 +21,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
         ),
         child: Column(
           children: [
-            itemAction("Chụp hình", () async {
+            itemAction("take_photo".translate(context), () async {
               Navigator.pop(context);
               var status = await Permission.camera.status;
               if (status.isDenied) {
@@ -29,7 +30,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
               status = await Permission.camera.status;
               if (status.isGranted) onPick(await pickAvatar(true));
             }),
-            itemAction("Chọn hình từ thư viện", () async {
+            itemAction("select_image_gallery".translate(context), () async {
               Navigator.pop(context);
               var status = await Permission.storage.status;
               if (status.isDenied) {
@@ -38,9 +39,10 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
               status = await Permission.storage.status;
               if (status.isGranted) onPick(await pickAvatar(false));
             }),
-            itemAction("Xem hình sản phẩm", () {}),
-            itemAction("Xóa hình sản phẩm", () {}),
-            itemAction("Hủy", () => Navigator.pop(context)),
+            itemAction("see_product_picture".translate(context), () {}),
+            itemAction("delete_product_image".translate(context), () {}),
+            itemAction(
+                "cancel".translate(context), () => Navigator.pop(context)),
           ],
         ),
       );
@@ -75,10 +77,7 @@ Widget itemAction(String text, Function onPress) {
       child: Center(
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -37,9 +38,9 @@ class _AddVoucherPageState extends State<AddVoucherPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Thêm voucher",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "add_voucher".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -54,7 +55,7 @@ class _AddVoucherPageState extends State<AddVoucherPage> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {}
             },
-            child: const Text("Lưu"),
+            child: Text("save".translate(context)),
           ),
         ],
       ),
@@ -77,35 +78,35 @@ class _AddVoucherPageState extends State<AddVoucherPage> {
                       : Image.file(image!, height: 150, width: 150),
                 ),
                 const SizedBox(height: 30),
-                descriptionLine(text: "Tiêu đề voucher"),
+                descriptionLine(text: "voucher_title".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: titleController,
-                  hint: "Tiêu đề voucher",
-                  title: "tiêu đề",
+                  hint: "voucher_title".translate(context),
+                  title: "title".translate(context).toLowerCase(),
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Ngày hết hạn"),
+                descriptionLine(text: "expiration_date".translate(context)),
                 const SizedBox(height: 10),
                 CustomPickerWidget(
                   text: DateFormat("dd/MM/yyyy").format(selectedDate),
                   onPress: () => selectDate(),
                 ),
-                descriptionLine(text: "Khuyến mãi"),
+                descriptionLine(text: "promotion".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: specialController,
                   hint: "100.000đ",
                   keyboardType: TextInputType.number,
-                  title: "khuyến mãi",
+                  title: "promotion".translate(context).toLowerCase(),
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Nội dung voucher"),
+                descriptionLine(text: "voucher_content".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: contentController,
-                  hint: "Nội dung voucher",
-                  title: "nội dung voucher",
+                  hint: "voucher_content".translate(context),
+                  title: "voucher_content".translate(context).toLowerCase(),
                 ),
               ],
             ),

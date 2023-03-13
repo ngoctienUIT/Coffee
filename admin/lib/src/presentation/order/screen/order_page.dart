@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/header_order.dart';
 import 'package:coffee_admin/src/presentation/view_order/screen/view_order_page.dart';
 import 'package:flutter/material.dart';
@@ -108,9 +109,11 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
                             .format(DateTime.now())),
                       ),
                       const SizedBox(height: 10),
-                      const Align(
+                      Align(
                         alignment: Alignment.centerRight,
-                        child: Text("Tổng đơn: 500.000đ"),
+                        child: Text(
+                          "${"total_order".translate(context)}: 500.000đ",
+                        ),
                       ),
                     ],
                   ),
@@ -119,23 +122,23 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
             ),
             const Divider(),
             const SizedBox(height: 10),
-            const Align(
+            Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "Thành tiền: 500.000đ",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                "${"into_money".translate(context)}: 500.000đ",
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 10),
             const Divider(),
             const SizedBox(height: 10),
             Row(
-              children: const [
-                Text("Tình trạng giao hàng"),
-                Spacer(),
+              children: [
+                Text("delivery_status".translate(context)),
+                const Spacer(),
                 Text(
-                  "ĐÃ GIAO",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  "delivered".translate(context).toUpperCase(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),

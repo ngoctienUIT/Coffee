@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
 import 'package:coffee_admin/src/presentation/special_offer/screen/special_offer_page.dart';
@@ -41,26 +42,26 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.cartShopping),
-            label: 'Đơn hàng',
+            icon: const Icon(FontAwesomeIcons.cartShopping),
+            label: 'order'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.productHunt),
-            label: 'Sản phẩm',
+            icon: const Icon(FontAwesomeIcons.productHunt),
+            label: 'product'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.gift),
-            label: 'Voucher',
+            icon: const Icon(FontAwesomeIcons.gift),
+            label: 'voucher'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.gifts),
-            label: 'Khuyến mãi',
+            icon: const Icon(FontAwesomeIcons.gifts),
+            label: 'promotion'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.bars),
-            label: 'Khác',
+            icon: const Icon(FontAwesomeIcons.bars),
+            label: 'other'.translate(context),
           ),
         ],
         type: BottomNavigationBarType.fixed,

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -36,9 +37,9 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Thêm khuyến mãi",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "add_promotion".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -53,7 +54,7 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {}
             },
-            child: const Text("Lưu"),
+            child: Text("save".translate(context)),
           ),
         ],
       ),
@@ -76,15 +77,15 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
                       : Image.file(image!, height: 150, width: 150),
                 ),
                 const SizedBox(height: 30),
-                descriptionLine(text: "Tiêu đề khuyến mãi"),
+                descriptionLine(text: "promotion_title".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: titleController,
-                  hint: "Tiêu đề khuyến mãi",
-                  title: "tiêu đề",
+                  hint: "promotion_title".translate(context),
+                  title: "title".translate(context).toLowerCase(),
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Ngày bắt đầu"),
+                descriptionLine(text: "start_day".translate(context)),
                 const SizedBox(height: 10),
                 CustomPickerWidget(
                   text: DateFormat("dd/MM/yyyy").format(startDate),
@@ -101,7 +102,7 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
                   },
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Ngày bắt đầu"),
+                descriptionLine(text: "finish_date".translate(context)),
                 const SizedBox(height: 10),
                 CustomPickerWidget(
                   text: DateFormat("dd/MM/yyyy").format(finishDate),
@@ -118,12 +119,13 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
                   },
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Nội dung khuyến mãi"),
+                descriptionLine(text: "promotional_content".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: contentController,
-                  hint: "Mô tả khuyến mãi",
-                  title: "mô tả khuyến mãi",
+                  hint: "promotion_description".translate(context),
+                  title:
+                      "promotion_description".translate(context).toLowerCase(),
                 ),
               ],
             ),

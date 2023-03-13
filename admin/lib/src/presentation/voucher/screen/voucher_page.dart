@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controls/function/route_function.dart';
@@ -15,9 +16,9 @@ class VoucherPage extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          "Tất cả voucher",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "all_vouchers".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
       ),
       body: SafeArea(

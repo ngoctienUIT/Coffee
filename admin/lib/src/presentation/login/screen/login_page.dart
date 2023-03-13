@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -60,30 +61,33 @@ class _LoginPageState extends State<LoginPage> {
                     child: Image.asset("assets/coffee_logo.jpg", height: 200),
                   ),
                   const SizedBox(height: 30),
-                  const Text(
-                    "Chào mừng Admin",
+                  Text(
+                    "welcome_admin".translate(context),
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 40),
-                  customTextInput(
+                  CustomTextInput(
                     controller: phoneController,
                     hint: "Username",
-                    typeInput: [TypeInput.text],
+                    typeInput: const [TypeInput.text],
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  customPasswordInput(
+                  CustomPasswordInput(
                     controller: passwordController,
-                    hint: "Mật khẩu",
+                    hint: "password".translate(context),
                     onPress: () => setState(() => hide = !hide),
                     hide: hide,
                   ),
                   const SizedBox(height: 30),
                   customButton(
-                    text: "TIẾP TỤC",
+                    text: "continue".translate(context).toUpperCase(),
                     isOnPress: isContinue,
                     onPress: () {
                       if (_formKey.currentState!.validate()) {

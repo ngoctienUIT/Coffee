@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:coffee_admin/src/presentation/add_special_offer/screen/add_special_offer.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,9 @@ class SpecialOfferPage extends StatelessWidget {
         backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
         elevation: 0,
         centerTitle: true,
-        title: const Text(
-          "Tất cả khuyến mãi",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "all_promotions".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
       ),
       body: const BuildGridSpecialOffer(),

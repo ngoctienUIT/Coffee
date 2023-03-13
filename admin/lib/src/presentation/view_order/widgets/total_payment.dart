@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 class TotalPayment extends StatelessWidget {
@@ -14,25 +15,33 @@ class TotalPayment extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Tính tiền",
-              style: TextStyle(fontSize: 16),
+            Text(
+              "prepare_bill".translate(context),
+              style: const TextStyle(fontSize: 16),
             ),
             const Divider(),
             Row(
-              children: const [Text("Tổng phụ"), Spacer(), Text("54.000đ")],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: const [
-                Text("Mã giảm giá"),
-                Spacer(),
-                Text("54.000đ")
+              children: [
+                Text("subtotal".translate(context)),
+                const Spacer(),
+                const Text("54.000đ"),
               ],
             ),
             const SizedBox(height: 10),
             Row(
-              children: const [Text("Tổng cộng"), Spacer(), Text("54.000đ")],
+              children: [
+                Text("discount_code".translate(context)),
+                const Spacer(),
+                const Text("54.000đ")
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Text("total".translate(context)),
+                const Spacer(),
+                const Text("54.000đ"),
+              ],
             ),
           ],
         ),

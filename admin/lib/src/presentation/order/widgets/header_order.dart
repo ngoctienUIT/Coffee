@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 
 class HeaderOrderPage extends StatelessWidget {
@@ -19,12 +20,12 @@ class HeaderOrderPage extends StatelessWidget {
         unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
         unselectedLabelStyle: const TextStyle(fontSize: 16),
         indicatorColor: Colors.green,
-        tabs: const [
-          Tab(text: "Tất cả"),
-          Tab(text: "Chưa giao"),
-          Tab(text: "Đang giao"),
-          Tab(text: "Đã giao"),
-          Tab(text: "Đã hủy"),
+        tabs: [
+          Tab(text: "all".translate(context)),
+          Tab(text: "not_delivery".translate(context)),
+          Tab(text: "delivering".translate(context)),
+          Tab(text: "delivered".translate(context)),
+          Tab(text: "cancelled".translate(context)),
         ],
       ),
     );

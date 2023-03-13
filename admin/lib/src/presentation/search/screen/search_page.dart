@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,9 +23,9 @@ class _SearchPageState extends State<SearchPage> {
         elevation: 0,
         title: SizedBox(
           height: 40,
-          child: customTextInput(
+          child: CustomTextInput(
             controller: searchFoodController,
-            hint: "Tìm kiếm tên món ăn",
+            hint: "search_name_dish".translate(context),
             radius: 90,
             contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             textInputAction: TextInputAction.search,

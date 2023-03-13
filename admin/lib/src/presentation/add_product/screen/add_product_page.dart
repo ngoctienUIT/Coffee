@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_text_input.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/description_line.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,9 @@ class _AddProductPageState extends State<AddProductPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Thêm sản phẩm",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          "add_products".translate(context),
+          style: const TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -52,7 +53,7 @@ class _AddProductPageState extends State<AddProductPage> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {}
             },
-            child: const Text("Lưu"),
+            child: Text("save".translate(context)),
           ),
         ],
       ),
@@ -74,29 +75,29 @@ class _AddProductPageState extends State<AddProductPage> {
                       : Image.file(image!, height: 150, width: 150),
                 ),
                 const SizedBox(height: 30),
-                descriptionLine(text: "Tên sản phẩm"),
+                descriptionLine(text: "product_name".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: nameController,
-                  hint: "Tên sản phẩm",
-                  title: "tên sản phẩm",
+                  hint: "product_name".translate(context),
+                  title: "product_name".translate(context).toLowerCase(),
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Giá sản phẩm"),
+                descriptionLine(text: "product_price".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: priceController,
                   hint: "100.000đ",
-                  title: "giá sản phẩm",
+                  title: "product_price".translate(context).toLowerCase(),
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
-                descriptionLine(text: "Mô tả sản phẩm"),
+                descriptionLine(text: "product_description".translate(context)),
                 const SizedBox(height: 10),
-                customTextInput(
+                CustomTextInput(
                   controller: descriptionController,
-                  hint: "Mô tả sản phẩm",
-                  title: "mô tả sản phẩm",
+                  hint: "product_description".translate(context),
+                  title: "product_description".translate(context).toLowerCase(),
                 ),
               ],
             ),

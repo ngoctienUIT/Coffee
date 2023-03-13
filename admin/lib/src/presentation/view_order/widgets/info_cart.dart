@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/controls/extension/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -20,7 +21,7 @@ class InfoCart extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                const Text("Phương thức:"),
+                Text("${"method".translate(context)}:"),
                 const Spacer(),
                 Container(
                   height: 40,
@@ -29,10 +30,10 @@ class InfoCart extends StatelessWidget {
                     color: isBringBack ? unselectedColor : selectedColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Tại bàn",
-                      style: TextStyle(
+                      "at_table".translate(context),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -47,10 +48,10 @@ class InfoCart extends StatelessWidget {
                     color: isBringBack ? selectedColor : unselectedColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Mang về",
-                      style: TextStyle(
+                      "bring_back".translate(context),
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -101,10 +102,10 @@ class InfoCart extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Row(
-              children: const [
-                Icon(FontAwesomeIcons.fileLines),
-                SizedBox(width: 5),
-                Expanded(child: Text("Không có")),
+              children: [
+                const Icon(FontAwesomeIcons.fileLines),
+                const SizedBox(width: 5),
+                Expanded(child: Text("not_have".translate(context))),
               ],
             ),
           ),
