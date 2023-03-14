@@ -1,5 +1,5 @@
+import 'package:coffee/src/controls/extension/int_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../data/data_app.dart';
 import '../../product/widgets/choose_quantity.dart';
@@ -17,7 +17,6 @@ class ItemProduct extends StatefulWidget {
 
 class _ItemProductState extends State<ItemProduct> {
   int number = 1;
-  final numberFormat = NumberFormat.currency(locale: "vi_VI");
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _ItemProductState extends State<ItemProduct> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 10),
-                    Text(numberFormat.format(30000 * number)),
+                    Text((30000 * number).toCurrency()),
                   ],
                 ),
               ),

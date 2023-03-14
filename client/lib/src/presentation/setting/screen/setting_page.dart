@@ -1,5 +1,6 @@
 import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
+import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 
 import '../../../controls/function/route_function.dart';
@@ -12,22 +13,7 @@ class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "setting".translate(context),
-          style: const TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: AppBarGeneral(title: "setting".translate(context), elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

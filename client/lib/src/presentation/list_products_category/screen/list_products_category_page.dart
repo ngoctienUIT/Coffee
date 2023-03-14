@@ -1,6 +1,6 @@
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
+import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../data/data_app.dart';
 import '../../order/widgets/grid_item_order.dart';
@@ -22,30 +22,10 @@ class _ListProductsCategoryPageState extends State<ListProductsCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+      appBar: AppBarGeneral(
+        title: listItemProduct[widget.index]["name"]!,
         elevation: 0,
-        title: Text(
-          listItemProduct[widget.index]["name"]!,
-          style: const TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.close,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.grey,
-            ),
-          )
-        ],
+        icon: Icons.close,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -55,9 +35,7 @@ class _ListProductsCategoryPageState extends State<ListProductsCategoryPage> {
               children: [
                 const Spacer(),
                 InkWell(
-                  onTap: () {
-                    setState(() => check = true);
-                  },
+                  onTap: () => setState(() => check = true),
                   child: Icon(
                     Icons.menu,
                     color: check ? Colors.red : Colors.grey,
@@ -65,9 +43,7 @@ class _ListProductsCategoryPageState extends State<ListProductsCategoryPage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    setState(() => check = false);
-                  },
+                  onTap: () => setState(() => check = false),
                   child: Icon(
                     Icons.grid_view_rounded,
                     color: check ? Colors.grey : Colors.red,

@@ -20,7 +20,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   AddressAPI addressAPI = AddressAPI();
-  String? selectedValue;
 
   @override
   Widget build(BuildContext context) {

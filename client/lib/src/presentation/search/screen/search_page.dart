@@ -1,8 +1,5 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/presentation/search/widgets/app_bar_search.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../signup/widgets/custom_text_input.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -19,34 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-        elevation: 0,
-        title: SizedBox(
-          height: 40,
-          child: CustomTextInput(
-            controller: searchFoodController,
-            hint: "search_name_dish".translate(context),
-            radius: 90,
-            contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            textInputAction: TextInputAction.search,
-            textStyle: const TextStyle(fontSize: 13),
-            backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-            suffixIcon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
+      appBar: AppBarSearch(controller: searchFoodController),
       body: Column(
         children: [
           Padding(

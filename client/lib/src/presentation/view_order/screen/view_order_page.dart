@@ -1,4 +1,5 @@
 import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/add_coupons.dart';
@@ -14,21 +15,9 @@ class ViewOrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+      appBar: AppBarGeneral(
+        title: "customer_name".translate(context),
         elevation: 0,
-        title: Text(
-          "customer_name".translate(context),
-          style: const TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),

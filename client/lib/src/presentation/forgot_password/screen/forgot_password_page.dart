@@ -1,7 +1,9 @@
 import 'package:coffee/src/controls/extension/string_extension.dart';
-import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
-import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
+
+import '../../login/widgets/custom_button.dart';
+import '../../signup/widgets/custom_text_input.dart';
+import '../../voucher/widgets/app_bar_general.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -23,17 +25,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
-          ),
-        ),
-      ),
+      appBar: const AppBarGeneral(elevation: 0),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
