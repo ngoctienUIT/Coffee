@@ -137,6 +137,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
             const SizedBox(height: 10),
             const Divider(color: Colors.black),
+            const SizedBox(height: 10),
             Row(
               children: [
                 const Icon(FontAwesomeIcons.fileLines),
@@ -149,7 +150,7 @@ class _ProductPageState extends State<ProductPage> {
                 Text("optional".translate(context)),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 15),
             CustomTextInput(
               controller: noteController,
               hint: "note".translate(context),

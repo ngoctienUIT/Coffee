@@ -17,9 +17,10 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final PageStorageBucket bucket = PageStorageBucket();
-  DateTime? currentBackPressTime;
   int currentTab = 0;
+  DateTime? currentBackPressTime;
+  final PageStorageBucket bucket = PageStorageBucket();
+  final PageController _pageController = PageController();
   List<Widget> screens = [
     const HomePage(key: PageStorageKey<String>('HomePage')),
     const OrderPage(key: PageStorageKey<String>('OrderPage')),
@@ -29,6 +30,12 @@ class _MainPageState extends State<MainPage> {
   ];
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: WillPopScope(
@@ -36,9 +43,13 @@ class _MainPageState extends State<MainPage> {
           action: (now) => currentBackPressTime = now,
           currentBackPressTime: currentBackPressTime,
         ),
-        child: PageStorage(
-          bucket: bucket,
-          child: screens[currentTab],
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: screens.length,
+          onPageChanged: (value) => setState(() => currentTab = value),
+          itemBuilder: (context, index) {
+            return PageStorage(bucket: bucket, child: screens[index]);
+          },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -69,9 +80,16 @@ class _MainPageState extends State<MainPage> {
         selectedItemColor: const Color.fromRGBO(173, 149, 121, 1),
         unselectedItemColor: Colors.grey,
         iconSize: 20,
-        backgroundColor: Colors.white,
-        onTap: (value) => setState(() => currentTab = value),
         elevation: 10,
+        backgroundColor: Colors.white,
+        onTap: (value) {
+          _pageController.animateToPage(
+            value,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+          setState(() => currentTab = value);
+        },
       ),
     );
   }
