@@ -4,9 +4,7 @@ import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../profile/screen/profile_page.dart';
-import '../../search/screen/search_page.dart';
+import '../../activity/widgets/custom_app_bar.dart';
 import '../widgets/bottom_sheet.dart';
 
 class StorePage extends StatefulWidget {
@@ -29,34 +27,7 @@ class _StorePageState extends State<StorePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(
-              screen: const ProfilePage(),
-              begin: const Offset(1, 0),
-            ));
-          },
-          borderRadius: BorderRadius.circular(90),
-          child: ClipOval(child: Image.asset("assets/coffee_logo.jpg")),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(createRoute(
-                screen: const SearchPage(),
-                begin: const Offset(1, 0),
-              ));
-            },
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.grey,
-            ),
-          )
-        ],
-      ),
+      appBar: const CustomAppBar(elevation: 0),
       body: SafeArea(
         child: Column(
           children: [

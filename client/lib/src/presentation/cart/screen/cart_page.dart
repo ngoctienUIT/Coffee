@@ -1,6 +1,6 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/data/models/cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/add_coupons.dart';
+import 'package:coffee/src/presentation/cart/widgets/app_bar_cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/bottom_cart_page.dart';
 import 'package:coffee/src/presentation/cart/widgets/info_cart.dart';
 import 'package:coffee/src/presentation/cart/widgets/list_product.dart';
@@ -22,28 +22,7 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-        elevation: 0,
-        title: Text(
-          "cart".translate(context),
-          style: const TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text("clear_cart".translate(context)),
-          ),
-        ],
-      ),
+      appBar: AppBarCart(clearCart: () {}),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(

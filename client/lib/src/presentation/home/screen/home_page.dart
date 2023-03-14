@@ -2,12 +2,10 @@ import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/cart/screen/cart_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/home/widgets/membership_card.dart';
-import 'package:coffee/src/presentation/search/screen/search_page.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../controls/function/route_function.dart';
-import '../../profile/screen/profile_page.dart';
+import '../../activity/widgets/custom_app_bar.dart';
 import '../widgets/build_item_product.dart';
 import '../widgets/build_selling_products.dart';
 import '../widgets/build_special_offer.dart';
@@ -20,34 +18,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        // elevation: 0,
-        leading: InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(
-              screen: const ProfilePage(),
-              begin: const Offset(1, 0),
-            ));
-          },
-          borderRadius: BorderRadius.circular(90),
-          child: ClipOval(child: Image.asset("assets/coffee_logo.jpg")),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(createRoute(
-                screen: const SearchPage(),
-                begin: const Offset(1, 0),
-              ));
-            },
-            icon: const Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.grey,
-            ),
-          )
-        ],
-      ),
+      appBar: const CustomAppBar(),
       body: RefreshIndicator(
         onRefresh: () async {},
         child: SingleChildScrollView(
