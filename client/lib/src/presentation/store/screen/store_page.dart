@@ -4,9 +4,10 @@ import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
+import '../widgets/bottom_sheet.dart';
 
 class StorePage extends StatefulWidget {
   const StorePage({Key? key}) : super(key: key);
@@ -94,9 +95,10 @@ class _StorePageState extends State<StorePage> {
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: 15,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {},
+                    onTap: () => showStoreBottomSheet(context),
                     child: itemStore(),
                   );
                 },
@@ -123,7 +125,7 @@ class _StorePageState extends State<StorePage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      elevation: 0,
+      elevation: 1,
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -142,7 +144,9 @@ class _StorePageState extends State<StorePage> {
                   store.name,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
+                const SizedBox(height: 5),
                 Text(store.address),
+                const SizedBox(height: 5),
                 Row(
                   children: [
                     const Icon(Icons.phone),
@@ -150,11 +154,12 @@ class _StorePageState extends State<StorePage> {
                     Text(store.phone),
                   ],
                 ),
+                const SizedBox(height: 5),
                 Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: const Color.fromRGBO(52, 175, 84, 1),
                         borderRadius: BorderRadius.circular(15),
@@ -163,9 +168,13 @@ class _StorePageState extends State<StorePage> {
                         store.checkOpen()
                             ? "open".translate(context)
                             : "close".translate(context),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(width: 8),
                     Text(store.rangeTime())
                   ],
                 ),

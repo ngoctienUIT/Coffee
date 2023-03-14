@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../../data/data_app.dart';
 import '../../product/screen/product_page.dart';
 

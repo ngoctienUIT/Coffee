@@ -2,7 +2,7 @@ import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 
 class AddCoupons extends StatefulWidget {
   const AddCoupons({Key? key}) : super(key: key);

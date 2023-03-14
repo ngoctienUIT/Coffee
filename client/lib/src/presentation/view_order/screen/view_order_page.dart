@@ -45,7 +45,7 @@ class ViewOrderPage extends StatelessWidget {
               const TotalPayment(),
               const SizedBox(height: 10),
               const PaymentMethods(value: 1),
-              const SizedBox(height: 200),
+              const SizedBox(height: 170),
             ],
           ),
         ),

@@ -1,11 +1,11 @@
-import 'package:coffee/src/language/bloc/language_cubit.dart';
-import 'package:coffee/src/language/bloc/language_state.dart';
-import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'src/language/bloc/language_cubit.dart';
+import 'src/language/bloc/language_state.dart';
 import 'src/language/localization/app_localizations_setup.dart';
+import 'src/presentation/login/screen/login_page.dart';
 
 int? language;
 

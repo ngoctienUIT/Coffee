@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
 
@@ -151,6 +151,7 @@ class _ActivityPageState extends State<ActivityPage>
                 ],
               ),
             ),
+            const SizedBox(width: 5),
             const Icon(Icons.arrow_forward_ios_outlined)
           ],
         ),

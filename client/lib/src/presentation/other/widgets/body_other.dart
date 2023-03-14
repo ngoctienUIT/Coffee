@@ -5,7 +5,7 @@ import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/route_function.dart';
+import '../../../controls/function/route_function.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../profile/screen/profile_page.dart';
 import 'group_item_other.dart';
