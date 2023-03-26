@@ -1,10 +1,13 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
 import 'package:coffee/src/presentation/profile/widgets/gender_widget.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 
 class BodyProfilePage extends StatefulWidget {
   const BodyProfilePage({Key? key}) : super(key: key);
@@ -29,7 +32,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: Color.fromRGBO(241, 241, 241, 1),
+        color: AppColors.bgColor,
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -156,7 +159,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               const Divider(color: Colors.black),
               GenderWidget(
                 gender: "male".translate(context),
-                image: "assets/male.png",
+                image: AppImages.imgMale,
                 onPress: () {
                   setState(() => isPick = true);
                   Navigator.pop(context);
@@ -165,7 +168,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               ),
               GenderWidget(
                 gender: "female".translate(context),
-                image: "assets/female.png",
+                image: AppImages.imgFemale,
                 onPress: () {
                   setState(() => isPick = false);
                   Navigator.pop(context);

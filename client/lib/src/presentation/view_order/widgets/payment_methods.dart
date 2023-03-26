@@ -1,4 +1,5 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_images.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import 'item_payment.dart';
@@ -28,13 +29,13 @@ class PaymentMethods extends StatelessWidget {
           itemPayment(
             value: 0,
             groupValue: value,
-            image: "assets/momo.png",
+            image: AppImages.imgMomo,
             title: "momo_wallet".translate(context),
           ),
           itemPayment(
             value: 1,
             groupValue: value,
-            image: "assets/cod.png",
+            image: AppImages.imgCOD,
             title: "payment_delivery".translate(context),
           ),
           const SizedBox(height: 5),

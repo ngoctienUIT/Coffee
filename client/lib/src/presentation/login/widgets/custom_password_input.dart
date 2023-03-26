@@ -1,5 +1,7 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class CustomPasswordInput extends StatelessWidget {
   const CustomPasswordInput({
@@ -43,7 +45,7 @@ class CustomPasswordInput extends StatelessWidget {
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
           borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
+            color: AppColors.borderColor,
             width: 0.7,
           ),
         ),
@@ -58,21 +60,21 @@ class CustomPasswordInput extends StatelessWidget {
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
           borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
+            color: AppColors.borderColor,
             width: 0.7,
           ),
         ),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
           borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
+            color: AppColors.borderColor,
             width: 0.7,
           ),
         ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
           borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
+            color: AppColors.borderColor,
             width: 0.7,
           ),
         ),

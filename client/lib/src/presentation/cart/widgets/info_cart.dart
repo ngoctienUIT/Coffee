@@ -1,9 +1,10 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../address/screen/address_page.dart';
 
 class InfoCart extends StatefulWidget {
@@ -15,8 +16,8 @@ class InfoCart extends StatefulWidget {
 
 class _InfoCartState extends State<InfoCart> {
   TextEditingController noteController = TextEditingController();
-  Color selectedColor = const Color.fromRGBO(177, 40, 48, 1);
-  Color unselectedColor = const Color.fromRGBO(204, 204, 204, 1);
+  Color selectedColor = AppColors.statusBarColor;
+  Color unselectedColor = AppColors.unselectedColor;
   bool isBringBack = false;
 
   @override

@@ -1,8 +1,9 @@
-import 'package:coffee/src/data/data_app.dart';
 import 'package:coffee/src/presentation/order/widgets/body_order.dart';
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
 import 'package:coffee/src/presentation/order/widgets/header_order.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Column(
           children: [

@@ -1,7 +1,8 @@
-import 'package:coffee/src/controls/extension/int_extension.dart';
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import 'choose_quantity.dart';
 
 class BottomWidget extends StatelessWidget {
@@ -25,7 +26,7 @@ class BottomWidget extends StatelessWidget {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+                  backgroundColor: AppColors.statusBarColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(90),
                   ),

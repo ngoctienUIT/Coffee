@@ -1,11 +1,12 @@
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'src/language/bloc/language_cubit.dart';
-import 'src/language/bloc/language_state.dart';
-import 'src/language/localization/app_localizations_setup.dart';
+import 'src/core/language/bloc/language_cubit.dart';
+import 'src/core/language/bloc/language_state.dart';
+import 'src/core/language/localization/app_localizations_setup.dart';
 import 'src/presentation/signup/screen/signup_page.dart';
 
 int? language;
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.blue,
               appBarTheme: const AppBarTheme(
                 systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: Color.fromRGBO(177, 40, 48, 1),
+                  statusBarColor: AppColors.statusBarColor,
                 ),
                 backgroundColor: Colors.white,
                 iconTheme: IconThemeData(color: Colors.black),

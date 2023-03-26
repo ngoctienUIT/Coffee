@@ -1,6 +1,7 @@
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 
 class AppBarProduct extends StatelessWidget {
   const AppBarProduct({Key? key, required this.isTop}) : super(key: key);
@@ -10,8 +11,7 @@ class AppBarProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor:
-          isTop ? Colors.transparent : const Color.fromRGBO(177, 40, 48, 1),
+      backgroundColor: isTop ? Colors.transparent : AppColors.statusBarColor,
       elevation: 0,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),

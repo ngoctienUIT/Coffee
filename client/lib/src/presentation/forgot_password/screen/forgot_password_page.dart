@@ -1,6 +1,8 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_images.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/enum/enums.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../../voucher/widgets/app_bar_general.dart';
@@ -37,7 +39,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Image.asset(
-                    "assets/coffee_logo.jpg",
+                    AppImages.imgLogo,
                     height: 200,
                   ),
                 ),

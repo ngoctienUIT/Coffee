@@ -1,8 +1,9 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum TypeInput { text, email, phone }
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 
 class CustomTextInput extends StatelessWidget {
   const CustomTextInput({
@@ -21,7 +22,7 @@ class CustomTextInput extends StatelessWidget {
     this.controller,
     this.backgroundColor = Colors.white,
     this.inputFormatters,
-    this.colorBorder = const Color.fromRGBO(220, 220, 220, 1),
+    this.colorBorder = AppColors.borderColor,
     this.textCapitalization = TextCapitalization.none,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
   }) : super(key: key);

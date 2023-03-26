@@ -1,9 +1,10 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/store.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../widgets/bottom_sheet.dart';
 
@@ -26,7 +27,7 @@ class _StorePageState extends State<StorePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: const CustomAppBar(elevation: 0),
       body: SafeArea(
         child: Column(

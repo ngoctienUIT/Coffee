@@ -8,6 +8,8 @@ import 'package:coffee/src/presentation/cart/widgets/payment_methods.dart';
 import 'package:coffee/src/presentation/cart/widgets/total_payment.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
+
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
 
@@ -21,7 +23,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBarCart(clearCart: () {}),
       body: Padding(
         padding: const EdgeInsets.all(10),

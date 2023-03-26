@@ -1,10 +1,12 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/constants/app_images.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
 import '../../cart/screen/cart_page.dart';
 
 class BottomSheetOrder extends StatelessWidget {
@@ -16,7 +18,7 @@ class BottomSheetOrder extends StatelessWidget {
       width: double.infinity,
       height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: const BoxDecoration(color: Color.fromRGBO(177, 40, 48, 1)),
+      decoration: const BoxDecoration(color: AppColors.statusBarColor),
       child: Row(
         children: [
           const Icon(
@@ -82,7 +84,7 @@ class BottomSheetOrder extends StatelessWidget {
                 child: itemBottomSheet(
                   title: "at_table".translate(context),
                   content: "please_select_store".translate(context),
-                  image: "assets/coffee_logo.jpg",
+                  image: AppImages.imgLogo,
                   onPress: () {},
                 ),
               ),
@@ -91,7 +93,7 @@ class BottomSheetOrder extends StatelessWidget {
                 child: itemBottomSheet(
                   title: "bring_back".translate(context),
                   content: "please_select_store".translate(context),
-                  image: "assets/coffee_logo.jpg",
+                  image: AppImages.imgLogo,
                   onPress: () {},
                 ),
               ),

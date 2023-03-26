@@ -1,8 +1,8 @@
 import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../../data/data_app.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/app_strings.dart';
 
 class ListItemOrder extends StatelessWidget {
   const ListItemOrder({Key? key}) : super(key: key);

@@ -1,4 +1,4 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:coffee/src/presentation/signup/widgets/pick_country_number.dart';
@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/on_will_pop.dart';
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/on_will_pop.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/social_login_button.dart';
 import '../../main/screen/main_page.dart';
@@ -56,7 +58,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 227, 178, 1),
+      backgroundColor: AppColors.bgCreamColor,
       appBar: canPop
           ? AppBar(
               elevation: 0,
@@ -84,8 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: Column(
                     children: [
                       ClipOval(
-                        child:
-                            Image.asset("assets/coffee_logo.jpg", height: 200),
+                        child: Image.asset(AppImages.imgLogo, height: 200),
                       ),
                       const SizedBox(height: 10),
                       Text(

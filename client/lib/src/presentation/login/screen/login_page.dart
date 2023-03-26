@@ -1,18 +1,20 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
-import 'package:coffee/src/presentation/forgot_password/screen/forgot_password_page.dart';
-import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
-import 'package:coffee/src/presentation/login/widgets/custom_password_input.dart';
-import 'package:coffee/src/presentation/login/widgets/social_login_button.dart';
-import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
-import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../controls/function/on_will_pop.dart';
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/on_will_pop.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
+import '../../forgot_password/screen/forgot_password_page.dart';
 import '../../main/screen/main_page.dart';
+import '../../signup/screen/signup_page.dart';
+import '../../signup/widgets/custom_text_input.dart';
+import '../widgets/custom_button.dart';
+import '../widgets/custom_password_input.dart';
+import '../widgets/social_login_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 227, 178, 1),
+      backgroundColor: AppColors.bgCreamColor,
       appBar: canPop
           ? AppBar(
               elevation: 0,
@@ -99,8 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       ClipOval(
-                        child:
-                            Image.asset("assets/coffee_logo.jpg", height: 200),
+                        child: Image.asset(AppImages.imgLogo, height: 200),
                       ),
                       const SizedBox(height: 20),
                       Text(

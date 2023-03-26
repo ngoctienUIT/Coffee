@@ -1,11 +1,13 @@
 import 'dart:io';
 
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class HeaderProfilePage extends StatefulWidget {
   const HeaderProfilePage({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color.fromRGBO(177, 40, 48, 1),
+      color: AppColors.statusBarColor,
       child: Column(
         children: [
           const SizedBox(height: 20),
@@ -31,7 +33,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                 onTap: () => showMyBottomSheet(),
                 child: ClipOval(
                   child: image == null
-                      ? Image.asset("assets/coffee_logo.jpg", height: 80)
+                      ? Image.asset(AppImages.imgLogo, height: 80)
                       : Image.file(image!, height: 80),
                 ),
               ),

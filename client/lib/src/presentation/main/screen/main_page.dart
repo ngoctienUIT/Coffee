@@ -4,7 +4,7 @@ import 'package:coffee/src/presentation/other/screen/other_page.dart';
 import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/on_will_pop.dart';
+import '../../../core/function/on_will_pop.dart';
 import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
 

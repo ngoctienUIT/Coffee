@@ -1,9 +1,10 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
@@ -49,7 +50,7 @@ class ListProduct extends StatelessWidget {
                     SlidableAction(
                       onPressed: (context) {},
                       // backgroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                      foregroundColor: const Color.fromRGBO(177, 40, 48, 1),
+                      foregroundColor: AppColors.statusBarColor,
                       icon: FontAwesomeIcons.trash,
                       // borderRadius: BorderRadius.circular(15),
                     ),

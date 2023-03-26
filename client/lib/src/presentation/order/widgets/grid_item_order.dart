@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../../data/data_app.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/app_strings.dart';
 import '../../product/screen/product_page.dart';
 
 Widget gridItemOrder() {

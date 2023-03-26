@@ -1,6 +1,8 @@
 import 'package:coffee/src/presentation/search/widgets/app_bar_search.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -15,7 +17,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBarSearch(controller: searchFoodController),
       body: Column(
         children: [

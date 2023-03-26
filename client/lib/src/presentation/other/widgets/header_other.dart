@@ -1,13 +1,15 @@
 import 'dart:io';
 
-import 'package:coffee/src/controls/extension/string_extension.dart';
-import 'package:coffee/src/language/bloc/language_cubit.dart';
-import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
-import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
-import 'package:coffee/src/presentation/other/widgets/language_widget.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/language/bloc/language_cubit.dart';
+import '../../../core/utils/constants/constants.dart';
+import '../../login/widgets/custom_button.dart';
+import '../../order/widgets/title_bottom_sheet.dart';
+import 'language_widget.dart';
 
 class HeaderOtherPage extends StatefulWidget {
   const HeaderOtherPage({Key? key}) : super(key: key);
@@ -49,7 +51,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color.fromRGBO(177, 40, 48, 1),
+      color: AppColors.statusBarColor,
       child: Column(
         children: [
           const SizedBox(height: 10),
@@ -92,7 +94,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
             children: [
               ClipOval(
                 child: Image.asset(
-                  "assets/coffee_logo.jpg",
+                  AppImages.imgLogo,
                   height: 80,
                 ),
               ),
@@ -170,7 +172,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: languageWidget(
-                          image: "assets/vietnam.png",
+                          image: AppImages.imgVietNam,
                           text: "Tiếng Việt",
                           onPress: () => setState(() => isVN = true),
                           isPick: isVN,
@@ -179,7 +181,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                       const SizedBox(width: 20),
                       Expanded(
                         child: languageWidget(
-                          image: "assets/english.png",
+                          image: AppImages.imgEnglish,
                           text: "English",
                           onPress: () => setState(() => isVN = false),
                           isPick: !isVN,

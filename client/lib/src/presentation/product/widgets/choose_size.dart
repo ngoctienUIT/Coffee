@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
+
 Widget chooseSize(String text, bool check, Function onPress) {
   return SizedBox(
     height: 50,
@@ -7,8 +9,7 @@ Widget chooseSize(String text, bool check, Function onPress) {
     child: ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        backgroundColor:
-            check ? const Color.fromRGBO(177, 40, 48, 1) : Colors.white,
+        backgroundColor: check ? AppColors.statusBarColor : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),

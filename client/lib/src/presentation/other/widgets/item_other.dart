@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
+
 Widget itemOther(String text, IconData icon, Function onPress) {
   return InkWell(
     onTap: () => onPress(),
@@ -11,10 +13,7 @@ Widget itemOther(String text, IconData icon, Function onPress) {
           const SizedBox(width: 10),
           Text(
             text,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Color.fromRGBO(80, 45, 30, 1),
-            ),
+            style: const TextStyle(fontSize: 16, color: AppColors.textColor),
           ),
           const Spacer(),
           const Icon(

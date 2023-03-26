@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
 import '../../view_order/screen/view_order_page.dart';
 
 class ListActivity extends StatelessWidget {

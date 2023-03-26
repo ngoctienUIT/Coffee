@@ -1,5 +1,7 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class AppBarCart extends StatelessWidget implements PreferredSizeWidget {
   const AppBarCart({Key? key, required this.clearCart}) : super(key: key);
@@ -9,7 +11,7 @@ class AppBarCart extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       elevation: 0,
       title: Text(
         "cart".translate(context),

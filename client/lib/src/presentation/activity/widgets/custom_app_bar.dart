@@ -1,7 +1,8 @@
+import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
 
@@ -23,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ));
         },
         borderRadius: BorderRadius.circular(90),
-        child: ClipOval(child: Image.asset("assets/coffee_logo.jpg")),
+        child: ClipOval(child: Image.asset(AppImages.imgLogo)),
       ),
       actions: [
         IconButton(

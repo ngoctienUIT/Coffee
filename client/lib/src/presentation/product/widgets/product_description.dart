@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 
 class ProductDescription extends StatelessWidget {
   const ProductDescription({Key? key}) : super(key: key);

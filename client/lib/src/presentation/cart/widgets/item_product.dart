@@ -1,7 +1,7 @@
-import 'package:coffee/src/controls/extension/int_extension.dart';
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 import '../../product/widgets/choose_quantity.dart';
 
 class ItemProduct extends StatefulWidget {

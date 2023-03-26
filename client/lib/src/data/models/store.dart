@@ -1,4 +1,4 @@
-import 'package:coffee/src/controls/extension/time_of_date_extension.dart';
+import 'package:coffee/src/core/utils/extensions/time_of_date_extension.dart';
 import 'package:flutter/material.dart';
 
 class Store {

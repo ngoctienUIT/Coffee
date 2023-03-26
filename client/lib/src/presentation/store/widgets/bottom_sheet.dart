@@ -1,5 +1,5 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
-import 'package:coffee/src/data/data_app.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/store.dart';

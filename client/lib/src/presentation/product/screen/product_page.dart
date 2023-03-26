@@ -2,7 +2,7 @@ import 'package:coffee/src/presentation/product/widgets/body_product.dart';
 import 'package:coffee/src/presentation/product/widgets/bottom_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 import '../widgets/app_bar_product.dart';
 
 class ProductPage extends StatefulWidget {

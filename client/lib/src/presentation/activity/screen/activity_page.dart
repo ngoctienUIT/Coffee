@@ -1,7 +1,9 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/widgets/custom_app_bar.dart';
 import 'package:coffee/src/presentation/activity/widgets/list_activity.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class ActivityPage extends StatefulWidget {
   const ActivityPage({Key? key}) : super(key: key);
@@ -24,7 +26,7 @@ class _ActivityPageState extends State<ActivityPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: const CustomAppBar(elevation: 0),
       body: SafeArea(
         child: Column(

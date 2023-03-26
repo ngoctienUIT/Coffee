@@ -1,7 +1,7 @@
 import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/app_strings.dart';
 import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 

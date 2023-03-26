@@ -1,4 +1,4 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/app_bar_add_address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/contact_info.dart';
@@ -6,6 +6,7 @@ import 'package:coffee/src/presentation/add_address/widgets/edit_address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/set_default.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
 
 class AddAddressPage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBarAddAddress(delete: () {}),
       body: SafeArea(
         child: SingleChildScrollView(

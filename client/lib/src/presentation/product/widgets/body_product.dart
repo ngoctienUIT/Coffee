@@ -1,8 +1,9 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/product/widgets/product_description.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import 'choose_size.dart';
 
@@ -29,7 +30,7 @@ class BodyProduct extends StatelessWidget {
           borderRadius: isTop
               ? const BorderRadius.vertical(top: Radius.circular(20))
               : null,
-          color: const Color.fromRGBO(241, 241, 241, 1),
+          color: AppColors.bgColor,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         duration: const Duration(milliseconds: 300),

@@ -1,7 +1,9 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/voucher/widgets/ticket_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class VoucherPage extends StatelessWidget {
   const VoucherPage({Key? key, this.onPress}) : super(key: key);
@@ -11,7 +13,7 @@ class VoucherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar:
           AppBarGeneral(title: "your_offer".translate(context), elevation: 0),
       body: RefreshIndicator(

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 Widget customButton({
@@ -16,14 +17,14 @@ Widget customButton({
           borderRadius: BorderRadius.circular(90),
         ),
         disabledBackgroundColor: const Color.fromRGBO(221, 221, 221, 1),
-        backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+        backgroundColor: AppColors.statusBarColor,
       ),
       child: Text(
         text,
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: isOnPress ? null : const Color.fromRGBO(204, 204, 204, 1),
+          color: isOnPress ? null : AppColors.unselectedColor,
         ),
       ),
     ),

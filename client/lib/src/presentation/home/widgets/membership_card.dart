@@ -1,4 +1,5 @@
-import 'package:coffee/src/controls/extension/string_extension.dart';
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
 class MembershipCard extends StatelessWidget {
@@ -9,7 +10,7 @@ class MembershipCard extends StatelessWidget {
     return Container(
       height: 200,
       width: double.infinity,
-      color: const Color.fromRGBO(241, 227, 178, 1),
+      color: AppColors.bgCreamColor,
       padding: const EdgeInsets.all(10),
       child: Card(
         elevation: 0,
@@ -22,7 +23,7 @@ class MembershipCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             gradient: const LinearGradient(
               colors: [
-                Color.fromRGBO(177, 40, 48, 1),
+                AppColors.statusBarColor,
                 Color.fromRGBO(233, 126, 136, 1),
               ],
               begin: Alignment.centerLeft,
