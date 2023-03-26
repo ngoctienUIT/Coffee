@@ -75,123 +75,128 @@ class _SignUpPageState extends State<SignUpPage> {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    ClipOval(
-                      child: Image.asset("assets/coffee_logo.jpg", height: 200),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      "start_journey".translate(context),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height - 35,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      ClipOval(
+                        child:
+                            Image.asset("assets/coffee_logo.jpg", height: 200),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 80,
-                          height: 50,
-                          child: PickCountryNumber(
-                            selectedValue: selectedValue,
-                            items: items,
-                            onChange: (value) {
-                              setState(() => selectedValue = value as String);
-                            },
-                          ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "start_journey".translate(context),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: CustomTextInput(
-                            controller: phoneController,
-                            hint: "phone_number".translate(context),
-                            typeInput: const [TypeInput.phone],
-                            keyboardType: TextInputType.phone,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                  RegExp("[0-9a-zA-Z]")),
-                            ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 80,
+                            height: 50,
+                            child: PickCountryNumber(
+                              selectedValue: selectedValue,
+                              items: items,
+                              onChange: (value) {
+                                setState(() => selectedValue = value as String);
+                              },
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    customButton(
-                      text: "continue".translate(context),
-                      isOnPress: isContinue,
-                      onPress: () {
-                        if (_formKey.currentState!.validate()) {
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: CustomTextInput(
+                              controller: phoneController,
+                              hint: "phone_number".translate(context),
+                              typeInput: const [TypeInput.phone],
+                              keyboardType: TextInputType.phone,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[0-9a-zA-Z]")),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      customButton(
+                        text: "continue".translate(context),
+                        isOnPress: isContinue,
+                        onPress: () {
+                          if (_formKey.currentState!.validate()) {
+                            Navigator.of(context).pushReplacement(createRoute(
+                              screen: const MainPage(),
+                              begin: const Offset(0, 1),
+                            ));
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          const Expanded(
+                            child: Divider(thickness: 1, color: Colors.black54),
+                          ),
+                          const SizedBox(width: 10),
+                          Text("or".translate(context)),
+                          const SizedBox(width: 10),
+                          const Expanded(
+                            child: Divider(thickness: 1, color: Colors.black54),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SocialLoginButton(
+                            icon: FontAwesomeIcons.google,
+                            color: Colors.red,
+                            onPress: () {},
+                          ),
+                          SocialLoginButton(
+                            icon: FontAwesomeIcons.facebook,
+                            color: Colors.blue,
+                            onPress: () {},
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () {
                           Navigator.of(context).pushReplacement(createRoute(
                             screen: const MainPage(),
                             begin: const Offset(0, 1),
                           ));
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: Divider(thickness: 1, color: Colors.black54),
-                        ),
-                        const SizedBox(width: 10),
-                        Text("or".translate(context)),
-                        const SizedBox(width: 10),
-                        const Expanded(
-                          child: Divider(thickness: 1, color: Colors.black54),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SocialLoginButton(
-                          icon: FontAwesomeIcons.google,
-                          color: Colors.red,
-                          onPress: () {},
-                        ),
-                        SocialLoginButton(
-                          icon: FontAwesomeIcons.facebook,
-                          color: Colors.blue,
-                          onPress: () {},
-                        ),
-                      ],
-                    ),
-                    // const Spacer(),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(createRoute(
-                          screen: const MainPage(),
-                          begin: const Offset(0, 1),
-                        ));
-                      },
-                      child: Text(
-                          "continue_guest".translate(context).toUpperCase()),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("${"already_have_account".translate(context)}?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(createRoute(
-                              screen: const LoginPage(),
-                              begin: const Offset(0, 1),
-                            ));
-                          },
-                          child: Text("login".translate(context)),
-                        )
-                      ],
-                    ),
-                  ],
+                        },
+                        child: Text(
+                            "continue_guest".translate(context).toUpperCase()),
+                      ),
+                      const Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("${"already_have_account".translate(context)}?"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacement(createRoute(
+                                screen: const LoginPage(),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
+                            child: Text("login".translate(context)),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
