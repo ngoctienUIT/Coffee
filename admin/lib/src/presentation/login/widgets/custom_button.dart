@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
+
 Widget customButton({
   required String text,
   required VoidCallback onPress,
@@ -16,14 +18,14 @@ Widget customButton({
           borderRadius: BorderRadius.circular(90),
         ),
         disabledBackgroundColor: const Color.fromRGBO(221, 221, 221, 1),
-        backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+        backgroundColor: AppColors.statusBarColor,
       ),
       child: Text(
         text,
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: isOnPress ? null : const Color.fromRGBO(204, 204, 204, 1),
+          color: isOnPress ? null : AppColors.unselectedColor,
         ),
       ),
     ),

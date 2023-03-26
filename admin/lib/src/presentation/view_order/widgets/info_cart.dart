@@ -1,13 +1,15 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class InfoCart extends StatelessWidget {
   const InfoCart({Key? key, required this.isBringBack}) : super(key: key);
 
   final bool isBringBack;
-  final Color selectedColor = const Color.fromRGBO(177, 40, 48, 1);
-  final Color unselectedColor = const Color.fromRGBO(204, 204, 204, 1);
+  final Color selectedColor = AppColors.statusBarColor;
+  final Color unselectedColor = AppColors.unselectedColor;
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 import 'description_line.dart';
 import 'list_item_product.dart';
 

@@ -1,7 +1,7 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {

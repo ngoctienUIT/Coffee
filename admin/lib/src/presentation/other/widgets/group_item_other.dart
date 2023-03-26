@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../product/widgets/description_line.dart';
 
 Widget groupItemOther(String description, List<Widget> list) {
   return Column(
     children: [
       const SizedBox(height: 20),
-      descriptionLine(
-        text: description,
-        color: const Color.fromRGBO(80, 45, 30, 1),
-      ),
+      descriptionLine(text: description, color: AppColors.textColor),
       const SizedBox(height: 10),
       Card(
         shape: RoundedRectangleBorder(

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';

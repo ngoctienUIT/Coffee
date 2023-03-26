@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class ItemProduct extends StatelessWidget {
   const ItemProduct({Key? key, required this.index, required this.number})
@@ -47,7 +47,7 @@ class ItemProduct extends StatelessWidget {
                 height: 35,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(241, 241, 241, 1),
+                  color: AppColors.bgColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(

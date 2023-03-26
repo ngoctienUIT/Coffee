@@ -1,8 +1,10 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 import '../../main/screen/main_page.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_password_input.dart';
@@ -47,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 227, 178, 1),
+      backgroundColor: AppColors.bgCreamColor,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -58,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   ClipOval(
-                    child: Image.asset("assets/coffee_logo.jpg", height: 200),
+                    child: Image.asset(AppImages.imgLogo, height: 200),
                   ),
                   const SizedBox(height: 30),
                   Text(

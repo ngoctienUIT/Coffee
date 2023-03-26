@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../widgets/body_other.dart';
 import '../widgets/header_other.dart';
 
@@ -9,7 +10,7 @@ class OtherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+      backgroundColor: AppColors.statusBarColor,
       body: SafeArea(
         child: Column(
           children: const [

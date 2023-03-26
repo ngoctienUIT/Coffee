@@ -2,7 +2,7 @@ import 'package:coffee_admin/src/presentation/view_product/widgets/app_bar_produ
 import 'package:coffee_admin/src/presentation/view_product/widgets/body_product.dart';
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class ViewProductPage extends StatefulWidget {
   const ViewProductPage({Key? key, required this.index}) : super(key: key);

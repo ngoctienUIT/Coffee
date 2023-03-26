@@ -1,5 +1,7 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class AddCoupons extends StatefulWidget {
   const AddCoupons({Key? key}) : super(key: key);
@@ -33,8 +35,8 @@ class _AddCouponsState extends State<AddCoupons> {
             margin: const EdgeInsets.fromLTRB(20, 5, 20, 15),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(241, 241, 241, 1),
-              border: Border.all(color: const Color.fromRGBO(177, 40, 48, 1)),
+              color: AppColors.bgColor,
+              border: Border.all(color: AppColors.statusBarColor),
             ),
             child: Row(
               children: [

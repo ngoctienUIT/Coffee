@@ -1,7 +1,8 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_text_input.dart';
 
 class SearchPage extends StatefulWidget {
@@ -17,9 +18,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+        backgroundColor: AppColors.bgColor,
         elevation: 0,
         title: SizedBox(
           height: 40,
@@ -30,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
             contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             textInputAction: TextInputAction.search,
             textStyle: const TextStyle(fontSize: 13),
-            backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+            backgroundColor: AppColors.bgColor,
             suffixIcon: const Icon(
               FontAwesomeIcons.magnifyingGlass,
               color: Colors.grey,

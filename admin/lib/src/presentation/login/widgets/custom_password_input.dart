@@ -1,5 +1,7 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+
+import '../../../core/utils/constants/constants.dart';
 
 class CustomPasswordInput extends StatelessWidget {
   const CustomPasswordInput({
@@ -42,10 +44,7 @@ class CustomPasswordInput extends StatelessWidget {
         hintText: hint,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -57,24 +56,15 @@ class CustomPasswordInput extends StatelessWidget {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
       ),
     );

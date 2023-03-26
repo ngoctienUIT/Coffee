@@ -20,10 +20,7 @@ class CustomPickerWidget extends StatelessWidget {
       onTap: checkEdit ? onPress : null,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.borderColor,
-            width: 0.7,
-          ),
+          border: Border.all(color: AppColors.borderColor, width: 0.7),
           color: Colors.white,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),

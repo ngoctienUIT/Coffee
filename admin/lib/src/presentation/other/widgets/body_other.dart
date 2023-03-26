@@ -1,9 +1,10 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../info/screen/info_page.dart';
 import 'group_item_other.dart';
 import 'item_other.dart';
@@ -17,7 +18,7 @@ class BodyOtherPage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: Color.fromRGBO(241, 241, 241, 1),
+        color: AppColors.bgColor,
       ),
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

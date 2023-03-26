@@ -1,10 +1,11 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/header_order.dart';
 import 'package:coffee_admin/src/presentation/view_order/screen/view_order_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -77,7 +78,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
           children: [
             Row(
               children: [
-                Image.asset("assets/vietnam.png", height: 40),
+                Image.asset(AppImages.imgVietNam, height: 40),
                 const SizedBox(width: 10),
                 const Text(
                   "Tên cửa hàng",

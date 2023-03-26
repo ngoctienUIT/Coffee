@@ -1,9 +1,9 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../../data/data_app.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_text_input.dart';
 import '../../search/screen/search_page.dart';
 
@@ -25,7 +25,7 @@ class HeaderProductPage extends StatelessWidget {
               radius: 90,
               contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               textStyle: const TextStyle(fontSize: 13),
-              backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+              backgroundColor: AppColors.bgColor,
               onPress: () {
                 Navigator.of(context).push(createRoute(
                   screen: const SearchPage(),

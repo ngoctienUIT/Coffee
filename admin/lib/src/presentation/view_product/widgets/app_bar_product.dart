@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class AppBarProduct extends StatelessWidget {
   const AppBarProduct({Key? key, required this.isTop, required this.onEdit})
@@ -12,8 +12,7 @@ class AppBarProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      backgroundColor:
-          isTop ? Colors.transparent : const Color.fromRGBO(177, 40, 48, 1),
+      backgroundColor: isTop ? Colors.transparent : AppColors.statusBarColor,
       elevation: 0,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
@@ -28,7 +27,7 @@ class AppBarProduct extends StatelessWidget {
           onPressed: onEdit,
           icon: Icon(
             Icons.edit,
-            color: isTop ? const Color.fromRGBO(177, 40, 48, 1) : Colors.white,
+            color: isTop ? AppColors.statusBarColor : Colors.white,
           ),
         ),
       ],

@@ -1,7 +1,8 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../add_voucher/screen/add_voucher_page.dart';
 import '../widgets/ticket_widget.dart';
 
@@ -11,9 +12,9 @@ class VoucherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+        backgroundColor: AppColors.bgColor,
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -51,7 +52,7 @@ class VoucherPage extends StatelessWidget {
             begin: const Offset(0, 1),
           ));
         },
-        backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+        backgroundColor: AppColors.statusBarColor,
         child: const Icon(Icons.add),
       ),
     );

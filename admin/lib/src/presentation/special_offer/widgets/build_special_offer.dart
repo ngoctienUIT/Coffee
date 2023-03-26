@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class BuildGridSpecialOffer extends StatelessWidget {
   const BuildGridSpecialOffer({Key? key}) : super(key: key);

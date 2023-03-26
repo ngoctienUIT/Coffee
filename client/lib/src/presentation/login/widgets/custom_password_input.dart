@@ -44,10 +44,7 @@ class CustomPasswordInput extends StatelessWidget {
         hintText: hint,
         border: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: AppColors.borderColor,
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -59,24 +56,15 @@ class CustomPasswordInput extends StatelessWidget {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: AppColors.borderColor,
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: AppColors.borderColor,
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(
-            color: AppColors.borderColor,
-            width: 0.7,
-          ),
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
       ),
     );

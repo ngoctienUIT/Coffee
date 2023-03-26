@@ -1,8 +1,9 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum TypeInput { text, email, phone }
+import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 
 class CustomTextInput extends StatelessWidget {
   const CustomTextInput({
@@ -63,31 +64,23 @@ class CustomTextInput extends StatelessWidget {
         contentPadding: contentPadding,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide:
+              const BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide:
+              const BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide:
+              const BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-          borderSide: const BorderSide(
-            color: Color.fromRGBO(220, 220, 220, 1),
-            width: 0.7,
-          ),
+          borderSide:
+              const BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
       ),
       validator: (value) {

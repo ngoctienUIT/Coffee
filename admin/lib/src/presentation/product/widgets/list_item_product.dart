@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../../data/data_app.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
@@ -33,7 +33,7 @@ class ListItemProduct extends StatelessWidget {
                 children: [
                   SlidableAction(
                     onPressed: (context) {},
-                    backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+                    backgroundColor: AppColors.statusBarColor,
                     foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
                     icon: FontAwesomeIcons.trash,
                     borderRadius: BorderRadius.circular(15),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/data_app.dart';
+import '../../../core/utils/constants/constants.dart';
 
 class BodyProduct extends StatelessWidget {
   const BodyProduct({Key? key, required this.isTop}) : super(key: key);
@@ -16,7 +16,7 @@ class BodyProduct extends StatelessWidget {
           borderRadius: isTop
               ? const BorderRadius.vertical(top: Radius.circular(20))
               : null,
-          color: const Color.fromRGBO(241, 241, 241, 1),
+          color: AppColors.bgColor,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         duration: const Duration(milliseconds: 300),

@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_text_input.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/description_line.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../widgets/bottom_pick_image.dart';
 
 class AddProductPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,

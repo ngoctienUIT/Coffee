@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/controls/extension/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
 import 'package:coffee_admin/src/presentation/special_offer/screen/special_offer_page.dart';
@@ -6,7 +6,7 @@ import 'package:coffee_admin/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../controls/function/on_will_pop.dart';
+import '../../../core/function/on_will_pop.dart';
 import '../../other/screen/other_page.dart';
 
 class MainPage extends StatefulWidget {

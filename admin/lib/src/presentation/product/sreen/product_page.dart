@@ -1,8 +1,8 @@
 import 'package:coffee_admin/src/presentation/add_product/screen/add_product_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../controls/function/route_function.dart';
-import '../../../data/data_app.dart';
+import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../widgets/body_product.dart';
 import '../widgets/header_product.dart';
 
@@ -28,7 +28,7 @@ class _ProductPageState extends State<ProductPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(241, 241, 241, 1),
+      backgroundColor: AppColors.bgColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -45,7 +45,7 @@ class _ProductPageState extends State<ProductPage>
             begin: const Offset(0, 1),
           ));
         },
-        backgroundColor: const Color.fromRGBO(177, 40, 48, 1),
+        backgroundColor: AppColors.statusBarColor,
         child: const Icon(Icons.add),
       ),
     );
