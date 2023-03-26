@@ -2,6 +2,7 @@ import 'package:coffee/src/controls/extension/string_extension.dart';
 import 'package:coffee/src/presentation/info/screen/info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
+import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 
@@ -69,7 +70,7 @@ class BodyOtherPage extends StatelessWidget {
                 isOnPress: true,
                 onPress: () {
                   Navigator.of(context).pushReplacement(createRoute(
-                    screen: const LoginPage(),
+                    screen: const SignUpPage(),
                     begin: const Offset(0, 1),
                   ));
                 },

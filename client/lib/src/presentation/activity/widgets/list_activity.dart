@@ -13,7 +13,9 @@ class ListActivity extends StatelessWidget {
       onRefresh: () async {},
       child: ListView.builder(
         padding: const EdgeInsets.all(10),
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         itemCount: 10,
         itemBuilder: (context, index) {
           return InkWell(
