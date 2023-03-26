@@ -8,6 +8,7 @@ import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../controls/function/on_will_pop.dart';
 import '../../../controls/function/route_function.dart';
@@ -25,12 +26,20 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   DateTime? currentBackPressTime;
+  bool isRemember = false;
   bool isContinue = false;
   bool canPop = false;
   bool hide = true;
 
   @override
   void initState() {
+    SharedPreferences.getInstance().then((value) {
+      setState(() {
+        isRemember = value.getBool("isRemember") ?? false;
+        phoneController.text = value.getString("username") ?? "";
+        passwordController.text = value.getString("password") ?? "";
+      });
+    });
     passwordController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
     super.initState();
@@ -49,6 +58,13 @@ class _LoginPageState extends State<LoginPage> {
     phoneController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future saveLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isRemember', isRemember);
+    prefs.setString('username', isRemember ? phoneController.text : "");
+    prefs.setString('password', isRemember ? passwordController.text : "");
   }
 
   @override
@@ -114,8 +130,14 @@ class _LoginPageState extends State<LoginPage> {
                         hide: hide,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
+                          Checkbox(
+                            value: isRemember,
+                            onChanged: (value) =>
+                                setState(() => isRemember = value!),
+                          ),
+                          Text("remember_login".translate(context)),
+                          const Spacer(),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).push(createRoute(
@@ -134,6 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                         isOnPress: isContinue,
                         onPress: () {
                           if (_formKey.currentState!.validate()) {
+                            saveLogin();
                             Navigator.of(context).pushReplacement(createRoute(
                               screen: const MainPage(),
                               begin: const Offset(0, 1),

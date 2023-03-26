@@ -50,6 +50,8 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_slidable: ^2.0.0
   dvhcvn: ^2.0.20221001
+  retrofit: ^4.0.1
+  dio: ^5.0.3
 
 dev_dependencies:
   flutter_test:
