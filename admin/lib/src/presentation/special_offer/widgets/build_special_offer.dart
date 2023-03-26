@@ -10,7 +10,9 @@ class BuildGridSpecialOffer extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {},
       child: GridView.builder(
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 2 / 3,

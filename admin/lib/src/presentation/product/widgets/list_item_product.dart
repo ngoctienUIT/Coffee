@@ -14,7 +14,9 @@ class ListItemProduct extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {},
       child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         itemCount: listSellingProducts.length,
         itemBuilder: (context, index) {
           return InkWell(

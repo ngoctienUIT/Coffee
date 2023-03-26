@@ -36,7 +36,9 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
               child: RefreshIndicator(
                 onRefresh: () async {},
                 child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   itemCount: 10,
                   itemBuilder: (context, index) {
