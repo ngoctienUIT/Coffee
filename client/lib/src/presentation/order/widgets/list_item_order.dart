@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_strings.dart';
+import '../../../domain/repositories/product/product_response.dart';
 
 class ListItemOrder extends StatelessWidget {
-  const ListItemOrder({Key? key}) : super(key: key);
+  const ListItemOrder({Key? key, required this.listProduct}) : super(key: key);
+
+  final List<ProductResponse> listProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +16,7 @@ class ListItemOrder extends StatelessWidget {
       onRefresh: () async {},
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: listSellingProducts.length,
+        itemCount: listProduct.length,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
@@ -48,12 +51,12 @@ class ListItemOrder extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    listSellingProducts[index]["name"]!,
+                    listProduct[index].name,
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    listSellingProducts[index]["content"]!,
+                    listProduct[index].description.toString(),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -64,7 +67,7 @@ class ListItemOrder extends StatelessWidget {
             SizedBox(
               width: 70,
               child: Text(
-                listSellingProducts[index]["price"]!,
+                "${listProduct[index].price}${listProduct[index].currency}",
                 style: const TextStyle(fontSize: 16),
               ),
             )

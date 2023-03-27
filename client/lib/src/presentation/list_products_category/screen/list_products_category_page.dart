@@ -52,7 +52,11 @@ class _ListProductsCategoryPageState extends State<ListProductsCategoryPage> {
                 ),
               ],
             ),
-            Expanded(child: check ? const ListItemOrder() : gridItemOrder()),
+            Expanded(
+              child: check
+                  ? const ListItemOrder(listProduct: [])
+                  : const GridItemOrder(listProduct: []),
+            ),
           ],
         ),
       ),

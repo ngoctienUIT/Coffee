@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: BlocProvider(
+            child: BlocProvider<LoginBloc>(
               create: (_) => LoginBloc(),
               child: SizedBox(
                 height: MediaQuery.of(context).size.height - 35,

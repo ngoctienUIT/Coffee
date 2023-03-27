@@ -1,5 +1,9 @@
+import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
+import 'package:coffee/src/presentation/order/bloc/order_event.dart';
+import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/app_strings.dart';
 import '../../home/widgets/description_line.dart';
@@ -48,13 +52,35 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
           ),
         ),
         const SizedBox(height: 10),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: check ? const ListItemOrder() : gridItemOrder(),
-          ),
+        BlocBuilder<OrderBloc, OrderState>(
+          buildWhen: (previous, current) => previous != current,
+          builder: (context, state) {
+            print(state);
+            if (state is InitState || state is OrderLoading) {
+              if (state is InitState) {
+                BlocProvider.of<OrderBloc>(context).add(GetData());
+              }
+              return _buildLoading();
+            }
+            if (state is OrderError) {
+              return Center(child: Text(state.message!));
+            }
+            if (state is OrderLoaded) {
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: check
+                      ? ListItemOrder(listProduct: state.listProduct)
+                      : GridItemOrder(listProduct: state.listProduct),
+                ),
+              );
+            }
+            return Container();
+          },
         ),
       ],
     );
   }
+
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

@@ -1,7 +1,9 @@
+import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/widgets/body_order.dart';
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
 import 'package:coffee/src/presentation/order/widgets/header_order.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
@@ -25,19 +27,22 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            HeaderOrderPage(tabController: _productController),
-            const SizedBox(height: 20),
-            Expanded(child: BodyOrderPage(index: _productController.index)),
-            const SizedBox(height: 56),
-          ],
+    return BlocProvider<OrderBloc>(
+      create: (_) => OrderBloc(),
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        body: SafeArea(
+          child: Column(
+            children: [
+              HeaderOrderPage(tabController: _productController),
+              const SizedBox(height: 20),
+              Expanded(child: BodyOrderPage(index: _productController.index)),
+              const SizedBox(height: 56),
+            ],
+          ),
         ),
+        bottomSheet: const BottomSheetOrder(),
       ),
-      bottomSheet: const BottomSheetOrder(),
     );
   }
 }
