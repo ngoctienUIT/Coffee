@@ -14,9 +14,6 @@ class MembershipCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Card(
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(

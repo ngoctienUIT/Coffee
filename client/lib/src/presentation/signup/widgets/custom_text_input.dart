@@ -23,6 +23,7 @@ class CustomTextInput extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.inputFormatters,
     this.colorBorder = AppColors.borderColor,
+    this.onFieldSubmitted,
     this.textCapitalization = TextCapitalization.none,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
   }) : super(key: key);
@@ -44,6 +45,7 @@ class CustomTextInput extends StatelessWidget {
   final Color colorBorder;
   final TextCapitalization textCapitalization;
   final EdgeInsetsGeometry contentPadding;
+  final Function(String value)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class CustomTextInput extends StatelessWidget {
       inputFormatters: inputFormatters,
       textCapitalization: textCapitalization,
       readOnly: onPress == null ? false : true,
+      onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         filled: true,
         hintText: hint,

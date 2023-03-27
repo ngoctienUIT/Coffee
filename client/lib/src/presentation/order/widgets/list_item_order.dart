@@ -1,9 +1,12 @@
 import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_strings.dart';
 import '../../../domain/repositories/product/product_response.dart';
+import '../bloc/order_bloc.dart';
+import '../bloc/order_event.dart';
 
 class ListItemOrder extends StatelessWidget {
   const ListItemOrder({Key? key, required this.listProduct}) : super(key: key);
@@ -13,9 +16,13 @@ class ListItemOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {},
+      onRefresh: () async {
+        BlocProvider.of<OrderBloc>(context).add(FetchData());
+      },
       child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         itemCount: listProduct.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -34,15 +41,12 @@ class ListItemOrder extends StatelessWidget {
 
   Widget itemOrder(int index) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Row(
           children: [
             Image.asset(
-              listSellingProducts[index]["image"]!,
+              listSellingProducts[index % 7]["image"]!,
               height: 100,
               width: 100,
             ),

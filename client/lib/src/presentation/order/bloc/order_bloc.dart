@@ -7,7 +7,7 @@ import '../../../domain/api_service.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(InitState()) {
-    on<GetData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(emit));
   }
 
   Future getData(Emitter emit) async {

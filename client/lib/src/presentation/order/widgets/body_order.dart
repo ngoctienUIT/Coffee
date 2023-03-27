@@ -58,7 +58,7 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
             print(state);
             if (state is InitState || state is OrderLoading) {
               if (state is InitState) {
-                BlocProvider.of<OrderBloc>(context).add(GetData());
+                BlocProvider.of<OrderBloc>(context).add(FetchData());
               }
               return _buildLoading();
             }

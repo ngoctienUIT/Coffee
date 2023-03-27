@@ -10,9 +10,6 @@ Widget groupItemOther(String description, List<Widget> list) {
       descriptionLine(text: description, color: AppColors.textColor),
       const SizedBox(height: 10),
       Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(children: list),

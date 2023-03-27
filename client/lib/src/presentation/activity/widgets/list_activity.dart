@@ -34,9 +34,6 @@ class ListActivity extends StatelessWidget {
 
   Widget itemActivity() {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(

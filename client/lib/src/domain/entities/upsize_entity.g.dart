@@ -7,7 +7,7 @@ part of 'upsize_entity.dart';
 // **************************************************************************
 
 UpsizeEntity _$UpsizeEntityFromJson(Map<String, dynamic> json) => UpsizeEntity(
-      s: json['S'] as int,
+      s: json['S'] as int?,
       m: json['M'] as int,
       l: json['L'] as int,
     );

@@ -47,6 +47,11 @@ class MyApp extends StatelessWidget {
             title: 'Coffee',
             theme: ThemeData(
               primarySwatch: Colors.blue,
+              cardTheme: CardTheme(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               appBarTheme: const AppBarTheme(
                 systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: AppColors.statusBarColor,

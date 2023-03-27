@@ -30,9 +30,6 @@ Widget buildListSellingProducts() {
 
 Widget buildSellingProducts(int index) {
   return Card(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
     child: SizedBox(
       width: 150,
       child: Padding(

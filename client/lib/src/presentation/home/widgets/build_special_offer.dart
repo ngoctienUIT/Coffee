@@ -30,9 +30,6 @@ Widget buildSpecialOffer(int index) {
   return Container(
     margin: const EdgeInsets.all(5),
     child: Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: SizedBox(
         width: 170,
         child: Padding(

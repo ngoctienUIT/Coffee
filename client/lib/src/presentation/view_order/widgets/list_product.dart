@@ -11,9 +11,6 @@ class ListProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

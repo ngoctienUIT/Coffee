@@ -5,7 +5,7 @@ part 'upsize_entity.g.dart';
 @JsonSerializable()
 class UpsizeEntity {
   @JsonKey(name: "S")
-  final int s;
+  final int? s;
 
   @JsonKey(name: "M")
   final int m;
@@ -13,7 +13,7 @@ class UpsizeEntity {
   @JsonKey(name: "L")
   final int l;
 
-  UpsizeEntity({required this.s, required this.m, required this.l});
+  UpsizeEntity({this.s, required this.m, required this.l});
 
   factory UpsizeEntity.fromJson(Map<String, dynamic> json) =>
       _$UpsizeEntityFromJson(json);

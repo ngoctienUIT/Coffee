@@ -16,9 +16,6 @@ class _AddCouponsState extends State<AddCoupons> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Column(
         children: [
           InkWell(

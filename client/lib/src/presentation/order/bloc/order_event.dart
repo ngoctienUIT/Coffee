@@ -1,3 +1,3 @@
 abstract class OrderEvent {}
 
-class GetData extends OrderEvent {}
+class FetchData extends OrderEvent {}

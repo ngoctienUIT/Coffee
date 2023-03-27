@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_strings.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
+import '../bloc/order_bloc.dart';
+import '../bloc/order_event.dart';
 
 class GridItemOrder extends StatelessWidget {
   const GridItemOrder({Key? key, required this.listProduct}) : super(key: key);
@@ -13,9 +16,13 @@ class GridItemOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {},
+      onRefresh: () async {
+        BlocProvider.of<OrderBloc>(context).add(FetchData());
+      },
       child: GridView.builder(
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemCount: listProduct.length,
@@ -36,9 +43,6 @@ class GridItemOrder extends StatelessWidget {
 
   Widget itemOrder(int index) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -46,7 +50,7 @@ class GridItemOrder extends StatelessWidget {
           children: [
             Center(
               child: Image.asset(
-                listSellingProducts[index]["image"]!,
+                listSellingProducts[index % 7]["image"]!,
                 width: 80,
               ),
             ),
