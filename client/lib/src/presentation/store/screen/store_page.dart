@@ -12,14 +12,26 @@ import '../../activity/widgets/custom_app_bar.dart';
 import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 
-class StorePage extends StatefulWidget {
+class StorePage extends StatelessWidget {
   const StorePage({Key? key}) : super(key: key);
 
   @override
-  State<StorePage> createState() => _StorePageState();
+  Widget build(BuildContext context) {
+    return BlocProvider<StoreBloc>(
+      create: (_) => StoreBloc()..add(FetchData()),
+      child: const StoreView(),
+    );
+  }
 }
 
-class _StorePageState extends State<StorePage> {
+class StoreView extends StatefulWidget {
+  const StoreView({Key? key}) : super(key: key);
+
+  @override
+  State<StoreView> createState() => _StoreViewState();
+}
+
+class _StoreViewState extends State<StoreView> {
   TextEditingController searchAddressController = TextEditingController();
 
   @override
@@ -30,20 +42,17 @@ class _StorePageState extends State<StorePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc(),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: const CustomAppBar(elevation: 0),
-        body: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              headerStore(),
-              const SizedBox(height: 10),
-              Expanded(child: bodyStore()),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: const CustomAppBar(elevation: 0),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            headerStore(),
+            const SizedBox(height: 10),
+            Expanded(child: bodyStore()),
+          ],
         ),
       ),
     );
@@ -58,8 +67,7 @@ class _StorePageState extends State<StorePage> {
             height: 40,
             child: CustomTextInput(
               onFieldSubmitted: (value) {
-                BlocProvider.of<StoreBloc>(context)
-                    .add(SearchStore(storeName: value));
+                context.read<StoreBloc>().add(SearchStore(storeName: value));
               },
               controller: searchAddressController,
               hint: "address_search".translate(context),
@@ -90,9 +98,6 @@ class _StorePageState extends State<StorePage> {
       builder: (context, state) {
         print(state);
         if (state is InitState || state is StoreLoading) {
-          if (state is InitState) {
-            BlocProvider.of<StoreBloc>(context).add(FetchData());
-          }
           return _buildLoading();
         }
         if (state is StoreError) {
