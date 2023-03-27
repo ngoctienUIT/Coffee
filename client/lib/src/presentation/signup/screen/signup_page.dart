@@ -59,16 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
     canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
-      appBar: canPop
-          ? AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close),
-              ),
-            )
-          : null,
+      appBar: canPop ? appBar() : null,
       body: WillPopScope(
         onWillPop: () => onWillPop(
           action: (now) => currentBackPressTime = now,
@@ -85,117 +76,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      ClipOval(
-                        child: Image.asset(AppImages.imgLogo, height: 200),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "start_journey".translate(context),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      signUpTitle(),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 80,
-                            height: 50,
-                            child: PickCountryNumber(
-                              selectedValue: selectedValue,
-                              items: items,
-                              onChange: (value) {
-                                setState(() => selectedValue = value as String);
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: CustomTextInput(
-                              controller: phoneController,
-                              hint: "phone_number".translate(context),
-                              typeInput: const [TypeInput.phone],
-                              keyboardType: TextInputType.phone,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp("[0-9a-zA-Z]")),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                      signUpInput(),
                       const SizedBox(height: 20),
-                      customButton(
-                        text: "continue".translate(context),
-                        isOnPress: isContinue,
-                        onPress: () {
-                          if (_formKey.currentState!.validate()) {
-                            Navigator.of(context).pushReplacement(createRoute(
-                              screen: const MainPage(),
-                              begin: const Offset(0, 1),
-                            ));
-                          }
-                        },
-                      ),
+                      signUpButton(),
                       const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Divider(thickness: 1, color: Colors.black54),
-                          ),
-                          const SizedBox(width: 10),
-                          Text("or".translate(context)),
-                          const SizedBox(width: 10),
-                          const Expanded(
-                            child: Divider(thickness: 1, color: Colors.black54),
-                          ),
-                        ],
-                      ),
+                      socialSignUp(),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SocialLoginButton(
-                            icon: FontAwesomeIcons.google,
-                            color: Colors.red,
-                            onPress: () {},
-                          ),
-                          SocialLoginButton(
-                            icon: FontAwesomeIcons.facebook,
-                            color: Colors.blue,
-                            onPress: () {},
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(createRoute(
-                            screen: const MainPage(),
-                            begin: const Offset(0, 1),
-                          ));
-                        },
-                        child: Text(
-                            "continue_guest".translate(context).toUpperCase()),
-                      ),
+                      continueGuest(),
                       const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("${"already_have_account".translate(context)}?"),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(createRoute(
-                                screen: const LoginPage(),
-                                begin: const Offset(0, 1),
-                              ));
-                            },
-                            child: Text("login".translate(context)),
-                          )
-                        ],
-                      ),
+                      login(),
                     ],
                   ),
                 ),
@@ -204,6 +95,147 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(Icons.close),
+      ),
+    );
+  }
+
+  Widget signUpTitle() {
+    return Column(
+      children: [
+        ClipOval(
+          child: Image.asset(AppImages.imgLogo, height: 200),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          "start_journey".translate(context),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget signUpInput() {
+    return Row(
+      children: [
+        SizedBox(
+          width: 80,
+          height: 50,
+          child: PickCountryNumber(
+            selectedValue: selectedValue,
+            items: items,
+            onChange: (value) {
+              setState(() => selectedValue = value as String);
+            },
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: CustomTextInput(
+            controller: phoneController,
+            hint: "phone_number".translate(context),
+            typeInput: const [TypeInput.phone],
+            keyboardType: TextInputType.phone,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget signUpButton() {
+    return customButton(
+      text: "continue".translate(context),
+      isOnPress: isContinue,
+      onPress: () {
+        if (_formKey.currentState!.validate()) {
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: const MainPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+      },
+    );
+  }
+
+  Widget socialSignUp() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Divider(thickness: 1, color: Colors.black54),
+            ),
+            const SizedBox(width: 10),
+            Text("or".translate(context)),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Divider(thickness: 1, color: Colors.black54),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SocialLoginButton(
+              icon: FontAwesomeIcons.google,
+              color: Colors.red,
+              onPress: () {},
+            ),
+            SocialLoginButton(
+              icon: FontAwesomeIcons.facebook,
+              color: Colors.blue,
+              onPress: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget continueGuest() {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacement(createRoute(
+          screen: const MainPage(),
+          begin: const Offset(0, 1),
+        ));
+      },
+      child: Text("continue_guest".translate(context).toUpperCase()),
+    );
+  }
+
+  Widget login() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("${"already_have_account".translate(context)}?"),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(createRoute(
+              screen: const LoginPage(),
+              begin: const Offset(0, 1),
+            ));
+          },
+          child: Text("login".translate(context)),
+        )
+      ],
     );
   }
 }

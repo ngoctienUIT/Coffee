@@ -1,6 +1,10 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
+import 'package:coffee/src/presentation/login/bloc/login_event.dart';
+import 'package:coffee/src/presentation/login/bloc/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -74,16 +78,7 @@ class _LoginPageState extends State<LoginPage> {
     canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
-      appBar: canPop
-          ? AppBar(
-              elevation: 0,
-              backgroundColor: Colors.transparent,
-              leading: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close),
-              ),
-            )
-          : null,
+      appBar: canPop ? appBar() : null,
       body: WillPopScope(
         onWillPop: () => onWillPop(
           action: (now) => currentBackPressTime = now,
@@ -92,126 +87,28 @@ class _LoginPageState extends State<LoginPage> {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height - 35,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      ClipOval(
-                        child: Image.asset(AppImages.imgLogo, height: 200),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        "welcome_back".translate(context),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextInput(
-                        controller: phoneController,
-                        hint: "phone_number".translate(context),
-                        keyboardType: TextInputType.phone,
-                        typeInput: const [TypeInput.phone],
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[0-9a-zA-Z]")),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      CustomPasswordInput(
-                        controller: passwordController,
-                        hint: "password".translate(context),
-                        onPress: () => setState(() => hide = !hide),
-                        hide: hide,
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: isRemember,
-                            onChanged: (value) =>
-                                setState(() => isRemember = value!),
-                          ),
-                          Text("remember_login".translate(context)),
-                          const Spacer(),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(createRoute(
-                                screen: const ForgotPasswordPage(),
-                                begin: const Offset(1, 0),
-                              ));
-                            },
-                            child: Text(
-                                "${"forgot_password".translate(context)}?"),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      customButton(
-                        text: "continue".translate(context).toUpperCase(),
-                        isOnPress: isContinue,
-                        onPress: () {
-                          if (_formKey.currentState!.validate()) {
-                            saveLogin();
-                            Navigator.of(context).pushReplacement(createRoute(
-                              screen: const MainPage(),
-                              begin: const Offset(0, 1),
-                            ));
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Divider(thickness: 1, color: Colors.black54),
-                          ),
-                          const SizedBox(width: 10),
-                          Text("or".translate(context)),
-                          const SizedBox(width: 10),
-                          const Expanded(
-                            child: Divider(thickness: 1, color: Colors.black54),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SocialLoginButton(
-                            icon: FontAwesomeIcons.google,
-                            color: Colors.red,
-                            onPress: () {},
-                          ),
-                          SocialLoginButton(
-                            icon: FontAwesomeIcons.facebook,
-                            color: Colors.blue,
-                            onPress: () {},
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("${"new_customer".translate(context)}?"),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacement(createRoute(
-                                screen: const SignUpPage(),
-                                begin: const Offset(0, 1),
-                              ));
-                            },
-                            child: Text("create_account".translate(context)),
-                          )
-                        ],
-                      ),
-                    ],
+            child: BlocProvider(
+              create: (_) => LoginBloc(),
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height - 35,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        loginTitle(),
+                        const SizedBox(height: 20),
+                        loginInput(),
+                        rememberLogin(),
+                        const SizedBox(height: 10),
+                        loginButton(),
+                        const SizedBox(height: 20),
+                        socialLogin(),
+                        const Spacer(),
+                        signup(),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -219,6 +116,156 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(Icons.close),
+      ),
+    );
+  }
+
+  Widget loginTitle() {
+    return Column(
+      children: [
+        ClipOval(
+          child: Image.asset(AppImages.imgLogo, height: 200),
+        ),
+        const SizedBox(height: 20),
+        Text(
+          "welcome_back".translate(context),
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
+  Widget loginInput() {
+    return Column(
+      children: [
+        CustomTextInput(
+          controller: phoneController,
+          hint: "phone_number".translate(context),
+          keyboardType: TextInputType.phone,
+          typeInput: const [TypeInput.phone],
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+          ],
+        ),
+        const SizedBox(height: 10),
+        CustomPasswordInput(
+          controller: passwordController,
+          hint: "password".translate(context),
+          onPress: () => setState(() => hide = !hide),
+          hide: hide,
+        ),
+      ],
+    );
+  }
+
+  Widget rememberLogin() {
+    return Row(
+      children: [
+        BlocBuilder<LoginBloc, LoginState>(
+          buildWhen: (previous, current) => current is RememberState,
+          builder: (context, state) {
+            return Checkbox(
+              value: isRemember,
+              onChanged: (value) {
+                isRemember = value!;
+                BlocProvider.of<LoginBloc>(context).add(RememberLoginEvent());
+              },
+            );
+          },
+        ),
+        Text("remember_login".translate(context)),
+        const Spacer(),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).push(createRoute(
+              screen: const ForgotPasswordPage(),
+              begin: const Offset(1, 0),
+            ));
+          },
+          child: Text("${"forgot_password".translate(context)}?"),
+        )
+      ],
+    );
+  }
+
+  Widget loginButton() {
+    return customButton(
+      text: "continue".translate(context).toUpperCase(),
+      isOnPress: isContinue,
+      onPress: () {
+        if (_formKey.currentState!.validate()) {
+          saveLogin();
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: const MainPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+      },
+    );
+  }
+
+  Widget socialLogin() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Expanded(
+              child: Divider(thickness: 1, color: Colors.black54),
+            ),
+            const SizedBox(width: 10),
+            Text("or".translate(context)),
+            const SizedBox(width: 10),
+            const Expanded(
+              child: Divider(thickness: 1, color: Colors.black54),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SocialLoginButton(
+              icon: FontAwesomeIcons.google,
+              color: Colors.red,
+              onPress: () {},
+            ),
+            SocialLoginButton(
+              icon: FontAwesomeIcons.facebook,
+              color: Colors.blue,
+              onPress: () {},
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget signup() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("${"new_customer".translate(context)}?"),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pushReplacement(createRoute(
+              screen: const SignUpPage(),
+              begin: const Offset(0, 1),
+            ));
+          },
+          child: Text("create_account".translate(context)),
+        )
+      ],
     );
   }
 }
