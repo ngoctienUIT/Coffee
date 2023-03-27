@@ -18,3 +18,9 @@ class ClickLoginEvent extends LoginEvent {
 
   ClickLoginEvent({required this.isContinue});
 }
+
+class HidePasswordEvent extends LoginEvent {
+  bool isHide;
+
+  HidePasswordEvent({required this.isHide});
+}

@@ -20,3 +20,9 @@ class ContinueState extends LoginState {
 
   ContinueState({required this.isContinue});
 }
+
+class HidePasswordState extends LoginState {
+  bool isHide;
+
+  HidePasswordState({required this.isHide});
+}

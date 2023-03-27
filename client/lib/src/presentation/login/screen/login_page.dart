@@ -28,23 +28,66 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  DateTime? currentBackPressTime;
+
+  @override
+  Widget build(BuildContext context) {
+    bool canPop = ModalRoute.of(context)!.canPop;
+    return Scaffold(
+      backgroundColor: AppColors.bgCreamColor,
+      appBar: canPop ? appBar() : null,
+      body: WillPopScope(
+        onWillPop: () => onWillPop(
+          action: (now) => currentBackPressTime = now,
+          currentBackPressTime: currentBackPressTime,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: BlocProvider<LoginBloc>(
+              create: (_) => LoginBloc(),
+              child: const LoginView(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  AppBar appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(Icons.close),
+      ),
+    );
+  }
+}
+
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  DateTime? currentBackPressTime;
   bool isRemember = false;
-  bool isContinue = false;
-  bool canPop = false;
   bool hide = true;
 
   @override
   void initState() {
     SharedPreferences.getInstance().then((value) {
-      setState(() {
-        isRemember = value.getBool("isRemember") ?? false;
-        phoneController.text = value.getString("username") ?? "";
-        passwordController.text = value.getString("password") ?? "";
-      });
+      isRemember = value.getBool("isRemember") ?? false;
+      phoneController.text = value.getString("username") ?? "";
+      passwordController.text = value.getString("password") ?? "";
+      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: true));
+      context.read<LoginBloc>().add(RememberLoginEvent());
     });
     passwordController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
@@ -53,9 +96,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void checkEmpty() {
     if (phoneController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-      setState(() => isContinue = true);
+      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: true));
     } else {
-      setState(() => isContinue = false);
+      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: false));
     }
   }
 
@@ -75,57 +118,27 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    canPop = ModalRoute.of(context)!.canPop;
-    return Scaffold(
-      backgroundColor: AppColors.bgCreamColor,
-      appBar: canPop ? appBar() : null,
-      body: WillPopScope(
-        onWillPop: () => onWillPop(
-          action: (now) => currentBackPressTime = now,
-          currentBackPressTime: currentBackPressTime,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: BlocProvider<LoginBloc>(
-              create: (_) => LoginBloc(),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height - 35,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        loginTitle(),
-                        const SizedBox(height: 20),
-                        loginInput(),
-                        rememberLogin(),
-                        const SizedBox(height: 10),
-                        loginButton(),
-                        const SizedBox(height: 20),
-                        socialLogin(),
-                        const Spacer(),
-                        signup(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 35,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              loginTitle(),
+              const SizedBox(height: 20),
+              loginInput(),
+              rememberLogin(),
+              const SizedBox(height: 10),
+              loginButton(),
+              const SizedBox(height: 20),
+              socialLogin(),
+              const Spacer(),
+              signup(),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      leading: IconButton(
-        onPressed: () => Navigator.pop(context),
-        icon: const Icon(Icons.close),
       ),
     );
   }
@@ -159,11 +172,19 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
         const SizedBox(height: 10),
-        CustomPasswordInput(
-          controller: passwordController,
-          hint: "password".translate(context),
-          onPress: () => setState(() => hide = !hide),
-          hide: hide,
+        BlocBuilder<LoginBloc, LoginState>(
+          buildWhen: (previous, current) => current is HidePasswordState,
+          builder: (context, state) {
+            return CustomPasswordInput(
+              controller: passwordController,
+              hint: "password".translate(context),
+              onPress: () {
+                context.read<LoginBloc>().add(HidePasswordEvent(isHide: !hide));
+                hide = !hide;
+              },
+              hide: state is HidePasswordState ? state.isHide : true,
+            );
+          },
         ),
       ],
     );
@@ -200,17 +221,22 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginButton() {
-    return customButton(
-      text: "continue".translate(context).toUpperCase(),
-      isOnPress: isContinue,
-      onPress: () {
-        if (_formKey.currentState!.validate()) {
-          saveLogin();
-          Navigator.of(context).pushReplacement(createRoute(
-            screen: const MainPage(),
-            begin: const Offset(0, 1),
-          ));
-        }
+    return BlocBuilder<LoginBloc, LoginState>(
+      buildWhen: (previous, current) => current is ContinueState,
+      builder: (context, state) {
+        return customButton(
+          text: "continue".translate(context).toUpperCase(),
+          isOnPress: state is ContinueState ? state.isContinue : false,
+          onPress: () {
+            if (_formKey.currentState!.validate()) {
+              saveLogin();
+              Navigator.of(context).pushReplacement(createRoute(
+                screen: const MainPage(),
+                begin: const Offset(0, 1),
+              ));
+            }
+          },
+        );
       },
     );
   }
@@ -238,12 +264,16 @@ class _LoginPageState extends State<LoginPage> {
             SocialLoginButton(
               icon: FontAwesomeIcons.google,
               color: Colors.red,
-              onPress: () {},
+              onPress: () {
+                context.read<LoginBloc>().add(LoginWithGoogleEvent());
+              },
             ),
             SocialLoginButton(
               icon: FontAwesomeIcons.facebook,
               color: Colors.blue,
-              onPress: () {},
+              onPress: () {
+                context.read<LoginBloc>().add(LoginWithFacebookEvent());
+              },
             ),
           ],
         ),

@@ -18,6 +18,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<ClickLoginEvent>(
         (event, emit) => emit(ContinueState(isContinue: event.isContinue)));
+
+    on<HidePasswordEvent>(
+        (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
   }
 
   Future loginWithEmailPassword(Emitter emit) async {}
