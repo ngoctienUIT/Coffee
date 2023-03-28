@@ -26,20 +26,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future loginWithEmailPassword(Emitter emit) async {}
 
   Future loginWithGoogle(Emitter emit) async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if (googleUser != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+        print("token: ${googleAuth.accessToken}");
 
-      emit(LoginSuccessState());
+        emit(LoginSuccessState());
 
-      // final credential = GoogleAuthProvider.credential(
-      //   accessToken: googleAuth.accessToken,
-      //   idToken: googleAuth.idToken,
-      // );
-    } else {
-      emit(LoginErrorState(status: ""));
+        // final credential = GoogleAuthProvider.credential(
+        //   accessToken: googleAuth.accessToken,
+        //   idToken: googleAuth.idToken,
+        // );
+      } else {
+        emit(LoginErrorState(status: ""));
+      }
+    } catch (e) {
+      print(e);
+      emit(LoginErrorState(status: e.toString()));
     }
   }
 
@@ -47,6 +53,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final LoginResult result = await FacebookAuth.instance.login();
     if (result.status == LoginStatus.success) {
       final AccessToken accessToken = result.accessToken!;
+      print("token ${result.accessToken}");
       emit(LoginSuccessState());
     } else {
       print(result.status);
