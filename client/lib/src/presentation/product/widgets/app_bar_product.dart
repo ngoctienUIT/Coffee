@@ -1,11 +1,11 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
-
 class AppBarProduct extends StatelessWidget {
-  const AppBarProduct({Key? key, required this.isTop}) : super(key: key);
+  const AppBarProduct({Key? key, required this.isTop, required this.name})
+      : super(key: key);
 
+  final String name;
   final bool isTop;
 
   @override
@@ -24,7 +24,7 @@ class AppBarProduct extends StatelessWidget {
           opacity: isTop ? 0.0 : 1.0,
           duration: const Duration(milliseconds: 300),
           child: Text(
-            listSellingProducts[0]["name"]!,
+            name,
             style: const TextStyle(color: Colors.white),
           ),
         ),

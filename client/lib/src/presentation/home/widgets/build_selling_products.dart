@@ -25,7 +25,7 @@ class BuildListSellingProducts extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(createRoute(
-                  screen: ProductPage(index: index),
+                  screen: ProductPage(product: listProduct[index]),
                   begin: const Offset(0, 1),
                 ));
               },

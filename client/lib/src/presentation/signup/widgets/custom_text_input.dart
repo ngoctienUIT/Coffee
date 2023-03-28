@@ -19,6 +19,7 @@ class CustomTextInput extends StatelessWidget {
     this.typeInput,
     this.keyboardType,
     this.textInputAction,
+    this.onChanged,
     this.controller,
     this.backgroundColor = Colors.white,
     this.inputFormatters,
@@ -46,6 +47,7 @@ class CustomTextInput extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final EdgeInsetsGeometry contentPadding;
   final Function(String value)? onFieldSubmitted;
+  final Function(String value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +55,7 @@ class CustomTextInput extends StatelessWidget {
       onTap: onPress,
       style: textStyle,
       enabled: checkEdit,
+      onChanged: onChanged,
       controller: controller,
       keyboardType: keyboardType,
       textInputAction: textInputAction,
@@ -118,7 +121,6 @@ class CustomTextInput extends StatelessWidget {
           break;
         case TypeInput.email:
           if (value!.isValidEmail()) {
-            print("email: $value");
             return null;
           } else if (!value.isValidEmail() && !value.isOnlyNumbers() ||
               value.isEmpty) {

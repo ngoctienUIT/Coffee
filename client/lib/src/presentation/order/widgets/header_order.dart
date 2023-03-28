@@ -14,64 +14,67 @@ class HeaderOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(15),
-          child: SizedBox(
-            height: 40,
-            child: CustomTextInput(
-              hint: "search_name_dish".translate(context),
-              radius: 90,
-              contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              textStyle: const TextStyle(fontSize: 13),
-              backgroundColor: AppColors.bgColor,
-              onPress: () {
-                Navigator.of(context).push(createRoute(
-                  screen: const SearchPage(),
-                  begin: const Offset(1, 0),
-                ));
-              },
-              suffixIcon: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                color: Colors.grey,
-              ),
-            ),
+    return Column(children: [search(context), tabBar(context)]);
+  }
+
+  Widget search(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: SizedBox(
+        height: 40,
+        child: CustomTextInput(
+          hint: "search_name_dish".translate(context),
+          radius: 90,
+          contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          textStyle: const TextStyle(fontSize: 13),
+          backgroundColor: AppColors.bgColor,
+          onPress: () {
+            Navigator.of(context).push(createRoute(
+              screen: const SearchPage(),
+              begin: const Offset(1, 0),
+            ));
+          },
+          suffixIcon: const Icon(
+            FontAwesomeIcons.magnifyingGlass,
+            color: Colors.grey,
           ),
         ),
-        SizedBox(
-          height: 115,
-          child: TabBar(
-            controller: tabController,
-            physics: const BouncingScrollPhysics(),
-            isScrollable: true,
-            labelColor: Colors.black87,
-            // labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
-            // unselectedLabelStyle: const TextStyle(fontSize: 16),
-            indicatorColor: Colors.green,
-            tabs: List.generate(listItemProduct.length, (index) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width / 3.7,
-                child: Column(
-                  children: [
-                    Image.asset(
-                      listItemProduct[index]["image"]!,
-                      height: 70,
-                    ),
-                    Text(
-                      listItemProduct[index]["name"]!.toUpperCase(),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+      ),
+    );
+  }
+
+  Widget tabBar(BuildContext context) {
+    return SizedBox(
+      height: 115,
+      child: TabBar(
+        controller: tabController,
+        physics: const BouncingScrollPhysics(),
+        isScrollable: true,
+        labelColor: Colors.black87,
+        // labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+        // unselectedLabelStyle: const TextStyle(fontSize: 16),
+        indicatorColor: Colors.green,
+        tabs: List.generate(listItemProduct.length, (index) {
+          return SizedBox(
+            width: MediaQuery.of(context).size.width / 3.7,
+            child: Column(
+              children: [
+                Image.asset(
+                  listItemProduct[index]["image"]!,
+                  height: 70,
                 ),
-              );
-            }),
-          ),
-        ),
-      ],
+                Text(
+                  listItemProduct[index]["name"]!.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }

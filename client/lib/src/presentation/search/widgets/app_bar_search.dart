@@ -1,5 +1,8 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/search/bloc/search_bloc.dart';
+import 'package:coffee/src/presentation/search/bloc/search_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -29,6 +32,9 @@ class AppBarSearch extends StatelessWidget implements PreferredSizeWidget {
             FontAwesomeIcons.magnifyingGlass,
             color: Colors.grey,
           ),
+          onChanged: (value) {
+            context.read<SearchBloc>().add(SearchProduct(query: value));
+          },
         ),
       ),
       centerTitle: true,
