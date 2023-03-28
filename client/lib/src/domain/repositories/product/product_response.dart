@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/entities/upsize_entity.dart';
+import 'package:coffee/src/domain/entities/upsize/upsize_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'product_response.g.dart';

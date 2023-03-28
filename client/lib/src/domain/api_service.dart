@@ -1,4 +1,5 @@
 import 'package:coffee/src/domain/repositories/login/login_response.dart';
+import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -99,4 +100,19 @@ abstract class ApiService {
 
   @GET('/topping/{id}')
   Future<ToppingResponse> getToppingByID(@Path("id") String id);
+
+  //order
+  @GET("/order?userIdentity={email}&status=")
+  Future<List<OrderResponse>> getOrderHistoryCustomer(
+      @Path("email") String email);
+
+  @GET("/order?order?userIdentity={email}&status=PENDING")
+  Future<List<OrderResponse>> getPendingOrderCustomer(
+      @Path("email") String email);
+
+  @GET("/order/{id}")
+  Future<OrderResponse> getOrderByID(@Path("id") String id);
+
+  @POST("/order}")
+  Future<OrderResponse> createNewOrder(@Body() Map<String, dynamic> order);
 }

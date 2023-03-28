@@ -78,27 +78,27 @@ class BodyProduct extends StatelessWidget {
           return Row(
             children: [
               chooseSize(
-                "S",
-                state.product.sizeIndex == 0,
-                () {
+                text: "S",
+                check: state.product.sizeIndex == 0,
+                onPress: () {
                   context.read<ProductBloc>().add(DataTransmissionEvent(
                       product: state.product.copyWith(sizeIndex: 0)));
                 },
               ),
               const SizedBox(width: 10),
               chooseSize(
-                "M",
-                state.product.sizeIndex == 1,
-                () {
+                text: "M",
+                check: state.product.sizeIndex == 1,
+                onPress: () {
                   context.read<ProductBloc>().add(DataTransmissionEvent(
                       product: state.product.copyWith(sizeIndex: 1)));
                 },
               ),
               const SizedBox(width: 10),
               chooseSize(
-                "L",
-                state.product.sizeIndex == 2,
-                () {
+                text: "L",
+                check: state.product.sizeIndex == 2,
+                onPress: () {
                   context.read<ProductBloc>().add(DataTransmissionEvent(
                       product: state.product.copyWith(sizeIndex: 2)));
                 },

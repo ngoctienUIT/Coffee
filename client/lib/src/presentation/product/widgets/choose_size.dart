@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
-Widget chooseSize(String text, bool check, Function onPress) {
+Widget chooseSize({
+  required String text,
+  required bool check,
+  required Function onPress,
+}) {
   return SizedBox(
     height: 50,
     width: 90,
