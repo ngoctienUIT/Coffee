@@ -26,11 +26,7 @@ class CustomPickerWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Row(
           children: [
-            Text(
-              text,
-              style:
-                  TextStyle(fontSize: 16, color: Theme.of(context).hintColor),
-            ),
+            Text(text, style: const TextStyle(fontSize: 16)),
             const Spacer(),
             if (checkEdit)
               Text(

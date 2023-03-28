@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/profile/bloc/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../bloc/profile_bloc.dart';
 
 class HeaderProfilePage extends StatefulWidget {
   const HeaderProfilePage({Key? key}) : super(key: key);
@@ -29,14 +32,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: () => showMyBottomSheet(),
-                child: ClipOval(
-                  child: image == null
-                      ? Image.asset(AppImages.imgLogo, height: 80)
-                      : Image.file(image!, height: 80),
-                ),
-              ),
+              imageWidget(),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,6 +67,24 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           const SizedBox(height: 30),
         ],
       ),
+    );
+  }
+
+  Widget imageWidget() {
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (previous, current) => current is EditProfileSate,
+      builder: (context, state) {
+        return InkWell(
+          onTap: (state is EditProfileSate)
+              ? (state.isEdit ? () => showMyBottomSheet() : null)
+              : null,
+          child: ClipOval(
+            child: image == null
+                ? Image.asset(AppImages.imgLogo, height: 80)
+                : Image.file(image!, height: 80),
+          ),
+        );
+      },
     );
   }
 
