@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_strings.dart';
+import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 
 class BuildListSellingProducts extends StatelessWidget {
-  const BuildListSellingProducts({Key? key}) : super(key: key);
+  const BuildListSellingProducts({Key? key, required this.listProduct})
+      : super(key: key);
+
+  final List<ProductResponse> listProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class BuildListSellingProducts extends StatelessWidget {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: listSellingProducts.length,
+        itemCount: listProduct.length,
         itemBuilder: (context, index) {
           return Container(
             margin: const EdgeInsets.all(5),
@@ -48,7 +52,7 @@ class BuildListSellingProducts extends StatelessWidget {
               const Spacer(),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(listSellingProducts[index]["name"]!, maxLines: 2),
+                child: Text(listProduct[index].name, maxLines: 2),
               ),
               const SizedBox(height: 10),
               Align(
@@ -61,7 +65,7 @@ class BuildListSellingProducts extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    listSellingProducts[index]["price"]!,
+                    "${listProduct[index].price}${listProduct[index].currency}",
                     maxLines: 2,
                     textAlign: TextAlign.center,
                   ),

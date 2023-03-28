@@ -2,10 +2,13 @@ import 'package:coffee/src/presentation/view_special_offer/screen/view_special_o
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/utils/constants/app_strings.dart';
+import '../../../domain/repositories/coupon/coupon_response.dart';
 
 class BuildListSpecialOffer extends StatelessWidget {
-  const BuildListSpecialOffer({Key? key}) : super(key: key);
+  const BuildListSpecialOffer({Key? key, required this.listCoupon})
+      : super(key: key);
+
+  final List<CouponResponse> listCoupon;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class BuildListSpecialOffer extends StatelessWidget {
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: listSpecialOffer.length,
+        itemCount: listCoupon.length,
         itemBuilder: (context, index) {
           return InkWell(
             borderRadius: BorderRadius.circular(15),
@@ -42,14 +45,14 @@ class BuildListSpecialOffer extends StatelessWidget {
             child: Column(
               children: [
                 Image.asset(
-                  listSpecialOffer[index]["image"]!,
+                  "assets/banner.jpg",
                   height: 150,
                 ),
                 const Spacer(),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    listSpecialOffer[index]["content"]!,
+                    listCoupon[index].couponName,
                     maxLines: 2,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -61,10 +64,8 @@ class BuildListSpecialOffer extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    listSpecialOffer[index]["time"]!,
-                    style: const TextStyle(
-                      color: Color.fromRGBO(122, 122, 122, 1),
-                    ),
+                    listCoupon[index].dueDate,
+                    style: const TextStyle(color: Color(0xFF7A7A7A)),
                     maxLines: 2,
                     textAlign: TextAlign.center,
                   ),

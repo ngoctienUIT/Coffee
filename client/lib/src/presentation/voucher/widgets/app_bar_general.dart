@@ -22,7 +22,7 @@ class AppBarGeneral extends StatelessWidget implements PreferredSizeWidget {
           : null,
       centerTitle: true,
       leading: IconButton(
-        icon: Icon(icon, color: Colors.black),
+        icon: Icon(icon),
         onPressed: () => Navigator.pop(context),
       ),
     );

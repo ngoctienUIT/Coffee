@@ -1,3 +1,4 @@
+import 'package:coffee/main.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
@@ -109,8 +110,10 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  Future saveLogin() async {
+  Future saveLogin(String token) async {
     final prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isLogin", true);
+    prefs.setString("token", token);
     prefs.setBool('isRemember', isRemember);
     prefs.setString('username', phoneController.text);
     prefs.setString('password', passwordController.text);
@@ -121,36 +124,32 @@ class _LoginViewState extends State<LoginView> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
-          SharedPreferences.getInstance().then((value) {
-            value.setBool("isLogin", true);
-            value.setString("token", state.token);
-          });
+          isLogin = true;
+          saveLogin(state.token);
           Navigator.of(context).pushReplacement(createRoute(
             screen: const MainPage(),
             begin: const Offset(0, 1),
           ));
         }
       },
-      child: SizedBox(
+      child: Container(
         height: MediaQuery.of(context).size.height - 35,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                loginTitle(),
-                const SizedBox(height: 20),
-                loginInput(),
-                rememberLogin(),
-                const SizedBox(height: 10),
-                loginButton(),
-                const SizedBox(height: 20),
-                socialLogin(),
-                const Spacer(),
-                signup(),
-              ],
-            ),
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              loginTitle(),
+              const SizedBox(height: 20),
+              loginInput(),
+              rememberLogin(),
+              const SizedBox(height: 10),
+              loginButton(),
+              const SizedBox(height: 20),
+              socialLogin(),
+              const Spacer(),
+              signup(),
+            ],
           ),
         ),
       ),
@@ -178,9 +177,9 @@ class _LoginViewState extends State<LoginView> {
       children: [
         CustomTextInput(
           controller: phoneController,
-          hint: "phone_number".translate(context),
-          keyboardType: TextInputType.phone,
-          typeInput: const [TypeInput.phone],
+          hint: "email_phone_number".translate(context),
+          keyboardType: TextInputType.emailAddress,
+          typeInput: const [TypeInput.phone, TypeInput.email],
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
           ],
@@ -243,7 +242,6 @@ class _LoginViewState extends State<LoginView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              saveLogin();
               context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
                     email: phoneController.text,
                     password: passwordController.text,

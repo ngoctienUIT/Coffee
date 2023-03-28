@@ -1,5 +1,7 @@
+import 'package:coffee/main.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
+import 'package:coffee/src/presentation/register_info/screen/register_info_page.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_bloc.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_event.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
@@ -104,27 +106,25 @@ class _SignUpViewState extends State<SignUpView> {
           ));
         }
       },
-      child: SizedBox(
+      child: Container(
         height: MediaQuery.of(context).size.height - 35,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                signUpTitle(),
-                const SizedBox(height: 20),
-                signUpInput(),
-                const SizedBox(height: 20),
-                signUpButton(),
-                const SizedBox(height: 20),
-                socialSignUp(),
-                const SizedBox(height: 20),
-                continueGuest(),
-                const Spacer(),
-                login(),
-              ],
-            ),
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              signUpTitle(),
+              const SizedBox(height: 20),
+              signUpInput(),
+              const SizedBox(height: 20),
+              signUpButton(),
+              const SizedBox(height: 20),
+              socialSignUp(),
+              const SizedBox(height: 20),
+              continueGuest(),
+              const Spacer(),
+              login(),
+            ],
           ),
         ),
       ),
@@ -153,9 +153,9 @@ class _SignUpViewState extends State<SignUpView> {
   Widget signUpInput() {
     return CustomTextInput(
       controller: phoneController,
-      hint: "phone_number".translate(context),
-      typeInput: const [TypeInput.phone],
-      keyboardType: TextInputType.phone,
+      hint: "email_phone_number".translate(context),
+      typeInput: const [TypeInput.phone, TypeInput.email],
+      keyboardType: TextInputType.emailAddress,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
       ],
@@ -171,8 +171,12 @@ class _SignUpViewState extends State<SignUpView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
-                  email: phoneController.text, password: "password"));
+              Navigator.of(context).push(createRoute(
+                screen: const RegisterInfoPage(),
+                begin: const Offset(0, 1),
+              ));
+              // context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
+              //     email: phoneController.text, password: "password"));
             }
           },
         );
@@ -223,6 +227,7 @@ class _SignUpViewState extends State<SignUpView> {
   Widget continueGuest() {
     return TextButton(
       onPressed: () {
+        isLogin = false;
         Navigator.of(context).pushReplacement(createRoute(
           screen: const MainPage(),
           begin: const Offset(0, 1),

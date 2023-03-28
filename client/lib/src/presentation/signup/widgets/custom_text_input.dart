@@ -118,6 +118,7 @@ class CustomTextInput extends StatelessWidget {
           break;
         case TypeInput.email:
           if (value!.isValidEmail()) {
+            print("email: $value");
             return null;
           } else if (!value.isValidEmail() && !value.isOnlyNumbers() ||
               value.isEmpty) {

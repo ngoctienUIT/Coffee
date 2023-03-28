@@ -20,10 +20,7 @@ class AppBarCart extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Colors.black,
-        ),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
       ),
       actions: [
         TextButton(

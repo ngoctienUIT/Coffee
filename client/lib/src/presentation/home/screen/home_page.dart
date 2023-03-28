@@ -87,7 +87,7 @@ class HomeView extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is HomeLoaded) {
-          return const BuildListSpecialOffer();
+          return BuildListSpecialOffer(listCoupon: state.listCoupon);
         }
         return Container();
       },
@@ -104,7 +104,7 @@ class HomeView extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is HomeLoaded) {
-          return const BuildListSellingProducts();
+          return BuildListSellingProducts(listProduct: state.listProduct);
         }
         return Container();
       },
