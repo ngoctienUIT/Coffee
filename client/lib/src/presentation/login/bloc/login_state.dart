@@ -2,7 +2,11 @@ abstract class LoginState {}
 
 class InitState extends LoginState {}
 
-class LoginSuccessState extends LoginState {}
+class LoginSuccessState extends LoginState {
+  String token;
+
+  LoginSuccessState({required this.token});
+}
 
 class LoginErrorState extends LoginState {
   String status;

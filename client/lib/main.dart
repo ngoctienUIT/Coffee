@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/presentation/main/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,8 @@ import 'src/core/language/localization/app_localizations_setup.dart';
 import 'src/presentation/signup/screen/signup_page.dart';
 
 int? language;
+bool isLogin = false;
+String token = "";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +23,8 @@ void main() async {
   );
   final prefs = await SharedPreferences.getInstance();
   language = prefs.getInt('language');
+  isLogin = prefs.getBool('isLogin') ?? false;
+  token = prefs.getString('token') ?? "";
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -66,7 +71,7 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: const SignUpPage(),
+            home: isLogin ? const MainPage() : const SignUpPage(),
           );
         },
       ),

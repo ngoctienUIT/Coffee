@@ -84,9 +84,9 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     SharedPreferences.getInstance().then((value) {
       isRemember = value.getBool("isRemember") ?? false;
-      phoneController.text = value.getString("username") ?? "";
-      passwordController.text = value.getString("password") ?? "";
-      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: true));
+      phoneController.text = isRemember ? value.getString("username")! : "";
+      passwordController.text = isRemember ? value.getString("password")! : "";
+      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: isRemember));
       context.read<LoginBloc>().add(RememberLoginEvent());
     });
     passwordController.addListener(() => checkEmpty());
@@ -112,8 +112,8 @@ class _LoginViewState extends State<LoginView> {
   Future saveLogin() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('isRemember', isRemember);
-    prefs.setString('username', isRemember ? phoneController.text : "");
-    prefs.setString('password', isRemember ? passwordController.text : "");
+    prefs.setString('username', phoneController.text);
+    prefs.setString('password', passwordController.text);
   }
 
   @override
@@ -121,6 +121,10 @@ class _LoginViewState extends State<LoginView> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
+          SharedPreferences.getInstance().then((value) {
+            value.setBool("isLogin", true);
+            value.setString("token", state.token);
+          });
           Navigator.of(context).pushReplacement(createRoute(
             screen: const MainPage(),
             begin: const Offset(0, 1),

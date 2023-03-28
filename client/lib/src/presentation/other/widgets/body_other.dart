@@ -3,6 +3,7 @@ import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -69,6 +70,8 @@ class BodyOtherPage extends StatelessWidget {
                 text: "logout".translate(context),
                 isOnPress: true,
                 onPress: () {
+                  SharedPreferences.getInstance()
+                      .then((value) => value.setBool("isLogin", false));
                   Navigator.of(context).pushReplacement(createRoute(
                     screen: const SignUpPage(),
                     begin: const Offset(0, 1),

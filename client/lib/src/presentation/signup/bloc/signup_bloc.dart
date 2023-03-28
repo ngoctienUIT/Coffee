@@ -68,15 +68,19 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   }
 
   Future signUpWithFacebook(Emitter emit) async {
-    final LoginResult result = await FacebookAuth.instance.login();
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-      print("token ${result.accessToken}");
-      emit(SignUpSuccessState());
-    } else {
-      print(result.status);
-      print(result.message);
-      emit(SignUpErrorState(status: result.status.toString()));
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
+        print("token ${result.accessToken}");
+        emit(SignUpSuccessState());
+      } else {
+        print(result.status);
+        print(result.message);
+        emit(SignUpErrorState(status: result.status.toString()));
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

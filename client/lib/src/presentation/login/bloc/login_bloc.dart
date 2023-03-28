@@ -32,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.login(
           {"loginIdentity": event.email, "hashedPassword": event.password});
-      emit(LoginSuccessState());
+      emit(LoginSuccessState(token: response));
     } catch (e) {
       emit(LoginErrorState(status: e.toString()));
       print(e);
@@ -48,7 +48,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             await googleUser.authentication;
         print("token: ${googleAuth.accessToken}");
 
-        emit(LoginSuccessState());
+        emit(LoginSuccessState(token: googleAuth.accessToken!));
 
         // final credential = GoogleAuthProvider.credential(
         //   accessToken: googleAuth.accessToken,
@@ -64,15 +64,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future loginWithFacebook(Emitter emit) async {
-    final LoginResult result = await FacebookAuth.instance.login();
-    if (result.status == LoginStatus.success) {
-      final AccessToken accessToken = result.accessToken!;
-      print("token ${result.accessToken}");
-      emit(LoginSuccessState());
-    } else {
-      print(result.status);
-      print(result.message);
-      emit(LoginErrorState(status: result.status.toString()));
+    try {
+      final LoginResult result = await FacebookAuth.instance.login();
+      if (result.status == LoginStatus.success) {
+        final AccessToken accessToken = result.accessToken!;
+        print("token ${accessToken.token}");
+        emit(LoginSuccessState(token: accessToken.token));
+      } else {
+        print(result.status);
+        print(result.message);
+        emit(LoginErrorState(status: result.status.toString()));
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }
