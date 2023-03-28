@@ -1,9 +1,12 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
+import 'package:coffee/src/presentation/signup/bloc/signup_bloc.dart';
+import 'package:coffee/src/presentation/signup/bloc/signup_event.dart';
+import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
-import 'package:coffee/src/presentation/signup/widgets/pick_country_number.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/on_will_pop.dart';
@@ -22,41 +25,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController phoneController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-  String selectedValue = "+84";
-  bool canPop = false;
-  bool isContinue = false;
   DateTime? currentBackPressTime;
-
-  final List<String> items = [
-    '+84',
-    '+85',
-    '+86',
-    '+87',
-  ];
-
-  @override
-  void initState() {
-    phoneController.addListener(() {
-      if (phoneController.text.isNotEmpty) {
-        setState(() => isContinue = true);
-      } else {
-        setState(() => isContinue = false);
-      }
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    phoneController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    canPop = ModalRoute.of(context)!.canPop;
+    bool canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
       appBar: canPop ? appBar() : null,
@@ -68,29 +41,9 @@ class _SignUpPageState extends State<SignUpPage> {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height - 35,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      signUpTitle(),
-                      const SizedBox(height: 20),
-                      signUpInput(),
-                      const SizedBox(height: 20),
-                      signUpButton(),
-                      const SizedBox(height: 20),
-                      socialSignUp(),
-                      const SizedBox(height: 20),
-                      continueGuest(),
-                      const Spacer(),
-                      login(),
-                    ],
-                  ),
-                ),
-              ),
+            child: BlocProvider(
+              create: (context) => SignUpBloc(),
+              child: const SignUpView(),
             ),
           ),
         ),
@@ -105,6 +58,75 @@ class _SignUpPageState extends State<SignUpPage> {
       leading: IconButton(
         onPressed: () => Navigator.pop(context),
         icon: const Icon(Icons.close),
+      ),
+    );
+  }
+}
+
+class SignUpView extends StatefulWidget {
+  const SignUpView({Key? key}) : super(key: key);
+
+  @override
+  State<SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<SignUpView> {
+  final TextEditingController phoneController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  bool isContinue = false;
+
+  @override
+  void initState() {
+    phoneController.addListener(() {
+      if (phoneController.text.isNotEmpty) {
+        context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: true));
+      } else {
+        context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: false));
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is SignUpSuccessState) {
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: const MainPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+      },
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - 35,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                signUpTitle(),
+                const SizedBox(height: 20),
+                signUpInput(),
+                const SizedBox(height: 20),
+                signUpButton(),
+                const SizedBox(height: 20),
+                socialSignUp(),
+                const SizedBox(height: 20),
+                continueGuest(),
+                const Spacer(),
+                login(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -129,46 +151,31 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget signUpInput() {
-    return Row(
-      children: [
-        SizedBox(
-          width: 80,
-          height: 50,
-          child: PickCountryNumber(
-            selectedValue: selectedValue,
-            items: items,
-            onChange: (value) {
-              setState(() => selectedValue = value as String);
-            },
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: CustomTextInput(
-            controller: phoneController,
-            hint: "phone_number".translate(context),
-            typeInput: const [TypeInput.phone],
-            keyboardType: TextInputType.phone,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-            ],
-          ),
-        ),
+    return CustomTextInput(
+      controller: phoneController,
+      hint: "phone_number".translate(context),
+      typeInput: const [TypeInput.phone],
+      keyboardType: TextInputType.phone,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
       ],
     );
   }
 
   Widget signUpButton() {
-    return customButton(
-      text: "continue".translate(context),
-      isOnPress: isContinue,
-      onPress: () {
-        if (_formKey.currentState!.validate()) {
-          Navigator.of(context).pushReplacement(createRoute(
-            screen: const MainPage(),
-            begin: const Offset(0, 1),
-          ));
-        }
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => current is ContinueState,
+      builder: (context, state) {
+        return customButton(
+          text: "continue".translate(context),
+          isOnPress: state is ContinueState ? state.isContinue : false,
+          onPress: () {
+            if (_formKey.currentState!.validate()) {
+              context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
+                  email: phoneController.text, password: "password"));
+            }
+          },
+        );
       },
     );
   }
@@ -196,12 +203,16 @@ class _SignUpPageState extends State<SignUpPage> {
             SocialLoginButton(
               icon: FontAwesomeIcons.google,
               color: Colors.red,
-              onPress: () {},
+              onPress: () {
+                context.read<SignUpBloc>().add(SignUpWithGoogleEvent());
+              },
             ),
             SocialLoginButton(
               icon: FontAwesomeIcons.facebook,
               color: Colors.blue,
-              onPress: () {},
+              onPress: () {
+                context.read<SignUpBloc>().add(SignUpWithFacebookEvent());
+              },
             ),
           ],
         ),

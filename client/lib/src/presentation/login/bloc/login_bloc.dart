@@ -1,14 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../domain/api_service.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(InitState()) {
     on<LoginWithEmailPasswordEvent>(
-        (event, emit) => loginWithEmailPassword(emit));
+        (event, emit) => loginWithEmailPassword(event, emit));
 
     on<LoginWithGoogleEvent>((event, emit) => loginWithGoogle(emit));
 
@@ -23,7 +25,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
   }
 
-  Future loginWithEmailPassword(Emitter emit) async {}
+  Future loginWithEmailPassword(
+      LoginWithEmailPasswordEvent event, Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final response = await apiService.login(
+          {"loginIdentity": event.email, "hashedPassword": event.password});
+      emit(LoginSuccessState());
+    } catch (e) {
+      emit(LoginErrorState(status: e.toString()));
+      print(e);
+    }
+  }
 
   Future loginWithGoogle(Emitter emit) async {
     try {

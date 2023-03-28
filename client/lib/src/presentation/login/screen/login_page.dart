@@ -118,25 +118,35 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height - 35,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              loginTitle(),
-              const SizedBox(height: 20),
-              loginInput(),
-              rememberLogin(),
-              const SizedBox(height: 10),
-              loginButton(),
-              const SizedBox(height: 20),
-              socialLogin(),
-              const Spacer(),
-              signup(),
-            ],
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is LoginSuccessState) {
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: const MainPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+      },
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height - 35,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                loginTitle(),
+                const SizedBox(height: 20),
+                loginInput(),
+                rememberLogin(),
+                const SizedBox(height: 10),
+                loginButton(),
+                const SizedBox(height: 20),
+                socialLogin(),
+                const Spacer(),
+                signup(),
+              ],
+            ),
           ),
         ),
       ),
@@ -200,7 +210,7 @@ class _LoginViewState extends State<LoginView> {
               value: isRemember,
               onChanged: (value) {
                 isRemember = value!;
-                BlocProvider.of<LoginBloc>(context).add(RememberLoginEvent());
+                context.read<LoginBloc>().add(RememberLoginEvent());
               },
             );
           },
@@ -230,10 +240,10 @@ class _LoginViewState extends State<LoginView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               saveLogin();
-              Navigator.of(context).pushReplacement(createRoute(
-                screen: const MainPage(),
-                begin: const Offset(0, 1),
-              ));
+              context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
+                    email: phoneController.text,
+                    password: passwordController.text,
+                  ));
             }
           },
         );

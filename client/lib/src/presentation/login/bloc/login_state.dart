@@ -1,12 +1,8 @@
-enum Social { email, google, facebook, newUser }
-
 abstract class LoginState {}
 
 class InitState extends LoginState {}
 
-class LoginSuccessState extends LoginState {
-  LoginSuccessState();
-}
+class LoginSuccessState extends LoginState {}
 
 class LoginErrorState extends LoginState {
   String status;
