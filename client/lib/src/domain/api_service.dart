@@ -24,6 +24,20 @@ abstract class ApiService {
   @POST("/user/login")
   Future<String> login(@Body() Map<String, dynamic> user);
 
+  // Reset password
+  @GET(
+      "/user/issue-rspwmail?email={email}&forward=http://mock-client.com/reset-password.jsp")
+  Future resetPassword(@Path("email") String email);
+
+  // Update existing user's field
+  @POST("/user/{email}/{field}")
+  Future<UserResponse> updateUser(
+      @Path("email") String email, @Path("field") String field, @Body() body);
+
+  // Remove user by ID
+  @DELETE("/user/{id}")
+  Future removeUserByID(@Path("id") String id);
+
   //product
   @GET('/product')
   Future<List<ProductResponse>> getAllProducts();
