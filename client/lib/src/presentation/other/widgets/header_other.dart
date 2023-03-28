@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/other/bloc/other_event.dart';
+import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,7 @@ import '../../../core/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/title_bottom_sheet.dart';
+import '../bloc/other_bloc.dart';
 import 'language_widget.dart';
 
 class HeaderOtherPage extends StatefulWidget {
@@ -24,10 +27,9 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
   @override
   void initState() {
     SharedPreferences.getInstance().then((value) {
-      setState(() {
-        language = value.getInt('language') ??
-            (Platform.localeName.split('_')[0] == "vi" ? 0 : 1);
-      });
+      language = value.getInt('language') ??
+          (Platform.localeName.split('_')[0] == "vi" ? 0 : 1);
+      context.read<OtherBloc>().add(ChangeLanguageEvent(language: language));
     });
     super.initState();
   }
@@ -42,7 +44,8 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('language', lang);
       if (!mounted) return;
-      setState(() => language = lang);
+      language = lang;
+      context.read<OtherBloc>().add(ChangeLanguageEvent(language: language));
     }
     if (!mounted) return;
     Navigator.pop(context);
@@ -55,49 +58,69 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          Row(
-            children: [
-              const Spacer(),
-              InkWell(
-                onTap: () {
-                  showMyBottomSheet(context);
-                },
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(90),
-                    border: Border.all(color: Colors.white),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        language == 0 ? "Tiếng Việt" : "English",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      const Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
+          header(),
+          const SizedBox(height: 10),
+          body(),
+          const SizedBox(height: 30),
+        ],
+      ),
+    );
+  }
+
+  Widget header() {
+    return BlocBuilder<OtherBloc, OtherState>(
+      buildWhen: (previous, current) => current is ChangeLanguageState,
+      builder: (context, state) {
+        return Row(
+          children: [
+            const Spacer(),
+            InkWell(
+              onTap: () => showMyBottomSheet(context),
+              child: Container(
+                alignment: Alignment.centerRight,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(90),
+                  border: Border.all(color: Colors.white),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      language == 0 ? "Tiếng Việt" : "English",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const Icon(
+                      Icons.keyboard_arrow_down_outlined,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 10),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
+            ),
+            const SizedBox(width: 10),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget body() {
+    return BlocBuilder<OtherBloc, OtherState>(
+      buildWhen: (previous, current) => current is! ChangeLanguageState,
+      builder: (context, state) {
+        if (state is InitState || state is OtherLoading) {
+          return _buildLoading();
+        }
+        if (state is OtherError) {
+          return Center(child: Text(state.message!));
+        }
+        if (state is OtherLoaded) {
+          return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ClipOval(
-                child: Image.asset(
-                  AppImages.imgLogo,
-                  height: 80,
-                ),
-              ),
+              ClipOval(child: Image.asset(AppImages.imgLogo, height: 80)),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,21 +128,19 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                   IntrinsicHeight(
                     child: Row(
                       children: [
-                        const Text(
-                          "Trần Ngọc Tiến",
-                          style: TextStyle(
+                        Text(
+                          state.user.displayName,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(width: 10),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          width: 2,
-                        ),
+                        const VerticalDivider(color: Colors.white, width: 2),
                         const SizedBox(width: 10),
                         Text(
-                          "member".translate(context),
+                          // "member".translate(context),
+                          state.user.userRole,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -129,17 +150,14 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
-                    "DRIPS: 0",
-                    style: TextStyle(color: Colors.white),
-                  )
+                  const Text("DRIPS: 0", style: TextStyle(color: Colors.white))
                 ],
               ),
             ],
-          ),
-          const SizedBox(height: 30),
-        ],
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
@@ -207,4 +225,6 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
       },
     );
   }
+
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

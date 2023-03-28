@@ -1,13 +1,14 @@
+import 'package:coffee/src/domain/repositories/login/login_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
+import 'entities/user/user_response.dart';
 import 'repositories/coupon/coupon_response.dart';
 import 'repositories/product/product_response.dart';
 import 'repositories/product_catalogues/product_catalogues_response.dart';
 import 'repositories/store/store_response.dart';
 import 'repositories/tag/tag_response.dart';
 import 'repositories/topping/topping_response.dart';
-import 'repositories/user/user_response.dart';
 
 part 'api_service.g.dart';
 
@@ -22,7 +23,7 @@ abstract class ApiService {
 
   //login
   @POST("/user/login")
-  Future<String> login(@Body() Map<String, dynamic> user);
+  Future<LoginResponse> login(@Body() Map<String, dynamic> user);
 
   // Reset password
   @GET(
@@ -34,9 +35,13 @@ abstract class ApiService {
   Future<UserResponse> updateUser(
       @Path("email") String email, @Path("field") String field, @Body() body);
 
-  // Remove user by ID
+  // Get user by ID
   @DELETE("/user/{id}")
   Future removeUserByID(@Path("id") String id);
+
+  // Remove user by ID
+  @GET("/user/{id}")
+  Future<UserResponse> getUserByID(@Path("id") String id);
 
   //product
   @GET('/product')

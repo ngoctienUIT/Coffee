@@ -243,8 +243,8 @@ class _LoginViewState extends State<LoginView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
-                    email: phoneController.text,
-                    password: passwordController.text,
+                    email: "test.user", // phoneController.text,
+                    password: "test", //passwordController.text,
                   ));
             }
           },

@@ -1,8 +1,11 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
+import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:coffee/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,10 +37,13 @@ class BodyOtherPage extends StatelessWidget {
             if (isLogin)
               groupItemOther("account".translate(context), [
                 itemOther("profile".translate(context), Icons.person, () {
-                  Navigator.of(context).push(createRoute(
-                    screen: const ProfilePage(),
-                    begin: const Offset(1, 0),
-                  ));
+                  OtherState otherState = context.read<OtherBloc>().state;
+                  if (otherState is OtherLoaded) {
+                    Navigator.of(context).push(createRoute(
+                      screen: ProfilePage(user: otherState.user),
+                      begin: const Offset(1, 0),
+                    ));
+                  }
                 }),
                 const Divider(),
                 itemOther("setting".translate(context), Icons.settings, () {

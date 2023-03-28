@@ -1,5 +1,4 @@
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
-import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
@@ -57,9 +56,6 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
           builder: (context, state) {
             print(state);
             if (state is InitState || state is OrderLoading) {
-              if (state is InitState) {
-                BlocProvider.of<OrderBloc>(context).add(FetchData());
-              }
               return _buildLoading();
             }
             if (state is OrderError) {

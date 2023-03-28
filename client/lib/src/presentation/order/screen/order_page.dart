@@ -1,4 +1,5 @@
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
+import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/widgets/body_order.dart';
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
 import 'package:coffee/src/presentation/order/widgets/header_order.dart';
@@ -28,7 +29,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OrderBloc>(
-      create: (_) => OrderBloc(),
+      create: (_) => OrderBloc()..add(FetchData()),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         body: SafeArea(

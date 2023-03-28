@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
 import 'login_event.dart';
@@ -32,7 +33,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.login(
           {"loginIdentity": event.email, "hashedPassword": event.password});
-      emit(LoginSuccessState(token: response));
+      SharedPreferences.getInstance().then((value) {
+        value.setString("userID", response.userResponse.id);
+      });
+      emit(LoginSuccessState(token: response.accessToken));
     } catch (e) {
       emit(LoginErrorState(status: e.toString()));
       print(e);
@@ -71,12 +75,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         print("token ${accessToken.token}");
         emit(LoginSuccessState(token: accessToken.token));
       } else {
-        print(result.status);
-        print(result.message);
+        print("status: ${result.status.name}");
+        print("message: ${result.message!}");
         emit(LoginErrorState(status: result.status.toString()));
       }
     } catch (e) {
-      print(e);
+      print("error: $e");
     }
   }
 }

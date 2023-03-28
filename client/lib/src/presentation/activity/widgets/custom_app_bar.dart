@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -18,10 +17,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation,
       leading: InkWell(
         onTap: () {
-          Navigator.of(context).push(createRoute(
-            screen: const ProfilePage(),
-            begin: const Offset(1, 0),
-          ));
+          // Navigator.of(context).push(createRoute(
+          //   screen: ProfilePage(),
+          //   begin: const Offset(1, 0),
+          // ));
         },
         borderRadius: BorderRadius.circular(90),
         child: ClipOval(child: Image.asset(AppImages.imgLogo)),
