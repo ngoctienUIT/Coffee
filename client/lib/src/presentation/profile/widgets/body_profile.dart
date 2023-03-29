@@ -1,11 +1,9 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
-import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_event.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_state.dart';
 import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dart';
-import 'package:coffee/src/presentation/profile/widgets/gender_widget.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/entities/user/user_response.dart';
+import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
   const BodyProfilePage({Key? key, required this.user}) : super(key: key);
@@ -121,7 +120,14 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           checkEdit: isEdit,
           text:
               isMale ? "male".translate(context) : "female".translate(context),
-          onPress: () => showMyBottomSheet(context),
+          onPress: () => showMyBottomSheet(
+            context: context,
+            isMale: isMale,
+            onPress: (isMale) {
+              Navigator.pop(context);
+              setState(() => this.isMale = isMale);
+            },
+          ),
         ),
         const SizedBox(height: 10),
         CustomPickerWidget(
@@ -165,50 +171,5 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
     if (picked != null && picked != selectedDate) {
       setState(() => selectedDate = picked);
     }
-  }
-
-  void showMyBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      context: context,
-      builder: (context) {
-        return Container(
-          height: 250,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              titleBottomSheet(
-                "choose_gender".translate(context),
-                () => Navigator.pop(context),
-              ),
-              const Divider(color: Colors.black),
-              GenderWidget(
-                gender: "male".translate(context),
-                image: AppImages.imgMale,
-                onPress: () {
-                  setState(() => isMale = true);
-                  Navigator.pop(context);
-                },
-                isPick: isMale,
-              ),
-              GenderWidget(
-                gender: "female".translate(context),
-                image: AppImages.imgFemale,
-                onPress: () {
-                  setState(() => isMale = false);
-                  Navigator.pop(context);
-                },
-                isPick: !isMale,
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 }

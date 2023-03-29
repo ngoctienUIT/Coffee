@@ -26,6 +26,11 @@ abstract class ApiService {
   @POST("/user/login")
   Future<LoginResponse> login(@Body() Map<String, dynamic> user);
 
+  //login
+  @POST("/user/login")
+  Future<LoginResponse> loginCredentialTokenOAuth2(
+      @Body() Map<String, dynamic> user);
+
   // Reset password
   @GET(
       "/user/issue-rspwmail?email={email}&forward=http://mock-client.com/reset-password.jsp")

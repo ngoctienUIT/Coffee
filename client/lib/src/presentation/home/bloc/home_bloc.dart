@@ -17,9 +17,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final listProduct = apiService.getAllProducts();
       final listCoupon = apiService.getAllCoupons();
+      final listProductCatalogues = apiService.getAllProductCatalogues();
       emit(HomeLoaded(
         listCoupon: await listCoupon,
         listProduct: await listProduct,
+        listProductCatalogues: await listProductCatalogues,
       ));
     } catch (e) {
       emit(HomeError(e.toString()));

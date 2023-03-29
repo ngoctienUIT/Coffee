@@ -66,7 +66,7 @@ class _StoreViewState extends State<StoreView> {
           child: SizedBox(
             height: 40,
             child: CustomTextInput(
-              onFieldSubmitted: (value) {
+              onChanged: (value) {
                 context.read<StoreBloc>().add(SearchStore(storeName: value));
               },
               controller: searchAddressController,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/utils/constants/app_strings.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 
@@ -41,8 +40,8 @@ class GridItemOrder extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
-              child: Image.asset(
-                listSellingProducts[index % 7]["image"]!,
+              child: Image.network(
+                listProduct[index].image!,
                 width: 80,
               ),
             ),

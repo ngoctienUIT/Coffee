@@ -17,7 +17,7 @@ class ProductCataloguesResponse {
   final String image;
 
   @JsonKey(name: "subCatalogues")
-  final List<String> subCatalogues;
+  final List<String>? subCatalogues;
 
   ProductCataloguesResponse({
     required this.id,

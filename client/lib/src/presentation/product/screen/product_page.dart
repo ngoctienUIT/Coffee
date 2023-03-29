@@ -6,7 +6,6 @@ import 'package:coffee/src/presentation/product/widgets/bottom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
 import '../../../data/models/product.dart';
 import '../widgets/app_bar_product.dart';
 
@@ -49,8 +48,8 @@ class _ProductPageState extends State<ProductPage> {
             slivers: [
               AppBarProduct(isTop: isTop, name: widget.product.name),
               SliverToBoxAdapter(
-                child: Image.asset(
-                  listSellingProducts[0]["image"]!,
+                child: Image.network(
+                  widget.product.image!,
                   height: 300,
                   width: 300,
                 ),

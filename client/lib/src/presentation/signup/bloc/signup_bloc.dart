@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/domain/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +11,7 @@ import 'signup_state.dart';
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc() : super(InitState()) {
     on<SignUpWithEmailPasswordEvent>(
-        (event, emit) => signUpWithEmailPassword(event, emit));
+        (event, emit) => signUpWithEmailPassword(event.user, emit));
 
     on<SignUpWithGoogleEvent>((event, emit) => signUpWithGoogle(emit));
 
@@ -23,19 +24,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
   }
 
-  Future signUpWithEmailPassword(
-      SignUpWithEmailPasswordEvent event, Emitter emit) async {
+  Future signUpWithEmailPassword(User user, Emitter emit) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.signup({
-        "displayName": "Admin User",
-        "email": event.email,
-        "phoneNumber": "(028) 0000 0000",
-        "username": "admin",
-        "hashedPassword": event.password,
-        "userRole": "ADMIN"
-      });
+      final response = await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
     } catch (e) {
       emit(SignUpErrorState(status: e.toString()));

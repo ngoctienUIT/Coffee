@@ -2,7 +2,6 @@ import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/utils/constants/app_strings.dart';
 import '../../../domain/repositories/product/product_response.dart';
 
 class ListItemOrder extends StatelessWidget {
@@ -37,8 +36,8 @@ class ListItemOrder extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Row(
           children: [
-            Image.asset(
-              listSellingProducts[index % 7]["image"]!,
+            Image.network(
+              listProduct[index].image!,
               height: 100,
               width: 100,
             ),

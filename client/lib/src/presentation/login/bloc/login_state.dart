@@ -3,9 +3,7 @@ abstract class LoginState {}
 class InitState extends LoginState {}
 
 class LoginSuccessState extends LoginState {
-  String token;
-
-  LoginSuccessState({required this.token});
+  LoginSuccessState();
 }
 
 class LoginErrorState extends LoginState {

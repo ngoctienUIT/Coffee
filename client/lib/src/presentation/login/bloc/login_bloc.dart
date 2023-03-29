@@ -35,8 +35,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           {"loginIdentity": event.email, "hashedPassword": event.password});
       SharedPreferences.getInstance().then((value) {
         value.setString("userID", response.userResponse.id);
+        value.setString("token", response.accessToken);
       });
-      emit(LoginSuccessState(token: response.accessToken));
+      print(response.accessToken);
+      emit(LoginSuccessState());
     } catch (e) {
       emit(LoginErrorState(status: e.toString()));
       print(e);
@@ -51,8 +53,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
         print("token: ${googleAuth.accessToken}");
-
-        emit(LoginSuccessState(token: googleAuth.accessToken!));
+        SharedPreferences.getInstance().then((value) {
+          // value.setString("userID", response.userResponse.id);
+          value.setString("token", googleAuth.accessToken!);
+        });
+        emit(LoginSuccessState());
 
         // final credential = GoogleAuthProvider.credential(
         //   accessToken: googleAuth.accessToken,
@@ -73,7 +78,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (result.status == LoginStatus.success) {
         final AccessToken accessToken = result.accessToken!;
         print("token ${accessToken.token}");
-        emit(LoginSuccessState(token: accessToken.token));
+        SharedPreferences.getInstance().then((value) {
+          // value.setString("userID", response.userResponse.id);
+          value.setString("token", accessToken.token);
+        });
+        emit(LoginSuccessState());
       } else {
         print("status: ${result.status.name}");
         print("message: ${result.message!}");

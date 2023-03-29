@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/utils/constants/app_strings.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 
@@ -45,8 +44,8 @@ class BuildListSellingProducts extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              Image.asset(
-                listSellingProducts[index]["image"]!,
+              Image.network(
+                listProduct[index].image!,
                 height: 120,
               ),
               const Spacer(),

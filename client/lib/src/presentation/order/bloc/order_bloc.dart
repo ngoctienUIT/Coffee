@@ -15,11 +15,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProducts();
-      for (var item in response) {
-        print(item.toJson());
-      }
-      emit(OrderLoaded(response));
+      final listProduct = await apiService.getAllProducts();
+      final listProductCatalogues = await apiService.getAllProductCatalogues();
+
+      emit(OrderLoaded(listProduct, listProductCatalogues));
     } catch (e) {
       emit(OrderError(e.toString()));
       print(e);

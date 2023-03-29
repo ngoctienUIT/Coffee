@@ -4,7 +4,6 @@ import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,10 +109,9 @@ class _LoginViewState extends State<LoginView> {
     super.dispose();
   }
 
-  Future saveLogin(String token) async {
+  Future saveLogin() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool("isLogin", true);
-    prefs.setString("token", token);
     prefs.setBool('isRemember', isRemember);
     prefs.setString('username', phoneController.text);
     prefs.setString('password', passwordController.text);
@@ -125,7 +123,7 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           isLogin = true;
-          saveLogin(state.token);
+          saveLogin();
           Navigator.of(context).pushReplacement(createRoute(
             screen: const MainPage(),
             begin: const Offset(0, 1),
@@ -180,9 +178,9 @@ class _LoginViewState extends State<LoginView> {
           hint: "email_phone_number".translate(context),
           keyboardType: TextInputType.emailAddress,
           typeInput: const [TypeInput.phone, TypeInput.email],
-          inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-          ],
+          // inputFormatters: [
+          //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+          // ],
         ),
         const SizedBox(height: 10),
         BlocBuilder<LoginBloc, LoginState>(
@@ -243,8 +241,8 @@ class _LoginViewState extends State<LoginView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
-                    email: "test.user", // phoneController.text,
-                    password: "test", //passwordController.text,
+                    email: phoneController.text,
+                    password: passwordController.text,
                   ));
             }
           },

@@ -1,5 +1,7 @@
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
+import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+
 abstract class OrderState {}
 
 class InitState extends OrderState {}
@@ -8,7 +10,9 @@ class OrderLoading extends OrderState {}
 
 class OrderLoaded extends OrderState {
   final List<ProductResponse> listProduct;
-  OrderLoaded(this.listProduct);
+  final List<ProductCataloguesResponse> listProductCatalogues;
+
+  OrderLoaded(this.listProduct, this.listProductCatalogues);
 }
 
 class OrderError extends OrderState {

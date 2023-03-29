@@ -1,10 +1,11 @@
+import '../../../data/models/user.dart';
+
 abstract class SignUpEvent {}
 
 class SignUpWithEmailPasswordEvent extends SignUpEvent {
-  final String email;
-  final String password;
+  final User user;
 
-  SignUpWithEmailPasswordEvent({required this.email, required this.password});
+  SignUpWithEmailPasswordEvent({required this.user});
 }
 
 class SignUpWithGoogleEvent extends SignUpEvent {}

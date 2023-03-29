@@ -13,8 +13,8 @@ ProductCataloguesResponse _$ProductCataloguesResponseFromJson(
       name: json['productCatalogueName'] as String,
       description: json['description'] as String,
       image: json['imageUrl'] as String,
-      subCatalogues: (json['subCatalogues'] as List<dynamic>)
-          .map((e) => e as String)
+      subCatalogues: (json['subCatalogues'] as List<dynamic>?)
+          ?.map((e) => e as String)
           .toList(),
     );
 

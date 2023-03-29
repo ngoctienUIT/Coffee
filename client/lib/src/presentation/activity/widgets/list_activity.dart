@@ -1,5 +1,9 @@
+import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
+import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
+import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../view_order/screen/view_order_page.dart';
@@ -9,30 +13,47 @@ class ListActivity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: ListView.builder(
-        padding: const EdgeInsets.all(10),
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Navigator.of(context).push(createRoute(
-                screen: const ViewOrderPage(),
-                begin: const Offset(0, 1),
-              ));
+    return BlocBuilder<ActivityBloc, ActivityState>(
+      builder: (context, state) {
+        if (state is InitState || state is ActivityLoading) {
+          return _buildLoading();
+        }
+        if (state is ActivityError) {
+          return Center(child: Text(state.message!));
+        }
+        if (state is ActivityLoaded) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<ActivityBloc>().add(FetchData());
             },
-            child: itemActivity(),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(10),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              itemCount: state.listOrder.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(createRoute(
+                      screen: const ViewOrderPage(),
+                      begin: const Offset(0, 1),
+                    ));
+                  },
+                  child: itemActivity(state.listOrder[index]),
+                );
+              },
+            ),
           );
-        },
-      ),
+        }
+        return Container();
+      },
     );
   }
 
-  Widget itemActivity() {
+  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+
+  Widget itemActivity(OrderResponse order) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -44,18 +65,19 @@ class ListActivity extends StatelessWidget {
               child: Column(
                 children: [
                   Row(
-                    children: const [
+                    children: [
                       Text(
-                        "Tại cửa hàng",
-                        style: TextStyle(
+                        order.orderId.toString(),
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Text(
-                        "105.000đ",
-                        style: TextStyle(
+                        order.orderAmount.toString(),
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -65,11 +87,9 @@ class ListActivity extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      const Text("Đang giao"),
+                      Text(order.status.toString()),
                       const Spacer(),
-                      Text(
-                        DateFormat("hh:mm - dd/MM/yyyy").format(DateTime.now()),
-                      ),
+                      Text(order.createdDate.toString()),
                     ],
                   )
                 ],
