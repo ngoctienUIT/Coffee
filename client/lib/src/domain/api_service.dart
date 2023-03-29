@@ -1,10 +1,10 @@
-import 'package:coffee/src/domain/repositories/login/login_response.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
 import 'entities/user/user_response.dart';
 import 'repositories/coupon/coupon_response.dart';
+import 'repositories/login/login_response.dart';
+import 'repositories/order/order_response.dart';
 import 'repositories/product/product_response.dart';
 import 'repositories/product_catalogues/product_catalogues_response.dart';
 import 'repositories/store/store_response.dart';
@@ -34,7 +34,11 @@ abstract class ApiService {
   // Update existing user's field
   @POST("/user/{email}/{field}")
   Future<UserResponse> updateUser(
-      @Path("email") String email, @Path("field") String field, @Body() body);
+    @Header('Authorization') String token,
+    @Path("email") String email,
+    @Path("field") String field,
+    @Body() body,
+  );
 
   // Get user by ID
   @DELETE("/user/{id}")
@@ -104,15 +108,38 @@ abstract class ApiService {
   //order
   @GET("/order?userIdentity={email}&status=")
   Future<List<OrderResponse>> getOrderHistoryCustomer(
-      @Path("email") String email);
+    @Header('Authorization') String token,
+    @Path("email") String email,
+  );
 
   @GET("/order?order?userIdentity={email}&status=PENDING")
   Future<List<OrderResponse>> getPendingOrderCustomer(
-      @Path("email") String email);
+    @Header('Authorization') String token,
+    @Path("email") String email,
+  );
 
   @GET("/order/{id}")
-  Future<OrderResponse> getOrderByID(@Path("id") String id);
+  Future<OrderResponse> getOrderByID(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
 
-  @POST("/order}")
-  Future<OrderResponse> createNewOrder(@Body() Map<String, dynamic> order);
+  // 'Bearer $token'
+  @POST("/order")
+  Future<OrderResponse> createNewOrder(
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> order,
+  );
+
+  @DELETE("/order/{id}")
+  Future<OrderResponse> cancelOrder(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
+
+  @DELETE("/order/{id}/place-order")
+  Future<OrderResponse> placeOrder(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
 }

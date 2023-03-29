@@ -48,10 +48,17 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_slidable: ^2.0.0
   shared_preferences: ^2.0.18
+  retrofit: ^4.0.1
+  dio: ^5.0.3
+  json_annotation: ^4.8.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  retrofit_generator: ^6.0.0+1
+  json_serializable: ^6.6.1
+  build_runner: ^2.3.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

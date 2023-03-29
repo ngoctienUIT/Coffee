@@ -92,13 +92,15 @@ class _ApiService implements ApiService {
 
   @override
   Future<UserResponse> updateUser(
+    token,
     email,
     field,
     body,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = body;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UserResponse>(Options(
@@ -554,10 +556,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<OrderResponse>> getOrderHistoryCustomer(email) async {
+  Future<List<OrderResponse>> getOrderHistoryCustomer(
+    token,
+    email,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<OrderResponse>>(Options(
@@ -579,10 +585,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<OrderResponse>> getPendingOrderCustomer(email) async {
+  Future<List<OrderResponse>> getPendingOrderCustomer(
+    token,
+    email,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<List<dynamic>>(_setStreamType<List<OrderResponse>>(Options(
@@ -604,10 +614,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<OrderResponse> getOrderByID(id) async {
+  Future<OrderResponse> getOrderByID(
+    token,
+    id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<OrderResponse>(Options(
@@ -627,10 +641,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<OrderResponse> createNewOrder(order) async {
+  Future<OrderResponse> createNewOrder(
+    token,
+    order,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(order);
     final _result = await _dio
@@ -641,7 +659,61 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/order}',
+              '/order',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = OrderResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<OrderResponse> cancelOrder(
+    token,
+    id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<OrderResponse>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/order/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = OrderResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<OrderResponse> placeOrder(
+    token,
+    id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<OrderResponse>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/order/${id}/place-order',
               queryParameters: queryParameters,
               data: _data,
             )
