@@ -87,10 +87,13 @@ class BodyOtherPage extends StatelessWidget {
                     FacebookAuth.instance.logOut();
                     SharedPreferences.getInstance()
                         .then((value) => value.setBool("isLogin", false));
-                    Navigator.of(context).pushReplacement(createRoute(
-                      screen: const SignUpPage(),
-                      begin: const Offset(0, 1),
-                    ));
+                    Navigator.of(context).pushAndRemoveUntil(
+                      createRoute(
+                        screen: const SignUpPage(),
+                        begin: const Offset(0, 1),
+                      ),
+                      (route) => false,
+                    );
                   },
                 ),
               ),
