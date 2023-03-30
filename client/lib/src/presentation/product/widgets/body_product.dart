@@ -31,6 +31,8 @@ class BodyProduct extends StatelessWidget {
             const ProductDescription(),
             const SizedBox(height: 20),
             sizeProduct(),
+            const SizedBox(height: 20),
+            addTopping(),
           ],
         ),
       ),
@@ -38,10 +40,46 @@ class BodyProduct extends StatelessWidget {
   }
 
   Widget addTopping() {
-    return Column(
-      children: const [
-        Divider(),
-      ],
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is DataTransmissionState &&
+            state.product.toppingOptions!.isNotEmpty) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(),
+              const Text(
+                "Thêm",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: state.product.toppingOptions!.length,
+                itemBuilder: (context, index) {
+                  return Row(
+                    children: [
+                      Checkbox(
+                        value: true,
+                        onChanged: (value) {},
+                      ),
+                      Text(state.product.toppingOptions![index].toppingName),
+                      const Spacer(),
+                      Text(
+                          "${state.product.toppingOptions![index].pricePerService}đ"),
+                      const SizedBox(width: 10),
+                    ],
+                  );
+                },
+              )
+            ],
+          );
+        }
+        return Container();
+      },
     );
   }
 

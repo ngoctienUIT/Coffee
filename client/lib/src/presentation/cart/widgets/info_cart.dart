@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../address/screen/address_page.dart';
+import '../../add_address/screen/add_address_page.dart';
 
 class InfoCart extends StatefulWidget {
   const InfoCart({Key? key}) : super(key: key);
@@ -72,7 +72,7 @@ class _InfoCartState extends State<InfoCart> {
           InkWell(
             onTap: () {
               Navigator.of(context).push(createRoute(
-                screen: const AddressPage(),
+                screen: const AddAddressPage(),
                 begin: const Offset(1, 0),
               ));
             },
@@ -82,7 +82,7 @@ class _InfoCartState extends State<InfoCart> {
           InkWell(
             onTap: () {
               Navigator.of(context).push(createRoute(
-                screen: const AddressPage(),
+                screen: const AddAddressPage(),
                 begin: const Offset(1, 0),
               ));
             },

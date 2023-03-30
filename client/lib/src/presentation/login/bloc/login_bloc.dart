@@ -52,22 +52,25 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
+        ApiService apiService =
+            ApiService(Dio(BaseOptions(contentType: "application/json")));
+        final response = await apiService.loginCredentialTokenOAuth2({
+          "oauth2ProviderUserId": googleUser.id,
+          "oauth2ProviderUserIdentity": googleUser.email,
+          "oauth2ProviderAccessToken": googleAuth.accessToken,
+          "oauth2ProviderProviderName": "GOOGLE"
+        });
         print("token: ${googleAuth.accessToken}");
         SharedPreferences.getInstance().then((value) {
-          // value.setString("userID", response.userResponse.id);
+          value.setString("userID", response.userResponse.id);
           value.setString("token", googleAuth.accessToken!);
         });
         emit(LoginSuccessState());
-
-        // final credential = GoogleAuthProvider.credential(
-        //   accessToken: googleAuth.accessToken,
-        //   idToken: googleAuth.idToken,
-        // );
       } else {
         emit(LoginErrorState(status: ""));
       }
     } catch (e) {
-      print(e);
+      print("error $e");
       emit(LoginErrorState(status: e.toString()));
     }
   }

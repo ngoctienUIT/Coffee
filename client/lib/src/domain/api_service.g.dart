@@ -45,7 +45,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<LoginResponse> login(user) async {
+  Future<LoginResponse> loginCredentialTokenOAuth2(user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -59,7 +59,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/user/login',
+              '/user/login-oauth2',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -69,7 +69,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<LoginResponse> loginCredentialTokenOAuth2(user) async {
+  Future<LoginResponse> login(user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

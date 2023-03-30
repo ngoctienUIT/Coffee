@@ -12,11 +12,13 @@ ProductResponse _$ProductResponseFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String?,
       id: json['productId'] as String,
       name: json['productName'] as String,
-      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+      tags: (json['tags'] as List<dynamic>)
+          .map((e) => TagResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
       price: json['price'] as int,
       currency: json['currency'] as String,
       toppingOptions: (json['toppingOptions'] as List<dynamic>)
-          .map((e) => e as String)
+          .map((e) => ToppingResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       upsizeOptions:
           UpsizeEntity.fromJson(json['upsizeOptions'] as Map<String, dynamic>),

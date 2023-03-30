@@ -3,7 +3,6 @@ import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/app_bar_add_address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/contact_info.dart';
 import 'package:coffee/src/presentation/add_address/widgets/edit_address.dart';
-import 'package:coffee/src/presentation/add_address/widgets/set_default.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -48,12 +47,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   },
                 ),
                 const SizedBox(height: 10),
-                SetDefault(
-                  value: addressAPI.isDefault,
-                  onChange: (value) {
-                    setState(() => addressAPI.isDefault = value);
-                  },
-                ),
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/topping.dart';
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
 class Product {
@@ -6,7 +7,7 @@ class Product {
   final String currency;
   final String? image;
   final String? description;
-  final List<String>? toppingOptions;
+  final List<Topping>? toppingOptions;
   final List<String>? tags;
   final int price;
   final int S;
@@ -37,7 +38,9 @@ class Product {
       name: product.name,
       image: product.image,
       description: product.description,
-      toppingOptions: product.toppingOptions,
+      toppingOptions: product.toppingOptions
+          .map((e) => Topping.fromToppingResponse(e))
+          .toList(),
       tags: product.tags,
       currency: product.currency,
       price: product.price,
@@ -48,7 +51,7 @@ class Product {
   }
 
   Product copyWith({
-    List<String>? toppingOptions,
+    List<Topping>? toppingOptions,
     int? sizeIndex,
     int? number,
   }) {

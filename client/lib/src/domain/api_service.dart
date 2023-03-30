@@ -23,13 +23,13 @@ abstract class ApiService {
   Future<UserResponse> signup(@Body() Map<String, dynamic> user);
 
   //login
-  @POST("/user/login")
-  Future<LoginResponse> login(@Body() Map<String, dynamic> user);
+  @POST("/user/login-oauth2")
+  Future<LoginResponse> loginCredentialTokenOAuth2(
+      @Body() Map<String, dynamic> user);
 
   //login
   @POST("/user/login")
-  Future<LoginResponse> loginCredentialTokenOAuth2(
-      @Body() Map<String, dynamic> user);
+  Future<LoginResponse> login(@Body() Map<String, dynamic> user);
 
   // Reset password
   @GET(
