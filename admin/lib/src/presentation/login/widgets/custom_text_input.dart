@@ -24,6 +24,7 @@ class CustomTextInput extends StatelessWidget {
     this.onPress,
     this.backgroundColor = Colors.white,
     this.maxLines,
+    this.onChanged,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -42,6 +43,7 @@ class CustomTextInput extends StatelessWidget {
   final VoidCallback? onPress;
   final Color backgroundColor;
   final int? maxLines;
+  final Function(String value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class CustomTextInput extends StatelessWidget {
       inputFormatters: inputFormatters,
       textCapitalization: textCapitalization,
       readOnly: onPress == null ? false : true,
+      onChanged: onChanged,
       decoration: InputDecoration(
         filled: true,
         hintText: hint,
