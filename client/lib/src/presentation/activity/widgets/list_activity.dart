@@ -24,7 +24,7 @@ class ListActivity extends StatelessWidget {
         if (state is ActivityLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
-              context.read<ActivityBloc>().add(FetchData());
+              context.read<ActivityBloc>().add(FetchData(state.index));
             },
             child: ListView.builder(
               padding: const EdgeInsets.all(10),

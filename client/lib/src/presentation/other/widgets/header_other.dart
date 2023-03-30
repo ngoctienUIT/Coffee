@@ -120,7 +120,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ClipOval(child: Image.asset(AppImages.imgLogo, height: 80)),
+              ClipOval(child: Image.asset(AppImages.imgNonAvatar, height: 80)),
               const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

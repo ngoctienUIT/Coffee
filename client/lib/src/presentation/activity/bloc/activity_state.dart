@@ -4,14 +4,22 @@ abstract class ActivityState {}
 
 class InitState extends ActivityState {}
 
-class ActivityLoading extends ActivityState {}
+class ActivityLoading extends ActivityState {
+  final int index;
+
+  ActivityLoading(this.index);
+}
 
 class ActivityLoaded extends ActivityState {
   final List<OrderResponse> listOrder;
-  ActivityLoaded({required this.listOrder});
+  final int index;
+
+  ActivityLoaded({required this.listOrder, required this.index});
 }
 
 class ActivityError extends ActivityState {
   final String? message;
-  ActivityError(this.message);
+  final int index;
+
+  ActivityError({this.message, required this.index});
 }

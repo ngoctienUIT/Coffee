@@ -8,22 +8,23 @@ import '../../../domain/api_service.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   ActivityBloc() : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(event.index, emit));
   }
 
-  Future getData(Emitter emit) async {
+  Future getData(int index, Emitter emit) async {
     try {
-      emit(ActivityLoading());
+      emit(ActivityLoading(index));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "admin";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final listOder =
-          await apiService.getOrderHistoryCustomer("Bearer $token", email);
-      emit(ActivityLoaded(listOrder: listOder));
+      final listOder = index == 0
+          ? await apiService.getPlaceOrderCustomer("Bearer $token", email)
+          : await apiService.getOrderHistoryCustomer("Bearer $token", email);
+      emit(ActivityLoaded(listOrder: listOder, index: index));
     } catch (e) {
-      emit(ActivityError(e.toString()));
+      emit(ActivityError(message: e.toString(), index: index));
       print(e);
     }
   }

@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'firebase_options.dart';
 import 'src/core/language/bloc/language_cubit.dart';
 import 'src/core/language/bloc/language_state.dart';
 import 'src/core/language/localization/app_localizations_setup.dart';
-import 'src/presentation/signup/screen/signup_page.dart';
 
 int? language;
 bool isLogin = false;
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: isLogin ? const MainPage() : const SignUpPage(),
+            home: isLogin ? const MainPage() : const LoginPage(),
           );
         },
       ),

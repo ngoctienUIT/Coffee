@@ -80,7 +80,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               : null,
           child: ClipOval(
             child: image == null
-                ? Image.asset(AppImages.imgLogo, height: 80)
+                ? Image.asset(AppImages.imgNonAvatar, height: 80)
                 : Image.file(image!, height: 80),
           ),
         );

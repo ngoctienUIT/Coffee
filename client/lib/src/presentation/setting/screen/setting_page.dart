@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
 import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import '../../other/widgets/group_item_other.dart';
 import '../../other/widgets/item_other.dart';
 
 class SettingPage extends StatelessWidget {
-  const SettingPage({Key? key}) : super(key: key);
+  const SettingPage({Key? key, required this.user}) : super(key: key);
+
+  final UserResponse user;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class SettingPage extends StatelessWidget {
                 Icons.lock,
                 () {
                   Navigator.of(context).push(createRoute(
-                    screen: const ChangePasswordPage(),
+                    screen: ChangePasswordPage(user: user),
                     begin: const Offset(1, 0),
                   ));
                 },

@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           // ));
         },
         borderRadius: BorderRadius.circular(90),
-        child: ClipOval(child: Image.asset(AppImages.imgLogo)),
+        child: ClipOval(child: Image.asset(AppImages.imgNonAvatar)),
       ),
       actions: [
         IconButton(

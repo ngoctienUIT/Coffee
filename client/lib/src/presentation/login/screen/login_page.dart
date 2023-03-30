@@ -32,10 +32,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
-      appBar: canPop ? appBar() : null,
       body: WillPopScope(
         onWillPop: () => onWillPop(
           action: (now) => currentBackPressTime = now,
@@ -50,17 +48,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      leading: IconButton(
-        onPressed: () => Navigator.pop(context),
-        icon: const Icon(Icons.close),
       ),
     );
   }

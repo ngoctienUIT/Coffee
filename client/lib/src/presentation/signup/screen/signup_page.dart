@@ -1,10 +1,8 @@
-import 'package:coffee/main.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_bloc.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_event.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
-import 'package:coffee/src/presentation/signup/screen/register_info_page.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,9 +12,12 @@ import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/user.dart';
 import '../../login/widgets/custom_button.dart';
+import '../../login/widgets/custom_password_input.dart';
 import '../../login/widgets/social_login_button.dart';
-import '../../main/screen/main_page.dart';
+import '../../profile/widgets/custom_picker_widget.dart';
+import '../../profile/widgets/modal_gender.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -30,10 +31,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool canPop = ModalRoute.of(context)!.canPop;
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
-      appBar: canPop ? appBar() : null,
       body: WillPopScope(
         onWillPop: () => onWillPop(
           action: (now) => currentBackPressTime = now,
@@ -51,17 +50,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
-  AppBar appBar() {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      leading: IconButton(
-        onPressed: () => Navigator.pop(context),
-        icon: const Icon(Icons.close),
-      ),
-    );
-  }
 }
 
 class SignUpView extends StatefulWidget {
@@ -72,49 +60,76 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  final TextEditingController userController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isContinue = false;
+  bool hide = true;
 
   @override
   void initState() {
-    userController.addListener(() {
-      if (userController.text.isNotEmpty) {
-        context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: true));
-      } else {
-        context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: false));
-      }
-    });
+    phoneController.addListener(() => checkEmpty());
+    passwordController.addListener(() => checkEmpty());
+    confirmPasswordController.addListener(() => checkEmpty());
+    nameController.addListener(() => checkEmpty());
+    emailController.addListener(() => checkEmpty());
     super.initState();
+  }
+
+  void checkEmpty() {
+    if (phoneController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty &&
+        confirmPasswordController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        emailController.text.isNotEmpty) {
+      context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: true));
+    } else {
+      context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: false));
+    }
   }
 
   @override
   void dispose() {
-    userController.dispose();
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height - 35,
-      padding: const EdgeInsets.all(20),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            signUpTitle(),
-            const SizedBox(height: 20),
-            signUpInput(),
-            const SizedBox(height: 20),
-            signUpButton(),
-            const SizedBox(height: 20),
-            socialSignUp(),
-            const SizedBox(height: 20),
-            continueGuest(),
-            const Spacer(),
-            login(),
-          ],
+    return BlocListener<SignUpBloc, SignUpState>(
+      listener: (context, state) {
+        if (state is SignUpSuccessState) {
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: const LoginPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              signUpTitle(),
+              const SizedBox(height: 20),
+              const SizedBox(height: 10),
+              registerInfo(),
+              const SizedBox(height: 20),
+              signUpButton(),
+              const SizedBox(height: 20),
+              socialSignUp(),
+              const SizedBox(height: 20),
+              login(),
+            ],
+          ),
         ),
       ),
     );
@@ -139,12 +154,99 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget signUpInput() {
+  Widget registerInfo() {
+    return Column(
+      children: [
+        registerName(),
+        const SizedBox(height: 10),
+        CustomPickerWidget(
+          checkEdit: true,
+          text: true ? "male".translate(context) : "female".translate(context),
+          onPress: () => showMyBottomSheet(
+            context: context,
+            isMale: true,
+            onPress: (isMale) {
+              Navigator.pop(context);
+              // setState(() => this.isMale = isMale);
+            },
+          ),
+        ),
+        const SizedBox(height: 10),
+        CustomPickerWidget(
+          checkEdit: true,
+          text: "birthday".translate(context),
+          // onPress: () => selectDate(),
+        ),
+        const SizedBox(height: 10),
+        registerContact(),
+        passwordInput(),
+      ],
+    );
+  }
+
+  Widget registerName() {
     return CustomTextInput(
-      controller: userController,
-      hint: "email_phone_number".translate(context),
-      typeInput: const [TypeInput.phone, TypeInput.email],
-      keyboardType: TextInputType.emailAddress,
+      controller: nameController,
+      hint: "name".translate(context),
+      title: "name".translate(context).toLowerCase(),
+      typeInput: const [TypeInput.text],
+    );
+  }
+
+  Widget registerContact() {
+    return Column(
+      children: [
+        CustomTextInput(
+          controller: phoneController,
+          hint: "phone_number".translate(context),
+          typeInput: const [TypeInput.phone],
+          keyboardType: TextInputType.phone,
+        ),
+        const SizedBox(height: 10),
+        CustomTextInput(
+          controller: emailController,
+          typeInput: const [TypeInput.email],
+          hint: "Email",
+          keyboardType: TextInputType.emailAddress,
+        ),
+      ],
+    );
+  }
+
+  Widget passwordInput() {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => current is HidePasswordState,
+      builder: (context, state) {
+        return Column(
+          children: [
+            const SizedBox(height: 10),
+            CustomPasswordInput(
+              controller: passwordController,
+              hint: "password".translate(context),
+              onPress: () {
+                context
+                    .read<SignUpBloc>()
+                    .add(HidePasswordEvent(isHide: !hide));
+                hide = !hide;
+              },
+              hide: state is HidePasswordState ? state.isHide : true,
+            ),
+            const SizedBox(height: 10),
+            CustomPasswordInput(
+              controller: confirmPasswordController,
+              hint: "confirm_password".translate(context),
+              confirmPassword: passwordController.text,
+              onPress: () {
+                context
+                    .read<SignUpBloc>()
+                    .add(HidePasswordEvent(isHide: !hide));
+                hide = !hide;
+              },
+              hide: state is HidePasswordState ? state.isHide : true,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -157,12 +259,16 @@ class _SignUpViewState extends State<SignUpView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              Navigator.of(context).push(createRoute(
-                screen: RegisterInfoPage(username: userController.text),
-                begin: const Offset(0, 1),
-              ));
-              // context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
-              //     email: phoneController.text, password: "password"));
+              context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
+                    user: User(
+                      username: emailController.text,
+                      displayName: nameController.text,
+                      isMale: true,
+                      email: emailController.text,
+                      phoneNumber: phoneController.text,
+                      password: passwordController.text,
+                    ),
+                  ));
             }
           },
         );
@@ -207,19 +313,6 @@ class _SignUpViewState extends State<SignUpView> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget continueGuest() {
-    return TextButton(
-      onPressed: () {
-        isLogin = false;
-        Navigator.of(context).pushReplacement(createRoute(
-          screen: const MainPage(),
-          begin: const Offset(0, 1),
-        ));
-      },
-      child: Text("continue_guest".translate(context).toUpperCase()),
     );
   }
 

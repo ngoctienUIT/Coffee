@@ -38,7 +38,7 @@ abstract class ApiService {
 
   // Update existing user's field
   @POST("/user/{email}/{field}")
-  Future<UserResponse> updateUser(
+  Future<UserResponse> updateUserField(
     @Header('Authorization') String token,
     @Path("email") String email,
     @Path("field") String field,
@@ -75,6 +75,10 @@ abstract class ApiService {
   @GET('/product-catalogues/search?q={query}')
   Future<List<ProductCataloguesResponse>> searchProductCataloguesByName(
       @Path("query") String query);
+
+  @GET('/product-catalogues/{id}/products')
+  Future<List<ProductCataloguesResponse>> getAllProductsFromProductCatalogueID(
+      @Path("id") String id);
 
   //coupon
   @GET('/coupon')
@@ -117,8 +121,8 @@ abstract class ApiService {
     @Path("email") String email,
   );
 
-  @GET("/order?order?userIdentity={email}&status=PENDING")
-  Future<List<OrderResponse>> getPendingOrderCustomer(
+  @GET("/order?userIdentity={email}&status=PLACED")
+  Future<List<OrderResponse>> getPlaceOrderCustomer(
     @Header('Authorization') String token,
     @Path("email") String email,
   );

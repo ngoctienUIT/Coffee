@@ -59,37 +59,24 @@ class _StoreViewState extends State<StoreView> {
   }
 
   Widget headerStore() {
-    return Row(
-      children: [
-        const SizedBox(width: 10),
-        Expanded(
-          child: SizedBox(
-            height: 40,
-            child: CustomTextInput(
-              onChanged: (value) {
-                context.read<StoreBloc>().add(SearchStore(storeName: value));
-              },
-              controller: searchAddressController,
-              hint: "address_search".translate(context),
-              radius: 90,
-              contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              textInputAction: TextInputAction.search,
-              textStyle: const TextStyle(fontSize: 13),
-              suffixIcon: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                color: Colors.grey,
-              ),
-            ),
-          ),
+    return Container(
+      height: 40,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: CustomTextInput(
+        onChanged: (value) {
+          context.read<StoreBloc>().add(SearchStore(storeName: value));
+        },
+        controller: searchAddressController,
+        hint: "address_search".translate(context),
+        radius: 90,
+        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        textInputAction: TextInputAction.search,
+        textStyle: const TextStyle(fontSize: 13),
+        suffixIcon: const Icon(
+          FontAwesomeIcons.magnifyingGlass,
+          color: Colors.grey,
         ),
-        const SizedBox(width: 10),
-        TextButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.map),
-          label: Text("map".translate(context)),
-        ),
-        const SizedBox(width: 10),
-      ],
+      ),
     );
   }
 

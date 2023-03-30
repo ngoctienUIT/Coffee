@@ -1,7 +1,7 @@
 class AppImages {
   AppImages._();
 
-  static const String imgLogo = 'assets/images/coffee_logo.jpg';
+  static const String imgLogo = 'assets/images/coffee_logo.png';
   static const String imgFemale = 'assets/images/female.png';
   static const String imgMale = 'assets/images/male.png';
   static const String imgVietNam = 'assets/images/vietnam.png';

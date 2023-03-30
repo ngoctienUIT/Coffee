@@ -1,24 +1,16 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee/src/presentation/product/bloc/product_state.dart';
 import 'package:coffee/src/presentation/product/widgets/product_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../signup/widgets/custom_text_input.dart';
 import 'choose_size.dart';
 
 class BodyProduct extends StatelessWidget {
-  const BodyProduct({
-    Key? key,
-    required this.controller,
-    required this.isTop,
-  }) : super(key: key);
+  const BodyProduct({Key? key, required this.isTop}) : super(key: key);
 
-  final TextEditingController controller;
   final bool isTop;
 
   @override
@@ -35,38 +27,20 @@ class BodyProduct extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         duration: const Duration(milliseconds: 300),
         child: Column(
-          children: [const ProductDescription(), body(context)],
+          children: [
+            const ProductDescription(),
+            const SizedBox(height: 20),
+            sizeProduct(),
+          ],
         ),
       ),
     );
   }
 
-  Widget body(BuildContext context) {
+  Widget addTopping() {
     return Column(
-      children: [
-        const SizedBox(height: 20),
-        sizeProduct(),
-        const SizedBox(height: 10),
-        const Divider(color: Colors.black),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            const Icon(FontAwesomeIcons.fileLines),
-            const SizedBox(width: 5),
-            Text(
-              "note".translate(context),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 5),
-            Text("optional".translate(context)),
-          ],
-        ),
-        const SizedBox(height: 15),
-        CustomTextInput(
-          controller: controller,
-          hint: "note".translate(context),
-          colorBorder: Colors.black87,
-        ),
+      children: const [
+        Divider(),
       ],
     );
   }

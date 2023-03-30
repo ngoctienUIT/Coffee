@@ -18,7 +18,6 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  TextEditingController noteController = TextEditingController();
   final _controller = ScrollController();
   int sizeIndex = 0;
   bool isTop = true;
@@ -54,10 +53,7 @@ class _ProductPageState extends State<ProductPage> {
                   width: 300,
                 ),
               ),
-              BodyProduct(
-                isTop: isTop,
-                controller: noteController,
-              )
+              BodyProduct(isTop: isTop)
             ],
           ),
         ),

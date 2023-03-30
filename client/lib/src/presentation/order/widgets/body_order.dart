@@ -5,7 +5,6 @@ import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
 import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 
@@ -28,32 +27,46 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
   }
 
   Widget header() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: [
-          descriptionLine(
-            text: listItemProduct[widget.index]["name"]!.toUpperCase(),
-          ),
-          const Spacer(),
-          InkWell(
-            onTap: () => setState(() => check = true),
-            child: Icon(
-              Icons.menu,
-              color: check ? Colors.red : Colors.grey,
-              size: 35,
+    return BlocBuilder<OrderBloc, OrderState>(
+      builder: (context, state) {
+        if (state is InitState || state is OrderLoading) {
+          return _buildLoading();
+        }
+        if (state is OrderError) {
+          return Center(child: Text(state.message!));
+        }
+        if (state is OrderLoaded) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                descriptionLine(
+                  text: state.listProductCatalogues[widget.index].name
+                      .toUpperCase(),
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () => setState(() => check = true),
+                  child: Icon(
+                    Icons.menu,
+                    color: check ? Colors.red : Colors.grey,
+                    size: 35,
+                  ),
+                ),
+                InkWell(
+                  onTap: () => setState(() => check = false),
+                  child: Icon(
+                    Icons.grid_view_rounded,
+                    color: check ? Colors.grey : Colors.red,
+                    size: 35,
+                  ),
+                ),
+              ],
             ),
-          ),
-          InkWell(
-            onTap: () => setState(() => check = false),
-            child: Icon(
-              Icons.grid_view_rounded,
-              color: check ? Colors.grey : Colors.red,
-              size: 35,
-            ),
-          ),
-        ],
-      ),
+          );
+        }
+        return Container();
+      },
     );
   }
 
