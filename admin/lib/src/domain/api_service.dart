@@ -33,7 +33,7 @@ abstract class ApiService {
 
   // Update existing user's field
   @POST("/user/{email}/{field}")
-  Future<UserResponse> updateUser(
+  Future<UserResponse> updateUserField(
     @Header('Authorization') String token,
     @Path("email") String email,
     @Path("field") String field,

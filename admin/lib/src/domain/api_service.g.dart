@@ -91,7 +91,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<UserResponse> updateUser(
+  Future<UserResponse> updateUserField(
     token,
     email,
     field,

@@ -1,6 +1,8 @@
+import 'package:coffee_admin/src/domain/repositories/tag/tag_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../entities/upsize/upsize_entity.dart';
+import '../topping/topping_response.dart';
 
 part 'product_response.g.dart';
 
@@ -25,10 +27,10 @@ class ProductResponse {
   final String? description;
 
   @JsonKey(name: "toppingOptions")
-  final List<String> toppingOptions;
+  final List<ToppingResponse>? toppingOptions;
 
   @JsonKey(name: "tags")
-  final List<String> tags;
+  final List<TagResponse>? tags;
 
   @JsonKey(name: "upsizeOptions")
   final UpsizeEntity upsizeOptions;
