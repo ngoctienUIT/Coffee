@@ -19,3 +19,16 @@ class OrderError extends OrderState {
   final String? message;
   OrderError(this.message);
 }
+
+class RefreshOrderLoading extends OrderState {}
+
+class RefreshOrderLoaded extends OrderState {
+  final List<ProductResponse> listProduct;
+
+  RefreshOrderLoaded(this.listProduct);
+}
+
+class RefreshOrderError extends OrderState {
+  final String? message;
+  RefreshOrderError(this.message);
+}

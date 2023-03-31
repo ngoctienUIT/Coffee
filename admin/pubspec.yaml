@@ -51,6 +51,7 @@ dependencies:
   retrofit: ^4.0.1
   dio: ^5.0.3
   json_annotation: ^4.8.0
+  dropdown_button2: ^1.9.4
 
 dev_dependencies:
   flutter_test:

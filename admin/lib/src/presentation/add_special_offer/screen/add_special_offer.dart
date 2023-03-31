@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../add_voucher/widgets/custom_picker_widget.dart';
-import '../../login/widgets/custom_text_input.dart';
 import '../../product/widgets/description_line.dart';
+import '../../signup/widgets/custom_text_input.dart';
 
 class AddSpecialOffer extends StatefulWidget {
   const AddSpecialOffer({Key? key}) : super(key: key);
@@ -43,10 +43,7 @@ class _AddSpecialOfferState extends State<AddSpecialOffer> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.close_rounded,
-            color: Colors.black,
-          ),
+          icon: const Icon(Icons.close_rounded),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [

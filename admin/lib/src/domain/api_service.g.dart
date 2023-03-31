@@ -285,7 +285,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<ProductResponse>> createNewProduct(
+  Future<ProductResponse> createNewProduct(
     token,
     product,
   ) async {
@@ -296,7 +296,7 @@ class _ApiService implements ApiService {
     final _data = <String, dynamic>{};
     _data.addAll(product);
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -308,20 +308,24 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductResponse>> updateExistingProducts(id) async {
+  Future<ProductResponse> updateExistingProducts(
+    id,
+    token,
+    product,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final Map<String, dynamic>? _data = null;
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(product);
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -333,14 +337,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductResponse>> updateProductFieldValue(
+  Future<ProductResponse> updateProductFieldValue(
     id,
     field,
     fieldValue,
@@ -350,7 +352,7 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{};
     final _data = fieldValue;
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -362,20 +364,18 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductResponse>> updateProductToppingOptions(id) async {
+  Future<ProductResponse> updateProductToppingOptions(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -387,20 +387,18 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductResponse>> removeProductByID(id) async {
+  Future<ProductResponse> removeProductByID(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<ProductResponse>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -412,9 +410,7 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductResponse.fromJson(_result.data!);
     return value;
   }
 
@@ -495,15 +491,15 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> createNewProductCatalogue(
+  Future<ProductCataloguesResponse> createNewProductCatalogue(
       productCatalogues) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(productCatalogues);
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ProductCataloguesResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -515,15 +511,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductCataloguesResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> updateExistingProductCatalogue(
+  Future<ProductCataloguesResponse> updateExistingProductCatalogue(
     productCatalogues,
     id,
   ) async {
@@ -532,8 +525,8 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(productCatalogues);
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ProductCataloguesResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -545,15 +538,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductCataloguesResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> updateProductCatalogueFieldValue(
+  Future<ProductCataloguesResponse> updateProductCatalogueFieldValue(
     fieldValue,
     id,
     field,
@@ -562,8 +552,8 @@ class _ApiService implements ApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = fieldValue;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ProductCataloguesResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -575,15 +565,12 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductCataloguesResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> updateSubCatalogueUsingID(
+  Future<ProductCataloguesResponse> updateSubCatalogueUsingID(
     listSub,
     id,
   ) async {
@@ -591,8 +578,8 @@ class _ApiService implements ApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = listSub;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ProductCataloguesResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -604,22 +591,18 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductCataloguesResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> removeProductCataloguesByID(
-      id) async {
+  Future<ProductCataloguesResponse> removeProductCataloguesByID(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ProductCataloguesResponse>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -631,10 +614,7 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
+    final value = ProductCataloguesResponse.fromJson(_result.data!);
     return value;
   }
 

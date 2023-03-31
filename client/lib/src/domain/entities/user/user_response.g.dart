@@ -16,7 +16,7 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
       hashedPassword: json['hashedPassword'] as String,
       imageUrl: json['imageUrl'] as String?,
       userRole: json['userRole'] as String,
-      accountProvider: json['accountProvider'] as String,
+      accountProvider: json['accountProvider'] as String?,
       accountProviderReferenceUid:
           json['accountProviderReferenceUid'] as String?,
     );

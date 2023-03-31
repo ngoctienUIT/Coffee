@@ -45,6 +45,12 @@ abstract class ApiService {
     @Body() body,
   );
 
+  @POST("/user/{email}")
+  Future<UserResponse> updateExistingUser(
+    @Path("email") String email,
+    @Body() body,
+  );
+
   // Get user by ID
   @DELETE("/user/{id}")
   Future removeUserByID(@Path("id") String id);

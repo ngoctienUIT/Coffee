@@ -9,6 +9,16 @@ List<Map<String, String>> listItemProduct = [
   {"name": "Bánh mì", "image": "assets/traditional_coffee.png"},
 ];
 
+List<String> dayInWeek = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
+
 List<Map<String, String>> listSellingProducts = [
   {
     "name": "Cà phê truyền thống",

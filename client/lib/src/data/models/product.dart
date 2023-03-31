@@ -1,6 +1,8 @@
 import 'package:coffee/src/data/models/topping.dart';
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
+import 'tag.dart';
+
 class Product {
   final String id;
   final String name;
@@ -8,7 +10,7 @@ class Product {
   final String? image;
   final String? description;
   final List<Topping>? toppingOptions;
-  final List<String>? tags;
+  final List<Tag>? tags;
   final int price;
   final int S;
   final int M;
@@ -41,7 +43,7 @@ class Product {
       toppingOptions: product.toppingOptions
           .map((e) => Topping.fromToppingResponse(e))
           .toList(),
-      tags: product.tags,
+      tags: product.tags.map((e) => Tag.fromTagResponse(e)).toList(),
       currency: product.currency,
       price: product.price,
       S: product.upsizeOptions.s ?? 0,

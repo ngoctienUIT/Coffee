@@ -6,7 +6,7 @@ import '../../../core/utils/constants/app_images.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
 import '../../login/widgets/custom_button.dart';
-import '../../login/widgets/custom_text_input.dart';
+import '../../signup/widgets/custom_text_input.dart';
 import '../widgets/app_bar_general.dart';
 
 class ForgotPasswordPage extends StatefulWidget {

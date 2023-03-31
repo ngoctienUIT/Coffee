@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../login/widgets/custom_text_input.dart';
+import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/search_bloc.dart';
 import '../bloc/search_event.dart';
 

@@ -22,10 +22,7 @@ class ViewOrderPage extends StatelessWidget {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: Colors.black,
-          ),
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () => Navigator.pop(context),
         ),
       ),

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../add_product/widgets/bottom_pick_image.dart';
-import '../../login/widgets/custom_text_input.dart';
 import '../../product/widgets/description_line.dart';
+import '../../signup/widgets/custom_text_input.dart';
 import '../widgets/custom_picker_widget.dart';
 
 class AddVoucherPage extends StatefulWidget {
@@ -44,10 +44,7 @@ class _AddVoucherPageState extends State<AddVoucherPage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(
-            Icons.close_rounded,
-            color: Colors.black,
-          ),
+          icon: const Icon(Icons.close_rounded),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [

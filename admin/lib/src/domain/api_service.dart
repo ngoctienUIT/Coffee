@@ -66,27 +66,30 @@ abstract class ApiService {
       @Path("query") String query);
 
   @POST('/product')
-  Future<List<ProductResponse>> createNewProduct(
+  Future<ProductResponse> createNewProduct(
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> product,
   );
 
   @POST('/product/{id}')
-  Future<List<ProductResponse>> updateExistingProducts(@Path("id") String id);
+  Future<ProductResponse> updateExistingProducts(
+    @Path("id") String id,
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> product,
+  );
 
   @POST('/product/{id}/{field}')
-  Future<List<ProductResponse>> updateProductFieldValue(
+  Future<ProductResponse> updateProductFieldValue(
     @Path("id") String id,
     @Path("field") String field,
     @Body() dynamic fieldValue,
   );
 
   @POST('/product/{id}/topping-options')
-  Future<List<ProductResponse>> updateProductToppingOptions(
-      @Path("id") String id);
+  Future<ProductResponse> updateProductToppingOptions(@Path("id") String id);
 
   @DELETE('/product/{id}')
-  Future<List<ProductResponse>> removeProductByID(@Path("id") String id);
+  Future<ProductResponse> removeProductByID(@Path("id") String id);
 
   //product-catalogues
   @GET('/product-catalogues')
@@ -101,30 +104,30 @@ abstract class ApiService {
       @Path("query") String query);
 
   @POST('/product-catalogues')
-  Future<List<ProductCataloguesResponse>> createNewProductCatalogue(
+  Future<ProductCataloguesResponse> createNewProductCatalogue(
       @Body() Map<String, dynamic> productCatalogues);
 
   @POST('/product-catalogues/{id}')
-  Future<List<ProductCataloguesResponse>> updateExistingProductCatalogue(
+  Future<ProductCataloguesResponse> updateExistingProductCatalogue(
     @Body() Map<String, dynamic> productCatalogues,
     @Path("id") String id,
   );
 
   @POST('/product-catalogues/{id}/{field}')
-  Future<List<ProductCataloguesResponse>> updateProductCatalogueFieldValue(
+  Future<ProductCataloguesResponse> updateProductCatalogueFieldValue(
     @Body() dynamic fieldValue,
     @Path("id") String id,
     @Path("field") String field,
   );
 
   @POST('/product-catalogues/{id}/sub-catalogues')
-  Future<List<ProductCataloguesResponse>> updateSubCatalogueUsingID(
+  Future<ProductCataloguesResponse> updateSubCatalogueUsingID(
     @Body() List<String> listSub,
     @Path("id") String id,
   );
 
   @DELETE('/product-catalogues/{id}')
-  Future<List<ProductCataloguesResponse>> removeProductCataloguesByID(
+  Future<ProductCataloguesResponse> removeProductCataloguesByID(
       @Path("id") String id);
 
   //coupon

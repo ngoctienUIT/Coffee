@@ -94,6 +94,15 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
           ),
           const SizedBox(height: 10),
           const Text(
+            "Trần Ngọc Tiến",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
             "Admin",
             style: TextStyle(
               fontSize: 20,

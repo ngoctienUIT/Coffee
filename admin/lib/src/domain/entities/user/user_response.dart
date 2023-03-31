@@ -32,7 +32,7 @@ class UserResponse {
   final String userRole;
 
   @JsonKey(name: "accountProvider")
-  final String accountProvider;
+  final String? accountProvider;
 
   @JsonKey(name: "accountProviderReferenceUid")
   final String? accountProviderReferenceUid;

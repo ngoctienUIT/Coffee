@@ -48,6 +48,10 @@ class HeaderOrderPage extends StatelessWidget {
 
   Widget tabBar(BuildContext context) {
     return BlocBuilder<OrderBloc, OrderState>(
+      buildWhen: (previous, current) =>
+          current is OrderLoading ||
+          current is OrderLoaded ||
+          current is OrderError,
       builder: (context, state) {
         if (state is InitState || state is OrderLoading) {
           return _buildLoading();

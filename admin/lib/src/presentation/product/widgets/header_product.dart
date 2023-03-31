@@ -5,8 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../login/widgets/custom_text_input.dart';
 import '../../search/screen/search_page.dart';
+import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/product_bloc.dart';
 import '../bloc/product_state.dart';
 
@@ -48,6 +48,10 @@ class HeaderProductPage extends StatelessWidget {
 
   Widget tabBar(BuildContext context) {
     return BlocBuilder<ProductBloc, ProductState>(
+      buildWhen: (previous, current) =>
+          current is ProductLoading ||
+          current is ProductLoaded ||
+          current is ProductError,
       builder: (context, state) {
         if (state is InitState || state is ProductLoading) {
           return _buildLoading();

@@ -27,7 +27,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Future loginWithEmailPassword(
-      LoginWithEmailPasswordEvent event, Emitter emit) async {
+    LoginWithEmailPasswordEvent event,
+    Emitter emit,
+  ) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));

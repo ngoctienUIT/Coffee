@@ -5,6 +5,7 @@ import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/repositories/product/product_response.dart';
 import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 
@@ -28,6 +29,10 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
 
   Widget header() {
     return BlocBuilder<OrderBloc, OrderState>(
+      buildWhen: (previous, current) =>
+          current is OrderLoading ||
+          current is OrderLoaded ||
+          current is OrderError,
       builder: (context, state) {
         if (state is InitState || state is OrderLoading) {
           return _buildLoading();
@@ -75,23 +80,32 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
-        if (state is InitState || state is OrderLoading) {
+        if (state is InitState ||
+            state is OrderLoading ||
+            state is RefreshOrderLoading) {
           return _buildLoading();
         }
-        if (state is OrderError) {
-          return Center(child: Text(state.message!));
+        if (state is OrderError || state is RefreshOrderError) {
+          return Center(
+            child: Text(state is OrderError
+                ? state.message!
+                : (state as RefreshOrderError).message!),
+          );
         }
-        if (state is OrderLoaded) {
+        if (state is OrderLoaded || state is RefreshOrderLoaded) {
+          List<ProductResponse> listProduct = state is OrderLoaded
+              ? state.listProduct
+              : (state as RefreshOrderLoaded).listProduct;
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderBloc>().add(FetchData());
+                  context.read<OrderBloc>().add(RefreshData());
                 },
                 child: check
-                    ? ListItemOrder(listProduct: state.listProduct)
-                    : GridItemOrder(listProduct: state.listProduct),
+                    ? ListItemOrder(listProduct: listProduct)
+                    : GridItemOrder(listProduct: listProduct),
               ),
             ),
           );

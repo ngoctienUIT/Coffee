@@ -14,7 +14,6 @@ import 'src/core/language/localization/app_localizations_setup.dart';
 
 int? language;
 bool isLogin = false;
-String token = "";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +23,6 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   language = prefs.getInt('language');
   isLogin = prefs.getBool('isLogin') ?? false;
-  token = prefs.getString('token') ?? "";
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
