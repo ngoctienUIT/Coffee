@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_event.dart';
@@ -7,6 +8,7 @@ import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dar
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -23,7 +25,6 @@ class BodyProfilePage extends StatefulWidget {
 }
 
 class _BodyProfilePageState extends State<BodyProfilePage> {
-  final TextEditingController surnameController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -34,7 +35,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
 
   @override
   void initState() {
-    surnameController.text = widget.user.displayName;
     nameController.text = widget.user.displayName;
     phoneController.text = widget.user.phoneNumber;
     emailController.text = widget.user.email;
@@ -44,21 +44,28 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: AppColors.bgColor,
-      ),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Form(
-          key: _formKey,
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) {
-              if (state is EditProfileSate) isEdit = state.isEdit;
-              return body();
-            },
+    return BlocListener<ProfileBloc, ProfileState>(
+      listenWhen: (previous, current) => current is SaveProfileLoaded,
+      listener: (context, state) {
+        context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+        Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          color: AppColors.bgColor,
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Form(
+            key: _formKey,
+            child: BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is EditProfileSate) isEdit = state.isEdit;
+                return body();
+              },
+            ),
           ),
         ),
       ),
@@ -68,8 +75,14 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-        context.read<ProfileBloc>().add(SaveProfileEvent());
+        context
+            .read<ProfileBloc>()
+            .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
+              displayName: nameController.text,
+              email: emailController.text,
+              phoneNumber: phoneController.text,
+              isMale: isMale,
+            )));
       }
     } else {
       context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
@@ -92,28 +105,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             ),
           ],
         ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomTextInput(
-                controller: surnameController,
-                hint: "surname".translate(context),
-                typeInput: const [TypeInput.text],
-                checkEdit: isEdit,
-                title: "surname".translate(context).toLowerCase(),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: CustomTextInput(
-                controller: nameController,
-                hint: "name".translate(context),
-                title: "name".translate(context).toLowerCase(),
-                typeInput: const [TypeInput.text],
-                checkEdit: isEdit,
-              ),
-            ),
-          ],
+        CustomTextInput(
+          controller: nameController,
+          hint: "name".translate(context),
+          title: "name".translate(context).toLowerCase(),
+          typeInput: const [TypeInput.text],
+          checkEdit: isEdit,
         ),
         const SizedBox(height: 10),
         CustomPickerWidget(

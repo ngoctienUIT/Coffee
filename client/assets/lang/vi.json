@@ -116,7 +116,7 @@
   "search_name_dish": "Tìm kiếm tên món ăn",
   "choose_delivery_method": "Chọn phương thức giao hàng",
   "please_enter_password": "Vui lòng nhập vào mật khẩu",
-  "Confirmation_password_not_match": "Mật khẩu xác nhận không trùng khớp",
+  "confirmation_password_not_match": "Mật khẩu xác nhận không trùng khớp",
   "password_length_characters": "Độ dài mật khẩu ít nhất là 8 ký tự",
   "enter_email_phone_reset_password": "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"
 }

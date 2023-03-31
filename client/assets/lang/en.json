@@ -115,7 +115,7 @@
   "search_name_dish": "Search the name of the dish",
   "choose_delivery_method": "Choose a delivery method",
   "please_enter_password": "Please enter password",
-  "Confirmation_password_not_match": "Confirmation password does not match",
+  "confirmation_password_not_match": "Confirmation password does not match",
   "password_length_characters": "Password length is at least 8 characters",
   "enter_email_phone_reset_password": "Enter the email address or phone number you used to log in to our app to reset your password"
 }

@@ -68,6 +68,7 @@ class _SignUpViewState extends State<SignUpView> {
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool hide = true;
+  bool isMale = true;
 
   @override
   void initState() {
@@ -161,13 +162,14 @@ class _SignUpViewState extends State<SignUpView> {
         const SizedBox(height: 10),
         CustomPickerWidget(
           checkEdit: true,
-          text: true ? "male".translate(context) : "female".translate(context),
+          text:
+              isMale ? "male".translate(context) : "female".translate(context),
           onPress: () => showMyBottomSheet(
             context: context,
-            isMale: true,
+            isMale: isMale,
             onPress: (isMale) {
               Navigator.pop(context);
-              // setState(() => this.isMale = isMale);
+              setState(() => this.isMale = isMale);
             },
           ),
         ),
@@ -263,7 +265,7 @@ class _SignUpViewState extends State<SignUpView> {
                     user: User(
                       username: emailController.text,
                       displayName: nameController.text,
-                      isMale: true,
+                      isMale: isMale,
                       email: emailController.text,
                       phoneNumber: phoneController.text,
                       password: passwordController.text,

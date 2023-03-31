@@ -28,8 +28,11 @@ class CustomPasswordInput extends StatelessWidget {
       obscureText: hide,
       keyboardType: keyboardType,
       validator: (value) {
+        if (confirmPassword != null) {
+          print(confirmPassword != value);
+        }
         if (confirmPassword != null && confirmPassword != value) {
-          return "Confirmation_password_not_match".translate(context);
+          return "confirmation_password_not_match".translate(context);
         }
         if (value!.isEmpty) {
           return "please_enter_password".translate(context);

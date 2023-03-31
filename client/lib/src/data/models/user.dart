@@ -1,3 +1,5 @@
+import 'package:coffee/src/domain/entities/user/user_response.dart';
+
 class User {
   final String username;
   final String displayName;
@@ -18,6 +20,39 @@ class User {
     this.imageUrl,
     this.userRole = "CUSTOMER",
   });
+
+  factory User.fromUserResponse(UserResponse userResponse) {
+    return User(
+      username: userResponse.username,
+      displayName: userResponse.displayName,
+      isMale: userResponse.isMale,
+      email: userResponse.email,
+      phoneNumber: userResponse.phoneNumber,
+      password: userResponse.hashedPassword,
+      userRole: userResponse.userRole,
+      imageUrl: userResponse.imageUrl,
+    );
+  }
+
+  User copyWith({
+    final String? displayName,
+    final bool? isMale,
+    final String? email,
+    final String? phoneNumber,
+    final String? imageUrl,
+    final String? password,
+  }) {
+    return User(
+      username: username,
+      displayName: displayName ?? this.displayName,
+      isMale: isMale ?? this.isMale,
+      email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      password: password ?? this.password,
+      imageUrl: imageUrl ?? this.imageUrl,
+      userRole: userRole,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

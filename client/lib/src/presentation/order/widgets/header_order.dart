@@ -25,7 +25,6 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
   @override
   void initState() {
     _productController = TabController(length: 0, vsync: this);
-
     super.initState();
   }
 

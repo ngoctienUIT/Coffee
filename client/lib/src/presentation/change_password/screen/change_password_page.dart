@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/change_password/bloc/change_password_bloc.dart';
 import 'package:coffee/src/presentation/change_password/bloc/change_password_state.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     oldPasswordController.addListener(() => checkEmpty());
     newPasswordController.addListener(() => checkEmpty());
     confirmPasswordController.addListener(() => checkEmpty());
+    confirmPasswordController.addListener(() {
+      context.read<ChangePasswordBloc>().add(TextChangeEvent());
+    });
     super.initState();
   }
 
@@ -110,21 +114,22 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   Widget passwordInput() {
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
-      buildWhen: (previous, current) => current is HidePasswordState,
+      buildWhen: (previous, current) =>
+          current is HidePasswordState || current is TextChangeState,
       builder: (context, state) {
         return Column(
           children: [
             CustomPasswordInput(
               controller: oldPasswordController,
               hint: "enter_old_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
             const SizedBox(height: 10),
             CustomPasswordInput(
               controller: newPasswordController,
               hint: "enter_new_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
             const SizedBox(height: 10),
@@ -132,7 +137,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               controller: confirmPasswordController,
               confirmPassword: newPasswordController.text,
               hint: "confirm_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
           ],
@@ -154,11 +159,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           text: "change_password".translate(context),
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
+            print(newPasswordController.text);
+            print(confirmPasswordController.text);
             if (_formKey.currentState!.validate()) {
               if (oldPasswordController.text == widget.user.hashedPassword) {
-                context
-                    .read<ChangePasswordBloc>()
-                    .add(ClickChangePasswordEvent(newPasswordController.text));
+                context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
+                    User.fromUserResponse(widget.user)
+                        .copyWith(password: newPasswordController.text)));
               } else {
                 Fluttertoast.showToast(msg: "Mật khẩu chưa chính xác");
               }

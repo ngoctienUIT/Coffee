@@ -42,13 +42,14 @@ abstract class ApiService {
     @Header('Authorization') String token,
     @Path("email") String email,
     @Path("field") String field,
-    @Body() body,
+    @Body() dynamic body,
   );
 
   @POST("/user/{email}")
   Future<UserResponse> updateExistingUser(
+    @Header('Authorization') String token,
     @Path("email") String email,
-    @Body() body,
+    @Body() Map<String, dynamic> body,
   );
 
   // Get user by ID

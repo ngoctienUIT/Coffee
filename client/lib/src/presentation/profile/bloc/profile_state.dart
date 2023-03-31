@@ -7,3 +7,12 @@ class EditProfileSate extends ProfileState {
 
   EditProfileSate({required this.isEdit});
 }
+
+class SaveProfileLoading extends ProfileState {}
+
+class SaveProfileLoaded extends ProfileState {}
+
+class SaveProfileError extends ProfileState {
+  final String? message;
+  SaveProfileError(this.message);
+}

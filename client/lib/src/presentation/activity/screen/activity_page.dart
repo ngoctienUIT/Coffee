@@ -19,11 +19,11 @@ class ActivityPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: const CustomAppBar(elevation: 0),
-        body: SafeArea(child: BlocBuilder<ActivityBloc, ActivityState>(
-          builder: (context, state) {
-            return const ActivityView();
-          },
-        )),
+        body: SafeArea(
+          child: BlocBuilder<ActivityBloc, ActivityState>(
+            builder: (context, state) => const ActivityView(),
+          ),
+        ),
       ),
     );
   }

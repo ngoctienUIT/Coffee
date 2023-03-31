@@ -1,9 +1,11 @@
+import '../../../data/models/user.dart';
+
 abstract class ChangePasswordEvent {}
 
 class ClickChangePasswordEvent extends ChangePasswordEvent {
-  String password;
+  User user;
 
-  ClickChangePasswordEvent(this.password);
+  ClickChangePasswordEvent(this.user);
 }
 
 class ShowChangeButtonEvent extends ChangePasswordEvent {
@@ -17,3 +19,5 @@ class HidePasswordEvent extends ChangePasswordEvent {
 
   HidePasswordEvent({required this.isHide});
 }
+
+class TextChangeEvent extends ChangePasswordEvent {}
