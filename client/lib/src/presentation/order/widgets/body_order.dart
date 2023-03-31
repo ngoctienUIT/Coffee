@@ -10,8 +10,7 @@ import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 
 class BodyOrderPage extends StatefulWidget {
-  const BodyOrderPage({Key? key, required this.index}) : super(key: key);
-  final int index;
+  const BodyOrderPage({Key? key}) : super(key: key);
 
   @override
   State<BodyOrderPage> createState() => _BodyOrderPageState();
@@ -22,9 +21,7 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [header(), const SizedBox(height: 10), body()],
-    );
+    return Column(children: [header(), const SizedBox(height: 10), body()]);
   }
 
   Widget header() {
@@ -46,7 +43,7 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
             child: Row(
               children: [
                 descriptionLine(
-                  text: state.listProductCatalogues[widget.index].name
+                  text: state.listProductCatalogues[state.index].name
                       .toUpperCase(),
                 ),
                 const Spacer(),
@@ -96,12 +93,15 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
           List<ProductResponse> listProduct = state is OrderLoaded
               ? state.listProduct
               : (state as RefreshOrderLoaded).listProduct;
+          int index = state is OrderLoaded
+              ? state.index
+              : (state as RefreshOrderLoaded).index;
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  context.read<OrderBloc>().add(RefreshData());
+                  context.read<OrderBloc>().add(RefreshData(index));
                 },
                 child: check
                     ? ListItemOrder(listProduct: listProduct)

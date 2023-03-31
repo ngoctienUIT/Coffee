@@ -8,23 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
-class OrderPage extends StatefulWidget {
+class OrderPage extends StatelessWidget {
   const OrderPage({Key? key}) : super(key: key);
-
-  @override
-  State<OrderPage> createState() => _OrderPageState();
-}
-
-class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
-  late TabController _productController;
-
-  @override
-  void initState() {
-    _productController =
-        TabController(length: listItemProduct.length, vsync: this);
-    _productController.addListener(() => setState(() {}));
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +19,11 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
         backgroundColor: AppColors.bgColor,
         body: SafeArea(
           child: Column(
-            children: [
-              HeaderOrderPage(tabController: _productController),
-              const SizedBox(height: 20),
-              Expanded(child: BodyOrderPage(index: _productController.index)),
-              const SizedBox(height: 56),
+            children: const [
+              HeaderOrderPage(),
+              SizedBox(height: 20),
+              Expanded(child: BodyOrderPage()),
+              SizedBox(height: 56),
             ],
           ),
         ),

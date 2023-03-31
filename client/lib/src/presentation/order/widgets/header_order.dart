@@ -9,11 +9,25 @@ import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../search/screen/search_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
+import '../bloc/order_event.dart';
 
-class HeaderOrderPage extends StatelessWidget {
-  const HeaderOrderPage({Key? key, required this.tabController})
-      : super(key: key);
-  final TabController tabController;
+class HeaderOrderPage extends StatefulWidget {
+  const HeaderOrderPage({Key? key}) : super(key: key);
+
+  @override
+  State<HeaderOrderPage> createState() => _HeaderOrderPageState();
+}
+
+class _HeaderOrderPageState extends State<HeaderOrderPage>
+    with TickerProviderStateMixin {
+  late TabController _productController;
+
+  @override
+  void initState() {
+    _productController = TabController(length: 0, vsync: this);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,10 +74,17 @@ class HeaderOrderPage extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is OrderLoaded) {
+          _productController = TabController(
+              length: state.listProductCatalogues.length, vsync: this);
+          _productController.addListener(() {
+            context
+                .read<OrderBloc>()
+                .add(RefreshData(_productController.index));
+          });
           return SizedBox(
             height: 115,
             child: TabBar(
-              controller: tabController,
+              controller: _productController,
               physics: const BouncingScrollPhysics(),
               isScrollable: true,
               labelColor: Colors.black87,
