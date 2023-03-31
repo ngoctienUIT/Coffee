@@ -23,7 +23,7 @@ class CustomPickerWidget extends StatelessWidget {
           border: Border.all(color: AppColors.borderColor, width: 0.7),
           color: Colors.white,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Row(
           children: [
             Text(text, style: const TextStyle(fontSize: 16)),

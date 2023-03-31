@@ -1,8 +1,8 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/function/on_will_pop.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
@@ -15,32 +15,20 @@ import '../bloc/signup_event.dart';
 import '../bloc/signup_state.dart';
 import '../widgets/custom_text_input.dart';
 
-class SignUpPage extends StatefulWidget {
+class SignUpPage extends StatelessWidget {
   const SignUpPage({Key? key}) : super(key: key);
-
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  DateTime? currentBackPressTime;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgCreamColor,
-      body: WillPopScope(
-        onWillPop: () => onWillPop(
-          action: (now) => currentBackPressTime = now,
-          currentBackPressTime: currentBackPressTime,
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: BlocProvider(
-              create: (context) => SignUpBloc(),
-              child: const SignUpView(),
-            ),
+      backgroundColor: AppColors.bgColor,
+      appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: BlocProvider(
+            create: (context) => SignUpBloc(),
+            child: const SignUpView(),
           ),
         ),
       ),
@@ -113,6 +101,7 @@ class _SignUpViewState extends State<SignUpView> {
             children: [
               signUpTitle(),
               const SizedBox(height: 20),
+              userRole(),
               const SizedBox(height: 10),
               registerInfo(),
               const SizedBox(height: 20),
@@ -132,7 +121,7 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         const SizedBox(height: 10),
         Text(
-          "start_journey".translate(context),
+          "add_new_staff".translate(context),
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 25,
@@ -140,6 +129,44 @@ class _SignUpViewState extends State<SignUpView> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget userRole() {
+    return DropdownButtonFormField2(
+      decoration: const InputDecoration(
+        isDense: true,
+        contentPadding: EdgeInsets.zero,
+        fillColor: Colors.white,
+        filled: true,
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
+        ),
+      ),
+      buttonHeight: 50,
+      isExpanded: true,
+      value: "ADMIN",
+      items: ["ADMIN", "STAFF"]
+          .map((item) => DropdownMenuItem<String>(
+                value: item,
+                child: Text(
+                  item,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ))
+          .toList(),
+      onChanged: (value) {
+        //Do something when changing the item if you want.
+      },
     );
   }
 

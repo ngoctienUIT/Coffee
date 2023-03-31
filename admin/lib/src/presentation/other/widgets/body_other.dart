@@ -1,6 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
+import 'package:coffee_admin/src/presentation/signup/screen/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,9 +53,19 @@ class BodyOtherPage extends StatelessWidget {
             ]),
             groupItemOther("manage".translate(context), [
               itemOther(
-                  "create_account".translate(context), Icons.person, () {}),
+                "create_account".translate(context),
+                Icons.account_circle_outlined,
+                () {
+                  Navigator.of(context).push(createRoute(
+                    screen: const SignUpPage(),
+                    begin: const Offset(1, 0),
+                  ));
+                },
+              ),
               const Divider(),
-              itemOther("store".translate(context), Icons.settings, () {})
+              itemOther("user".translate(context), Icons.people, () {}),
+              const Divider(),
+              itemOther("store".translate(context), Icons.store, () {}),
             ]),
             groupItemOther("general_info".translate(context), [
               itemOther("policy".translate(context), Icons.file_copy, () {}),

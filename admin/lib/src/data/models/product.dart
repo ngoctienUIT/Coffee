@@ -79,13 +79,13 @@ class Product {
 
   Map<String, dynamic> toJson() {
     return {
-      'productName': name,
+      'name': name,
       'price': price,
-      'currency': currency,
-      'imageUrl': image,
+      // 'currency': currency,
+      // 'imageUrl': image,
       'description': description,
-      'toppingOptions': toppingOptions,
-      'tags': tags,
+      // 'toppingOptions': toppingOptions,
+      // 'tags': tags,
       'upsizeOptions': {
         "S": S,
         "M": M,

@@ -8,7 +8,9 @@ import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/description_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -68,8 +70,6 @@ class _AddProductViewState extends State<AddProductView> {
       nameController.text = product.name;
       priceController.text = product.price.toString();
       descriptionController.text = product.description!;
-    } else {
-      product = Product.init();
     }
     nameController.addListener(() => checkEmpty());
     priceController.addListener(() => checkEmpty());
@@ -97,43 +97,58 @@ class _AddProductViewState extends State<AddProductView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              productImage(),
-              const SizedBox(height: 30),
-              descriptionLine(text: "product_name".translate(context)),
-              const SizedBox(height: 10),
-              CustomTextInput(
-                controller: nameController,
-                hint: "product_name".translate(context),
-                title: "product_name".translate(context).toLowerCase(),
-              ),
-              const SizedBox(height: 10),
-              descriptionLine(text: "product_price".translate(context)),
-              const SizedBox(height: 10),
-              CustomTextInput(
-                controller: priceController,
-                hint: "100.000đ",
-                title: "product_price".translate(context).toLowerCase(),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(height: 10),
-              descriptionLine(text: "product_description".translate(context)),
-              const SizedBox(height: 10),
-              CustomTextInput(
-                controller: descriptionController,
-                hint: "product_description".translate(context),
-                title: "product_description".translate(context).toLowerCase(),
-              ),
-              saveButton(),
-            ],
+    return BlocListener<AddProductBloc, AddProductState>(
+      listener: (context, state) {
+        if (state is AddProductSuccessState) {
+          Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
+          Future.delayed(
+            const Duration(seconds: 3),
+            () => Navigator.pop(context),
+          );
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                productImage(),
+                const SizedBox(height: 30),
+                descriptionLine(text: "product_name".translate(context)),
+                const SizedBox(height: 10),
+                CustomTextInput(
+                  controller: nameController,
+                  hint: "product_name".translate(context),
+                  title: "product_name".translate(context).toLowerCase(),
+                ),
+                const SizedBox(height: 10),
+                descriptionLine(text: "product_price".translate(context)),
+                const SizedBox(height: 10),
+                CustomTextInput(
+                  controller: priceController,
+                  hint: "100.000đ",
+                  title: "product_price".translate(context).toLowerCase(),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                descriptionLine(text: "product_description".translate(context)),
+                const SizedBox(height: 10),
+                CustomTextInput(
+                  controller: descriptionController,
+                  hint: "product_description".translate(context),
+                  title: "product_description".translate(context).toLowerCase(),
+                ),
+                const SizedBox(height: 10),
+                saveButton(),
+              ],
+            ),
           ),
         ),
       ),
@@ -167,9 +182,17 @@ class _AddProductViewState extends State<AddProductView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               if (widget.product == null) {
-                context.read<AddProductBloc>().add(CreateProductEvent(product));
+                context.read<AddProductBloc>().add(CreateProductEvent(Product(
+                      name: nameController.text,
+                      price: int.parse(priceController.text),
+                      description: descriptionController.text,
+                      M: 0,
+                      L: 0,
+                    )));
               } else {
-                context.read<AddProductBloc>().add(UpdateProductEvent(product));
+                context
+                    .read<AddProductBloc>()
+                    .add(UpdateProductEvent(product.copyWith()));
               }
             }
           },

@@ -21,6 +21,7 @@ class ListItemProduct extends StatelessWidget {
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
         ),
+        padding: const EdgeInsets.only(bottom: 60),
         itemCount: listProduct.length,
         itemBuilder: (context, index) {
           return InkWell(
@@ -61,11 +62,17 @@ class ListItemProduct extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Row(
           children: [
-            Image.network(
-              listProduct[index].image!,
-              height: 100,
-              width: 100,
-            ),
+            listProduct[index].image == null
+                ? Image.asset(
+                    AppImages.imgLogo,
+                    height: 100,
+                    width: 100,
+                  )
+                : Image.network(
+                    listProduct[index].image!,
+                    height: 100,
+                    width: 100,
+                  ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
