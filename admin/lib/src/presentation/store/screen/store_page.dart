@@ -1,8 +1,11 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/presentation/add_store/screen/add_store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/store/store_response.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -10,7 +13,6 @@ import '../bloc/store_bloc.dart';
 import '../bloc/store_event.dart';
 import '../bloc/store_state.dart';
 import '../widgets/bottom_sheet.dart';
-import '../widgets/custom_app_bar.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({Key? key}) : super(key: key);
@@ -44,37 +46,45 @@ class _StoreViewState extends State<StoreView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const CustomAppBar(elevation: 0),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            headerStore(),
-            const SizedBox(height: 10),
-            Expanded(child: bodyStore()),
-          ],
-        ),
+      appBar: appBar(),
+      body: SafeArea(child: bodyStore()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(createRoute(
+            screen: const AddStorePage(),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
       ),
     );
   }
 
-  Widget headerStore() {
-    return Container(
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: CustomTextInput(
-        onChanged: (value) {
-          context.read<StoreBloc>().add(SearchStore(storeName: value));
-        },
-        controller: searchAddressController,
-        hint: "address_search".translate(context),
-        radius: 90,
-        contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        textInputAction: TextInputAction.search,
-        textStyle: const TextStyle(fontSize: 13),
-        suffixIcon: const Icon(
-          FontAwesomeIcons.magnifyingGlass,
-          color: Colors.grey,
+  AppBar appBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: SizedBox(
+        height: 40,
+        child: CustomTextInput(
+          onChanged: (value) {
+            context.read<StoreBloc>().add(SearchStore(storeName: value));
+          },
+          controller: searchAddressController,
+          hint: "address_search".translate(context),
+          radius: 90,
+          contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          textInputAction: TextInputAction.search,
+          textStyle: const TextStyle(fontSize: 13),
+          suffixIcon: const Icon(
+            FontAwesomeIcons.magnifyingGlass,
+            color: Colors.grey,
+          ),
         ),
       ),
     );
@@ -94,14 +104,29 @@ class _StoreViewState extends State<StoreView> {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
             itemCount: state.listStore.length,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () => showStoreBottomSheet(
                   context,
                   state.listStore[index],
                 ),
-                child: itemStore(state.listStore[index]),
+                child: Slidable(
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    extentRatio: 0.2,
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) {},
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.trash,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ],
+                  ),
+                  child: itemStore(state.listStore[index]),
+                ),
               );
             },
           );

@@ -22,7 +22,14 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -136,7 +143,7 @@ class _SignUpViewState extends State<SignUpView> {
     return DropdownButtonFormField2(
       decoration: const InputDecoration(
         isDense: true,
-        contentPadding: EdgeInsets.zero,
+        contentPadding: EdgeInsets.only(right: 10),
         fillColor: Colors.white,
         filled: true,
         border: OutlineInputBorder(

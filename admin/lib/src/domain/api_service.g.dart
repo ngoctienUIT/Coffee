@@ -491,6 +491,33 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<List<ProductCataloguesResponse>> getAllProductsFromProductCatalogueID(
+      id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<List<ProductCataloguesResponse>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/product-catalogues/${id}/products',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) =>
+            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<ProductCataloguesResponse> createNewProductCatalogue(
       productCatalogues) async {
     const _extra = <String, dynamic>{};

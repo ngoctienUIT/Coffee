@@ -103,6 +103,10 @@ abstract class ApiService {
   Future<List<ProductCataloguesResponse>> searchProductCataloguesByName(
       @Path("query") String query);
 
+  @GET('/product-catalogues/{id}/products')
+  Future<List<ProductCataloguesResponse>> getAllProductsFromProductCatalogueID(
+      @Path("id") String id);
+
   @POST('/product-catalogues')
   Future<ProductCataloguesResponse> createNewProductCatalogue(
       @Body() Map<String, dynamic> productCatalogues);
