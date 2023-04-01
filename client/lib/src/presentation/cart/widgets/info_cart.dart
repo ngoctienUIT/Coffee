@@ -1,6 +1,7 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -14,9 +15,16 @@ class InfoCart extends StatefulWidget {
 }
 
 class _InfoCartState extends State<InfoCart> {
+  TextEditingController noteController = TextEditingController();
   Color selectedColor = AppColors.statusBarColor;
   Color unselectedColor = AppColors.unselectedColor;
   bool isBringBack = false;
+
+  @override
+  void dispose() {
+    noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +96,25 @@ class _InfoCartState extends State<InfoCart> {
             },
             child: itemInfo(Icons.location_on, "Hồ Chí Minh, Việt Nam"),
           ),
-          const SizedBox(height: 10),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Icon(FontAwesomeIcons.fileLines),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: TextField(
+                    controller: noteController,
+                    decoration: InputDecoration(
+                      hintText: "order_notes".translate(context),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

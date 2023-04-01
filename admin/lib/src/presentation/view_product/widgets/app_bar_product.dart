@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class AppBarProduct extends StatelessWidget {
-  const AppBarProduct({Key? key, required this.isTop, required this.onEdit})
-      : super(key: key);
+  const AppBarProduct({
+    Key? key,
+    required this.isTop,
+    required this.name,
+    required this.onEdit,
+  }) : super(key: key);
 
   final bool isTop;
+  final String name;
+
   final VoidCallback onEdit;
 
   @override
@@ -38,7 +44,7 @@ class AppBarProduct extends StatelessWidget {
           opacity: isTop ? 0.0 : 1.0,
           duration: const Duration(milliseconds: 300),
           child: Text(
-            listSellingProducts[0]["name"]!,
+            name,
             style: const TextStyle(color: Colors.white),
           ),
         ),

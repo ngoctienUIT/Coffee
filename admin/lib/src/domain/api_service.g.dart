@@ -491,14 +491,13 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<ProductCataloguesResponse>> getAllProductsFromProductCatalogueID(
-      id) async {
+  Future<List<ProductResponse>> getAllProductsFromProductCatalogueID(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<List<dynamic>>(
-        _setStreamType<List<ProductCataloguesResponse>>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<ProductResponse>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -511,8 +510,7 @@ class _ApiService implements ApiService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!
-        .map((dynamic i) =>
-            ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
+        .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
         .toList();
     return value;
   }

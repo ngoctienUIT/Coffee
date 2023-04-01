@@ -8,10 +8,11 @@ class InitState extends ProductState {}
 class ProductLoading extends ProductState {}
 
 class ProductLoaded extends ProductState {
+  final int index;
   final List<ProductResponse> listProduct;
   final List<ProductCataloguesResponse> listProductCatalogues;
 
-  ProductLoaded(this.listProduct, this.listProductCatalogues);
+  ProductLoaded(this.index, this.listProduct, this.listProductCatalogues);
 }
 
 class ProductError extends ProductState {
@@ -22,9 +23,10 @@ class ProductError extends ProductState {
 class RefreshLoading extends ProductState {}
 
 class RefreshLoaded extends ProductState {
+  final int index;
   final List<ProductResponse> listProduct;
 
-  RefreshLoaded(this.listProduct);
+  RefreshLoaded(this.index, this.listProduct);
 }
 
 class RefreshError extends ProductState {

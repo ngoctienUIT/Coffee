@@ -8,9 +8,7 @@ import 'description_line.dart';
 import 'list_item_product.dart';
 
 class BodyProductPage extends StatefulWidget {
-  const BodyProductPage({Key? key, required this.index}) : super(key: key);
-
-  final int index;
+  const BodyProductPage({Key? key}) : super(key: key);
 
   @override
   State<BodyProductPage> createState() => _BodyProductPageState();
@@ -43,8 +41,7 @@ class _BodyProductPageState extends State<BodyProductPage> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: descriptionLine(
-              text:
-                  state.listProductCatalogues[widget.index].name.toUpperCase(),
+              text: state.listProductCatalogues[state.index].name.toUpperCase(),
             ),
           );
         }
@@ -77,7 +74,10 @@ class _BodyProductPageState extends State<BodyProductPage> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  context.read<ProductBloc>().add(RefreshData());
+                  int index = state is ProductLoaded
+                      ? state.index
+                      : (state as RefreshLoaded).index;
+                  context.read<ProductBloc>().add(RefreshData(index));
                 },
                 child: ListItemProduct(
                     listProduct: state is ProductLoaded

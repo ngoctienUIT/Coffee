@@ -104,7 +104,7 @@ abstract class ApiService {
       @Path("query") String query);
 
   @GET('/product-catalogues/{id}/products')
-  Future<List<ProductCataloguesResponse>> getAllProductsFromProductCatalogueID(
+  Future<List<ProductResponse>> getAllProductsFromProductCatalogueID(
       @Path("id") String id);
 
   @POST('/product-catalogues')
