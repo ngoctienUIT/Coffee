@@ -1,14 +1,13 @@
-import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
 import '../../product/widgets/choose_quantity.dart';
 
 class ItemProduct extends StatefulWidget {
-  const ItemProduct({Key? key, required this.index, required this.onChange})
+  const ItemProduct({Key? key, required this.product, required this.onChange})
       : super(key: key);
 
-  final int index;
+  final Product product;
   final Function(int value) onChange;
 
   @override
@@ -19,6 +18,12 @@ class _ItemProductState extends State<ItemProduct> {
   int number = 1;
 
   @override
+  void initState() {
+    number = widget.product.number;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
@@ -26,7 +31,8 @@ class _ItemProductState extends State<ItemProduct> {
         // crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (widget.index != 0) const Divider(indent: 10, endIndent: 10),
+          // if (widget.pro != 0)
+          const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
               Image.asset("assets/tea.png", height: 50, width: 50),
@@ -38,7 +44,7 @@ class _ItemProductState extends State<ItemProduct> {
                   children: [
                     const SizedBox(height: 5),
                     Text(
-                      listSellingProducts[widget.index]["name"]!,
+                      widget.product.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -46,7 +52,7 @@ class _ItemProductState extends State<ItemProduct> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 10),
-                    Text((30000 * number).toCurrency()),
+                    Text(widget.product.getPriceString()),
                   ],
                 ),
               ),

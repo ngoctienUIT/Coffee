@@ -122,16 +122,11 @@ abstract class ApiService {
   Future<ToppingResponse> getToppingByID(@Path("id") String id);
 
   //order
-  @GET("/order?userIdentity={email}&status=")
-  Future<List<OrderResponse>> getOrderHistoryCustomer(
+  @GET("/order?userIdentity={email}&status={status}")
+  Future<List<OrderResponse>> getAllOrders(
     @Header('Authorization') String token,
     @Path("email") String email,
-  );
-
-  @GET("/order?userIdentity={email}&status=PLACED")
-  Future<List<OrderResponse>> getPlaceOrderCustomer(
-    @Header('Authorization') String token,
-    @Path("email") String email,
+    @Path("status") String status,
   );
 
   @GET("/order/{id}")
@@ -147,6 +142,12 @@ abstract class ApiService {
     @Body() Map<String, dynamic> order,
   );
 
+  @POST("/order/{id}")
+  Future<OrderResponse> updatePendingOrder(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
+
   @DELETE("/order/{id}")
   Future<OrderResponse> cancelOrder(
     @Header('Authorization') String token,
@@ -157,5 +158,11 @@ abstract class ApiService {
   Future<OrderResponse> placeOrder(
     @Header('Authorization') String token,
     @Path("id") String id,
+  );
+
+  @DELETE("/order/truncate-cart?userIdentity={email}")
+  Future<List<OrderResponse>> removePendingOrder(
+    @Header('Authorization') String token,
+    @Path("email") String email,
   );
 }

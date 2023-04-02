@@ -20,8 +20,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final listOder = index == 0
-          ? await apiService.getPlaceOrderCustomer("Bearer $token", email)
-          : await apiService.getOrderHistoryCustomer("Bearer $token", email);
+          ? await apiService.getAllOrders("Bearer $token", email, "PLACED")
+          : await apiService.getAllOrders("Bearer $token", email, "COMPLETED");
       emit(ActivityLoaded(listOrder: listOder, index: index));
     } catch (e) {
       emit(ActivityError(message: e.toString(), index: index));

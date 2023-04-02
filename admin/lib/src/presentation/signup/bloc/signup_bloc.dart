@@ -16,6 +16,8 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
     on<HidePasswordEvent>(
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
+
+    on<TextChangeEvent>((event, emit) => emit(TextChangeState()));
   }
 
   Future signUpWithEmailPassword(User user, Emitter emit) async {

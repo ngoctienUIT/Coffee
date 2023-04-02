@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/product.dart';
 import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,8 @@ class ListItemOrder extends StatelessWidget {
         return InkWell(
           onTap: () {
             Navigator.of(context).push(createRoute(
-              screen: ProductPage(product: listProduct[index]),
+              screen: ProductPage(
+                  product: Product.fromProductResponse(listProduct[index])),
               begin: const Offset(0, 1),
             ));
           },

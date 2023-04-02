@@ -1,6 +1,7 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
+import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,12 @@ class BodyOtherPage extends StatelessWidget {
                   Icons.card_giftcard_rounded, () {}),
             ]),
             groupItemOther("general_info".translate(context), [
-              itemOther("policy".translate(context), Icons.file_copy, () {}),
+              itemOther("policy".translate(context), Icons.file_copy, () {
+                Navigator.of(context).push(createRoute(
+                  screen: const PolicyPage(),
+                  begin: const Offset(1, 0),
+                ));
+              }),
               const Divider(),
               itemOther("app_info".translate(context), Icons.info, () {
                 Navigator.of(context).push(createRoute(

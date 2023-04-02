@@ -7,3 +7,9 @@ class DataTransmissionEvent extends ProductEvent {
 
   DataTransmissionEvent({required this.product});
 }
+
+class AddProductToOrderEvent extends ProductEvent {
+  final Product product;
+
+  AddProductToOrderEvent(this.product);
+}

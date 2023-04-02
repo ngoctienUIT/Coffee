@@ -57,6 +57,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     confirmPasswordController.addListener(() {
       context.read<ChangePasswordBloc>().add(TextChangeEvent());
     });
+    newPasswordController.addListener(() {
+      context.read<ChangePasswordBloc>().add(TextChangeEvent());
+    });
     super.initState();
   }
 

@@ -73,8 +73,14 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   void initState() {
     phoneController.addListener(() => checkEmpty());
-    passwordController.addListener(() => checkEmpty());
-    confirmPasswordController.addListener(() => checkEmpty());
+    passwordController.addListener(() {
+      context.read<SignUpBloc>().add(TextChangeEvent());
+      checkEmpty();
+    });
+    confirmPasswordController.addListener(() {
+      context.read<SignUpBloc>().add(TextChangeEvent());
+      checkEmpty();
+    });
     nameController.addListener(() => checkEmpty());
     emailController.addListener(() => checkEmpty());
     super.initState();
@@ -217,7 +223,8 @@ class _SignUpViewState extends State<SignUpView> {
 
   Widget passwordInput() {
     return BlocBuilder<SignUpBloc, SignUpState>(
-      buildWhen: (previous, current) => current is HidePasswordState,
+      buildWhen: (previous, current) =>
+          current is HidePasswordState || current is TextChangeState,
       builder: (context, state) {
         return Column(
           children: [
@@ -231,7 +238,7 @@ class _SignUpViewState extends State<SignUpView> {
                     .add(HidePasswordEvent(isHide: !hide));
                 hide = !hide;
               },
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
             ),
             const SizedBox(height: 10),
             CustomPasswordInput(
@@ -244,7 +251,7 @@ class _SignUpViewState extends State<SignUpView> {
                     .add(HidePasswordEvent(isHide: !hide));
                 hide = !hide;
               },
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
             ),
           ],
         );

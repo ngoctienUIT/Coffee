@@ -14,6 +14,10 @@ class BottomWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductBloc, ProductState>(
+      buildWhen: (previous, current) =>
+          current is! AddProductToOrderSuccessState ||
+          current is AddProductToOrderErrorState ||
+          current is AddProductToOrderLoadingState,
       builder: (context, state) {
         if (state is DataTransmissionState) {
           return Container(
@@ -36,7 +40,13 @@ class BottomWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(90),
                         ),
                       ),
-                      onPressed: state.product.number > 0 ? () {} : null,
+                      onPressed: state.product.number > 0
+                          ? () {
+                              context
+                                  .read<ProductBloc>()
+                                  .add(AddProductToOrderEvent(state.product));
+                            }
+                          : null,
                       child: Text(
                         "${"add".translate(context)} ${state.product.getTotalString()}",
                       ),

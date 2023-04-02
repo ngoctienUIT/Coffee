@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
@@ -24,7 +25,8 @@ class BuildListSellingProducts extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(createRoute(
-                  screen: ProductPage(product: listProduct[index]),
+                  screen: ProductPage(
+                      product: Product.fromProductResponse(listProduct[index])),
                   begin: const Offset(0, 1),
                 ));
               },

@@ -9,3 +9,13 @@ class DataTransmissionState extends ProductState {
 
   DataTransmissionState(this.product);
 }
+
+class AddProductToOrderSuccessState extends ProductState {}
+
+class AddProductToOrderErrorState extends ProductState {
+  String error;
+
+  AddProductToOrderErrorState(this.error);
+}
+
+class AddProductToOrderLoadingState extends ProductState {}

@@ -41,6 +41,10 @@ class BodyProduct extends StatelessWidget {
 
   Widget addTopping() {
     return BlocBuilder<ProductBloc, ProductState>(
+      buildWhen: (previous, current) =>
+          current is! AddProductToOrderSuccessState ||
+          current is AddProductToOrderErrorState ||
+          current is AddProductToOrderLoadingState,
       builder: (context, state) {
         if (state is DataTransmissionState &&
             state.product.toppingOptions!.isNotEmpty) {
@@ -85,6 +89,10 @@ class BodyProduct extends StatelessWidget {
 
   Widget sizeProduct() {
     return BlocBuilder<ProductBloc, ProductState>(
+      buildWhen: (previous, current) =>
+          current is! AddProductToOrderSuccessState ||
+          current is AddProductToOrderErrorState ||
+          current is AddProductToOrderLoadingState,
       builder: (context, state) {
         if (state is DataTransmissionState) {
           return Row(

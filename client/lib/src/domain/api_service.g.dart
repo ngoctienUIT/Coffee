@@ -634,9 +634,10 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<List<OrderResponse>> getOrderHistoryCustomer(
+  Future<List<OrderResponse>> getAllOrders(
     token,
     email,
+    status,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -651,36 +652,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/order?userIdentity=${email}&status=',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    var value = _result.data!
-        .map((dynamic i) => OrderResponse.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
-  }
-
-  @override
-  Future<List<OrderResponse>> getPlaceOrderCustomer(
-    token,
-    email,
-  ) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<List<dynamic>>(_setStreamType<List<OrderResponse>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/order?userIdentity=${email}&status=PLACED',
+              '/order?userIdentity=${email}&status=${status}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -747,6 +719,33 @@ class _ApiService implements ApiService {
   }
 
   @override
+  Future<OrderResponse> updatePendingOrder(
+    token,
+    id,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<OrderResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/order/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = OrderResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<OrderResponse> cancelOrder(
     token,
     id,
@@ -797,6 +796,35 @@ class _ApiService implements ApiService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = OrderResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<List<OrderResponse>> removePendingOrder(
+    token,
+    email,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<OrderResponse>>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/order/truncate-cart?userIdentity=${email}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => OrderResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

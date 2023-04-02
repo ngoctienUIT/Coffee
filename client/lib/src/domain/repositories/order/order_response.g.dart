@@ -13,9 +13,9 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       createdDate: json['createdDate'] as String?,
       lastUpdated: json['lastUpdated'] as String?,
       status: json['status'] as String?,
-      orderItems: (json['orderItems'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
-      ),
+      orderItems: (json['orderItems'] as List<dynamic>?)
+          ?.map((e) => ItemOrderResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
       selectedPaymentMethod: json['selectedPaymentMethod'] as String?,
       selectedPickupOption: json['selectedPickupOption'] as String?,
       selectedPickupStore: json['selectedPickupStore'] == null
@@ -26,9 +26,9 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       address2: json['address2'] as String?,
       address3: json['address3'] as String?,
       address4: json['address4'] as String?,
-      orderAmount: json['orderAmount'] as String?,
+      orderAmount: json['orderAmount'] as int?,
       appliedCoupons: (json['appliedCoupons'] as List<dynamic>?)
-          ?.map((e) => e as String)
+          ?.map((e) => e as Map<String, dynamic>)
           .toList(),
       orderStatus: json['orderStatus'] as String?,
     );

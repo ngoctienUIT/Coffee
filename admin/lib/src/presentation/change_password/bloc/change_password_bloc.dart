@@ -17,6 +17,8 @@ class ChangePasswordBloc
 
     on<HidePasswordEvent>(
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
+
+    on<TextChangeEvent>((event, emit) => emit(TextChangeState()));
   }
 
   Future changePassword(String password, Emitter emit) async {

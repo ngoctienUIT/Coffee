@@ -22,3 +22,5 @@ class HidePasswordState extends ChangePasswordState {
 
   HidePasswordState({required this.isHide});
 }
+
+class TextChangeState extends ChangePasswordState {}

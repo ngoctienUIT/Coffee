@@ -53,6 +53,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     oldPasswordController.addListener(() => checkEmpty());
     newPasswordController.addListener(() => checkEmpty());
     confirmPasswordController.addListener(() => checkEmpty());
+    confirmPasswordController.addListener(() {
+      context.read<ChangePasswordBloc>().add(TextChangeEvent());
+    });
+    newPasswordController.addListener(() {
+      context.read<ChangePasswordBloc>().add(TextChangeEvent());
+    });
     super.initState();
   }
 
@@ -110,21 +116,22 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   Widget passwordInput() {
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
-      buildWhen: (previous, current) => current is HidePasswordState,
+      buildWhen: (previous, current) =>
+          current is HidePasswordState || current is TextChangeState,
       builder: (context, state) {
         return Column(
           children: [
             CustomPasswordInput(
               controller: oldPasswordController,
               hint: "enter_old_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
             const SizedBox(height: 10),
             CustomPasswordInput(
               controller: newPasswordController,
               hint: "enter_new_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
             const SizedBox(height: 10),
@@ -132,7 +139,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               controller: confirmPasswordController,
               confirmPassword: newPasswordController.text,
               hint: "confirm_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : true,
+              hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
           ],

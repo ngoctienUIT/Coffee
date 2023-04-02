@@ -19,3 +19,5 @@ class HidePasswordEvent extends SignUpEvent {
 
   HidePasswordEvent({required this.isHide});
 }
+
+class TextChangeEvent extends SignUpEvent {}
