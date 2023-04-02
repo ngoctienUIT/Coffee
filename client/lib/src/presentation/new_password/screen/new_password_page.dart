@@ -2,14 +2,18 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../domain/api_service.dart';
+import '../../login/screen/login_page.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
 import '../../voucher/widgets/app_bar_general.dart';
 
 class NewPasswordPage extends StatefulWidget {
-  const NewPasswordPage({Key? key, required this.token}) : super(key: key);
-  final String token;
+  const NewPasswordPage({Key? key, required this.resetCredential})
+      : super(key: key);
+
+  final String resetCredential;
 
   @override
   State<NewPasswordPage> createState() => _NewPasswordPageState();
@@ -17,7 +21,16 @@ class NewPasswordPage extends StatefulWidget {
 
 class _NewPasswordPageState extends State<NewPasswordPage> {
   TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isHide = false;
+
+  @override
+  void dispose() {
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +54,34 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               CustomPasswordInput(
                 controller: newPasswordController,
                 hint: "enter_new_password".translate(context),
-                hide: true,
-                onPress: () {},
+                hide: isHide,
+                onPress: () => setState(() => isHide = !isHide),
+              ),
+              const SizedBox(height: 10),
+              CustomPasswordInput(
+                controller: confirmPasswordController,
+                confirmPassword: newPasswordController.text,
+                hint: "confirm_password".translate(context),
+                hide: isHide,
+                onPress: () => setState(() => isHide = !isHide),
               ),
               const Spacer(),
               customButton(
                 text: "change_password".translate(context),
                 isOnPress: true,
                 onPress: () {
-                  if (_formKey.currentState!.validate()) {}
+                  setState(() {});
+                  if (_formKey.currentState!.validate()) {
+                    sendApi().then((value) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        createRoute(
+                          screen: const LoginPage(),
+                          begin: const Offset(0, 1),
+                        ),
+                        (route) => false,
+                      );
+                    });
+                  }
                 },
               ),
               const SizedBox(height: 10)
@@ -64,8 +96,8 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      bool check = await apiService.validateResetTokenClient(
-          widget.token, newPasswordController.text);
+      await apiService.issueNewPasswordUser(
+          widget.resetCredential, newPasswordController.text);
     } catch (e) {
       print(e);
     }

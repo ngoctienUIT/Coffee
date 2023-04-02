@@ -1,8 +1,10 @@
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/input_pin/screen/input_pin.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
 import '../../login/widgets/custom_button.dart';
@@ -59,7 +61,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   text: "continue".translate(context),
                   onPress: () {
                     if (_formKey.currentState!.validate()) {
-                      sendApi();
+                      sendApi().then((value) {
+                        Navigator.of(context).push(createRoute(
+                          screen: InputPin(resetCredential: value!),
+                          begin: const Offset(1, 0),
+                        ));
+                      });
                     }
                   },
                   isOnPress: true,
@@ -72,13 +79,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  Future sendApi() async {
+  Future<String?> sendApi() async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.resetPasswordIssue(controller.text);
+      return await apiService.resetPasswordIssue(controller.text);
     } catch (e) {
       print(e);
+      return null;
     }
   }
 }
