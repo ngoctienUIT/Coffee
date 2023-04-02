@@ -1,3 +1,5 @@
+import 'package:coffee/src/domain/repositories/order/order_response.dart';
+
 import 'item_order.dart';
 
 class Order {
@@ -14,8 +16,8 @@ class Order {
   String? address2;
   String? address3;
   String? address4;
-  String? orderAmount;
-  List<String>? appliedCoupons;
+  int? orderAmount;
+  String? appliedCoupons;
   String? orderStatus;
 
   Order({
@@ -46,5 +48,30 @@ class Order {
       "couponId": null,
       "storeId": storeId,
     };
+  }
+
+  factory Order.fromOrderResponse(OrderResponse orderResponse) {
+    return Order(
+      userId: orderResponse.userId!,
+      orderId: orderResponse.orderId,
+      orderItems: orderResponse.orderItems == null
+          ? []
+          : orderResponse.orderItems!
+              .map((e) => ItemOrder.fromItemOrderResponse(e))
+              .toList(),
+      status: orderResponse.status,
+      address1: orderResponse.address1,
+      address2: orderResponse.address2,
+      address3: orderResponse.address3,
+      address4: orderResponse.address4,
+      appliedCoupons: null,
+      createdDate: orderResponse.createdDate,
+      lastUpdated: orderResponse.lastUpdated,
+      orderAmount: orderResponse.orderAmount,
+      orderStatus: orderResponse.orderStatus,
+      selectedPaymentMethod: orderResponse.selectedPaymentMethod,
+      selectedPickupOption: orderResponse.selectedPickupOption,
+      storeId: orderResponse.selectedPickupStore!.storeId,
+    );
   }
 }

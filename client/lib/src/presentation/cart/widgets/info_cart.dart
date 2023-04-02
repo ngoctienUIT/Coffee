@@ -73,11 +73,6 @@ class _InfoCartState extends State<InfoCart> {
           ),
           const Divider(),
           InkWell(
-            onTap: () {},
-            child: itemInfo(Icons.alarm, "Hôm nay - 17:15"),
-          ),
-          const Divider(),
-          InkWell(
             onTap: () {
               Navigator.of(context).push(createRoute(
                 screen: const AddAddressPage(),

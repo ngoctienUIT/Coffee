@@ -27,3 +27,17 @@ class RemoveOrderErrorState extends CartState {
 
   RemoveOrderErrorState(this.error);
 }
+
+class DeleteProductLoadingState extends CartState {}
+
+class DeleteProductSuccessState extends CartState {
+  String id;
+
+  DeleteProductSuccessState(this.id);
+}
+
+class DeleteProductErrorState extends CartState {
+  String error;
+
+  DeleteProductErrorState(this.error);
+}

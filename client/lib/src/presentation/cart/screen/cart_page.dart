@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/product.dart';
+import '../../../domain/repositories/item_order/item_order_response.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -42,8 +43,12 @@ class CartView extends StatelessWidget {
         if (state is RemoveOrderSuccessState) {
           Navigator.pop(context);
         }
+        if (state is DeleteProductSuccessState) {
+          context.read<CartBloc>().add(GetOrderSpending());
+        }
       },
       builder: (context, state) {
+        print("cart page: $state");
         if (state is InitState || state is GetOrderLoadingState) {
           return _buildLoading();
         }
@@ -68,13 +73,13 @@ class CartView extends StatelessWidget {
                       const InfoCart(),
                       const SizedBox(height: 10),
                       ListProduct(
-                          listProduct: state.order!.orderItems == null
-                              ? []
-                              : state.order!.orderItems!
-                                  .map((e) =>
-                                      Product.fromProductResponse(e.product))
-                                  .toList(),
-                          onChange: (total) {}),
+                        listProduct: state.order!.orderItems == null
+                            ? []
+                            : state.order!.orderItems!
+                                .map((e) => toProduct(e))
+                                .toList(),
+                        onChange: (total) {},
+                      ),
                       const SizedBox(height: 10),
                       const AddCoupons(),
                       const SizedBox(height: 10),
@@ -93,6 +98,14 @@ class CartView extends StatelessWidget {
         return Container();
       },
     );
+  }
+
+  Product toProduct(ItemOrderResponse item) {
+    Product product = Product.fromProductResponse(item.product);
+    product.number = item.quantity;
+    product.sizeIndex =
+        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
+    return product;
   }
 
   Widget emptyCart(BuildContext context) {

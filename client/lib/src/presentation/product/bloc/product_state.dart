@@ -19,3 +19,23 @@ class AddProductToOrderErrorState extends ProductState {
 }
 
 class AddProductToOrderLoadingState extends ProductState {}
+
+class UpdateLoadingState extends ProductState {}
+
+class UpdateSuccessState extends ProductState {}
+
+class UpdateErrorState extends ProductState {
+  String error;
+
+  UpdateErrorState(this.error);
+}
+
+class DeleteLoadingState extends ProductState {}
+
+class DeleteSuccessState extends ProductState {}
+
+class DeleteErrorState extends ProductState {
+  String error;
+
+  DeleteErrorState(this.error);
+}

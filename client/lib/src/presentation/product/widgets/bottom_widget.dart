@@ -9,7 +9,11 @@ import '../../../core/utils/constants/constants.dart';
 import 'choose_quantity.dart';
 
 class BottomWidget extends StatelessWidget {
-  const BottomWidget({Key? key}) : super(key: key);
+  const BottomWidget({Key? key, required this.isEdit, this.index})
+      : super(key: key);
+
+  final bool isEdit;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +44,29 @@ class BottomWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(90),
                         ),
                       ),
-                      onPressed: state.product.number > 0
+                      onPressed: isEdit
                           ? () {
-                              context
-                                  .read<ProductBloc>()
-                                  .add(AddProductToOrderEvent(state.product));
+                              if (state.product.number == 0) {
+                                context
+                                    .read<ProductBloc>()
+                                    .add(DeleteProductEvent(index!));
+                              } else {
+                                context.read<ProductBloc>().add(
+                                    UpdateProductEvent(state.product, index!));
+                              }
                             }
-                          : null,
+                          : (state.product.number > 0
+                              ? () {
+                                  context.read<ProductBloc>().add(
+                                      AddProductToOrderEvent(state.product));
+                                }
+                              : null),
                       child: Text(
-                        "${"add".translate(context)} ${state.product.getTotalString()}",
+                        isEdit
+                            ? (state.product.number == 0
+                                ? "Xóa"
+                                : "Cập nhật ${state.product.getTotalString()}")
+                            : "${"add".translate(context)} ${state.product.getTotalString()}",
                       ),
                     ),
                   ),

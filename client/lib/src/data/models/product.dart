@@ -1,22 +1,23 @@
 import 'package:coffee/src/data/models/topping.dart';
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
+import 'item_order.dart';
 import 'tag.dart';
 
 class Product {
   final String id;
-  final String name;
+  String name;
   final String currency;
-  final String? image;
-  final String? description;
-  final List<Topping>? toppingOptions;
-  final List<Tag>? tags;
+  String? image;
+  String? description;
+  List<Topping>? toppingOptions;
+  List<Tag>? tags;
   final int price;
   final int S;
   final int M;
   final int L;
-  final int sizeIndex;
-  final int number;
+  int sizeIndex;
+  int number;
 
   Product({
     required this.id,
@@ -84,5 +85,20 @@ class Product {
 
   String getTotalString() {
     return "${getPrice() * number}$currency";
+  }
+
+  ItemOrder toItemOrder() {
+    return ItemOrder(
+      productId: id,
+      quantity: number,
+      toppingIds: toppingOptions == null
+          ? []
+          : toppingOptions!.map((e) => e.toppingId).toList(),
+      selectedSize: sizeIndex,
+    );
+  }
+
+  String getSize() {
+    return sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");
   }
 }

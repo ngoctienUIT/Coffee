@@ -13,3 +13,16 @@ class AddProductToOrderEvent extends ProductEvent {
 
   AddProductToOrderEvent(this.product);
 }
+
+class UpdateProductEvent extends ProductEvent {
+  Product product;
+  int index;
+
+  UpdateProductEvent(this.product, this.index);
+}
+
+class DeleteProductEvent extends ProductEvent {
+  int index;
+
+  DeleteProductEvent(this.index);
+}

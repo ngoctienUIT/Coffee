@@ -24,7 +24,9 @@ class GridItemOrder extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(createRoute(
               screen: ProductPage(
-                  product: Product.fromProductResponse(listProduct[index])),
+                isEdit: false,
+                product: Product.fromProductResponse(listProduct[index]),
+              ),
               begin: const Offset(0, 1),
             ));
           },

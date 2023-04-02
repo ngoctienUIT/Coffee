@@ -32,9 +32,20 @@ abstract class ApiService {
   Future<LoginResponse> login(@Body() Map<String, dynamic> user);
 
   // Reset password
-  @GET(
-      "/user/issue-rspwmail?email={email}&forward=http://mock-client.com/reset-password.jsp")
-  Future resetPassword(@Path("email") String email);
+  @GET("/user/issue-rspwmail?email={email}")
+  Future<String> resetPasswordIssue(@Path("email") String email);
+
+  @POST("/user/validate-reset-token?resetCredential={token}")
+  Future<bool> validateResetTokenClient(
+    @Path("token") String token,
+    @Body() String text,
+  );
+
+  @POST("/user/reset-pass?resetCredential={token}")
+  Future<UserResponse> issueNewPasswordUser(
+    @Path("token") String token,
+    @Body() String text,
+  );
 
   // Update existing user's field
   @POST("/user/{email}/{field}")
@@ -145,6 +156,7 @@ abstract class ApiService {
   @POST("/order/{id}")
   Future<OrderResponse> updatePendingOrder(
     @Header('Authorization') String token,
+    @Body() Map<String, dynamic> order,
     @Path("id") String id,
   );
 

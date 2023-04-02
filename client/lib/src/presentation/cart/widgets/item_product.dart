@@ -1,13 +1,17 @@
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
-import '../../product/widgets/choose_quantity.dart';
-
 class ItemProduct extends StatefulWidget {
-  const ItemProduct({Key? key, required this.product, required this.onChange})
-      : super(key: key);
+  const ItemProduct({
+    Key? key,
+    required this.product,
+    required this.onChange,
+    required this.index,
+  }) : super(key: key);
 
   final Product product;
+  final int index;
   final Function(int value) onChange;
 
   @override
@@ -15,14 +19,6 @@ class ItemProduct extends StatefulWidget {
 }
 
 class _ItemProductState extends State<ItemProduct> {
-  int number = 1;
-
-  @override
-  void initState() {
-    number = widget.product.number;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -31,11 +27,12 @@ class _ItemProductState extends State<ItemProduct> {
         // crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // if (widget.pro != 0)
-          const Divider(indent: 10, endIndent: 10),
+          if (widget.index != 0) const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
-              Image.asset("assets/tea.png", height: 50, width: 50),
+              widget.product.image == null
+                  ? Image.asset("assets/tea.png", height: 50, width: 50)
+                  : Image.network(widget.product.image!, height: 50, width: 50),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -52,11 +49,25 @@ class _ItemProductState extends State<ItemProduct> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 10),
-                    Text(widget.product.getPriceString()),
+                    Text(
+                      "${widget.product.number}×${widget.product.getSize()}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.statusBarColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
-              chooseQuantity(number, (value) => setState(() => number = value)),
+              Text(
+                widget.product.getTotalString(),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.statusBarColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ],

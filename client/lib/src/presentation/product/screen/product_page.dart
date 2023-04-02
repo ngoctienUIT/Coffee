@@ -10,8 +10,18 @@ import '../../../data/models/product.dart';
 import '../widgets/app_bar_product.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({Key? key, required this.product}) : super(key: key);
+  const ProductPage({
+    Key? key,
+    this.index,
+    required this.product,
+    required this.isEdit,
+    this.onPress,
+  }) : super(key: key);
+
   final Product product;
+  final bool isEdit;
+  final int? index;
+  final VoidCallback? onPress;
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -39,7 +49,10 @@ class _ProductPageState extends State<ProductPage> {
           ProductBloc()..add(DataTransmissionEvent(product: widget.product)),
       child: BlocListener<ProductBloc, ProductState>(
         listener: (context, state) {
-          if (state is AddProductToOrderSuccessState) {
+          if (state is AddProductToOrderSuccessState ||
+              state is UpdateSuccessState ||
+              state is DeleteSuccessState) {
+            widget.onPress!();
             Navigator.pop(context);
           }
         },
@@ -62,7 +75,7 @@ class _ProductPageState extends State<ProductPage> {
               ],
             ),
           ),
-          bottomSheet: const BottomWidget(),
+          bottomSheet: BottomWidget(isEdit: widget.isEdit, index: widget.index),
         ),
       ),
     );

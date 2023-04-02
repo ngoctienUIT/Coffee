@@ -93,24 +93,75 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<dynamic> resetPassword(email) async {
+  Future<String> resetPasswordIssue(email) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/user/issue-rspwmail?email=${email}&forward=http://mock-client.com/reset-password.jsp',
+          '/user/issue-rspwmail?email=${email}',
           queryParameters: queryParameters,
           data: _data,
         )
         .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data;
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
+  Future<bool> validateResetTokenClient(
+    token,
+    text,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = text;
+    final _result = await _dio.fetch<bool>(_setStreamType<bool>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/user/validate-reset-token?resetCredential=${token}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
+  Future<UserResponse> issueNewPasswordUser(
+    token,
+    text,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = text;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/user/reset-pass?resetCredential=${token}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = UserResponse.fromJson(_result.data!);
     return value;
   }
 
@@ -721,13 +772,15 @@ class _ApiService implements ApiService {
   @override
   Future<OrderResponse> updatePendingOrder(
     token,
+    order,
     id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(order);
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<OrderResponse>(Options(
       method: 'POST',
