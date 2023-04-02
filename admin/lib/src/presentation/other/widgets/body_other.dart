@@ -53,16 +53,16 @@ class BodyOtherPage extends StatelessWidget {
               })
             ]),
             groupItemOther("manage".translate(context), [
-              itemOther(
-                "create_account".translate(context),
-                Icons.account_circle_outlined,
-                () {
+              itemOther("create_account".translate(context),
+                  Icons.account_circle_outlined, () {
+                OtherState otherState = context.read<OtherBloc>().state;
+                if (otherState is OtherLoaded) {
                   Navigator.of(context).push(createRoute(
-                    screen: const SignUpPage(),
+                    screen: SignUpPage(role: otherState.user.userRole),
                     begin: const Offset(1, 0),
                   ));
-                },
-              ),
+                }
+              }),
               const Divider(),
               itemOther("user".translate(context), Icons.people, () {}),
               const Divider(),

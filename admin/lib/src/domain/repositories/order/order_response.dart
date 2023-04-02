@@ -1,3 +1,5 @@
+import 'package:coffee_admin/src/domain/entities/item_order/item_order_entity.dart';
+import 'package:coffee_admin/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../store/store_response.dart';
@@ -18,11 +20,8 @@ class OrderResponse {
   @JsonKey(name: "lastUpdated")
   String? lastUpdated;
 
-  @JsonKey(name: "status")
-  String? status;
-
   @JsonKey(name: "orderItems")
-  Map<String, int>? orderItems;
+  List<ItemOrderEntity>? orderItems;
 
   @JsonKey(name: "selectedPaymentMethod")
   String? selectedPaymentMethod;
@@ -46,10 +45,10 @@ class OrderResponse {
   String? address4;
 
   @JsonKey(name: "orderAmount")
-  String? orderAmount;
+  int? orderAmount;
 
   @JsonKey(name: "appliedCoupons")
-  List<String>? appliedCoupons;
+  List<CouponResponse>? appliedCoupons;
 
   @JsonKey(name: "orderStatus")
   String? orderStatus;
@@ -59,7 +58,6 @@ class OrderResponse {
     this.userId,
     this.createdDate,
     this.lastUpdated,
-    this.status,
     this.orderItems,
     this.selectedPaymentMethod,
     this.selectedPickupOption,

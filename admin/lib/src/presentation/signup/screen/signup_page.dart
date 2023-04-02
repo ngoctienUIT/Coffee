@@ -16,7 +16,9 @@ import '../bloc/signup_state.dart';
 import '../widgets/custom_text_input.dart';
 
 class SignUpPage extends StatelessWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({Key? key, required this.role}) : super(key: key);
+
+  final String role;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class SignUpPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: BlocProvider(
             create: (context) => SignUpBloc(),
-            child: const SignUpView(),
+            child: SignUpView(role: role),
           ),
         ),
       ),
@@ -44,7 +46,9 @@ class SignUpPage extends StatelessWidget {
 }
 
 class SignUpView extends StatefulWidget {
-  const SignUpView({Key? key}) : super(key: key);
+  const SignUpView({Key? key, required this.role}) : super(key: key);
+
+  final String role;
 
   @override
   State<SignUpView> createState() => _SignUpViewState();
@@ -59,6 +63,8 @@ class _SignUpViewState extends State<SignUpView> {
       TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool hide = true;
+  String selectedRole = "ADMIN";
+  bool isMale = true;
 
   @override
   void initState() {
@@ -67,6 +73,7 @@ class _SignUpViewState extends State<SignUpView> {
     confirmPasswordController.addListener(() => checkEmpty());
     nameController.addListener(() => checkEmpty());
     emailController.addListener(() => checkEmpty());
+    selectedRole = widget.role;
     super.initState();
   }
 
@@ -161,19 +168,13 @@ class _SignUpViewState extends State<SignUpView> {
       ),
       buttonHeight: 50,
       isExpanded: true,
-      value: "ADMIN",
-      items: ["ADMIN", "STAFF"]
+      value: selectedRole,
+      items: (widget.role == "ADMIN" ? ["ADMIN", "STAFF"] : ["STAFF"])
           .map((item) => DropdownMenuItem<String>(
-                value: item,
-                child: Text(
-                  item,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ))
+              value: item,
+              child: Text(item, style: const TextStyle(fontSize: 16))))
           .toList(),
-      onChanged: (value) {
-        //Do something when changing the item if you want.
-      },
+      onChanged: (value) => selectedRole = value!,
     );
   }
 
@@ -184,13 +185,14 @@ class _SignUpViewState extends State<SignUpView> {
         const SizedBox(height: 10),
         CustomPickerWidget(
           checkEdit: true,
-          text: true ? "male".translate(context) : "female".translate(context),
+          text:
+              isMale ? "male".translate(context) : "female".translate(context),
           onPress: () => showMyBottomSheet(
             context: context,
-            isMale: true,
+            isMale: isMale,
             onPress: (isMale) {
               Navigator.pop(context);
-              // setState(() => this.isMale = isMale);
+              setState(() => this.isMale = isMale);
             },
           ),
         ),
@@ -283,15 +285,15 @@ class _SignUpViewState extends State<SignUpView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
-                    user: User(
-                        username: emailController.text,
-                        displayName: nameController.text,
-                        isMale: true,
-                        email: emailController.text,
-                        phoneNumber: phoneController.text,
-                        password: passwordController.text,
-                        userRole: "ADMIN"),
-                  ));
+                      user: User(
+                    username: emailController.text,
+                    displayName: nameController.text,
+                    isMale: isMale,
+                    email: emailController.text,
+                    phoneNumber: phoneController.text,
+                    password: passwordController.text,
+                    userRole: selectedRole,
+                  )));
             }
           },
         );
