@@ -58,7 +58,10 @@ class GenderWidget extends StatelessWidget {
                       bottomLeft: Radius.circular(10),
                     ),
                   ),
-                  child: Text("current_selection".translate(context)),
+                  child: Text(
+                    "current_selection".translate(context),
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
           ],

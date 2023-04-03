@@ -13,19 +13,29 @@ import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 
 class StorePage extends StatelessWidget {
-  const StorePage({Key? key}) : super(key: key);
+  const StorePage({Key? key, this.onPress, required this.isPick, this.storeID})
+      : super(key: key);
+
+  final Function(StoreResponse store)? onPress;
+  final bool isPick;
+  final String? storeID;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StoreBloc>(
       create: (_) => StoreBloc()..add(FetchData()),
-      child: const StoreView(),
+      child: StoreView(onPress: onPress, isPick: isPick, storeID: storeID),
     );
   }
 }
 
 class StoreView extends StatefulWidget {
-  const StoreView({Key? key}) : super(key: key);
+  const StoreView({Key? key, this.onPress, required this.isPick, this.storeID})
+      : super(key: key);
+
+  final Function(StoreResponse store)? onPress;
+  final bool isPick;
+  final String? storeID;
 
   @override
   State<StoreView> createState() => _StoreViewState();
@@ -44,7 +54,7 @@ class _StoreViewState extends State<StoreView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const CustomAppBar(elevation: 0),
+      appBar: CustomAppBar(elevation: 0, isPick: widget.isPick),
       body: SafeArea(
         child: Column(
           children: [
@@ -100,6 +110,11 @@ class _StoreViewState extends State<StoreView> {
                 onTap: () => showStoreBottomSheet(
                   context,
                   state.listStore[index],
+                  () {
+                    widget.onPress!(state.listStore[index]);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
                 ),
                 child: itemStore(state.listStore[index]),
               );
@@ -114,23 +129,49 @@ class _StoreViewState extends State<StoreView> {
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
   Widget itemStore(StoreResponse store) {
-    return Card(
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: [
-            Image.network(
-              "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
-              height: 100,
-              width: 100,
-              fit: BoxFit.fitHeight,
+    return Stack(
+      children: [
+        Card(
+          elevation: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Image.network(
+                  "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.fitHeight,
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: infoStore(store))
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(child: infoStore(store))
-          ],
+          ),
         ),
-      ),
+        if (store.storeId == widget.storeID)
+          Positioned(
+            right: 5,
+            bottom: 5,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 5,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              child: Text(
+                "current_selection".translate(context),
+                style: const TextStyle(fontSize: 12, color: Colors.white),
+              ),
+            ),
+          ),
+      ],
     );
   }
 

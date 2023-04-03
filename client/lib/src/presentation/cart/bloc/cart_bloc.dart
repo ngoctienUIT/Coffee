@@ -14,6 +14,35 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<DeleteOrderEvent>((event, emit) => deleteOrderSpending(emit));
 
     on<DeleteProductEvent>((event, emit) => deleteProduct(event.id, emit));
+
+    on<ChangeMethod>((event, emit) => changeMethod(event.isBringBack, emit));
+
+    on<AttachCouponToOrder>(
+        (event, emit) => attachCouponToOrder(event.id, emit));
+  }
+
+  Future changeMethod(bool isBringBack, Emitter emit) async {
+    try {
+      emit(GetOrderLoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "";
+      final orderSpending =
+          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      Order order = Order.fromOrderResponse(orderSpending[0]);
+      order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
+      await apiService.updatePendingOrder(
+        "Bearer $token",
+        order.toJson(),
+        order.orderId!,
+      );
+      getOrderSpending(emit);
+    } catch (e) {
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
+    }
   }
 
   Future getOrderSpending(Emitter emit) async {
@@ -24,10 +53,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      String userID = prefs.getString("userID") ?? "";
       final orderSpending =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
-
       if (orderSpending.isEmpty) {
         emit(GetOrderSuccessState(null));
       } else {
@@ -47,8 +74,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
-          await apiService.removePendingOrder("Bearer $token", email);
+
+      await apiService.removePendingOrder("Bearer $token", email);
       emit(RemoveOrderSuccessState());
     } catch (e) {
       emit(RemoveOrderErrorState(e.toString()));
@@ -70,10 +97,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       order.orderItems =
           order.orderItems.where((element) => element.productId != id).toList();
       if (order.orderItems.isEmpty) {
-        final orderSpending =
-            await apiService.removePendingOrder("Bearer $token", email);
+        apiService.removePendingOrder("Bearer $token", email);
       } else {
-        final response = await apiService.updatePendingOrder(
+        await apiService.updatePendingOrder(
           "Bearer $token",
           order.toJson(),
           order.orderId!,
@@ -82,6 +108,25 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(DeleteProductSuccessState(id));
     } catch (e) {
       emit(DeleteProductErrorState(e.toString()));
+      print(e);
+    }
+  }
+
+  Future attachCouponToOrder(String id, Emitter emit) async {
+    try {
+      emit(GetOrderLoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "";
+      final orderSpending =
+          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.attachCouponToOrder(
+          "Bearer $token", orderSpending[0].orderId!, id);
+      emit(GetOrderSuccessState(response));
+    } catch (e) {
+      emit(GetOrderErrorState(e.toString()));
       print(e);
     }
   }

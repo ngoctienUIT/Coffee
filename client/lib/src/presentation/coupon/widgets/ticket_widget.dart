@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TicketWidget extends StatelessWidget {
   final double margin;
@@ -9,8 +8,10 @@ class TicketWidget extends StatelessWidget {
   final int numberOfSmallClips;
   final String image;
   final String title;
-  final DateTime date;
-  final VoidCallback onPress;
+  final String date;
+  final VoidCallback? onPress;
+  final double? height;
+  final double? width;
 
   const TicketWidget({
     Key? key,
@@ -19,17 +20,19 @@ class TicketWidget extends StatelessWidget {
     this.clipRadius = 7,
     this.smallClipRadius = 2,
     this.numberOfSmallClips = 8,
+    this.width,
+    this.height,
     required this.image,
     required this.title,
     required this.date,
-    required this.onPress,
+    this.onPress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final ticketWidth = screenSize.width;
-    double ticketHeight = 130;
+    final ticketWidth = width ?? screenSize.width;
+    double ticketHeight = height ?? 130;
 
     return InkWell(
       onTap: onPress,
@@ -54,28 +57,43 @@ class TicketWidget extends StatelessWidget {
                 clipRadius: clipRadius,
                 smallClipRadius: smallClipRadius,
                 numberOfSmallClips: numberOfSmallClips,
+                ticketHeight: ticketHeight,
               ),
               child: Container(color: Colors.white),
             ),
             SizedBox(
-              height: 130,
+              height: ticketHeight,
               child: Row(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 13),
-                    child: Image.asset(image, height: 100, width: 100),
+                    child: Image.asset(
+                      "assets/banner.jpg",
+                      height: ticketHeight - 30,
+                      width: ticketHeight - 30,
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title),
-                        const Spacer(),
-                        Text(
-                          "Hết hạn ${DateFormat("dd/MM/yyyy").format(date)}",
-                        ),
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const Spacer(),
+                          Text(
+                            "Hết hạn $date",
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],
@@ -95,12 +113,14 @@ class TicketClipper extends CustomClipper<Path> {
   final double clipRadius;
   final double smallClipRadius;
   final int numberOfSmallClips;
+  final double ticketHeight;
 
   const TicketClipper({
     required this.borderRadius,
     required this.clipRadius,
     required this.smallClipRadius,
     required this.numberOfSmallClips,
+    required this.ticketHeight,
   });
 
   @override
@@ -114,7 +134,7 @@ class TicketClipper extends CustomClipper<Path> {
     ));
 
     final clipPath = Path();
-    double centerX = 130;
+    double centerX = ticketHeight;
 
     // circle on the left
     clipPath.addOval(Rect.fromCircle(

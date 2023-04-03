@@ -18,9 +18,6 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllStores();
-      for (var item in response) {
-        print(item.toJson());
-      }
       emit(StoreLoaded(response));
     } catch (e) {
       emit(StoreError(e.toString()));

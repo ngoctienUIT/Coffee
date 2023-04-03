@@ -9,7 +9,11 @@ import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
 
 class AddAddressPage extends StatefulWidget {
-  const AddAddressPage({Key? key}) : super(key: key);
+  const AddAddressPage({Key? key, required this.onSave, this.address})
+      : super(key: key);
+
+  final Function(Address address) onSave;
+  final Address? address;
 
   @override
   State<AddAddressPage> createState() => _AddAddressPageState();
@@ -22,15 +26,26 @@ class _AddAddressPageState extends State<AddAddressPage> {
   AddressAPI addressAPI = AddressAPI();
 
   @override
+  void initState() {
+    if (widget.address != null) {
+      addressAPI = AddressAPI.fromAddress(widget.address!);
+      nameController.text = widget.address!.name;
+      phoneController.text = widget.address!.phone;
+      addressController.text = widget.address!.address;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: AppBarAddAddress(delete: () {}),
+      appBar: const AppBarAddAddress(),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -46,7 +61,6 @@ class _AddAddressPageState extends State<AddAddressPage> {
                     setState(() => addressAPI = address);
                   },
                 ),
-                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -59,7 +73,16 @@ class _AddAddressPageState extends State<AddAddressPage> {
           child: customButton(
             text: "save".translate(context),
             isOnPress: true,
-            onPress: () {},
+            onPress: () {
+              widget.onSave(addressAPI
+                  .copyWith(
+                    name: nameController.text,
+                    phone: phoneController.text,
+                    address: addressController.text,
+                  )
+                  .toAddress());
+              Navigator.pop(context);
+            },
           ),
         ),
       ),

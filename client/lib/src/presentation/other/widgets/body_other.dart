@@ -3,7 +3,6 @@ import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
-import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -12,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../coupon/screen/coupon_page.dart';
 import '../../info/screen/info_page.dart';
 import '../../login/screen/login_page.dart';
 import '../../login/widgets/custom_button.dart';
@@ -58,7 +58,7 @@ class BodyOtherPage extends StatelessWidget {
             groupItemOther("interact".translate(context), [
               itemOther("voucher".translate(context), Icons.local_activity, () {
                 Navigator.of(context).push(createRoute(
-                  screen: const VoucherPage(),
+                  screen: const CouponPage(),
                   begin: const Offset(1, 0),
                 ));
               }),

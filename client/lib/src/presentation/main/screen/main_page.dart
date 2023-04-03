@@ -24,7 +24,7 @@ class _MainPageState extends State<MainPage> {
     const HomePage(key: PageStorageKey<String>('HomePage')),
     const OrderPage(key: PageStorageKey<String>('OrderPage')),
     const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
-    const StorePage(key: PageStorageKey<String>('StorePage')),
+    const StorePage(key: PageStorageKey<String>('StorePage'), isPick: false),
     const OtherPage(key: PageStorageKey<String>('OtherPage')),
   ];
 

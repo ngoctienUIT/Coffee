@@ -1,5 +1,5 @@
+import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:coffee/src/domain/repositories/item_order/item_order_response.dart';
-import 'package:coffee/src/domain/repositories/product/product_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../store/store_response.dart';
@@ -51,7 +51,7 @@ class OrderResponse {
   int? orderAmount;
 
   @JsonKey(name: "appliedCoupons")
-  List<Map<String, dynamic>>? appliedCoupons;
+  List<CouponResponse>? appliedCoupons;
 
   @JsonKey(name: "orderStatus")
   String? orderStatus;

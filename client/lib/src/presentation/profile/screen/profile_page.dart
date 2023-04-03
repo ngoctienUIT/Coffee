@@ -2,11 +2,11 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
 import 'package:coffee/src/presentation/profile/widgets/header_profile.dart';
-import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../coupon/widgets/app_bar_general.dart';
 import '../widgets/body_profile.dart';
 
 class ProfilePage extends StatelessWidget {

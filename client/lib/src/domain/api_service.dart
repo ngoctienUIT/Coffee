@@ -160,6 +160,13 @@ abstract class ApiService {
     @Path("id") String id,
   );
 
+  @POST("/order/{id}/attach/{coupon_id}")
+  Future<OrderResponse> attachCouponToOrder(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+    @Path("coupon_id") String couponID,
+  );
+
   @DELETE("/order/{id}")
   Future<OrderResponse> cancelOrder(
     @Header('Authorization') String token,

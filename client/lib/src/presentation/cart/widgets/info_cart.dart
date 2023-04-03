@@ -1,5 +1,8 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/address.dart';
+import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
+import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -19,6 +22,8 @@ class _InfoCartState extends State<InfoCart> {
   Color selectedColor = AppColors.statusBarColor;
   Color unselectedColor = AppColors.unselectedColor;
   bool isBringBack = false;
+  Address? address;
+  StoreResponse? store;
 
   @override
   void dispose() {
@@ -48,7 +53,10 @@ class _InfoCartState extends State<InfoCart> {
                       backgroundColor:
                           isBringBack ? unselectedColor : selectedColor,
                     ),
-                    onPressed: () => setState(() => isBringBack = false),
+                    onPressed: () {
+                      // context.read<CartBloc>().add(ChangeMethod(false));
+                      setState(() => isBringBack = false);
+                    },
                     child: Text("at_table".translate(context)),
                   ),
                 ),
@@ -64,7 +72,10 @@ class _InfoCartState extends State<InfoCart> {
                       backgroundColor:
                           isBringBack ? selectedColor : unselectedColor,
                     ),
-                    onPressed: () => setState(() => isBringBack = true),
+                    onPressed: () {
+                      // context.read<CartBloc>().add(ChangeMethod(false));
+                      setState(() => isBringBack = true);
+                    },
                     child: Text("bring_back".translate(context)),
                   ),
                 )
@@ -72,25 +83,7 @@ class _InfoCartState extends State<InfoCart> {
             ),
           ),
           const Divider(),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(createRoute(
-                screen: const AddAddressPage(),
-                begin: const Offset(1, 0),
-              ));
-            },
-            child: itemInfo(Icons.phone, "0334161287"),
-          ),
-          const Divider(),
-          InkWell(
-            onTap: () {
-              Navigator.of(context).push(createRoute(
-                screen: const AddAddressPage(),
-                begin: const Offset(1, 0),
-              ));
-            },
-            child: itemInfo(Icons.location_on, "Hồ Chí Minh, Việt Nam"),
-          ),
+          isBringBack ? bringBack() : atTable(),
           const Divider(),
           Padding(
             padding: const EdgeInsets.all(10),
@@ -112,6 +105,93 @@ class _InfoCartState extends State<InfoCart> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget atTable() {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(createRoute(
+          screen: StorePage(
+            storeID: store == null ? null : store!.storeId,
+            isPick: true,
+            onPress: (store) => setState(() {
+              this.store = store;
+            }),
+          ),
+          begin: const Offset(1, 0),
+        ));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Row(
+          children: [
+            const Icon(Icons.store),
+            const SizedBox(width: 5),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    store != null ? store!.storeName! : "",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(store != null ? store!.hotlineNumber! : ""),
+                  const SizedBox(height: 5),
+                  Text(store == null
+                      ? ""
+                      : "${store!.address1}, ${store!.address2}, ${store!.address3}, ${store!.address4},"),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios_rounded)
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget bringBack() {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(createRoute(
+              screen: AddAddressPage(
+                address: address,
+                onSave: (address) => setState(() {
+                  this.address = address;
+                }),
+              ),
+              begin: const Offset(1, 0),
+            ));
+          },
+          child: itemInfo(Icons.phone, address == null ? "" : address!.phone),
+        ),
+        const Divider(),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(createRoute(
+              screen: AddAddressPage(
+                address: address,
+                onSave: (address) => setState(() {
+                  this.address = address;
+                }),
+              ),
+              begin: const Offset(1, 0),
+            ));
+          },
+          child: itemInfo(
+            Icons.location_on,
+            address == null ? "" : address!.getAddress(),
+          ),
+        ),
+      ],
     );
   }
 }

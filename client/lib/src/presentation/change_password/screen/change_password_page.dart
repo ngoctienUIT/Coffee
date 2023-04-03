@@ -7,9 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../domain/entities/user/user_response.dart';
+import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
-import '../../voucher/widgets/app_bar_general.dart';
 import '../bloc/change_password_event.dart';
 
 class ChangePasswordPage extends StatelessWidget {

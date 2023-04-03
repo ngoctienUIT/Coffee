@@ -18,7 +18,7 @@ class ActivityPage extends StatelessWidget {
       create: (context) => ActivityBloc()..add(FetchData(0)),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
-        appBar: const CustomAppBar(elevation: 0),
+        appBar: const CustomAppBar(elevation: 0, isPick: false),
         body: SafeArea(
           child: BlocBuilder<ActivityBloc, ActivityState>(
             builder: (context, state) => const ActivityView(),

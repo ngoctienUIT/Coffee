@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
       create: (context) => HomeBloc()..add(FetchData()),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
-        appBar: const CustomAppBar(),
+        appBar: const CustomAppBar(isPick: false),
         body: const HomeView(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

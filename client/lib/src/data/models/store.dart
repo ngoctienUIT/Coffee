@@ -1,32 +1,37 @@
-import 'package:coffee/src/core/utils/extensions/time_of_date_extension.dart';
-import 'package:flutter/material.dart';
-
 class Store {
-  String image;
-  String name;
-  String address;
-  String phone;
-  TimeOfDay startDay;
-  TimeOfDay endDay;
+  String? storeId;
+  String? storeName;
+  String? address1;
+  String? address2;
+  String? address3;
+  String? address4;
+  String? openingHour;
+  String? closingHour;
+  double? latitude;
+  double? longitude;
+  String? imageUrl;
+  String? hotlineNumber;
+  String? googleMapUrl;
+  String? registrationDate;
+  String? lastUpdateDate;
 
   Store({
-    required this.image,
-    required this.name,
-    required this.address,
-    required this.phone,
-    required this.startDay,
-    required this.endDay,
+    this.storeId,
+    this.storeName,
+    this.address1,
+    this.address2,
+    this.address3,
+    this.address4,
+    this.openingHour,
+    this.closingHour,
+    this.latitude,
+    this.longitude,
+    this.imageUrl,
+    this.hotlineNumber,
+    this.googleMapUrl,
+    this.registrationDate,
+    this.lastUpdateDate,
   });
 
-  bool checkOpen() {
-    int start = startDay.hour * 60 + startDay.minute;
-    int current = DateTime.now().hour * 60 + DateTime.now().minute;
-    int end = endDay.hour * 60 + endDay.minute;
-    if (start < current && current < end) return true;
-    return false;
-  }
-
-  String rangeTime() {
-    return "${startDay.toTimeString()} - ${endDay.toTimeString()}";
-  }
+  // factory Store.fromStoreResponse
 }

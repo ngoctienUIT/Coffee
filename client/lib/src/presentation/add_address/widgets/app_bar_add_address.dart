@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class AppBarAddAddress extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarAddAddress({Key? key, required this.delete}) : super(key: key);
-
-  final VoidCallback delete;
+  const AppBarAddAddress({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

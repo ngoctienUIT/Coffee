@@ -8,7 +8,6 @@ class Address {
   String district;
   String ward;
   String address;
-  bool isDefault;
 
   Address({
     required this.address,
@@ -18,8 +17,9 @@ class Address {
     required this.province,
     required this.district,
     required this.ward,
-    this.isDefault = false,
   });
+
+  String getAddress() => "$address, $ward, $district, $province, $country";
 }
 
 class AddressAPI {
@@ -30,7 +30,6 @@ class AddressAPI {
   dvhcvn.Level2? district;
   dvhcvn.Level3? ward;
   String? address;
-  bool isDefault;
 
   AddressAPI({
     this.address,
@@ -40,8 +39,24 @@ class AddressAPI {
     this.province,
     this.district,
     this.ward,
-    this.isDefault = false,
   });
+
+  factory AddressAPI.fromAddress(Address address) {
+    return AddressAPI(
+      phone: address.phone,
+      name: address.name,
+      address: address.address,
+      province: dvhcvn.findLevel1ByName(address.province),
+      district: dvhcvn
+          .findLevel1ByName(address.province)!
+          .findLevel2ByName(address.district),
+      ward: dvhcvn
+          .findLevel1ByName(address.province)!
+          .findLevel2ByName(address.district)!
+          .findLevel3ByName(address.ward),
+      country: address.country,
+    );
+  }
 
   AddressAPI copyWith({
     String? name,
@@ -51,17 +66,15 @@ class AddressAPI {
     dvhcvn.Level2? district,
     dvhcvn.Level3? ward,
     String? address,
-    bool? isDefault,
   }) {
     return AddressAPI(
       name: name ?? this.name,
       phone: phone ?? this.phone,
       country: country ?? this.country,
       address: address ?? this.address,
-      isDefault: isDefault ?? this.isDefault,
-      district: district,
-      province: province,
-      ward: ward,
+      district: district ?? this.district,
+      province: province ?? this.province,
+      ward: ward ?? this.ward,
     );
   }
 

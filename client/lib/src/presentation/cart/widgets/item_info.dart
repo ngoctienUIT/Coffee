@@ -7,8 +7,7 @@ Widget itemInfo(IconData icon, String content) {
       children: [
         Icon(icon),
         const SizedBox(width: 5),
-        Text(content),
-        const Spacer(),
+        Expanded(child: Text(content)),
         const Icon(Icons.arrow_forward_ios_rounded)
       ],
     ),

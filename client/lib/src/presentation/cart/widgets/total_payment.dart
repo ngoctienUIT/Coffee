@@ -1,8 +1,11 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:flutter/material.dart';
 
 class TotalPayment extends StatelessWidget {
-  const TotalPayment({Key? key}) : super(key: key);
+  const TotalPayment({Key? key, required this.order}) : super(key: key);
+
+  final OrderResponse order;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("total".translate(context)),
                 const Spacer(),
-                const Text("54.000đ"),
+                Text(order.orderAmount.toString()),
               ],
             ),
           ],

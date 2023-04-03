@@ -1,12 +1,18 @@
-import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/presentation/voucher/screen/voucher_page.dart';
+import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
+import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../coupon/screen/coupon_page.dart';
+import '../../coupon/widgets/ticket_widget.dart';
 
 class AddCoupons extends StatefulWidget {
-  const AddCoupons({Key? key}) : super(key: key);
+  const AddCoupons({Key? key, this.coupons}) : super(key: key);
+
+  final List<CouponResponse>? coupons;
 
   @override
   State<AddCoupons> createState() => _AddCouponsState();
@@ -21,7 +27,12 @@ class _AddCouponsState extends State<AddCoupons> {
           InkWell(
             onTap: () {
               Navigator.of(context).push(createRoute(
-                screen: const VoucherPage(),
+                screen: CouponPage(
+                  onPress: (id) {
+                    print(id);
+                    context.read<CartBloc>().add(AttachCouponToOrder(id));
+                  },
+                ),
                 begin: const Offset(1, 0),
               ));
             },
@@ -38,28 +49,16 @@ class _AddCouponsState extends State<AddCoupons> {
               ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 5, 20, 15),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              border: Border.all(color: AppColors.statusBarColor),
+          if (widget.coupons != null)
+            TicketWidget(
+              height: 100,
+              width: MediaQuery.of(context).size.width - 50,
+              onPress: null,
+              title: widget.coupons![0].couponName,
+              image: widget.coupons![0].imageUrl,
+              date: widget.coupons![0].dueDate,
             ),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Miễn phí vận chuyển"),
-                    SizedBox(height: 5),
-                    Text("Hết hạn sau 10 giờ"),
-                  ],
-                ),
-                const Spacer(),
-                Text("already_applied".translate(context))
-              ],
-            ),
-          )
+          if (widget.coupons != null) const SizedBox(height: 10),
         ],
       ),
     );

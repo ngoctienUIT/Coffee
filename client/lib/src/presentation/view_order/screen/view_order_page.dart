@@ -1,7 +1,7 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/presentation/voucher/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 
+import '../../coupon/widgets/app_bar_general.dart';
 import '../widgets/add_coupons.dart';
 import '../widgets/bottom_cart_page.dart';
 import '../widgets/info_cart.dart';

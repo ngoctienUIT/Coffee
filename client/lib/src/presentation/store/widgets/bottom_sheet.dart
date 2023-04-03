@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../../../domain/repositories/store/store_response.dart';
 import '../../login/widgets/custom_button.dart';
 
-void showStoreBottomSheet(BuildContext context, StoreResponse store) {
+void showStoreBottomSheet(
+    BuildContext context, StoreResponse store, VoidCallback onPress) {
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -40,7 +41,7 @@ void showStoreBottomSheet(BuildContext context, StoreResponse store) {
               child: customButton(
                 text: "order_here".translate(context).toUpperCase(),
                 isOnPress: true,
-                onPress: () {},
+                onPress: onPress,
               ),
             ),
           ],

@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../domain/api_service.dart';
+import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
-import '../../voucher/widgets/app_bar_general.dart';
 
 class NewPasswordPage extends StatefulWidget {
   const NewPasswordPage({Key? key, required this.resetCredential})

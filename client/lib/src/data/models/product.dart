@@ -75,17 +75,13 @@ class Product {
     );
   }
 
-  int getPrice() {
-    return price + (sizeIndex == 0 ? S : (sizeIndex == 1 ? M : L));
-  }
+  int getPrice() => price + (sizeIndex == 0 ? S : (sizeIndex == 1 ? M : L));
 
-  String getPriceString() {
-    return "${getPrice()}$currency";
-  }
+  String getPriceString() => "${getPrice()}$currency";
 
-  String getTotalString() {
-    return "${getPrice() * number}$currency";
-  }
+  String getTotalString() => "${getPrice() * number}$currency";
+
+  String getSize() => sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");
 
   ItemOrder toItemOrder() {
     return ItemOrder(
@@ -96,9 +92,5 @@ class Product {
           : toppingOptions!.map((e) => e.toppingId).toList(),
       selectedSize: sizeIndex,
     );
-  }
-
-  String getSize() {
-    return sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");
   }
 }
