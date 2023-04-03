@@ -7,3 +7,5 @@ class RefreshData extends OrderEvent {
 
   RefreshData(this.index);
 }
+
+class AddProductToCart extends OrderEvent {}

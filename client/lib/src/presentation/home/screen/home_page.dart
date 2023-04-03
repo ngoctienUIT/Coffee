@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(createRoute(
-              screen: const CartPage(),
+              screen: CartPage(onRemove: () {}),
               begin: const Offset(1, 0),
             ));
           },

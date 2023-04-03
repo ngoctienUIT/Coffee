@@ -12,13 +12,16 @@ import 'package:coffee/src/presentation/cart/widgets/total_payment.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({Key? key}) : super(key: key);
+  const CartPage({Key? key, required this.onRemove}) : super(key: key);
+
+  final VoidCallback onRemove;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -29,23 +32,30 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CartBloc()..add(GetOrderSpending()),
-      child: const CartView(),
+      child: CartView(onRemove: widget.onRemove),
     );
   }
 }
 
 class CartView extends StatelessWidget {
-  const CartView({Key? key}) : super(key: key);
+  const CartView({Key? key, required this.onRemove}) : super(key: key);
+
+  final VoidCallback onRemove;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, state) {
         if (state is RemoveOrderSuccessState) {
+          onRemove();
           Navigator.pop(context);
         }
         if (state is DeleteProductSuccessState) {
           context.read<CartBloc>().add(GetOrderSpending());
+        }
+        if (state is PlaceOrderSuccessState) {
+          Fluttertoast.showToast(msg: "Đặt hàng thành công");
+          Navigator.pop(context);
         }
       },
       builder: (context, state) {

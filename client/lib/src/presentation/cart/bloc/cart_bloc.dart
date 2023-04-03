@@ -32,7 +32,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future placeOrder(Emitter emit) async {
     try {
-      emit(GetOrderLoadingState());
+      emit(PlaceOrderLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
@@ -42,8 +42,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       List<OrderResponse> orderSpending = response.data;
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
+      emit(PlaceOrderSuccessState());
     } catch (e) {
-      emit(GetOrderErrorState(e.toString()));
+      emit(PlaceOrderErrorState(e.toString()));
       print(e);
     }
   }

@@ -74,7 +74,10 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
 
   Widget body() {
     return BlocBuilder<OrderBloc, OrderState>(
-      buildWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) =>
+          current is! AddProductToCartLoading &&
+          current is! AddProductToCartLoaded &&
+          current is! AddProductToCartError,
       builder: (context, state) {
         print(state);
         if (state is InitState ||
@@ -104,8 +107,18 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
                   context.read<OrderBloc>().add(RefreshData(index));
                 },
                 child: check
-                    ? ListItemOrder(listProduct: listProduct)
-                    : GridItemOrder(listProduct: listProduct),
+                    ? ListItemOrder(
+                        listProduct: listProduct,
+                        onPress: () {
+                          context.read<OrderBloc>().add(AddProductToCart());
+                        },
+                      )
+                    : GridItemOrder(
+                        listProduct: listProduct,
+                        onPress: () {
+                          context.read<OrderBloc>().add(AddProductToCart());
+                        },
+                      ),
               ),
             ),
           );

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
@@ -65,8 +66,8 @@ class BottomWidget extends StatelessWidget {
                         isEdit
                             ? (state.product.number == 0
                                 ? "Xóa"
-                                : "Cập nhật ${state.product.getTotalString()}")
-                            : "${"add".translate(context)} ${state.product.getTotalString()}",
+                                : "Cập nhật ${state.product.getTotal().toCurrency()}")
+                            : "${"add".translate(context)} ${state.product.getTotal().toCurrency()}",
                       ),
                     ),
                   ),

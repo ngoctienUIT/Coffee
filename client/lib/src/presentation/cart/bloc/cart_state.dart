@@ -41,3 +41,13 @@ class DeleteProductErrorState extends CartState {
 
   DeleteProductErrorState(this.error);
 }
+
+class PlaceOrderSuccessState extends CartState {}
+
+class PlaceOrderLoadingState extends CartState {}
+
+class PlaceOrderErrorState extends CartState {
+  String error;
+
+  PlaceOrderErrorState(this.error);
+}

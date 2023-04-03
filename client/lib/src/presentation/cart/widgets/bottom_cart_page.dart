@@ -4,7 +4,6 @@ import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../login/widgets/custom_button.dart';
 
@@ -43,11 +42,7 @@ class BottomCartPage extends StatelessWidget {
           ),
           customButton(
             text: "order".translate(context),
-            onPress: () {
-              context.read<CartBloc>().add(PlaceOrder());
-              Fluttertoast.showToast(msg: "Đặt hàng thành công");
-              Navigator.pop(context);
-            },
+            onPress: () => context.read<CartBloc>().add(PlaceOrder()),
             isOnPress: true,
           ),
         ],

@@ -52,6 +52,7 @@ class _ProductPageState extends State<ProductPage> {
           if (state is AddProductToOrderSuccessState ||
               state is UpdateSuccessState ||
               state is DeleteSuccessState) {
+            print(state);
             if (widget.onPress != null) widget.onPress!();
             Navigator.pop(context);
           }
