@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 import 'entities/user/user_response.dart';
 import 'repositories/coupon/coupon_response.dart';
@@ -20,20 +20,31 @@ abstract class ApiService {
 
   //sign up
   @POST("/user/signup")
-  Future<UserResponse> signup(@Body() Map<String, dynamic> user);
+  Future<HttpResponse<UserResponse>> signup(@Body() Map<String, dynamic> user);
 
   //login
   @POST("/user/login")
-  Future<LoginResponse> login(@Body() Map<String, dynamic> user);
+  Future<HttpResponse<LoginResponse>> login(@Body() Map<String, dynamic> user);
 
   // Reset password
-  @GET(
-      "/user/issue-rspwmail?email={email}&forward=http://mock-client.com/reset-password.jsp")
-  Future resetPassword(@Path("email") String email);
+  @GET("/user/issue-rspwmail?email={email}")
+  Future<HttpResponse<String>> resetPasswordIssue(@Path("email") String email);
+
+  @POST("/user/validate-reset-token?resetCredential={token}")
+  Future<HttpResponse<bool>> validateResetTokenClient(
+    @Path("token") String token,
+    @Body() String text,
+  );
+
+  @POST("/user/reset-pass?resetCredential={token}")
+  Future<HttpResponse<UserResponse>> issueNewPasswordUser(
+    @Path("token") String token,
+    @Body() String text,
+  );
 
   // Update existing user's field
   @POST("/user/{email}/{field}")
-  Future<UserResponse> updateUserField(
+  Future<HttpResponse<UserResponse>> updateUserField(
     @Header('Authorization') String token,
     @Path("email") String email,
     @Path("field") String field,
@@ -42,126 +53,135 @@ abstract class ApiService {
 
   // Get user by ID
   @DELETE("/user/{id}")
-  Future removeUserByID(@Path("id") String id);
+  Future<HttpResponse> removeUserByID(@Path("id") String id);
 
   // Remove user by ID
   @GET("/user/{id}")
-  Future<UserResponse> getUserByID(@Path("id") String id);
+  Future<HttpResponse<UserResponse>> getUserByID(@Path("id") String id);
 
   @GET("/user")
-  Future<UserResponse> getAllUsers(@Header('Authorization') String token);
+  Future<HttpResponse<UserResponse>> getAllUsers(
+      @Header('Authorization') String token);
 
   @GET("/user/search/name?q={name}")
-  Future<UserResponse> searchUserByName(@Path("name") String name);
+  Future<HttpResponse<UserResponse>> searchUserByName(
+      @Path("name") String name);
 
   //product
   @GET('/product')
-  Future<List<ProductResponse>> getAllProducts();
+  Future<HttpResponse<List<ProductResponse>>> getAllProducts();
 
   @GET('/product/{id}')
-  Future<ProductResponse> getProductByID(@Path("id") String id);
+  Future<HttpResponse<ProductResponse>> getProductByID(@Path("id") String id);
 
   @GET('/product/search?q={query}')
-  Future<List<ProductResponse>> searchProductsByName(
+  Future<HttpResponse<List<ProductResponse>>> searchProductsByName(
       @Path("query") String query);
 
   @POST('/product')
-  Future<ProductResponse> createNewProduct(
+  Future<HttpResponse<ProductResponse>> createNewProduct(
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> product,
   );
 
   @POST('/product/{id}')
-  Future<ProductResponse> updateExistingProducts(
+  Future<HttpResponse<ProductResponse>> updateExistingProducts(
     @Path("id") String id,
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> product,
   );
 
   @POST('/product/{id}/{field}')
-  Future<ProductResponse> updateProductFieldValue(
+  Future<HttpResponse<ProductResponse>> updateProductFieldValue(
     @Path("id") String id,
     @Path("field") String field,
     @Body() dynamic fieldValue,
   );
 
   @POST('/product/{id}/topping-options')
-  Future<ProductResponse> updateProductToppingOptions(@Path("id") String id);
+  Future<HttpResponse<ProductResponse>> updateProductToppingOptions(
+      @Path("id") String id);
 
   @DELETE('/product/{id}')
-  Future<ProductResponse> removeProductByID(@Path("id") String id);
+  Future<HttpResponse<ProductResponse>> removeProductByID(
+      @Path("id") String id);
 
   //product-catalogues
   @GET('/product-catalogues')
-  Future<List<ProductCataloguesResponse>> getAllProductCatalogues();
+  Future<HttpResponse<List<ProductCataloguesResponse>>>
+      getAllProductCatalogues();
 
   @GET('/product-catalogues/{id}')
-  Future<ProductCataloguesResponse> getProductCatalogueByID(
+  Future<HttpResponse<ProductCataloguesResponse>> getProductCatalogueByID(
       @Path("id") String id);
 
   @GET('/product-catalogues/search?q={query}')
-  Future<List<ProductCataloguesResponse>> searchProductCataloguesByName(
-      @Path("query") String query);
+  Future<HttpResponse<List<ProductCataloguesResponse>>>
+      searchProductCataloguesByName(@Path("query") String query);
 
   @GET('/product-catalogues/{id}/products')
-  Future<List<ProductResponse>> getAllProductsFromProductCatalogueID(
-      @Path("id") String id);
+  Future<HttpResponse<List<ProductResponse>>>
+      getAllProductsFromProductCatalogueID(@Path("id") String id);
 
   @POST('/product-catalogues')
-  Future<ProductCataloguesResponse> createNewProductCatalogue(
+  Future<HttpResponse<ProductCataloguesResponse>> createNewProductCatalogue(
       @Body() Map<String, dynamic> productCatalogues);
 
   @POST('/product-catalogues/{id}')
-  Future<ProductCataloguesResponse> updateExistingProductCatalogue(
+  Future<HttpResponse<ProductCataloguesResponse>>
+      updateExistingProductCatalogue(
     @Body() Map<String, dynamic> productCatalogues,
     @Path("id") String id,
   );
 
   @POST('/product-catalogues/{id}/{field}')
-  Future<ProductCataloguesResponse> updateProductCatalogueFieldValue(
+  Future<HttpResponse<ProductCataloguesResponse>>
+      updateProductCatalogueFieldValue(
     @Body() dynamic fieldValue,
     @Path("id") String id,
     @Path("field") String field,
   );
 
   @POST('/product-catalogues/{id}/sub-catalogues')
-  Future<ProductCataloguesResponse> updateSubCatalogueUsingID(
+  Future<HttpResponse<ProductCataloguesResponse>> updateSubCatalogueUsingID(
     @Body() List<String> listSub,
     @Path("id") String id,
   );
 
   @DELETE('/product-catalogues/{id}')
-  Future<ProductCataloguesResponse> removeProductCataloguesByID(
+  Future<HttpResponse<ProductCataloguesResponse>> removeProductCataloguesByID(
       @Path("id") String id);
 
   //coupon
   @GET('/coupon')
-  Future<List<CouponResponse>> getAllCoupons();
+  Future<HttpResponse<List<CouponResponse>>> getAllCoupons();
 
   @GET('/coupon/{id}')
-  Future<CouponResponse> getCouponByID(@Path("id") String id);
+  Future<HttpResponse<CouponResponse>> getCouponByID(@Path("id") String id);
 
   @GET('/coupon/search?q={query}')
-  Future<List<CouponResponse>> searchCouponsByName(@Path("query") String query);
+  Future<HttpResponse<List<CouponResponse>>> searchCouponsByName(
+      @Path("query") String query);
 
   @POST('/coupon')
-  Future<CouponResponse> createNewCoupon(@Body() Map<String, dynamic> coupon);
+  Future<HttpResponse<CouponResponse>> createNewCoupon(
+      @Body() Map<String, dynamic> coupon);
 
   @POST('/coupon/{id}')
-  Future<CouponResponse> updateExistingCoupon(
+  Future<HttpResponse<CouponResponse>> updateExistingCoupon(
     @Path("id") String id,
     @Body() Map<String, dynamic> coupon,
   );
 
   @POST('/coupon/{id}/{field}')
-  Future<CouponResponse> updateCouponFieldValue(
+  Future<HttpResponse<CouponResponse>> updateCouponFieldValue(
     @Path("id") String id,
     @Path("field") String field,
     @Body() dynamic fieldValue,
   );
 
   @POST('/coupon/{id}/{field}')
-  Future<CouponResponse> removeCouponByID(
+  Future<HttpResponse<CouponResponse>> removeCouponByID(
     @Path("id") String id,
     @Path("field") String field,
     @Body() Map<String, dynamic> coupon,
@@ -169,140 +189,118 @@ abstract class ApiService {
 
   //stores
   @GET('/stores')
-  Future<List<StoreResponse>> getAllStores();
+  Future<HttpResponse<List<StoreResponse>>> getAllStores();
 
   @GET('/stores/{id}')
-  Future<StoreResponse> getStoreByID(@Path("id") String id);
+  Future<HttpResponse<StoreResponse>> getStoreByID(@Path("id") String id);
 
   @GET('/stores/search?q={query}')
-  Future<List<StoreResponse>> searchStoresByName(@Path("query") String query);
+  Future<HttpResponse<List<StoreResponse>>> searchStoresByName(
+      @Path("query") String query);
 
   @POST('/stores')
-  Future<StoreResponse> registerNewStore(@Body() Map<String, dynamic> store);
+  Future<HttpResponse<StoreResponse>> registerNewStore(
+      @Body() Map<String, dynamic> store);
 
   @POST('/stores/{id}')
-  Future<StoreResponse> updateExistingStore(
+  Future<HttpResponse<StoreResponse>> updateExistingStore(
     @Path("id") String id,
     @Body() Map<String, dynamic> store,
   );
 
   @POST('/stores/{id}/{field}')
-  Future<StoreResponse> updateStoreFieldValue(
+  Future<HttpResponse<StoreResponse>> updateStoreFieldValue(
     @Path("id") String id,
     @Path("field") String field,
     @Body() dynamic fieldValue,
   );
 
   @DELETE('/stores/{id}')
-  Future<StoreResponse> removeStoreByID(
+  Future<HttpResponse<StoreResponse>> removeStoreByID(
     @Path("id") String id,
     @Header('Authorization') String token,
   );
 
   //tag
   @GET('/tag')
-  Future<List<TagResponse>> getAllTags();
+  Future<HttpResponse<List<TagResponse>>> getAllTags();
 
   @GET('/tag/{id}')
-  Future<TagResponse> getTagByID(@Path("id") String id);
+  Future<HttpResponse<TagResponse>> getTagByID(@Path("id") String id);
 
   @POST('/tag')
-  Future<TagResponse> createNewTag(@Body() Map<String, dynamic> tag);
+  Future<HttpResponse<TagResponse>> createNewTag(
+      @Body() Map<String, dynamic> tag);
 
   @POST('/tag/{id}')
-  Future<TagResponse> updateExistingTag(
+  Future<HttpResponse<TagResponse>> updateExistingTag(
     @Body() Map<String, dynamic> tag,
     @Path("id") String id,
   );
 
   @POST('/tag/{id}/{field}')
-  Future<TagResponse> updateTagFieldValue(
+  Future<HttpResponse<TagResponse>> updateTagFieldValue(
     @Body() dynamic fieldValue,
     @Path("id") String id,
     @Path("field") String field,
   );
 
   @DELETE('/tag/{id}')
-  Future<TagResponse> removeByID(@Path("id") String id);
+  Future<HttpResponse<TagResponse>> removeByID(@Path("id") String id);
 
   //topping
   @GET('/topping')
-  Future<List<ToppingResponse>> getAllToppings();
+  Future<HttpResponse<List<ToppingResponse>>> getAllToppings();
 
   @GET('/topping/{id}')
-  Future<ToppingResponse> getToppingByID(@Path("id") String id);
+  Future<HttpResponse<ToppingResponse>> getToppingByID(@Path("id") String id);
 
   @POST('/topping')
-  Future<ToppingResponse> createNewTopping(
+  Future<HttpResponse<ToppingResponse>> createNewTopping(
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> topping,
   );
 
   @POST('/topping/{id}')
-  Future<ToppingResponse> updateExistingTopping(
+  Future<HttpResponse<ToppingResponse>> updateExistingTopping(
     @Path("id") String id,
     @Body() Map<String, dynamic> topping,
   );
 
   @POST('/topping/{id}/{field}')
-  Future<ToppingResponse> updateToppingFieldValue(
+  Future<HttpResponse<ToppingResponse>> updateToppingFieldValue(
     @Path("id") String id,
     @Path("field") String field,
     @Body() dynamic fieldValue,
   );
 
   @DELETE('/topping/{id}')
-  Future<ToppingResponse> removeToppingByID(@Path("id") String id);
+  Future<HttpResponse<ToppingResponse>> removeToppingByID(
+      @Path("id") String id);
 
   //order
   @GET("/order?userIdentity={email}&status={status}")
-  Future<List<OrderResponse>> getAllOrders(
+  Future<HttpResponse<List<OrderResponse>>> getAllOrders(
     @Header('Authorization') String token,
     @Path("email") String email,
     @Path("status") String status,
   );
 
   @GET("/order/{id}")
-  Future<OrderResponse> getOrderByID(
-    @Header('Authorization') String token,
-    @Path("id") String id,
-  );
-
-  // 'Bearer $token'
-  @POST("/order}")
-  Future<OrderResponse> createNewOrder(
-    @Header('Authorization') String token,
-    @Body() Map<String, dynamic> order,
-  );
-
-  @POST("/order/{id}")
-  Future<OrderResponse> updatePendingOrder(
-    @Header('Authorization') String token,
-    @Path("id") String id,
-  );
-
-  @POST("/order/{id}/place-order")
-  Future<OrderResponse> placeOrder(
+  Future<HttpResponse<OrderResponse>> getOrderByID(
     @Header('Authorization') String token,
     @Path("id") String id,
   );
 
   @POST("/order/{id}/close")
-  Future<OrderResponse> closeSuccessOrder(
+  Future<HttpResponse<OrderResponse>> closeSuccessOrder(
     @Header('Authorization') String token,
     @Path("id") String id,
   );
 
-  @POST("/order/{id}")
-  Future<OrderResponse> cancelOrder(
+  @DELETE("/order/{id}")
+  Future<HttpResponse<OrderResponse>> cancelOrder(
     @Header('Authorization') String token,
     @Path("id") String id,
-  );
-
-  @POST("/order/{id}/attach/{coupon_id}")
-  Future<OrderResponse> attachCouponToOrder(
-    @Header('Authorization') String token,
-    @Path("id") String id,
-    @Path("coupon_id") String couponID,
   );
 }

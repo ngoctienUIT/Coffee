@@ -20,10 +20,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(ProductLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      listProductCatalogues = await apiService.getAllProductCatalogues();
-      final listProduct = await apiService
+      final response = await apiService.getAllProductCatalogues();
+      listProductCatalogues = response.data;
+      final productResponse = await apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
-
+      final listProduct = productResponse.data;
       emit(ProductLoaded(0, listProduct, listProductCatalogues));
     } catch (e) {
       emit(ProductError(e.toString()));
@@ -36,8 +37,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(RefreshLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final listProduct = await apiService.getAllProductsFromProductCatalogueID(
+      final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
+      final listProduct = response.data;
 
       emit(RefreshLoaded(index, listProduct));
     } catch (e) {

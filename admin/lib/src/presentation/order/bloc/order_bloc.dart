@@ -20,7 +20,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      final listOrder = await apiService.getAllOrders('Bearer $token', "", "");
+      final response = await apiService.getAllOrders('Bearer $token', "", "");
+      final listOrder = response.data;
 
       emit(OrderLoaded(0, listOrder));
     } catch (e) {
@@ -39,8 +40,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       String status = index == 0
           ? ""
           : (index == 1 ? "PLACED" : (index == 2 ? "COMPLETED" : "CANCELLED"));
-      final listOrder =
+      final response =
           await apiService.getAllOrders('Bearer $token', "", status);
+      final listOrder = response.data;
 
       emit(RefreshLoaded(index, listOrder));
     } catch (e) {

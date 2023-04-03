@@ -30,15 +30,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.login(
           {"loginIdentity": event.email, "hashedPassword": event.password});
-      if (response.userResponse.userRole == "CUSTOMER") {
+      final user = response.data;
+      if (user.userResponse.userRole == "CUSTOMER") {
         Fluttertoast.showToast(msg: "Không có quyền");
         emit(LoginErrorState(status: "Không có quyền"));
       } else {
         SharedPreferences.getInstance().then((value) {
-          value.setString("userID", response.userResponse.id);
-          value.setString("token", response.accessToken);
+          value.setString("userID", user.userResponse.id);
+          value.setString("token", user.accessToken);
         });
-        print(response.accessToken);
+        print(user.accessToken);
         emit(LoginSuccessState());
       }
     } catch (e) {

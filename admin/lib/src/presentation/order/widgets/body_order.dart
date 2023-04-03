@@ -93,7 +93,7 @@ class BodyOrder extends StatelessWidget {
   Future<UserResponse> getUserInfo(String id) async {
     ApiService apiService =
         ApiService(Dio(BaseOptions(contentType: "application/json")));
-    return await apiService.getUserByID(id);
+    return (await apiService.getUserByID(id)).data;
   }
 
   Widget bodyItem(OrderResponse order) {
