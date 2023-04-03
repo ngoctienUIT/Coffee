@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_state.dart';
@@ -59,6 +60,18 @@ class CartView extends StatelessWidget {
           if (state.order == null) {
             return emptyCart(context);
           } else {
+            Address? address;
+            if (state.order!.address1 != null) {
+              address = Address(
+                address: state.order!.address1!,
+                phone: "",
+                name: "",
+                country: "Việt Nam",
+                province: state.order!.address4!,
+                district: state.order!.address3!,
+                ward: state.order!.address2!,
+              );
+            }
             return Scaffold(
               backgroundColor: AppColors.bgColor,
               appBar: AppBarCart(clearCart: () {
@@ -70,7 +83,10 @@ class CartView extends StatelessWidget {
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      const InfoCart(),
+                      InfoCart(
+                        store: state.order!.selectedPickupStore,
+                        address: address,
+                      ),
                       const SizedBox(height: 10),
                       ListProduct(
                         listProduct: state.order!.orderItems == null
@@ -91,7 +107,7 @@ class CartView extends StatelessWidget {
                   ),
                 ),
               ),
-              bottomSheet: BottomCartPage(onPress: () {}),
+              bottomSheet: const BottomCartPage(),
             );
           }
         }

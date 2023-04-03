@@ -65,6 +65,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       Order(
         userId: userID,
         storeId: "6425d2c7cf1d264dca4bcc82",
+        selectedPickupOption: "AT_STORE",
         orderItems: [product.toItemOrder()],
       ).toJson(),
     );

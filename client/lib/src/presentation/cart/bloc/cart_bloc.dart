@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/address.dart';
 import '../../../domain/api_service.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
@@ -15,13 +16,42 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     on<DeleteProductEvent>((event, emit) => deleteProduct(event.id, emit));
 
-    on<ChangeMethod>((event, emit) => changeMethod(event.isBringBack, emit));
+    on<ChangeMethod>((event, emit) => changeMethod(
+          isBringBack: event.isBringBack,
+          emit: emit,
+          storeID: event.storeID,
+          address: event.address,
+        ));
 
     on<AttachCouponToOrder>(
         (event, emit) => attachCouponToOrder(event.id, emit));
+
+    on<PlaceOrder>((event, emit) => placeOrder(emit));
   }
 
-  Future changeMethod(bool isBringBack, Emitter emit) async {
+  Future placeOrder(Emitter emit) async {
+    try {
+      emit(GetOrderLoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "";
+      final orderSpending =
+          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
+    } catch (e) {
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
+    }
+  }
+
+  Future changeMethod({
+    required bool isBringBack,
+    required Emitter emit,
+    Address? address,
+    String? storeID,
+  }) async {
     try {
       emit(GetOrderLoadingState());
       ApiService apiService =
@@ -33,12 +63,21 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
+      print(order.selectedPickupOption);
+      // if (isBringBack) {
+      //   order.addAddress(address!);
+      //   // order.storeId = null;
+      //   print(order.storeId);
+      // } else {
+      //   order.removeAddress();
+      //   order.storeId = storeID;
+      // }
       await apiService.updatePendingOrder(
         "Bearer $token",
         order.toJson(),
         order.orderId!,
       );
-      getOrderSpending(emit);
+      // getOrderSpending(emit);
     } catch (e) {
       emit(GetOrderErrorState(e.toString()));
       print(e);

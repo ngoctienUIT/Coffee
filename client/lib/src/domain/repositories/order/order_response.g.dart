@@ -31,6 +31,7 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
           ?.map((e) => CouponResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       orderStatus: json['orderStatus'] as String?,
+      orderCustomerNote: json['orderCustomerNote'] as String?,
     );
 
 Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
@@ -51,4 +52,5 @@ Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
       'orderAmount': instance.orderAmount,
       'appliedCoupons': instance.appliedCoupons,
       'orderStatus': instance.orderStatus,
+      'orderCustomerNote': instance.orderCustomerNote,
     };

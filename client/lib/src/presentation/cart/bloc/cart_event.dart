@@ -1,3 +1,5 @@
+import '../../../data/models/address.dart';
+
 abstract class CartEvent {}
 
 class GetOrderSpending extends CartEvent {}
@@ -18,6 +20,10 @@ class AttachCouponToOrder extends CartEvent {
 
 class ChangeMethod extends CartEvent {
   bool isBringBack;
+  Address? address;
+  String? storeID;
 
-  ChangeMethod(this.isBringBack);
+  ChangeMethod({required this.isBringBack, this.address, this.storeID});
 }
+
+class PlaceOrder extends CartEvent {}

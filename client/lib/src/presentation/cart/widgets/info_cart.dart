@@ -4,14 +4,20 @@ import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_address/screen/add_address_page.dart';
+import '../bloc/cart_bloc.dart';
+import '../bloc/cart_event.dart';
 
 class InfoCart extends StatefulWidget {
-  const InfoCart({Key? key}) : super(key: key);
+  const InfoCart({Key? key, this.store, this.address}) : super(key: key);
+
+  final StoreResponse? store;
+  final Address? address;
 
   @override
   State<InfoCart> createState() => _InfoCartState();
@@ -24,6 +30,13 @@ class _InfoCartState extends State<InfoCart> {
   bool isBringBack = false;
   Address? address;
   StoreResponse? store;
+
+  @override
+  void initState() {
+    store = widget.store;
+    address = widget.address;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -54,7 +67,6 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? unselectedColor : selectedColor,
                     ),
                     onPressed: () {
-                      // context.read<CartBloc>().add(ChangeMethod(false));
                       setState(() => isBringBack = false);
                     },
                     child: Text("at_table".translate(context)),
@@ -73,7 +85,6 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? selectedColor : unselectedColor,
                     ),
                     onPressed: () {
-                      // context.read<CartBloc>().add(ChangeMethod(false));
                       setState(() => isBringBack = true);
                     },
                     child: Text("bring_back".translate(context)),
@@ -117,6 +128,8 @@ class _InfoCartState extends State<InfoCart> {
             isPick: true,
             onPress: (store) => setState(() {
               this.store = store;
+              context.read<CartBloc>().add(
+                  ChangeMethod(isBringBack: false, storeID: store.storeId));
             }),
           ),
           begin: const Offset(1, 0),
@@ -166,6 +179,9 @@ class _InfoCartState extends State<InfoCart> {
                 address: address,
                 onSave: (address) => setState(() {
                   this.address = address;
+                  context
+                      .read<CartBloc>()
+                      .add(ChangeMethod(isBringBack: true, address: address));
                 }),
               ),
               begin: const Offset(1, 0),
@@ -181,6 +197,9 @@ class _InfoCartState extends State<InfoCart> {
                 address: address,
                 onSave: (address) => setState(() {
                   this.address = address;
+                  context
+                      .read<CartBloc>()
+                      .add(ChangeMethod(isBringBack: true, address: address));
                 }),
               ),
               begin: const Offset(1, 0),

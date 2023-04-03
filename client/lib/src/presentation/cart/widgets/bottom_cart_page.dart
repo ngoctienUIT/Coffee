@@ -1,11 +1,14 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
+import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../login/widgets/custom_button.dart';
 
 class BottomCartPage extends StatelessWidget {
-  const BottomCartPage({Key? key, required this.onPress}) : super(key: key);
-  final Function onPress;
+  const BottomCartPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,11 @@ class BottomCartPage extends StatelessWidget {
           ),
           customButton(
             text: "order".translate(context),
-            onPress: () {},
+            onPress: () {
+              context.read<CartBloc>().add(PlaceOrder());
+              Fluttertoast.showToast(msg: "Đặt hàng thành công");
+              Navigator.pop(context);
+            },
             isOnPress: true,
           ),
         ],

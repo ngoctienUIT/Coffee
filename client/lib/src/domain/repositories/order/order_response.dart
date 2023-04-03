@@ -56,6 +56,9 @@ class OrderResponse {
   @JsonKey(name: "orderStatus")
   String? orderStatus;
 
+  @JsonKey(name: "orderCustomerNote")
+  String? orderCustomerNote;
+
   OrderResponse({
     this.orderId,
     this.userId,
@@ -73,6 +76,7 @@ class OrderResponse {
     this.orderAmount,
     this.appliedCoupons,
     this.orderStatus,
+    this.orderCustomerNote,
   });
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>

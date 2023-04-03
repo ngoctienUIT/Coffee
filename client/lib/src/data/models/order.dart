@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/domain/repositories/order/order_response.dart';
 
 import 'item_order.dart';
@@ -19,6 +20,7 @@ class Order {
   int? orderAmount;
   String? appliedCoupons;
   String? orderStatus;
+  String? orderNote;
 
   Order({
     this.orderId,
@@ -27,6 +29,7 @@ class Order {
     this.lastUpdated,
     this.status,
     required this.orderItems,
+    this.orderNote,
     this.selectedPaymentMethod,
     this.selectedPickupOption,
     this.storeId,
@@ -40,14 +43,44 @@ class Order {
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      "userId": userId,
-      "orderItems": orderItems.map((e) => e.toJson()).toList(),
-      "paymentMethod": "CASH",
-      "pickupOptions": "AT_STORE",
-      "couponId": null,
-      "storeId": storeId,
-    };
+    if (selectedPickupOption == "AT_STORE") {
+      return {
+        "userId": userId,
+        "orderItems": orderItems.map((e) => e.toJson()).toList(),
+        "paymentMethod": "CASH",
+        "pickupOptions": selectedPickupOption,
+        "couponId": null,
+        "storeId": storeId,
+        // "orderNote": orderNote,
+      };
+    } else {
+      return {
+        "userId": userId,
+        "orderItems": orderItems.map((e) => e.toJson()).toList(),
+        "paymentMethod": "CASH",
+        "pickupOptions": selectedPickupOption,
+        "couponId": null,
+        "address1": address1,
+        "address2": address2,
+        "address3": address3,
+        "address4": address4,
+        // "orderNote": orderNote,
+      };
+    }
+  }
+
+  void addAddress(Address address) {
+    address1 = address.province;
+    address2 = address.district;
+    address3 = address.ward;
+    address4 = address.address;
+  }
+
+  void removeAddress() {
+    address1 = null;
+    address2 = null;
+    address3 = null;
+    address4 = null;
   }
 
   factory Order.fromOrderResponse(OrderResponse orderResponse) {
@@ -72,6 +105,7 @@ class Order {
       selectedPaymentMethod: orderResponse.selectedPaymentMethod,
       selectedPickupOption: orderResponse.selectedPickupOption,
       storeId: orderResponse.selectedPickupStore!.storeId,
+      orderNote: orderResponse.orderCustomerNote,
     );
   }
 }

@@ -173,7 +173,7 @@ abstract class ApiService {
     @Path("id") String id,
   );
 
-  @DELETE("/order/{id}/place-order")
+  @POST("/order/{id}/place-order")
   Future<OrderResponse> placeOrder(
     @Header('Authorization') String token,
     @Path("id") String id,

@@ -2,16 +2,10 @@ import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_payment.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class PaymentMethods extends StatefulWidget {
+class PaymentMethods extends StatelessWidget {
   const PaymentMethods({Key? key}) : super(key: key);
-
-  @override
-  State<PaymentMethods> createState() => _PaymentMethodsState();
-}
-
-class _PaymentMethodsState extends State<PaymentMethods> {
-  int value = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +22,19 @@ class _PaymentMethodsState extends State<PaymentMethods> {
           ),
           const Divider(),
           itemPayment(
-            onChange: (value) => setState(() => this.value = value!),
-            onPress: () => setState(() => value = 0),
+            onChange: (value) {},
+            onPress: () => Fluttertoast.showToast(
+                msg: "Tính năng thanh toán Momo chưa ra mắt"),
             value: 0,
-            groupValue: value,
+            groupValue: 1,
             image: AppImages.imgMomo,
             title: "momo_wallet".translate(context),
           ),
           itemPayment(
-            onChange: (value) => setState(() => this.value = value!),
-            onPress: () => setState(() => value = 1),
+            onChange: (value) {},
+            onPress: () {},
             value: 1,
-            groupValue: value,
+            groupValue: 1,
             image: AppImages.imgCOD,
             title: "payment_delivery".translate(context),
           ),
