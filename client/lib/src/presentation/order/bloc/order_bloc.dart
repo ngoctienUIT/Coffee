@@ -20,10 +20,12 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      listProductCatalogues = await apiService.getAllProductCatalogues();
+      final response = await apiService.getAllProductCatalogues();
+      listProductCatalogues = response.data;
 
-      final listProduct = await apiService
+      final productResponse = await apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
+      final listProduct = productResponse.data;
 
       emit(OrderLoaded(0, listProduct, listProductCatalogues));
     } catch (e) {
@@ -37,8 +39,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(RefreshOrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final listProduct = await apiService.getAllProductsFromProductCatalogueID(
+      final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
+      final listProduct = response.data;
 
       emit(RefreshOrderLoaded(index, listProduct));
     } catch (e) {

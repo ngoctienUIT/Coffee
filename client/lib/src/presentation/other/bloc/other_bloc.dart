@@ -23,7 +23,7 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getUserByID(id);
 
-      emit(OtherLoaded(response));
+      emit(OtherLoaded(response.data));
     } catch (e) {
       emit(OtherError(e.toString()));
       print(e);

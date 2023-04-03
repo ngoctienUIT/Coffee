@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/address.dart';
 import '../../../domain/api_service.dart';
+import '../../../domain/repositories/order/order_response.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(InitState()) {
@@ -37,8 +38,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      List<OrderResponse> orderSpending = response.data;
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
     } catch (e) {
       emit(GetOrderErrorState(e.toString()));
@@ -59,8 +61,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      List<OrderResponse> orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
       print(order.selectedPickupOption);
@@ -92,8 +95,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      List<OrderResponse> orderSpending = response.data;
       if (orderSpending.isEmpty) {
         emit(GetOrderSuccessState(null));
       } else {
@@ -130,8 +134,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      List<OrderResponse> orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.orderItems =
           order.orderItems.where((element) => element.productId != id).toList();
@@ -159,11 +164,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
-      final response = await apiService.attachCouponToOrder(
+      final orderSpending = response.data;
+      final responseCoupon = await apiService.attachCouponToOrder(
           "Bearer $token", orderSpending[0].orderId!, id);
-      emit(GetOrderSuccessState(response));
+      emit(GetOrderSuccessState(responseCoupon.data));
     } catch (e) {
       emit(GetOrderErrorState(e.toString()));
       print(e);

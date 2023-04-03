@@ -16,10 +16,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.searchProductsByName(query);
-      for (var item in response) {
-        print(item.toJson());
-      }
-      emit(SearchLoaded(response));
+      emit(SearchLoaded(response.data));
     } catch (e) {
       emit(SearchError(e.toString()));
       print(e);

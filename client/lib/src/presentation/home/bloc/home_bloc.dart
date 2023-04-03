@@ -19,9 +19,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final listCoupon = apiService.getAllCoupons();
       final listProductCatalogues = apiService.getAllProductCatalogues();
       emit(HomeLoaded(
-        listCoupon: await listCoupon,
-        listProduct: await listProduct,
-        listProductCatalogues: await listProductCatalogues,
+        listCoupon: (await listCoupon).data,
+        listProduct: (await listProduct).data,
+        listProductCatalogues: (await listProductCatalogues).data,
       ));
     } catch (e) {
       emit(HomeError(e.toString()));

@@ -33,8 +33,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
       String userID = prefs.getString("userID") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final orderSpending = response.data;
       if (orderSpending.isEmpty) {
         await createNewOrder(
             token: token, userID: userID, product: product, emit: emit);
@@ -106,8 +107,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
 
       order.orderItems[index].quantity = product.number;
@@ -133,8 +135,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      final orderSpending =
+      final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.orderItems.removeAt(index);
 

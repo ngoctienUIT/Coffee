@@ -35,11 +35,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.login(
           {"loginIdentity": event.email, "hashedPassword": event.password});
+      final user = response.data;
       SharedPreferences.getInstance().then((value) {
-        value.setString("userID", response.userResponse.id);
-        value.setString("token", response.accessToken);
+        value.setString("userID", user.userResponse.id);
+        value.setString("token", user.accessToken);
       });
-      print(response.accessToken);
+      print(user.accessToken);
       emit(LoginSuccessState());
     } catch (e) {
       emit(LoginErrorState(status: e.toString()));
@@ -64,7 +65,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         });
         print("token: ${googleAuth.accessToken}");
         SharedPreferences.getInstance().then((value) {
-          value.setString("userID", response.userResponse.id);
+          value.setString("userID", response.data.userResponse.id);
           value.setString("token", googleAuth.accessToken!);
         });
         emit(LoginSuccessState());

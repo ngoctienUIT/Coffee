@@ -83,7 +83,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      return await apiService.resetPasswordIssue(controller.text);
+      return (await apiService.resetPasswordIssue(controller.text)).data;
     } catch (e) {
       print(e);
       return null;

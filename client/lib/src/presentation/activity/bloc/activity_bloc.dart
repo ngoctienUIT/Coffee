@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
+import '../../../domain/repositories/order/order_response.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   ActivityBloc() : super(InitState()) {
@@ -19,9 +20,14 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       String email = prefs.getString("username") ?? "admin";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final listOder = index == 0
+
+      List<OrderResponse> listOder;
+      final response = index == 0
           ? await apiService.getAllOrders("Bearer $token", email, "PLACED")
-          : (await apiService.getAllOrders("Bearer $token", email, ""))
+          : await apiService.getAllOrders("Bearer $token", email, "");
+      listOder = index == 0
+          ? response.data
+          : response.data
               .where((element) =>
                   element.orderStatus == "COMPLETED" ||
                   element.orderStatus == "CANCELLED")

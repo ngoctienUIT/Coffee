@@ -89,10 +89,9 @@ class _InputPinState extends State<InputPin> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      return await apiService.validateResetTokenClient(
-        widget.resetCredential,
-        controller.text,
-      );
+      return (await apiService.validateResetTokenClient(
+              widget.resetCredential, controller.text))
+          .data;
     } catch (e) {
       print(e);
       return false;

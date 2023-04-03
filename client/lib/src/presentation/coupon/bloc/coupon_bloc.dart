@@ -15,9 +15,9 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
       emit(CouponLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final coupon = await apiService.getAllCoupons();
-
-      emit(CouponLoaded(coupon));
+      final response = await apiService.getAllCoupons();
+      final coupons = response.data;
+      emit(CouponLoaded(coupons));
     } catch (e) {
       emit(CouponError(e.toString()));
       print(e);
