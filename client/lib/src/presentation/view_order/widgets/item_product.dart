@@ -1,12 +1,14 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
 class ItemProduct extends StatelessWidget {
-  const ItemProduct({Key? key, required this.index, required this.number})
+  const ItemProduct({Key? key, required this.index, required this.product})
       : super(key: key);
-  final int number;
+  final Product product;
   final int index;
 
   @override
@@ -22,7 +24,7 @@ class ItemProduct extends StatelessWidget {
           if (index != 0) const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
-              Image.asset("assets/tea.png", height: 50, width: 50),
+              Image.network(product.image!, height: 50, width: 50),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -31,7 +33,7 @@ class ItemProduct extends StatelessWidget {
                   children: [
                     const SizedBox(height: 5),
                     Text(
-                      listSellingProducts[index]["name"]!,
+                      product.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -39,7 +41,7 @@ class ItemProduct extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 10),
-                    Text(numberFormat.format(30000 * number)),
+                    Text(product.getTotal().toCurrency()),
                   ],
                 ),
               ),
@@ -52,7 +54,7 @@ class ItemProduct extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "x$number",
+                    "${product.getSize()} x ${product.number}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

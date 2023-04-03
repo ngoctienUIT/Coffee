@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("total".translate(context)),
                 const Spacer(),
-                Text(order.orderAmount.toString()),
+                Text(order.orderAmount!.toCurrency()),
               ],
             ),
           ],

@@ -12,7 +12,6 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       userId: json['userId'] as String?,
       createdDate: json['createdDate'] as String?,
       lastUpdated: json['lastUpdated'] as String?,
-      status: json['status'] as String?,
       orderItems: (json['orderItems'] as List<dynamic>?)
           ?.map((e) => ItemOrderResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -40,7 +39,6 @@ Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
       'userId': instance.userId,
       'createdDate': instance.createdDate,
       'lastUpdated': instance.lastUpdated,
-      'status': instance.status,
       'orderItems': instance.orderItems,
       'selectedPaymentMethod': instance.selectedPaymentMethod,
       'selectedPickupOption': instance.selectedPickupOption,

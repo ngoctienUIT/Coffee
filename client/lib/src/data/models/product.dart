@@ -79,6 +79,8 @@ class Product {
 
   String getPriceString() => "${getPrice()}$currency";
 
+  int getTotal() => getPrice() * number;
+
   String getTotalString() => "${getPrice() * number}$currency";
 
   String getSize() => sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");

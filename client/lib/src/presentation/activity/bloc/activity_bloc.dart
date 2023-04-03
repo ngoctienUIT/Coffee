@@ -21,7 +21,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final listOder = index == 0
           ? await apiService.getAllOrders("Bearer $token", email, "PLACED")
-          : await apiService.getAllOrders("Bearer $token", email, "COMPLETED");
+          : (await apiService.getAllOrders("Bearer $token", email, ""))
+              .where((element) =>
+                  element.orderStatus == "COMPLETED" ||
+                  element.orderStatus == "CANCELLED")
+              .toList();
       emit(ActivityLoaded(listOrder: listOder, index: index));
     } catch (e) {
       emit(ActivityError(message: e.toString(), index: index));

@@ -1,7 +1,9 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/app_colors.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 
@@ -41,7 +43,7 @@ class GridItemOrder extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
               child: Image.network(
@@ -54,9 +56,13 @@ class GridItemOrder extends StatelessWidget {
               listProduct[index].name,
               style: const TextStyle(fontSize: 16),
             ),
+            const SizedBox(height: 5),
             Text(
-              "${listProduct[index].price}${listProduct[index].currency}",
-              style: const TextStyle(fontSize: 16),
+              listProduct[index].price.toCurrency(),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.statusBarColor,
+              ),
             ),
           ],
         ),

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
@@ -8,7 +9,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../login/widgets/custom_button.dart';
 
 class BottomCartPage extends StatelessWidget {
-  const BottomCartPage({Key? key}) : super(key: key);
+  const BottomCartPage({Key? key, required this.total}) : super(key: key);
+
+  final int total;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +32,9 @@ class BottomCartPage extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Text(
-                "54.000đ",
-                style: TextStyle(
+              Text(
+                total.toCurrency(),
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),

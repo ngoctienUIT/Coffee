@@ -36,7 +36,15 @@ class ListActivity extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(createRoute(
-                      screen: const ViewOrderPage(),
+                      screen: ViewOrderPage(
+                        index: state.index,
+                        order: state.listOrder[index],
+                        onPress: () {
+                          context
+                              .read<ActivityBloc>()
+                              .add(FetchData(state.index));
+                        },
+                      ),
                       begin: const Offset(0, 1),
                     ));
                   },
@@ -87,7 +95,7 @@ class ListActivity extends StatelessWidget {
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Text(order.status.toString()),
+                      Text(order.orderStatus.toString()),
                       const Spacer(),
                       Text(order.createdDate.toString()),
                     ],

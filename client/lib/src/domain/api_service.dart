@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:retrofit/http.dart';
+import 'package:retrofit/retrofit.dart';
 
 import 'entities/user/user_response.dart';
 import 'repositories/coupon/coupon_response.dart';

@@ -1,6 +1,9 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../data/models/product.dart';
+import '../../../domain/repositories/item_order/item_order_response.dart';
+import '../../../domain/repositories/order/order_response.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../widgets/add_coupons.dart';
 import '../widgets/bottom_cart_page.dart';
@@ -10,7 +13,16 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage({Key? key}) : super(key: key);
+  const ViewOrderPage({
+    Key? key,
+    required this.order,
+    required this.onPress,
+    required this.index,
+  }) : super(key: key);
+
+  final OrderResponse order;
+  final VoidCallback onPress;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +37,17 @@ class ViewOrderPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              const InfoCart(isBringBack: true),
+              InfoCart(isBringBack: order.address1 != null, order: order),
               const SizedBox(height: 10),
-              ListProduct(onChange: (total) {}),
+              ListProduct(
+                listProduct:
+                    order.orderItems!.map((e) => toProduct(e)).toList(),
+              ),
               const SizedBox(height: 10),
-              const AddCoupons(),
-              const SizedBox(height: 10),
-              const TotalPayment(),
+              if (order.appliedCoupons != null)
+                AddCoupons(listCoupon: order.appliedCoupons!),
+              if (order.appliedCoupons != null) const SizedBox(height: 10),
+              TotalPayment(order: order),
               const SizedBox(height: 10),
               const PaymentMethods(value: 1),
               const SizedBox(height: 170),
@@ -39,7 +55,21 @@ class ViewOrderPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: BottomCartPage(onPress: () {}),
+      bottomSheet: index == 0
+          ? BottomCartPage(
+              total: order.orderAmount!,
+              id: order.orderId!,
+              onPress: onPress,
+            )
+          : null,
     );
+  }
+
+  Product toProduct(ItemOrderResponse item) {
+    Product product = Product.fromProductResponse(item.product);
+    product.number = item.quantity;
+    product.sizeIndex =
+        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
+    return product;
   }
 }

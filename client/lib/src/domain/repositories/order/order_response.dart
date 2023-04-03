@@ -20,9 +20,6 @@ class OrderResponse {
   @JsonKey(name: "lastUpdated")
   String? lastUpdated;
 
-  @JsonKey(name: "status")
-  String? status;
-
   @JsonKey(name: "orderItems")
   List<ItemOrderResponse>? orderItems;
 
@@ -64,7 +61,6 @@ class OrderResponse {
     this.userId,
     this.createdDate,
     this.lastUpdated,
-    this.status,
     this.orderItems,
     this.selectedPaymentMethod,
     this.selectedPickupOption,

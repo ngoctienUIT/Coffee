@@ -22,7 +22,7 @@ class PaymentMethods extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
           ),
-          const Divider(),
+          const Divider(indent: 10, endIndent: 10),
           itemPayment(
             value: 0,
             groupValue: value,

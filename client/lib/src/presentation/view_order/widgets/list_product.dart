@@ -1,12 +1,13 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
-  const ListProduct({Key? key, required this.onChange}) : super(key: key);
-  final Function(int total) onChange;
+  const ListProduct({Key? key, required this.listProduct}) : super(key: key);
+
+  final List<Product> listProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +27,9 @@ class ListProduct extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: listSellingProducts.length,
+            itemCount: listProduct.length,
             itemBuilder: (context, index) {
-              return ItemProduct(index: index, number: 1);
+              return ItemProduct(index: index, product: listProduct[index]);
             },
           ),
         ],

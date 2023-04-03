@@ -1,3 +1,5 @@
+import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
@@ -64,10 +66,13 @@ class ListItemOrder extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             SizedBox(
-              width: 70,
+              width: 80,
               child: Text(
-                "${listProduct[index].price}${listProduct[index].currency}",
-                style: const TextStyle(fontSize: 16),
+                listProduct[index].price.toCurrency(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.statusBarColor,
+                ),
               ),
             )
           ],

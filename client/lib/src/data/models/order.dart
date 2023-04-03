@@ -92,7 +92,7 @@ class Order {
           : orderResponse.orderItems!
               .map((e) => ItemOrder.fromItemOrderResponse(e))
               .toList(),
-      status: orderResponse.status,
+      status: orderResponse.orderStatus,
       address1: orderResponse.address1,
       address2: orderResponse.address2,
       address3: orderResponse.address3,

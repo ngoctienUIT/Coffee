@@ -107,7 +107,7 @@ class CartView extends StatelessWidget {
                   ),
                 ),
               ),
-              bottomSheet: const BottomCartPage(),
+              bottomSheet: BottomCartPage(total: state.order!.orderAmount!),
             );
           }
         }

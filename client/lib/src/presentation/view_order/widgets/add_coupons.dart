@@ -2,15 +2,12 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../domain/repositories/coupon/coupon_response.dart';
 
-class AddCoupons extends StatefulWidget {
-  const AddCoupons({Key? key}) : super(key: key);
+class AddCoupons extends StatelessWidget {
+  const AddCoupons({Key? key, this.listCoupon}) : super(key: key);
+  final List<CouponResponse>? listCoupon;
 
-  @override
-  State<AddCoupons> createState() => _AddCouponsState();
-}
-
-class _AddCouponsState extends State<AddCoupons> {
   @override
   Widget build(BuildContext context) {
     return Card(

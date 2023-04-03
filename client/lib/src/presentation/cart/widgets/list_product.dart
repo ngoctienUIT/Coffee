@@ -55,7 +55,6 @@ class ListProduct extends StatelessWidget {
                       isEdit: true,
                       index: index,
                       onPress: () {
-                        print("object");
                         context.read<CartBloc>().add(GetOrderSpending());
                       },
                     ),
