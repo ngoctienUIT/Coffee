@@ -21,12 +21,4 @@ class Tag {
       tagName: tagResponse.tagColorCode,
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'tagName': tagName,
-      'tagDescription': tagDescription,
-      'tagColorCode': tagColorCode,
-    };
-  }
 }

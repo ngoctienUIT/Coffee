@@ -1,7 +1,7 @@
-import 'package:coffee_admin/src/domain/entities/item_order/item_order_entity.dart';
-import 'package:coffee_admin/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../coupon/coupon_response.dart';
+import '../item_order/item_order_response.dart';
 import '../store/store_response.dart';
 
 part 'order_response.g.dart';
@@ -21,7 +21,7 @@ class OrderResponse {
   String? lastUpdated;
 
   @JsonKey(name: "orderItems")
-  List<ItemOrderEntity>? orderItems;
+  List<ItemOrderResponse>? orderItems;
 
   @JsonKey(name: "selectedPaymentMethod")
   String? selectedPaymentMethod;
@@ -53,6 +53,9 @@ class OrderResponse {
   @JsonKey(name: "orderStatus")
   String? orderStatus;
 
+  @JsonKey(name: "orderCustomerNote")
+  String? orderCustomerNote;
+
   OrderResponse({
     this.orderId,
     this.userId,
@@ -69,6 +72,7 @@ class OrderResponse {
     this.orderAmount,
     this.appliedCoupons,
     this.orderStatus,
+    this.orderCustomerNote,
   });
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) =>

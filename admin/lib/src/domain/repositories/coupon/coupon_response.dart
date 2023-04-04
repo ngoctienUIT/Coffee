@@ -22,6 +22,18 @@ class CouponResponse {
   @JsonKey(name: "dueDate")
   final String dueDate;
 
+  @JsonKey(name: "discountRate")
+  double? discountRate;
+
+  @JsonKey(name: "discountAmount")
+  int? discountAmount;
+
+  @JsonKey(name: "discountRateCapAmount")
+  int? discountRateCapAmount;
+
+  @JsonKey(name: "minimumOrderAmountCriterion")
+  int? minimumOrderAmountCriterion;
+
   CouponResponse({
     required this.id,
     required this.couponName,
@@ -29,6 +41,10 @@ class CouponResponse {
     required this.content,
     required this.imageUrl,
     required this.dueDate,
+    this.discountRate,
+    this.discountAmount,
+    this.discountRateCapAmount,
+    this.minimumOrderAmountCriterion,
   });
 
   factory CouponResponse.fromJson(Map<String, dynamic> json) =>

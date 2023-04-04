@@ -10,7 +10,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc() : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
-    on<RefreshData>((event, emit) => getDataProduct(event.index, emit));
+    on<RefreshData>((event, emit) => getDataOrder(event.index, emit));
   }
 
   Future getData(Emitter emit) async {
@@ -21,7 +21,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       final response = await apiService.getAllOrders('Bearer $token', "", "");
-      final listOrder = response.data;
+      final listOrder = response.data
+          .where((element) => element.orderStatus != "PENDING")
+          .toList();
 
       emit(OrderLoaded(0, listOrder));
     } catch (e) {
@@ -30,7 +32,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
-  Future getDataProduct(int index, Emitter emit) async {
+  Future getDataOrder(int index, Emitter emit) async {
     try {
       emit(RefreshLoading());
       ApiService apiService =
@@ -42,7 +44,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           : (index == 1 ? "PLACED" : (index == 2 ? "COMPLETED" : "CANCELLED"));
       final response =
           await apiService.getAllOrders('Bearer $token', "", status);
-      final listOrder = response.data;
+      final listOrder = index != 0
+          ? response.data
+          : response.data
+              .where((element) => element.orderStatus != "PENDING")
+              .toList();
 
       emit(RefreshLoaded(index, listOrder));
     } catch (e) {

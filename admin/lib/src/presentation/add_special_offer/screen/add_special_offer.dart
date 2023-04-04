@@ -4,8 +4,8 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../add_coupon/widgets/custom_picker_widget.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
-import '../../add_voucher/widgets/custom_picker_widget.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
 

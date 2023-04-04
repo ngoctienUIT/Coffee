@@ -13,7 +13,7 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       createdDate: json['createdDate'] as String?,
       lastUpdated: json['lastUpdated'] as String?,
       orderItems: (json['orderItems'] as List<dynamic>?)
-          ?.map((e) => ItemOrderEntity.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => ItemOrderResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       selectedPaymentMethod: json['selectedPaymentMethod'] as String?,
       selectedPickupOption: json['selectedPickupOption'] as String?,
@@ -30,6 +30,7 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
           ?.map((e) => CouponResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       orderStatus: json['orderStatus'] as String?,
+      orderCustomerNote: json['orderCustomerNote'] as String?,
     );
 
 Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
@@ -49,4 +50,5 @@ Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
       'orderAmount': instance.orderAmount,
       'appliedCoupons': instance.appliedCoupons,
       'orderStatus': instance.orderStatus,
+      'orderCustomerNote': instance.orderCustomerNote,
     };

@@ -24,7 +24,7 @@ class ProductCataloguesResponse {
     required this.name,
     required this.description,
     required this.image,
-    this.subCatalogues,
+    required this.subCatalogues,
   });
 
   factory ProductCataloguesResponse.fromJson(Map<String, dynamic> json) =>

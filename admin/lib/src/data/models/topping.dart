@@ -26,13 +26,4 @@ class Topping {
       pricePerService: topping.pricePerService,
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'toppingName': toppingName,
-      'description': description,
-      'imageUrl': imageUrl,
-      'pricePerService': pricePerService,
-    };
-  }
 }

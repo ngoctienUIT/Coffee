@@ -2,11 +2,11 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
 import 'package:coffee_admin/src/presentation/special_offer/screen/special_offer_page.dart';
-import 'package:coffee_admin/src/presentation/voucher/screen/voucher_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/on_will_pop.dart';
+import '../../coupon/screen/coupon_page.dart';
 import '../../other/screen/other_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> screens = [
     const OrderPage(key: PageStorageKey<String>('HomePage')),
     const ProductPage(key: PageStorageKey<String>('OrderPage')),
-    const VoucherPage(key: PageStorageKey<String>('ActivityPage')),
+    const CouponPage(key: PageStorageKey<String>('ActivityPage')),
     const SpecialOfferPage(key: PageStorageKey<String>('StorePage')),
     const OtherPage(key: PageStorageKey<String>('OtherPage')),
   ];

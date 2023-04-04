@@ -1,6 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TicketWidget extends StatelessWidget {
   final double margin;
@@ -10,7 +9,7 @@ class TicketWidget extends StatelessWidget {
   final int numberOfSmallClips;
   final String image;
   final String title;
-  final DateTime date;
+  final String date;
   final VoidCallback onPress;
 
   const TicketWidget({
@@ -74,7 +73,7 @@ class TicketWidget extends StatelessWidget {
                         Text(title),
                         const Spacer(),
                         Text(
-                          "${"expired".translate(context)} ${DateFormat("dd/MM/yyyy").format(date)}",
+                          "${"expired".translate(context)} $date",
                         ),
                       ],
                     ),

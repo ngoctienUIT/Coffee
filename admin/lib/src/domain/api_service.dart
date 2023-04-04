@@ -165,11 +165,14 @@ abstract class ApiService {
 
   @POST('/coupon')
   Future<HttpResponse<CouponResponse>> createNewCoupon(
-      @Body() Map<String, dynamic> coupon);
+    @Header("Authorization") token,
+    @Body() Map<String, dynamic> coupon,
+  );
 
   @POST('/coupon/{id}')
   Future<HttpResponse<CouponResponse>> updateExistingCoupon(
     @Path("id") String id,
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> coupon,
   );
 
@@ -180,10 +183,11 @@ abstract class ApiService {
     @Body() dynamic fieldValue,
   );
 
-  @POST('/coupon/{id}/{field}')
+  @POST('/coupon/{id}')
   Future<HttpResponse<CouponResponse>> removeCouponByID(
     @Path("id") String id,
     @Path("field") String field,
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> coupon,
   );
 
@@ -200,11 +204,14 @@ abstract class ApiService {
 
   @POST('/stores')
   Future<HttpResponse<StoreResponse>> registerNewStore(
-      @Body() Map<String, dynamic> store);
+    @Header("Authorization") token,
+    @Body() Map<String, dynamic> store,
+  );
 
   @POST('/stores/{id}')
   Future<HttpResponse<StoreResponse>> updateExistingStore(
     @Path("id") String id,
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> store,
   );
 
@@ -212,6 +219,7 @@ abstract class ApiService {
   Future<HttpResponse<StoreResponse>> updateStoreFieldValue(
     @Path("id") String id,
     @Path("field") String field,
+    @Header("Authorization") token,
     @Body() dynamic fieldValue,
   );
 
@@ -230,23 +238,30 @@ abstract class ApiService {
 
   @POST('/tag')
   Future<HttpResponse<TagResponse>> createNewTag(
-      @Body() Map<String, dynamic> tag);
+    @Header("Authorization") token,
+    @Body() Map<String, dynamic> tag,
+  );
 
   @POST('/tag/{id}')
   Future<HttpResponse<TagResponse>> updateExistingTag(
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> tag,
     @Path("id") String id,
   );
 
   @POST('/tag/{id}/{field}')
   Future<HttpResponse<TagResponse>> updateTagFieldValue(
+    @Header("Authorization") token,
     @Body() dynamic fieldValue,
     @Path("id") String id,
     @Path("field") String field,
   );
 
   @DELETE('/tag/{id}')
-  Future<HttpResponse<TagResponse>> removeByID(@Path("id") String id);
+  Future<HttpResponse<TagResponse>> removeByID(
+    @Header("Authorization") token,
+    @Path("id") String id,
+  );
 
   //topping
   @GET('/topping')
@@ -264,6 +279,7 @@ abstract class ApiService {
   @POST('/topping/{id}')
   Future<HttpResponse<ToppingResponse>> updateExistingTopping(
     @Path("id") String id,
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> topping,
   );
 
@@ -271,12 +287,15 @@ abstract class ApiService {
   Future<HttpResponse<ToppingResponse>> updateToppingFieldValue(
     @Path("id") String id,
     @Path("field") String field,
+    @Header("Authorization") token,
     @Body() dynamic fieldValue,
   );
 
   @DELETE('/topping/{id}')
   Future<HttpResponse<ToppingResponse>> removeToppingByID(
-      @Path("id") String id);
+    @Header("Authorization") token,
+    @Path("id") String id,
+  );
 
   //order
   @GET("/order?userIdentity={email}&status={status}")

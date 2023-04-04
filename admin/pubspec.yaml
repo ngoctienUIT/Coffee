@@ -52,6 +52,8 @@ dependencies:
   dio: ^5.0.3
   json_annotation: ^4.8.0
   dropdown_button2: ^1.9.4
+  firebase_core: ^2.9.0
+  dvhcvn: ^2.0.20221001
 
 dev_dependencies:
   flutter_test:

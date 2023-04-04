@@ -1,21 +1,23 @@
 import '../../domain/repositories/product/product_response.dart';
+import 'item_order.dart';
 import 'tag.dart';
 import 'topping.dart';
 
 class Product {
   final String? id;
-  final String name;
+  String name;
   final String currency;
-  final String? image;
-  final String? description;
-  final List<Topping>? toppingOptions;
-  final List<Tag>? tags;
+  String? image;
+  String? description;
+  List<Topping>? toppingOptions;
+  List<bool>? chooseTopping;
+  List<Tag>? tags;
   final int price;
   final int S;
   final int M;
   final int L;
-  final int sizeIndex;
-  final int number;
+  int sizeIndex;
+  int number;
 
   Product({
     this.id,
@@ -31,7 +33,12 @@ class Product {
     required this.L,
     this.sizeIndex = 0,
     this.number = 1,
-  });
+    this.chooseTopping,
+  }) {
+    if (toppingOptions != null) {
+      chooseTopping = List.filled(toppingOptions!.length, false);
+    }
+  }
 
   factory Product.fromProductResponse(ProductResponse product) {
     return Product(
@@ -39,10 +46,10 @@ class Product {
       name: product.name,
       image: product.image,
       description: product.description,
-      toppingOptions: product.toppingOptions!
+      toppingOptions: product.toppingOptions
           .map((e) => Topping.fromToppingResponse(e))
           .toList(),
-      tags: product.tags!.map((e) => Tag.fromTagResponse(e)).toList(),
+      tags: product.tags.map((e) => Tag.fromTagResponse(e)).toList(),
       currency: product.currency,
       price: product.price,
       S: product.upsizeOptions.s ?? 0,
@@ -51,14 +58,11 @@ class Product {
     );
   }
 
-  factory Product.init() {
-    return Product(name: "name", price: 0, M: 0, L: 0);
-  }
-
   Product copyWith({
     List<Topping>? toppingOptions,
     int? sizeIndex,
     int? number,
+    List<bool>? chooseTopping,
   }) {
     return Product(
       id: id,
@@ -74,6 +78,41 @@ class Product {
       toppingOptions: toppingOptions ?? this.toppingOptions,
       sizeIndex: sizeIndex ?? this.sizeIndex,
       number: number ?? this.number,
+      chooseTopping: chooseTopping ?? this.chooseTopping,
+    );
+  }
+
+  int getPrice() => price + (sizeIndex == 0 ? S : (sizeIndex == 1 ? M : L));
+
+  String getPriceString() => "${getPrice()}$currency";
+
+  int getTotal() {
+    int toppingPrice = 0;
+    for (int i = 0; i < chooseTopping!.length; i++) {
+      if (chooseTopping![i]) toppingPrice += toppingOptions![i].pricePerService;
+    }
+    return (getPrice() + toppingPrice) * number;
+  }
+
+  String getTotalString() => "${getPrice() * number}$currency";
+
+  String getSize() => sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");
+
+  bool isTopping() => chooseTopping!.contains(true);
+
+  int totalTopping() =>
+      chooseTopping!.where((element) => element).toList().length;
+
+  ItemOrder toItemOrder() {
+    List<String> list = toppingOptions!
+        .where((element) => chooseTopping![toppingOptions!.indexOf(element)])
+        .map((e) => e.toppingId)
+        .toList();
+    return ItemOrder(
+      productId: id!,
+      quantity: number,
+      toppingIds: toppingOptions == null ? [] : list,
+      selectedSize: sizeIndex,
     );
   }
 
@@ -92,17 +131,5 @@ class Product {
         "L": L,
       },
     };
-  }
-
-  int getPrice() {
-    return price + (sizeIndex == 0 ? S : (sizeIndex == 1 ? M : L));
-  }
-
-  String getPriceString() {
-    return "${getPrice()}$currency";
-  }
-
-  String getTotalString() {
-    return "${getPrice() * number}$currency";
   }
 }

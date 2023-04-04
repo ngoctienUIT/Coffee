@@ -808,10 +808,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<CouponResponse>> createNewCoupon(coupon) async {
+  Future<HttpResponse<CouponResponse>> createNewCoupon(
+    token,
+    coupon,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(coupon);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -835,11 +839,13 @@ class _ApiService implements ApiService {
   @override
   Future<HttpResponse<CouponResponse>> updateExistingCoupon(
     id,
+    token,
     coupon,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(coupon);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -892,11 +898,13 @@ class _ApiService implements ApiService {
   Future<HttpResponse<CouponResponse>> removeCouponByID(
     id,
     field,
+    token,
     coupon,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(coupon);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -907,7 +915,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/coupon/${id}/${field}',
+              '/coupon/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -994,10 +1002,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<StoreResponse>> registerNewStore(store) async {
+  Future<HttpResponse<StoreResponse>> registerNewStore(
+    token,
+    store,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(store);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -1021,11 +1033,13 @@ class _ApiService implements ApiService {
   @override
   Future<HttpResponse<StoreResponse>> updateExistingStore(
     id,
+    token,
     store,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(store);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -1050,11 +1064,13 @@ class _ApiService implements ApiService {
   Future<HttpResponse<StoreResponse>> updateStoreFieldValue(
     id,
     field,
+    token,
     fieldValue,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = fieldValue;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<StoreResponse>>(Options(
@@ -1153,10 +1169,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<TagResponse>> createNewTag(tag) async {
+  Future<HttpResponse<TagResponse>> createNewTag(
+    token,
+    tag,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(tag);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -1179,12 +1199,14 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<TagResponse>> updateExistingTag(
+    token,
     tag,
     id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(tag);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -1207,13 +1229,15 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<TagResponse>> updateTagFieldValue(
+    token,
     fieldValue,
     id,
     field,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = fieldValue;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<TagResponse>>(Options(
@@ -1234,10 +1258,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<TagResponse>> removeByID(id) async {
+  Future<HttpResponse<TagResponse>> removeByID(
+    token,
+    id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<TagResponse>>(Options(
@@ -1339,11 +1367,13 @@ class _ApiService implements ApiService {
   @override
   Future<HttpResponse<ToppingResponse>> updateExistingTopping(
     id,
+    token,
     topping,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(topping);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -1368,11 +1398,13 @@ class _ApiService implements ApiService {
   Future<HttpResponse<ToppingResponse>> updateToppingFieldValue(
     id,
     field,
+    token,
     fieldValue,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = fieldValue;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ToppingResponse>>(Options(
@@ -1393,10 +1425,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<ToppingResponse>> removeToppingByID(id) async {
+  Future<HttpResponse<ToppingResponse>> removeToppingByID(
+    token,
+    id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<ToppingResponse>>(Options(
