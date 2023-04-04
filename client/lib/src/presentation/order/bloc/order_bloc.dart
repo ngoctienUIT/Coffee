@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
@@ -38,7 +39,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoaded(0, listProduct, listProductCatalogues,
           orderResponse.data.isEmpty ? null : orderResponse.data[0]));
     } catch (e) {
-      emit(OrderError(e.toString()));
+      emit(OrderError(serverStatus(e)!));
       print(e);
     }
   }
@@ -54,7 +55,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
       emit(RefreshOrderLoaded(index, listProduct));
     } catch (e) {
-      emit(RefreshOrderError(e.toString()));
+      emit(RefreshOrderError(serverStatus(e)));
       print(e);
     }
   }
@@ -72,7 +73,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(AddProductToCartLoaded(
           response.data.isEmpty ? null : response.data[0]));
     } catch (e) {
-      emit(AddProductToCartError(e.toString()));
+      emit(AddProductToCartError(serverStatus(e)));
       print(e);
     }
   }

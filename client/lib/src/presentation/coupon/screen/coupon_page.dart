@@ -57,6 +57,7 @@ class CouponView extends StatelessWidget {
                     onPress: () => onPress!(state.listCoupon[index].id),
                     title: state.listCoupon[index].couponName,
                     image: state.listCoupon[index].imageUrl,
+                    content: state.listCoupon[index].content,
                     date: state.listCoupon[index].dueDate,
                   ),
                 );

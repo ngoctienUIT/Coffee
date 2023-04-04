@@ -56,7 +56,10 @@ class ListItemOrder extends StatelessWidget {
                 children: [
                   Text(
                     listProduct[index].name,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Text(
@@ -69,10 +72,11 @@ class ListItemOrder extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             SizedBox(
-              width: 60,
+              width: 80,
               child: Text(
                 listProduct[index].price.toCurrency(),
                 style: const TextStyle(
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: AppColors.statusBarColor,
                 ),

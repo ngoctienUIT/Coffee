@@ -6,7 +6,6 @@ import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
@@ -302,24 +301,11 @@ class _SignUpViewState extends State<SignUpView> {
           ],
         ),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SocialLoginButton(
-              icon: FontAwesomeIcons.google,
-              color: Colors.red,
-              onPress: () {
-                context.read<SignUpBloc>().add(SignUpWithGoogleEvent());
-              },
-            ),
-            SocialLoginButton(
-              icon: FontAwesomeIcons.facebook,
-              color: Colors.blue,
-              onPress: () {
-                context.read<SignUpBloc>().add(SignUpWithFacebookEvent());
-              },
-            ),
-          ],
+        SocialLoginButton(
+          text: "Sign up with Google",
+          onPress: () {
+            context.read<SignUpBloc>().add(SignUpWithGoogleEvent());
+          },
         ),
       ],
     );

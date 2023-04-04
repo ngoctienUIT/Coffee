@@ -1,30 +1,25 @@
+import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:flutter/material.dart';
 
 class SocialLoginButton extends StatelessWidget {
-  const SocialLoginButton({
-    Key? key,
-    required this.icon,
-    required this.color,
-    required this.onPress,
-  }) : super(key: key);
-  final IconData icon;
-  final Color color;
+  const SocialLoginButton({Key? key, required this.onPress, required this.text})
+      : super(key: key);
+
   final VoidCallback onPress;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      iconSize: 50,
-      onPressed: onPress,
-      icon: Container(
-        width: 200,
-        height: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(90),
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
+    return SizedBox(
+      height: 50,
+      child: ElevatedButton.icon(
+        onPressed: onPress,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
         ),
-        child: Icon(icon, color: color, size: 35),
+        icon: Image.asset(AppImages.imgGoogle, height: 40),
+        label: Text(text),
       ),
     );
   }

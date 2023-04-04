@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
@@ -28,7 +29,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       emit(SaveProfileLoaded());
     } catch (e) {
-      emit(SaveProfileError(e.toString()));
+      emit(SaveProfileError(serverStatus(e)));
       print(e);
     }
   }

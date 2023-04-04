@@ -1,11 +1,11 @@
 import 'package:coffee/main.dart';
+import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/on_will_pop.dart';
@@ -115,6 +115,12 @@ class _LoginViewState extends State<LoginView> {
             screen: const MainPage(),
             begin: const Offset(0, 1),
           ));
+        }
+        if (state is LoginLoadingState) {
+          loadingAnimation(context);
+        }
+        if (state is LoginErrorState) {
+          Navigator.pop(context);
         }
       },
       child: Container(
@@ -255,24 +261,11 @@ class _LoginViewState extends State<LoginView> {
           ],
         ),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SocialLoginButton(
-              icon: FontAwesomeIcons.google,
-              color: Colors.red,
-              onPress: () {
-                context.read<LoginBloc>().add(LoginWithGoogleEvent());
-              },
-            ),
-            SocialLoginButton(
-              icon: FontAwesomeIcons.facebook,
-              color: Colors.blue,
-              onPress: () {
-                context.read<LoginBloc>().add(LoginWithFacebookEvent());
-              },
-            ),
-          ],
+        SocialLoginButton(
+          text: "Sign in with Google",
+          onPress: () {
+            context.read<LoginBloc>().add(LoginWithGoogleEvent());
+          },
         ),
       ],
     );

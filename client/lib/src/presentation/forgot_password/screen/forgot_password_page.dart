@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/function/server_status.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
@@ -85,7 +86,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       return (await apiService.resetPasswordIssue(controller.text)).data;
     } catch (e) {
-      print(e);
+      print(serverStatus(e));
       return null;
     }
   }

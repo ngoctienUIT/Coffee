@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../data/models/address.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
@@ -48,7 +49,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);
     } catch (e) {
-      print(e);
+      print(serverStatus(e));
     }
   }
 
@@ -66,8 +67,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
       emit(PlaceOrderSuccessState());
     } catch (e) {
-      emit(PlaceOrderErrorState(e.toString()));
-      print(e);
+      emit(PlaceOrderErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 
@@ -102,8 +103,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           "Bearer $token", order.toJson(), order.orderId!);
       // getOrderSpending(emit);
     } catch (e) {
-      emit(GetOrderErrorState(e.toString()));
-      print(e);
+      emit(GetOrderErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 
@@ -124,8 +125,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(GetOrderSuccessState(orderSpending[0]));
       }
     } catch (e) {
-      emit(GetOrderErrorState(e.toString()));
-      print(e);
+      emit(GetOrderErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 
@@ -141,8 +142,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.removePendingOrder("Bearer $token", email);
       emit(RemoveOrderSuccessState());
     } catch (e) {
-      emit(RemoveOrderErrorState(e.toString()));
-      print(e);
+      emit(RemoveOrderErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 
@@ -168,8 +169,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
       emit(DeleteProductSuccessState(id));
     } catch (e) {
-      emit(DeleteProductErrorState(e.toString()));
-      print(e);
+      emit(DeleteProductErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 
@@ -188,8 +189,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           "Bearer $token", orderSpending[0].orderId!, id);
       emit(GetOrderSuccessState(responseCoupon.data));
     } catch (e) {
-      emit(GetOrderErrorState(e.toString()));
-      print(e);
+      emit(GetOrderErrorState(serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 }

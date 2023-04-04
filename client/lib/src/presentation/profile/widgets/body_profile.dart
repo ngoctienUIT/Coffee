@@ -51,7 +51,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
       },
       child: Container(
-        padding: const EdgeInsets.all(10),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           color: AppColors.bgColor,
@@ -63,7 +62,31 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state is EditProfileSate) isEdit = state.isEdit;
-                return body();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: body(),
+                    ),
+                    Container(
+                      height: 50,
+                      color: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Image.asset(AppImages.imgGoogle, height: 40),
+                          const SizedBox(width: 10),
+                          const Text("Google"),
+                          const Spacer(),
+                          Switch(
+                            value: false,
+                            onChanged: (value) {},
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
               },
             ),
           ),
@@ -79,8 +102,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             .read<ProfileBloc>()
             .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
               displayName: nameController.text,
-              email: emailController.text,
-              phoneNumber: phoneController.text,
               isMale: isMale,
             )));
       }
@@ -138,19 +159,15 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomTextInput(
           controller: phoneController,
           hint: "phone_number".translate(context),
-          typeInput: const [TypeInput.phone],
-          checkEdit: isEdit,
-          keyboardType: TextInputType.phone,
+          checkEdit: false,
         ),
         const SizedBox(height: 10),
         descriptionLine(text: "Email"),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: emailController,
-          typeInput: const [TypeInput.email],
           hint: "Email",
-          checkEdit: isEdit,
-          keyboardType: TextInputType.emailAddress,
+          checkEdit: false,
         ),
         const SizedBox(height: 10),
         descriptionLine(text: "affiliate_account".translate(context)),

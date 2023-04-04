@@ -10,8 +10,6 @@ class SignUpWithEmailPasswordEvent extends SignUpEvent {
 
 class SignUpWithGoogleEvent extends SignUpEvent {}
 
-class SignUpWithFacebookEvent extends SignUpEvent {}
-
 class ClickSignUpEvent extends SignUpEvent {
   bool isContinue;
 

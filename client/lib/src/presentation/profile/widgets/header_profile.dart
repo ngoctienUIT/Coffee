@@ -29,42 +29,21 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               imageWidget(),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        const Text(
-                          "DRIPS: 0",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const VerticalDivider(color: Colors.white, width: 2),
-                        const SizedBox(width: 10),
-                        Text(
-                          "member".translate(context).toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 15),
+              Text(
+                "member".translate(context).toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ],
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../data/models/order.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/api_service.dart';
@@ -48,7 +49,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         );
       }
     } catch (e) {
-      emit(AddProductToOrderErrorState(e.toString()));
+      emit(AddProductToOrderErrorState(serverStatus(e)!));
       print(e);
     }
   }
@@ -59,19 +60,24 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required Product product,
     required Emitter emit,
   }) async {
-    ApiService apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
-    await apiService.createNewOrder(
-      "Bearer $token",
-      Order(
-        userId: userID,
-        storeId: "6425d2c7cf1d264dca4bcc82",
-        selectedPickupOption: "AT_STORE",
-        orderItems: [product.toItemOrder()],
-      ).toJson(),
-    );
-    Fluttertoast.showToast(msg: "Thêm sản phẩm vào giỏ hàng thành công");
-    emit(AddProductToOrderSuccessState());
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      await apiService.createNewOrder(
+        "Bearer $token",
+        Order(
+          userId: userID,
+          storeId: "6425d2c7cf1d264dca4bcc82",
+          selectedPickupOption: "AT_STORE",
+          orderItems: [product.toItemOrder()],
+        ).toJson(),
+      );
+      Fluttertoast.showToast(
+          msg: "Thêm sản phẩm vào giỏ hàng thành công");
+      emit(AddProductToOrderSuccessState());
+    } catch (e) {
+      emit(AddProductToOrderErrorState(serverStatus(e)!));
+    }
   }
 
   Future updatePendingOrder({
@@ -80,23 +86,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required Product product,
     required Emitter emit,
   }) async {
-    ApiService apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
-    int index = order.orderItems.indexWhere((element) =>
-        element.productId == product.id &&
-        element.selectedSize == product.sizeIndex);
-    if (index == -1) {
-      order.orderItems.add(product.toItemOrder());
-    } else {
-      order.orderItems[index].quantity += product.number;
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      int index = order.orderItems.indexWhere((element) =>
+          element.productId == product.id &&
+          element.selectedSize == product.sizeIndex);
+      if (index == -1) {
+        order.orderItems.add(product.toItemOrder());
+      } else {
+        order.orderItems[index].quantity += product.number;
+      }
+      await apiService.updatePendingOrder(
+        "Bearer $token",
+        order.toJson(),
+        order.orderId!,
+      );
+      Fluttertoast.showToast(
+          msg: "Thêm sản phẩm vào giỏ hàng thành công");
+      emit(AddProductToOrderSuccessState());
+    } catch (e) {
+      emit(AddProductToOrderErrorState(serverStatus(e)!));
     }
-    await apiService.updatePendingOrder(
-      "Bearer $token",
-      order.toJson(),
-      order.orderId!,
-    );
-    Fluttertoast.showToast(msg: "Thêm sản phẩm vào giỏ hàng thành công");
-    emit(AddProductToOrderSuccessState());
   }
 
   Future updateProductOrder(int index, Product product, Emitter emit) async {
@@ -132,7 +143,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
       emit(UpdateSuccessState());
     } catch (e) {
-      emit(UpdateErrorState(e.toString()));
+      emit(UpdateErrorState(serverStatus(e)!));
       print(e);
     }
   }
@@ -162,7 +173,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
       emit(DeleteSuccessState());
     } catch (e) {
-      emit(DeleteErrorState(e.toString()));
+      emit(DeleteErrorState(serverStatus(e)!));
       print(e);
     }
   }

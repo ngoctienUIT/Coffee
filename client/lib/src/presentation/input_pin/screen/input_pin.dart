@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/function/server_status.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
@@ -93,7 +94,7 @@ class _InputPinState extends State<InputPin> {
               widget.resetCredential, controller.text))
           .data;
     } catch (e) {
-      print(e);
+      print(serverStatus(e));
       return false;
     }
   }

@@ -9,8 +9,6 @@ class LoginWithEmailPasswordEvent extends LoginEvent {
 
 class LoginWithGoogleEvent extends LoginEvent {}
 
-class LoginWithFacebookEvent extends LoginEvent {}
-
 class RememberLoginEvent extends LoginEvent {}
 
 class ClickLoginEvent extends LoginEvent {

@@ -8,6 +8,7 @@ class TicketWidget extends StatelessWidget {
   final int numberOfSmallClips;
   final String image;
   final String title;
+  final String? content;
   final String date;
   final VoidCallback? onPress;
   final double? height;
@@ -22,6 +23,7 @@ class TicketWidget extends StatelessWidget {
     this.numberOfSmallClips = 8,
     this.width,
     this.height,
+    this.content,
     required this.image,
     required this.title,
     required this.date,
@@ -87,6 +89,13 @@ class TicketWidget extends StatelessWidget {
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
+                          const Spacer(),
+                          if (content != null)
+                            Text(
+                              content!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           const Spacer(),
                           Text(
                             "Hết hạn $date",

@@ -98,8 +98,8 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
                     width: MediaQuery.of(context).size.width / 3.7,
                     child: Column(
                       children: [
-                        Image.asset(
-                          listItemProduct[index]["image"]!,
+                        Image.network(
+                          state.listProductCatalogues[index].image,
                           height: 70,
                         ),
                         Text(

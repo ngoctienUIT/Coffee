@@ -32,6 +32,4 @@ class Store {
     this.registrationDate,
     this.lastUpdateDate,
   });
-
-  // factory Store.fromStoreResponse
 }

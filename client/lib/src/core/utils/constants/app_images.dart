@@ -9,4 +9,5 @@ class AppImages {
   static const String imgMomo = 'assets/images/momo.png';
   static const String imgCOD = 'assets/images/cod.png';
   static const String imgNonAvatar = 'assets/images/img_non_avatar.jpg';
+  static const String imgGoogle = 'assets/images/google.png';
 }

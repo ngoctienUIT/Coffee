@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
@@ -34,7 +35,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
               .toList();
       emit(ActivityLoaded(listOrder: listOder, index: index));
     } catch (e) {
-      emit(ActivityError(message: e.toString(), index: index));
+      emit(ActivityError(message: serverStatus(e)!, index: index));
       print(e);
     }
   }

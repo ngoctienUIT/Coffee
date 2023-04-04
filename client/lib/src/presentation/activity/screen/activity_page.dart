@@ -63,9 +63,9 @@ class _ActivityViewState extends State<ActivityView>
             labelColor: Colors.black87,
             labelStyle:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+            unselectedLabelColor: AppColors.statusBarColor,
             unselectedLabelStyle: const TextStyle(fontSize: 16),
-            indicatorColor: Colors.green,
+            indicatorColor: AppColors.statusBarColor,
             tabs: [
               Tab(text: "going_on".translate(context)),
               Tab(text: "order_history".translate(context)),

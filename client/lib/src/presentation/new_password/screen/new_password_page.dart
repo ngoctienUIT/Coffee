@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
@@ -99,7 +100,7 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
       await apiService.issueNewPasswordUser(
           widget.resetCredential, newPasswordController.text);
     } catch (e) {
-      print(e);
+      print(serverStatus(e));
     }
   }
 }

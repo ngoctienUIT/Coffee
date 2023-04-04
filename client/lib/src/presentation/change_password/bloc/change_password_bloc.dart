@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
@@ -30,12 +31,12 @@ class ChangePasswordBloc
       String email = prefs.getString("username") ?? "admin";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.updateExistingUser(
+      await apiService.updateExistingUser(
           "Bearer $token", email, user.toJson());
       emit(ChangePasswordSuccessState());
     } catch (e) {
-      emit(ChangePasswordErrorState(status: e.toString()));
-      print(e);
+      emit(ChangePasswordErrorState(status: serverStatus(e)!));
+      print(serverStatus(e));
     }
   }
 }
