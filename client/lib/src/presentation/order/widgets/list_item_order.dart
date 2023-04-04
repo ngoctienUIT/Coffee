@@ -67,9 +67,9 @@ class ListItemOrder extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 5),
+            const SizedBox(width: 10),
             SizedBox(
-              width: 80,
+              width: 60,
               child: Text(
                 listProduct[index].price.toCurrency(),
                 style: const TextStyle(
@@ -77,7 +77,8 @@ class ListItemOrder extends StatelessWidget {
                   color: AppColors.statusBarColor,
                 ),
               ),
-            )
+            ),
+            const SizedBox(width: 5),
           ],
         ),
       ),

@@ -11,6 +11,7 @@ class Product {
   String? image;
   String? description;
   List<Topping>? toppingOptions;
+  List<bool>? chooseTopping;
   List<Tag>? tags;
   final int price;
   final int S;
@@ -33,7 +34,12 @@ class Product {
     required this.L,
     this.sizeIndex = 0,
     this.number = 1,
-  });
+    this.chooseTopping,
+  }) {
+    if (toppingOptions != null) {
+      chooseTopping = List.filled(toppingOptions!.length, false);
+    }
+  }
 
   factory Product.fromProductResponse(ProductResponse product) {
     return Product(
@@ -57,6 +63,7 @@ class Product {
     List<Topping>? toppingOptions,
     int? sizeIndex,
     int? number,
+    List<bool>? chooseTopping,
   }) {
     return Product(
       id: id,
@@ -72,6 +79,7 @@ class Product {
       toppingOptions: toppingOptions ?? this.toppingOptions,
       sizeIndex: sizeIndex ?? this.sizeIndex,
       number: number ?? this.number,
+      chooseTopping: chooseTopping ?? this.chooseTopping,
     );
   }
 
@@ -79,19 +87,32 @@ class Product {
 
   String getPriceString() => "${getPrice()}$currency";
 
-  int getTotal() => getPrice() * number;
+  int getTotal() {
+    int toppingPrice = 0;
+    for (int i = 0; i < chooseTopping!.length; i++) {
+      if (chooseTopping![i]) toppingPrice += toppingOptions![i].pricePerService;
+    }
+    return getPrice() * number + toppingPrice;
+  }
 
   String getTotalString() => "${getPrice() * number}$currency";
 
   String getSize() => sizeIndex == 0 ? "S" : (sizeIndex == 1 ? "M" : "L");
 
+  bool isTopping() => chooseTopping!.contains(true);
+
+  int totalTopping() =>
+      chooseTopping!.where((element) => element).toList().length;
+
   ItemOrder toItemOrder() {
+    List<String> list = toppingOptions!
+        .where((element) => chooseTopping![toppingOptions!.indexOf(element)])
+        .map((e) => e.toppingId)
+        .toList();
     return ItemOrder(
       productId: id,
       quantity: number,
-      toppingIds: toppingOptions == null
-          ? []
-          : toppingOptions!.map((e) => e.toppingId).toList(),
+      toppingIds: toppingOptions == null ? [] : list,
       selectedSize: sizeIndex,
     );
   }

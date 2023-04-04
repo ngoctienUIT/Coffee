@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee/src/presentation/product/bloc/product_state.dart';
@@ -5,16 +6,40 @@ import 'package:coffee/src/presentation/product/widgets/product_description.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/loading_animation.dart';
 import '../../../core/utils/constants/constants.dart';
 import 'choose_size.dart';
 
 class BodyProduct extends StatelessWidget {
-  const BodyProduct({Key? key, required this.isTop}) : super(key: key);
+  const BodyProduct({Key? key, required this.isTop, this.onPress})
+      : super(key: key);
 
   final bool isTop;
+  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<ProductBloc, ProductState>(
+      listener: (context, state) {
+        print(state);
+        if (state is AddProductToOrderSuccessState ||
+            state is UpdateSuccessState ||
+            state is DeleteSuccessState) {
+          if (onPress != null) onPress!();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is DeleteLoadingState ||
+            state is UpdateLoadingState ||
+            state is AddProductToOrderLoadingState) {
+          loadingAnimation(context);
+        }
+      },
+      child: view(context),
+    );
+  }
+
+  Widget view(BuildContext context) {
     return SliverToBoxAdapter(
       child: AnimatedContainer(
         height: MediaQuery.of(context).size.height - 90,
@@ -41,10 +66,7 @@ class BodyProduct extends StatelessWidget {
 
   Widget addTopping() {
     return BlocBuilder<ProductBloc, ProductState>(
-      buildWhen: (previous, current) =>
-          current is! AddProductToOrderSuccessState ||
-          current is AddProductToOrderErrorState ||
-          current is AddProductToOrderLoadingState,
+      buildWhen: (previous, current) => current is DataTransmissionState,
       builder: (context, state) {
         if (state is DataTransmissionState &&
             state.product.toppingOptions!.isNotEmpty) {
@@ -67,13 +89,17 @@ class BodyProduct extends StatelessWidget {
                   return Row(
                     children: [
                       Checkbox(
-                        value: true,
-                        onChanged: (value) {},
+                        value: state.product.chooseTopping![index],
+                        onChanged: (value) {
+                          state.product.chooseTopping![index] = value!;
+                          context.read<ProductBloc>().add(
+                              DataTransmissionEvent(product: state.product));
+                        },
                       ),
                       Text(state.product.toppingOptions![index].toppingName),
                       const Spacer(),
-                      Text(
-                          "${state.product.toppingOptions![index].pricePerService}đ"),
+                      Text(state.product.toppingOptions![index].pricePerService
+                          .toCurrency()),
                       const SizedBox(width: 10),
                     ],
                   );
@@ -89,10 +115,7 @@ class BodyProduct extends StatelessWidget {
 
   Widget sizeProduct() {
     return BlocBuilder<ProductBloc, ProductState>(
-      buildWhen: (previous, current) =>
-          current is! AddProductToOrderSuccessState ||
-          current is AddProductToOrderErrorState ||
-          current is AddProductToOrderLoadingState,
+      buildWhen: (previous, current) => current is DataTransmissionState,
       builder: (context, state) {
         if (state is DataTransmissionState) {
           return Row(

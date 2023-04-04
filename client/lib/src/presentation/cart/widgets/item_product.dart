@@ -22,6 +22,7 @@ class ItemProduct extends StatefulWidget {
 class _ItemProductState extends State<ItemProduct> {
   @override
   Widget build(BuildContext context) {
+    print(widget.product.chooseTopping);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -58,6 +59,23 @@ class _ItemProductState extends State<ItemProduct> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    if (widget.product.isTopping())
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.product.toppingOptions!.length,
+                        itemBuilder: (context, index) {
+                          if (widget.product.chooseTopping![index]) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text(widget
+                                  .product.toppingOptions![index].toppingName),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
                   ],
                 ),
               ),

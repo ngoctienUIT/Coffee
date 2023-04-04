@@ -24,9 +24,7 @@ class BottomSheetOrder extends StatelessWidget {
           current is! RefreshOrderLoaded &&
           current is! RefreshOrderError,
       builder: (context, state) {
-        if (state is InitState ||
-            state is OrderLoading ||
-            state is AddProductToCartLoading) {
+        if (state is InitState || state is OrderLoading) {
           return _buildLoading();
         }
         if (state is OrderError || state is AddProductToCartError) {

@@ -10,14 +10,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../data/models/product.dart';
+import '../../../domain/repositories/item_order/item_order_response.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
   const ListProduct(
-      {Key? key, required this.onChange, required this.listProduct})
+      {Key? key, required this.onChange, required this.orderItems})
       : super(key: key);
   final Function(int total) onChange;
-  final List<Product> listProduct;
+  final List<ItemOrderResponse> orderItems;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +46,23 @@ class ListProduct extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: listProduct.length,
+            itemCount: orderItems.length,
             itemBuilder: (context, index) {
+              final product = toProduct(orderItems[index]);
+              product.chooseTopping =
+                  List.filled(product.toppingOptions!.length, false);
+              List<String> idS =
+                  orderItems[index].toppings.map((e) => e.toppingId).toList();
+              for (int i = 0; i < product.toppingOptions!.length; i++) {
+                if (idS.contains(product.toppingOptions![i].toppingId)) {
+                  product.chooseTopping![i] = true;
+                }
+              }
               return InkWell(
                 onTap: () {
                   Navigator.of(context).push(createRoute(
                     screen: ProductPage(
-                      product: listProduct[index],
+                      product: product,
                       isEdit: true,
                       index: index,
                       onPress: () {
@@ -70,7 +81,7 @@ class ListProduct extends StatelessWidget {
                         onPressed: (context) {
                           context
                               .read<CartBloc>()
-                              .add(DeleteProductEvent(listProduct[index].id));
+                              .add(DeleteProductEvent(product.id));
                         },
                         // backgroundColor: const Color.fromRGBO(231, 231, 231, 1),
                         foregroundColor: AppColors.statusBarColor,
@@ -80,7 +91,7 @@ class ListProduct extends StatelessWidget {
                     ],
                   ),
                   child: ItemProduct(
-                    product: listProduct[index],
+                    product: product,
                     index: index,
                     onChange: (value) {},
                   ),
@@ -91,5 +102,13 @@ class ListProduct extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Product toProduct(ItemOrderResponse item) {
+    Product product = Product.fromProductResponse(item.product);
+    product.number = item.quantity;
+    product.sizeIndex =
+        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
+    return product;
   }
 }

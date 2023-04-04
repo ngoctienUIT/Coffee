@@ -11,6 +11,7 @@ class ProductDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ProductBloc, ProductState>(
+      buildWhen: (previous, current) => current is DataTransmissionState,
       builder: (context, state) {
         if (state is DataTransmissionState) {
           return Column(

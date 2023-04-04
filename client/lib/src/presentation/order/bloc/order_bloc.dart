@@ -61,7 +61,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   Future getOrderSpending(Emitter emit) async {
     try {
-      emit(AddProductToCartLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();

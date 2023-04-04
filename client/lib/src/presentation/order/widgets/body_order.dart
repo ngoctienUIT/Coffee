@@ -75,7 +75,6 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
   Widget body() {
     return BlocBuilder<OrderBloc, OrderState>(
       buildWhen: (previous, current) =>
-          current is! AddProductToCartLoading &&
           current is! AddProductToCartLoaded &&
           current is! AddProductToCartError,
       builder: (context, state) {

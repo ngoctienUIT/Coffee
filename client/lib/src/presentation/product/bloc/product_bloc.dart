@@ -1,13 +1,13 @@
-import 'package:coffee/src/data/models/product.dart';
-import 'package:coffee/src/presentation/product/bloc/product_event.dart';
-import 'package:coffee/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/order.dart';
+import '../../../data/models/product.dart';
 import '../../../domain/api_service.dart';
+import 'product_event.dart';
+import 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(InitState()) {
@@ -114,6 +114,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       order.orderItems[index].quantity = product.number;
       order.orderItems[index].selectedSize = product.sizeIndex;
+
+      if (product.toppingOptions != null) {
+        List<String> list = [];
+        for (int i = 0; i < product.chooseTopping!.length; i++) {
+          if (product.chooseTopping![i]) {
+            list.add(product.toppingOptions![i].toppingId);
+          }
+        }
+        order.orderItems[index].toppingIds = list;
+      }
 
       await apiService.updatePendingOrder(
         "Bearer $token",

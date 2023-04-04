@@ -15,8 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/product.dart';
-import '../../../domain/repositories/item_order/item_order_response.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({Key? key, required this.onRemove}) : super(key: key);
@@ -99,11 +97,9 @@ class CartView extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       ListProduct(
-                        listProduct: state.order!.orderItems == null
+                        orderItems: state.order!.orderItems == null
                             ? []
-                            : state.order!.orderItems!
-                                .map((e) => toProduct(e))
-                                .toList(),
+                            : state.order!.orderItems!,
                         onChange: (total) {},
                       ),
                       const SizedBox(height: 10),
@@ -124,14 +120,6 @@ class CartView extends StatelessWidget {
         return Container();
       },
     );
-  }
-
-  Product toProduct(ItemOrderResponse item) {
-    Product product = Product.fromProductResponse(item.product);
-    product.number = item.quantity;
-    product.sizeIndex =
-        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
-    return product;
   }
 
   Widget emptyCart(BuildContext context) {

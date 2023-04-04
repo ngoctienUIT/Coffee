@@ -1,4 +1,5 @@
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
+import 'package:coffee/src/domain/repositories/topping/topping_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'item_order_response.g.dart';
@@ -12,7 +13,7 @@ class ItemOrderResponse {
   int quantity;
 
   @JsonKey(name: "toppings")
-  List<Map<String, dynamic>> toppings;
+  List<ToppingResponse> toppings;
 
   @JsonKey(name: "selectedSize")
   String selectedSize;

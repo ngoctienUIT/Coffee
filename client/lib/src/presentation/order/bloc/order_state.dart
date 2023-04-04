@@ -38,8 +38,6 @@ class RefreshOrderError extends OrderState {
   RefreshOrderError(this.message);
 }
 
-class AddProductToCartLoading extends OrderState {}
-
 class AddProductToCartLoaded extends OrderState {
   final OrderResponse? order;
 

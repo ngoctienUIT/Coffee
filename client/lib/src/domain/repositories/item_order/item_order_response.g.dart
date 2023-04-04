@@ -12,7 +12,7 @@ ItemOrderResponse _$ItemOrderResponseFromJson(Map<String, dynamic> json) =>
           ProductResponse.fromJson(json['product'] as Map<String, dynamic>),
       quantity: json['quantity'] as int,
       toppings: (json['toppings'] as List<dynamic>)
-          .map((e) => e as Map<String, dynamic>)
+          .map((e) => ToppingResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       selectedSize: json['selectedSize'] as String,
     );
