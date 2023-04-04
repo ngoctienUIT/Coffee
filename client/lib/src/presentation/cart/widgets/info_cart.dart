@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
@@ -14,10 +16,12 @@ import '../bloc/cart_bloc.dart';
 import '../bloc/cart_event.dart';
 
 class InfoCart extends StatefulWidget {
-  const InfoCart({Key? key, this.store, this.address}) : super(key: key);
+  const InfoCart({Key? key, this.store, this.address, this.note})
+      : super(key: key);
 
   final StoreResponse? store;
   final Address? address;
+  final String? note;
 
   @override
   State<InfoCart> createState() => _InfoCartState();
@@ -35,6 +39,9 @@ class _InfoCartState extends State<InfoCart> {
   void initState() {
     store = widget.store;
     address = widget.address;
+    if (widget.note != null) {
+      noteController.text = widget.note!;
+    }
     super.initState();
   }
 
@@ -104,6 +111,7 @@ class _InfoCartState extends State<InfoCart> {
                 const SizedBox(width: 5),
                 Expanded(
                   child: TextField(
+                    onChanged: _onChangeHandler,
                     controller: noteController,
                     decoration: InputDecoration(
                       hintText: "order_notes".translate(context),
@@ -117,6 +125,17 @@ class _InfoCartState extends State<InfoCart> {
         ],
       ),
     );
+  }
+
+  Timer? searchOnStoppedTyping;
+
+  _onChangeHandler(value) {
+    const duration = Duration(milliseconds: 800);
+    if (searchOnStoppedTyping != null) {
+      setState(() => searchOnStoppedTyping!.cancel());
+    }
+    setState(() => searchOnStoppedTyping =
+        Timer(duration, () => context.read<CartBloc>().add(AddNote(value))));
   }
 
   Widget atTable() {

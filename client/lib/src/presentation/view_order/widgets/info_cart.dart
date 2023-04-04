@@ -73,7 +73,11 @@ class InfoCart extends StatelessWidget {
               children: [
                 const Icon(FontAwesomeIcons.fileLines),
                 const SizedBox(width: 5),
-                Expanded(child: Text("not_have".translate(context))),
+                Expanded(
+                  child: Text(order.orderCustomerNote == null
+                      ? "not_have".translate(context)
+                      : order.orderCustomerNote!),
+                ),
               ],
             ),
           ),

@@ -94,6 +94,7 @@ class CartView extends StatelessWidget {
                       InfoCart(
                         store: state.order!.selectedPickupStore,
                         address: address,
+                        note: state.order!.orderCustomerNote,
                       ),
                       const SizedBox(height: 10),
                       ListProduct(

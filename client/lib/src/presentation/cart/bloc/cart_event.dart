@@ -27,3 +27,9 @@ class ChangeMethod extends CartEvent {
 }
 
 class PlaceOrder extends CartEvent {}
+
+class AddNote extends CartEvent {
+  String note;
+
+  AddNote(this.note);
+}

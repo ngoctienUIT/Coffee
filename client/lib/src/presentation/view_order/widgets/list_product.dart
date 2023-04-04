@@ -2,12 +2,13 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
+import '../../../domain/repositories/item_order/item_order_response.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
-  const ListProduct({Key? key, required this.listProduct}) : super(key: key);
+  const ListProduct({Key? key, required this.orderItems}) : super(key: key);
 
-  final List<Product> listProduct;
+  final List<ItemOrderResponse> orderItems;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +28,31 @@ class ListProduct extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 10),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: listProduct.length,
+            itemCount: orderItems.length,
             itemBuilder: (context, index) {
-              return ItemProduct(index: index, product: listProduct[index]);
+              final product = toProduct(orderItems[index]);
+              product.chooseTopping =
+                  List.filled(product.toppingOptions!.length, false);
+              List<String> idS =
+                  orderItems[index].toppings.map((e) => e.toppingId).toList();
+              for (int i = 0; i < product.toppingOptions!.length; i++) {
+                if (idS.contains(product.toppingOptions![i].toppingId)) {
+                  product.chooseTopping![i] = true;
+                }
+              }
+              return ItemProduct(index: index, product: product);
             },
           ),
         ],
       ),
     );
+  }
+
+  Product toProduct(ItemOrderResponse item) {
+    Product product = Product.fromProductResponse(item.product);
+    product.number = item.quantity;
+    product.sizeIndex =
+        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
+    return product;
   }
 }

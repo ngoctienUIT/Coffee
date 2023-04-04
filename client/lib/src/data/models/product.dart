@@ -92,7 +92,7 @@ class Product {
     for (int i = 0; i < chooseTopping!.length; i++) {
       if (chooseTopping![i]) toppingPrice += toppingOptions![i].pricePerService;
     }
-    return getPrice() * number + toppingPrice;
+    return (getPrice() + toppingPrice) * number;
   }
 
   String getTotalString() => "${getPrice() * number}$currency";

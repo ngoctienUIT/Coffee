@@ -39,10 +39,7 @@ class ViewOrderPage extends StatelessWidget {
             children: [
               InfoCart(isBringBack: order.address1 != null, order: order),
               const SizedBox(height: 10),
-              ListProduct(
-                listProduct:
-                    order.orderItems!.map((e) => toProduct(e)).toList(),
-              ),
+              ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
               if (order.appliedCoupons != null)
                 AddCoupons(listCoupon: order.appliedCoupons!),

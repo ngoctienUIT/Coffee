@@ -51,7 +51,7 @@ class Order {
         "pickupOptions": selectedPickupOption,
         "couponId": null,
         "storeId": storeId,
-        // "orderNote": orderNote,
+        "orderNote": orderNote,
       };
     } else {
       return {
@@ -64,7 +64,7 @@ class Order {
         "address2": address2,
         "address3": address3,
         "address4": address4,
-        // "orderNote": orderNote,
+        "orderNote": orderNote,
       };
     }
   }

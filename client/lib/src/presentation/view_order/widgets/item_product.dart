@@ -1,7 +1,6 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
@@ -13,8 +12,6 @@ class ItemProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final numberFormat = NumberFormat.currency(locale: "vi_VI");
-
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -40,17 +37,44 @@ class ItemProduct extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 10),
-                    Text(product.getTotal().toCurrency()),
+                    if (product.isTopping())
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: product.toppingOptions!.length,
+                        itemBuilder: (context, index) {
+                          if (product.chooseTopping![index]) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text(
+                                product.toppingOptions![index].toppingName,
+                                style: const TextStyle(
+                                  color: AppColors.statusBarColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    Text(
+                      product.getTotal().toCurrency(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.statusBarColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Container(
-                height: 35,
-                width: 40,
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppColors.bgColor,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(
                   child: Text(

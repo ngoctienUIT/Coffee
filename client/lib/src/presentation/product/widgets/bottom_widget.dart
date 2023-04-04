@@ -31,8 +31,10 @@ class BottomWidget extends StatelessWidget {
             child: Row(
               children: [
                 chooseQuantity(state.product.number, (value) {
-                  context.read<ProductBloc>().add(DataTransmissionEvent(
-                      product: state.product.copyWith(number: value)));
+                  state.product.number = value;
+                  context
+                      .read<ProductBloc>()
+                      .add(DataTransmissionEvent(product: state.product));
                 }),
                 const SizedBox(width: 20),
                 Expanded(
