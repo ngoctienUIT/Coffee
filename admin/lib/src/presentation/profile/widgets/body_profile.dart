@@ -1,9 +1,12 @@
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/user.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -14,9 +17,11 @@ import 'custom_picker_widget.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
-  const BodyProfilePage({Key? key, required this.user}) : super(key: key);
+  const BodyProfilePage({Key? key, required this.user, required this.onChange})
+      : super(key: key);
 
   final UserResponse user;
+  final VoidCallback onChange;
 
   @override
   State<BodyProfilePage> createState() => _BodyProfilePageState();
@@ -44,21 +49,34 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        color: AppColors.bgColor,
-      ),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Form(
-          key: _formKey,
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) {
-              if (state is EditProfileSate) isEdit = state.isEdit;
-              return body();
-            },
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state is SaveProfileLoaded) {
+          context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+          Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+          widget.onChange();
+          Navigator.pop(context);
+        }
+        if (state is SaveProfileLoading) {
+          loadingAnimation(context);
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          color: AppColors.bgColor,
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Form(
+            key: _formKey,
+            child: BlocBuilder<ProfileBloc, ProfileState>(
+              builder: (context, state) {
+                if (state is EditProfileSate) isEdit = state.isEdit;
+                return body();
+              },
+            ),
           ),
         ),
       ),
@@ -68,8 +86,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-        context.read<ProfileBloc>().add(SaveProfileEvent());
+        context
+            .read<ProfileBloc>()
+            .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
+              displayName: nameController.text,
+              isMale: isMale,
+            )));
       }
     } else {
       context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
@@ -92,28 +114,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             ),
           ],
         ),
-        Row(
-          children: [
-            Expanded(
-              child: CustomTextInput(
-                controller: surnameController,
-                hint: "surname".translate(context),
-                typeInput: const [TypeInput.text],
-                checkEdit: isEdit,
-                title: "surname".translate(context).toLowerCase(),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: CustomTextInput(
-                controller: nameController,
-                hint: "name".translate(context),
-                title: "name".translate(context).toLowerCase(),
-                typeInput: const [TypeInput.text],
-                checkEdit: isEdit,
-              ),
-            ),
-          ],
+        CustomTextInput(
+          controller: nameController,
+          hint: "name".translate(context),
+          title: "name".translate(context).toLowerCase(),
+          typeInput: const [TypeInput.text],
+          checkEdit: isEdit,
         ),
         const SizedBox(height: 10),
         CustomPickerWidget(
@@ -141,22 +147,16 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomTextInput(
           controller: phoneController,
           hint: "phone_number".translate(context),
-          typeInput: const [TypeInput.phone],
-          checkEdit: isEdit,
-          keyboardType: TextInputType.phone,
+          checkEdit: false,
         ),
         const SizedBox(height: 10),
         descriptionLine(text: "Email"),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: emailController,
-          typeInput: const [TypeInput.email],
           hint: "Email",
-          checkEdit: isEdit,
-          keyboardType: TextInputType.emailAddress,
+          checkEdit: false,
         ),
-        const SizedBox(height: 10),
-        descriptionLine(text: "affiliate_account".translate(context)),
       ],
     );
   }

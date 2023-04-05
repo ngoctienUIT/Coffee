@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
@@ -32,7 +33,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       );
       emit(AddProductSuccessState());
     } catch (e) {
-      emit(AddProductErrorState(e.toString()));
+      emit(AddProductErrorState(serverStatus(e)!));
       print(e);
     }
   }
@@ -51,7 +52,7 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       );
       emit(AddProductSuccessState());
     } catch (e) {
-      emit(AddProductErrorState(e.toString()));
+      emit(AddProductErrorState(serverStatus(e)!));
       print(e);
     }
   }

@@ -54,6 +54,7 @@ dependencies:
   dropdown_button2: ^1.9.4
   firebase_core: ^2.9.0
   dvhcvn: ^2.0.20221001
+  firebase_storage: ^11.1.0
 
 dev_dependencies:
   flutter_test:

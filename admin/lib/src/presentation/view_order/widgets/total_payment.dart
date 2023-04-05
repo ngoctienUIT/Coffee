@@ -1,15 +1,17 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../domain/repositories/order/order_response.dart';
+
 class TotalPayment extends StatelessWidget {
-  const TotalPayment({Key? key}) : super(key: key);
+  const TotalPayment({Key? key, required this.order}) : super(key: key);
+
+  final OrderResponse order;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
         child: Column(
@@ -24,7 +26,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("subtotal".translate(context)),
                 const Spacer(),
-                const Text("54.000đ"),
+                Text(order.orderAmount!.toCurrency()),
               ],
             ),
             const SizedBox(height: 10),
@@ -32,7 +34,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("discount_code".translate(context)),
                 const Spacer(),
-                const Text("54.000đ")
+                Text(order.orderAmount!.toCurrency())
               ],
             ),
             const SizedBox(height: 10),
@@ -40,7 +42,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("total".translate(context)),
                 const Spacer(),
-                const Text("54.000đ"),
+                Text(order.orderAmount!.toCurrency()),
               ],
             ),
           ],

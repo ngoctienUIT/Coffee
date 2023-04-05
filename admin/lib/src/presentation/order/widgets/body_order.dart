@@ -36,12 +36,12 @@ class BodyOrder extends StatelessWidget {
           List<OrderResponse> listOrder = state is OrderLoaded
               ? state.listOrder
               : (state as RefreshLoaded).listOrder;
+          int indexState = state is OrderLoaded
+              ? state.index
+              : (state as RefreshLoaded).index;
           return RefreshIndicator(
             onRefresh: () async {
-              int index = state is OrderLoaded
-                  ? state.index
-                  : (state as RefreshLoaded).index;
-              context.read<OrderBloc>().add(RefreshData(index));
+              context.read<OrderBloc>().add(RefreshData(indexState));
             },
             child: ListView.builder(
               physics: const BouncingScrollPhysics(
@@ -53,7 +53,15 @@ class BodyOrder extends StatelessWidget {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(createRoute(
-                      screen: const ViewOrderPage(),
+                      screen: ViewOrderPage(
+                        order: listOrder[index],
+                        onPress: () {
+                          context
+                              .read<OrderBloc>()
+                              .add(RefreshData(indexState));
+                        },
+                        index: indexState,
+                      ),
                       begin: const Offset(1, 0),
                     ));
                   },

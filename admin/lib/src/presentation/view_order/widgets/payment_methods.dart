@@ -1,7 +1,7 @@
-import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import 'item_payment.dart';
 
 class PaymentMethods extends StatelessWidget {
@@ -12,9 +12,6 @@ class PaymentMethods extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -25,7 +22,7 @@ class PaymentMethods extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
           ),
-          const Divider(),
+          const Divider(indent: 10, endIndent: 10),
           itemPayment(
             value: 0,
             groupValue: value,

@@ -1,5 +1,10 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../data/models/product.dart';
+import '../../../domain/repositories/item_order/item_order_response.dart';
+import '../../../domain/repositories/order/order_response.dart';
+import '../../forgot_password/widgets/app_bar_general.dart';
 import '../widgets/add_coupons.dart';
 import '../widgets/bottom_cart_page.dart';
 import '../widgets/info_cart.dart';
@@ -8,23 +13,23 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage({Key? key}) : super(key: key);
+  const ViewOrderPage({
+    Key? key,
+    required this.order,
+    required this.onPress,
+    required this.index,
+  }) : super(key: key);
+
+  final OrderResponse order;
+  final VoidCallback onPress;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
+      appBar: AppBarGeneral(
+        title: "customer_name".translate(context),
         elevation: 0,
-        title: const Text(
-          "Tên khách hàng",
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_outlined),
-          onPressed: () => Navigator.pop(context),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -32,21 +37,36 @@ class ViewOrderPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              const InfoCart(isBringBack: true),
+              InfoCart(isBringBack: order.address1 != null, order: order),
               const SizedBox(height: 10),
-              ListProduct(onChange: (total) {}),
+              ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
-              const AddCoupons(),
-              const SizedBox(height: 10),
-              const TotalPayment(),
+              if (order.appliedCoupons != null)
+                AddCoupons(listCoupon: order.appliedCoupons!),
+              if (order.appliedCoupons != null) const SizedBox(height: 10),
+              TotalPayment(order: order),
               const SizedBox(height: 10),
               const PaymentMethods(value: 1),
-              const SizedBox(height: 200),
+              const SizedBox(height: 170),
             ],
           ),
         ),
       ),
-      bottomSheet: BottomCartPage(onPress: () {}),
+      bottomSheet: index == 0
+          ? BottomCartPage(
+              total: order.orderAmount!,
+              id: order.orderId!,
+              onPress: onPress,
+            )
+          : null,
     );
+  }
+
+  Product toProduct(ItemOrderResponse item) {
+    Product product = Product.fromProductResponse(item.product);
+    product.number = item.quantity;
+    product.sizeIndex =
+        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
+    return product;
   }
 }

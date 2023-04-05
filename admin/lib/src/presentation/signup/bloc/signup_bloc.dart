@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
 import 'signup_event.dart';
@@ -27,7 +28,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       final response = await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
     } catch (e) {
-      emit(SignUpErrorState(status: e.toString()));
+      emit(SignUpErrorState(status: serverStatus(e)!));
       print(e);
     }
   }

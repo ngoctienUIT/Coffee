@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,8 +67,9 @@ class BodyProduct extends StatelessWidget {
                       children: [
                         Text(state.product.toppingOptions![index].toppingName),
                         const Spacer(),
-                        Text(
-                            "${state.product.toppingOptions![index].pricePerService}đ"),
+                        Text(state
+                            .product.toppingOptions![index].pricePerService
+                            .toCurrency()),
                         const SizedBox(width: 10),
                       ],
                     ),

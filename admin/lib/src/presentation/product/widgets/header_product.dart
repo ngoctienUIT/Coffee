@@ -88,9 +88,9 @@ class _HeaderProductPageState extends State<HeaderProductPage>
               isScrollable: true,
               labelColor: Colors.black87,
               // labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+              unselectedLabelColor: AppColors.statusBarColor,
               // unselectedLabelStyle: const TextStyle(fontSize: 16),
-              indicatorColor: Colors.green,
+              indicatorColor: AppColors.statusBarColor,
               tabs: List.generate(
                 state.listProductCatalogues.length,
                 (index) {
@@ -98,8 +98,8 @@ class _HeaderProductPageState extends State<HeaderProductPage>
                     width: MediaQuery.of(context).size.width / 3.7,
                     child: Column(
                       children: [
-                        Image.asset(
-                          listItemProduct[index]["image"]!,
+                        Image.network(
+                          state.listProductCatalogues[index].image,
                           height: 70,
                         ),
                         Text(

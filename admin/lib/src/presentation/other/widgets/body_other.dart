@@ -1,6 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
+import 'package:coffee_admin/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee_admin/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee_admin/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,12 @@ class BodyOtherPage extends StatelessWidget {
                 OtherState otherState = context.read<OtherBloc>().state;
                 if (otherState is OtherLoaded) {
                   Navigator.of(context).push(createRoute(
-                    screen: ProfilePage(user: otherState.user),
+                    screen: ProfilePage(
+                      user: otherState.user,
+                      onChange: () {
+                        context.read<OtherBloc>().add(FetchData());
+                      },
+                    ),
                     begin: const Offset(1, 0),
                   ));
                 }
@@ -63,8 +69,6 @@ class BodyOtherPage extends StatelessWidget {
                   ));
                 }
               }),
-              const Divider(),
-              itemOther("user".translate(context), Icons.people, () {}),
               const Divider(),
               itemOther("store".translate(context), Icons.store, () {
                 Navigator.of(context).push(createRoute(

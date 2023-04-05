@@ -3,6 +3,7 @@ import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
@@ -27,7 +28,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final listProduct = productResponse.data;
       emit(ProductLoaded(0, listProduct, listProductCatalogues));
     } catch (e) {
-      emit(ProductError(e.toString()));
+      emit(ProductError(serverStatus(e)!));
       print(e);
     }
   }
@@ -43,7 +44,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       emit(RefreshLoaded(index, listProduct));
     } catch (e) {
-      emit(RefreshError(e.toString()));
+      emit(RefreshError(serverStatus(e)!));
       print(e);
     }
   }

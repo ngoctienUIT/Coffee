@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
@@ -27,7 +28,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
       emit(OrderLoaded(0, listOrder));
     } catch (e) {
-      emit(OrderError(e.toString()));
+      emit(OrderError(serverStatus(e)!));
       print(e);
     }
   }
@@ -52,7 +53,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
       emit(RefreshLoaded(index, listOrder));
     } catch (e) {
-      emit(RefreshError(e.toString()));
+      emit(RefreshError(serverStatus(e)!));
       print(e);
     }
   }

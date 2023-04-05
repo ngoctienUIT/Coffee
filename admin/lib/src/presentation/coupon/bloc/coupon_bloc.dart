@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'coupon_event.dart';
 import 'coupon_state.dart';
@@ -19,7 +20,7 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
 
       emit(CouponLoaded(response.data));
     } catch (e) {
-      emit(CouponError(e.toString()));
+      emit(CouponError(serverStatus(e)!));
       print(e);
     }
   }

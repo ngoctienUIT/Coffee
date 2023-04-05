@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
@@ -33,7 +34,7 @@ class ChangePasswordBloc
           "Bearer $token", email, "hashedPassword", password);
       emit(ChangePasswordSuccessState());
     } catch (e) {
-      emit(ChangePasswordErrorState(status: e.toString()));
+      emit(ChangePasswordErrorState(status: serverStatus(e)!));
       print(e);
     }
   }

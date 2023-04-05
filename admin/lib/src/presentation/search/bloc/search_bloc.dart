@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'search_event.dart';
 import 'search_state.dart';
@@ -18,7 +19,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final response = await apiService.searchProductsByName(query);
       emit(SearchLoaded(response.data));
     } catch (e) {
-      emit(SearchError(e.toString()));
+      emit(SearchError(serverStatus(e)!));
       print(e);
     }
   }

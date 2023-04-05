@@ -74,6 +74,7 @@ class CouponView extends StatelessWidget {
                   child: TicketWidget(
                     onPress: () {},
                     title: state.listCoupon[index].couponName,
+                    content: state.listCoupon[index].content,
                     image: "assets/banner.jpg",
                     date: state.listCoupon[index].dueDate,
                   ),

@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +26,7 @@ class ProductDescription extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    state.product.getPriceString(),
+                    state.product.getTotal().toCurrency(),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

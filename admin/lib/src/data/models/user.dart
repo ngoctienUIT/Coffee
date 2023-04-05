@@ -2,12 +2,12 @@ import '../../domain/entities/user/user_response.dart';
 
 class User {
   final String username;
-  final String displayName;
-  final bool isMale;
+  String displayName;
+  bool isMale;
   final String email;
   final String phoneNumber;
-  final String password;
-  final String? imageUrl;
+  String password;
+  String? imageUrl;
   final String userRole;
 
   User({
@@ -62,6 +62,7 @@ class User {
       "username": username,
       "hashedPassword": password,
       "userRole": userRole,
+      "imageUrl": imageUrl,
     };
   }
 }

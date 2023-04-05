@@ -9,6 +9,7 @@ class TicketWidget extends StatelessWidget {
   final int numberOfSmallClips;
   final String image;
   final String title;
+  final String content;
   final String date;
   final VoidCallback onPress;
 
@@ -22,6 +23,7 @@ class TicketWidget extends StatelessWidget {
     required this.image,
     required this.title,
     required this.date,
+    required this.content,
     required this.onPress,
   }) : super(key: key);
 
@@ -65,17 +67,27 @@ class TicketWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 13),
                     child: Image.asset(image, height: 100, width: 100),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title),
-                        const Spacer(),
-                        Text(
-                          "${"expired".translate(context)} $date",
-                        ),
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Spacer(),
+                          Text(content),
+                          const Spacer(),
+                          Text(
+                            "${"expired".translate(context)} $date",
+                          ),
+                        ],
+                      ),
                     ),
                   )
                 ],

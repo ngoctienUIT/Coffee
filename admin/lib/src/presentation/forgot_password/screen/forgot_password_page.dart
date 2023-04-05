@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../core/utils/constants/app_images.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
@@ -78,7 +79,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       return (await apiService.resetPasswordIssue(controller.text)).data;
     } catch (e) {
-      print(e);
+      print(serverStatus(e)!);
     }
   }
 }

@@ -1,3 +1,5 @@
+import '../../../data/models/user.dart';
+
 abstract class ProfileEvent {}
 
 class EditProfileEvent extends ProfileEvent {
@@ -6,4 +8,14 @@ class EditProfileEvent extends ProfileEvent {
   EditProfileEvent({required this.isEdit});
 }
 
-class SaveProfileEvent extends ProfileEvent {}
+class SaveProfileEvent extends ProfileEvent {
+  User user;
+
+  SaveProfileEvent(this.user);
+}
+
+class PickAvatarEvent extends ProfileEvent {
+  String image;
+
+  PickAvatarEvent(this.image);
+}

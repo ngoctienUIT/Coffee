@@ -1,7 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
-import 'package:coffee_admin/src/presentation/special_offer/screen/special_offer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -24,7 +24,7 @@ class _MainPageState extends State<MainPage> {
     const OrderPage(key: PageStorageKey<String>('HomePage')),
     const ProductPage(key: PageStorageKey<String>('OrderPage')),
     const CouponPage(key: PageStorageKey<String>('ActivityPage')),
-    const SpecialOfferPage(key: PageStorageKey<String>('StorePage')),
+    const AccountManagementPage(key: PageStorageKey<String>('AccountManage')),
     const OtherPage(key: PageStorageKey<String>('OtherPage')),
   ];
 
@@ -56,8 +56,8 @@ class _MainPageState extends State<MainPage> {
             label: 'voucher'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(FontAwesomeIcons.gifts),
-            label: 'promotion'.translate(context),
+            icon: const Icon(FontAwesomeIcons.user),
+            label: 'user'.translate(context),
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.bars),

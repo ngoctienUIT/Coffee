@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -79,7 +80,10 @@ class ListItemProduct extends StatelessWidget {
                 children: [
                   Text(
                     listProduct[index].name,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 5),
                   Text(
@@ -92,11 +96,14 @@ class ListItemProduct extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             SizedBox(
-              width: 70,
+              width: 80,
               child: Text(
-                listProduct[index].price.toString() +
-                    listProduct[index].currency,
-                style: const TextStyle(fontSize: 16),
+                listProduct[index].price.toCurrency(),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.statusBarColor,
+                ),
               ),
             )
           ],

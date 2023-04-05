@@ -42,6 +42,13 @@ abstract class ApiService {
     @Body() String text,
   );
 
+  @POST("/user/{email}")
+  Future<HttpResponse<UserResponse>> updateExistingUser(
+    @Header('Authorization') String token,
+    @Path("email") String email,
+    @Body() Map<String, dynamic> body,
+  );
+
   // Update existing user's field
   @POST("/user/{email}/{field}")
   Future<HttpResponse<UserResponse>> updateUserField(

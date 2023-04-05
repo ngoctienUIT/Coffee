@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'store_event.dart';
 import 'store_state.dart';
@@ -20,7 +21,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final response = await apiService.getAllStores();
       emit(StoreLoaded(response.data));
     } catch (e) {
-      emit(StoreError(e.toString()));
+      emit(StoreError(serverStatus(e)!));
       print(e);
     }
   }
@@ -33,7 +34,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       final response = await apiService.searchStoresByName(query);
       emit(StoreLoaded(response.data));
     } catch (e) {
-      emit(StoreError(e.toString()));
+      emit(StoreError(serverStatus(e)!));
       print(e);
     }
   }

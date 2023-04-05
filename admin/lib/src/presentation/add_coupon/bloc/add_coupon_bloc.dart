@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../data/models/coupon.dart';
 import '../../../domain/api_service.dart';
 import 'add_coupon_event.dart';
@@ -28,13 +29,13 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      final response = await apiService.createNewCoupon(
+      await apiService.createNewCoupon(
         'Bearer $token',
         coupon.toJson(),
       );
       emit(AddCouponSuccessState());
     } catch (e) {
-      emit(AddCouponErrorState(e.toString()));
+      emit(AddCouponErrorState(serverStatus(e)!));
       print(e);
     }
   }
@@ -46,14 +47,14 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      final response = await apiService.updateExistingCoupon(
+      await apiService.updateExistingCoupon(
         coupon.id!,
         'Bearer $token',
         coupon.toJson(),
       );
       emit(AddCouponSuccessState());
     } catch (e) {
-      emit(AddCouponErrorState(e.toString()));
+      emit(AddCouponErrorState(serverStatus(e)!));
       print(e);
     }
   }

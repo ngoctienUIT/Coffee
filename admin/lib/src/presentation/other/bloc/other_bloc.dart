@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'other_event.dart';
 import 'other_state.dart';
@@ -25,7 +26,7 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
 
       emit(OtherLoaded(response.data));
     } catch (e) {
-      emit(OtherError(e.toString()));
+      emit(OtherError(serverStatus(e)!));
       print(e);
     }
   }

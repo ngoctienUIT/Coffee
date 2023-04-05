@@ -10,10 +10,13 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../bloc/profile_bloc.dart';
+import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
 
 class HeaderProfilePage extends StatefulWidget {
-  const HeaderProfilePage({Key? key}) : super(key: key);
+  const HeaderProfilePage({Key? key, this.avatar}) : super(key: key);
+
+  final String? avatar;
 
   @override
   State<HeaderProfilePage> createState() => _HeaderProfilePageState();
@@ -21,6 +24,7 @@ class HeaderProfilePage extends StatefulWidget {
 
 class _HeaderProfilePageState extends State<HeaderProfilePage> {
   File? image;
+  bool isEdit = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,42 +33,21 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
       child: Column(
         children: [
           const SizedBox(height: 20),
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               imageWidget(),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        const Text(
-                          "DRIPS: 0",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const VerticalDivider(color: Colors.white, width: 2),
-                        const SizedBox(width: 10),
-                        Text(
-                          "member".translate(context).toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              const SizedBox(height: 15),
+              Text(
+                "member".translate(context).toUpperCase(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ],
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
         ],
       ),
     );
@@ -72,15 +55,18 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
 
   Widget imageWidget() {
     return BlocBuilder<ProfileBloc, ProfileState>(
-      buildWhen: (previous, current) => current is EditProfileSate,
+      buildWhen: (previous, current) =>
+          current is EditProfileSate || current is ChangeAvatarState,
       builder: (context, state) {
+        if (state is EditProfileSate) isEdit = state.isEdit;
+
         return InkWell(
-          onTap: (state is EditProfileSate)
-              ? (state.isEdit ? () => showMyBottomSheet() : null)
-              : null,
+          onTap: isEdit ? () => showMyBottomSheet() : null,
           child: ClipOval(
             child: image == null
-                ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                ? (widget.avatar == null
+                    ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                    : Image.network(widget.avatar!, height: 80))
                 : Image.file(image!, height: 80),
           ),
         );
@@ -144,7 +130,10 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           aspectRatioPresets: [CropAspectRatioPreset.square],
         );
         if (cropImage != null) {
-          setState(() => image = File(cropImage.path));
+          image = File(cropImage.path);
+          if (context.mounted) {
+            context.read<ProfileBloc>().add(PickAvatarEvent(image!.path));
+          }
         }
       }
     } on PlatformException catch (_) {}

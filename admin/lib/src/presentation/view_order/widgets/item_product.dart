@@ -1,18 +1,17 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/product.dart';
 
 class ItemProduct extends StatelessWidget {
-  const ItemProduct({Key? key, required this.index, required this.number})
+  const ItemProduct({Key? key, required this.index, required this.product})
       : super(key: key);
-  final int number;
+  final Product product;
   final int index;
 
   @override
   Widget build(BuildContext context) {
-    final numberFormat = NumberFormat.currency(locale: "vi_VI");
-
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -22,7 +21,7 @@ class ItemProduct extends StatelessWidget {
           if (index != 0) const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
-              Image.asset("assets/tea.png", height: 50, width: 50),
+              Image.network(product.image!, height: 50, width: 50),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -31,28 +30,55 @@ class ItemProduct extends StatelessWidget {
                   children: [
                     const SizedBox(height: 5),
                     Text(
-                      listSellingProducts[index]["name"]!,
+                      product.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 10),
-                    Text(numberFormat.format(30000 * number)),
+                    if (product.isTopping())
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: product.toppingOptions!.length,
+                        itemBuilder: (context, index) {
+                          if (product.chooseTopping![index]) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Text(
+                                product.toppingOptions![index].toppingName,
+                                style: const TextStyle(
+                                  color: AppColors.statusBarColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
+                      ),
+                    Text(
+                      product.getTotal().toCurrency(),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: AppColors.statusBarColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),
               Container(
-                height: 35,
-                width: 40,
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppColors.bgColor,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
                 child: Center(
                   child: Text(
-                    "x$number",
+                    "${product.getSize()} x ${product.number}",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

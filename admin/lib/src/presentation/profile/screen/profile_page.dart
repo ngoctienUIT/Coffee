@@ -10,9 +10,11 @@ import '../widgets/body_profile.dart';
 import '../widgets/header_profile.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key, required this.user}) : super(key: key);
+  const ProfilePage({Key? key, required this.user, required this.onChange})
+      : super(key: key);
 
   final UserResponse user;
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,8 @@ class ProfilePage extends StatelessWidget {
             AppBarGeneral(title: "profile".translate(context), elevation: 0),
         body: Column(
           children: [
-            const HeaderProfilePage(),
-            Expanded(child: BodyProfilePage(user: user)),
+            HeaderProfilePage(avatar: user.imageUrl),
+            Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
           ],
         ),
       ),
