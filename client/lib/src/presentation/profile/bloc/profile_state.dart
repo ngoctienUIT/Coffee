@@ -16,3 +16,5 @@ class SaveProfileError extends ProfileState {
   final String? message;
   SaveProfileError(this.message);
 }
+
+class ChangeAvatarState extends ProfileState {}

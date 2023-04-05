@@ -2,13 +2,13 @@ import 'package:coffee/src/domain/entities/user/user_response.dart';
 
 class User {
   final String username;
-  final String displayName;
-  final bool isMale;
+  String displayName;
+  bool isMale;
   final String email;
   final String phoneNumber;
-  final String password;
-  final String? imageUrl;
-  final String userRole;
+  String password;
+  String? imageUrl;
+  String userRole;
 
   User({
     required this.username,
@@ -60,6 +60,7 @@ class User {
       "email": email,
       "phoneNumber": phoneNumber,
       "username": username,
+      "imageUrl": imageUrl,
       "hashedPassword": password,
       "userRole": userRole,
     };

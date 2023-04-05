@@ -63,6 +63,7 @@ class GridItemOrder extends StatelessWidget {
             Text(
               listProduct[index].price.toCurrency(),
               style: const TextStyle(
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.statusBarColor,
               ),

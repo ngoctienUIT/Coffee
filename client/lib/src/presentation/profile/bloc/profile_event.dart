@@ -13,3 +13,9 @@ class SaveProfileEvent extends ProfileEvent {
 
   SaveProfileEvent(this.user);
 }
+
+class PickAvatarEvent extends ProfileEvent {
+  String image;
+
+  PickAvatarEvent(this.image);
+}

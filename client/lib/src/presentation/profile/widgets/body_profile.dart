@@ -16,9 +16,11 @@ import '../../../domain/entities/user/user_response.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
-  const BodyProfilePage({Key? key, required this.user}) : super(key: key);
+  const BodyProfilePage({Key? key, required this.user, required this.onChange})
+      : super(key: key);
 
   final UserResponse user;
+  final VoidCallback onChange;
 
   @override
   State<BodyProfilePage> createState() => _BodyProfilePageState();
@@ -49,6 +51,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       listener: (context, state) {
         context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
         Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+        widget.onChange();
       },
       child: Container(
         decoration: const BoxDecoration(

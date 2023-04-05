@@ -1,11 +1,11 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
+import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +39,12 @@ class BodyOtherPage extends StatelessWidget {
                 OtherState otherState = context.read<OtherBloc>().state;
                 if (otherState is OtherLoaded) {
                   Navigator.of(context).push(createRoute(
-                    screen: ProfilePage(user: otherState.user),
+                    screen: ProfilePage(
+                      user: otherState.user,
+                      onChange: () {
+                        context.read<OtherBloc>().add(FetchData());
+                      },
+                    ),
                     begin: const Offset(1, 0),
                   ));
                 }
@@ -88,7 +93,6 @@ class BodyOtherPage extends StatelessWidget {
                 isOnPress: true,
                 onPress: () {
                   GoogleSignIn().signOut();
-                  FacebookAuth.instance.logOut();
                   SharedPreferences.getInstance()
                       .then((value) => value.setBool("isLogin", false));
                   Navigator.of(context).pushAndRemoveUntil(

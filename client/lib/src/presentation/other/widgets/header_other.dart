@@ -117,42 +117,31 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
           return Center(child: Text(state.message!));
         }
         if (state is OtherLoaded) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          return Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ClipOval(child: Image.asset(AppImages.imgNonAvatar, height: 80)),
-              const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        Text(
-                          state.user.displayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        const VerticalDivider(color: Colors.white, width: 2),
-                        const SizedBox(width: 10),
-                        Text(
-                          // "member".translate(context),
-                          state.user.userRole,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text("DRIPS: 0", style: TextStyle(color: Colors.white))
-                ],
+              ClipOval(
+                child: state.user.imageUrl == null
+                    ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                    : Image.network(state.user.imageUrl!, height: 80),
               ),
+              const SizedBox(height: 10, width: double.infinity),
+              Text(
+                state.user.displayName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                state.user.userRole,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              )
             ],
           );
         }
