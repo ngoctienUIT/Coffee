@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../language/localization/app_localizations.dart';
 
@@ -19,5 +19,19 @@ extension EmailValidator on String {
 
   String translate(BuildContext context) {
     return AppLocalizations.of(context).translate(this);
+  }
+
+  bool isSpecialCharacters() {
+    return RegExp(r"[^\w\s]").hasMatch(this);
+  }
+
+  TimeOfDay toTime() {
+    final list = split(":");
+    return TimeOfDay(hour: int.parse(list[0]), minute: int.parse(list[1]));
+  }
+
+  DateTime toDateTime() {
+    final list = split("/");
+    return DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
   }
 }

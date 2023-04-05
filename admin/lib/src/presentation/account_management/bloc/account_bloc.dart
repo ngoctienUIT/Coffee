@@ -21,10 +21,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "admin";
       final response = await apiService.getAllUsers('Bearer $token');
       final listAccount = response.data
           .where((element) =>
-              element.userRole == "ADMIN" || element.userRole == "STAFF")
+              element.email != email &&
+              (element.userRole == "ADMIN" || element.userRole == "STAFF"))
           .toList();
 
       emit(AccountLoaded(0, listAccount));
@@ -41,12 +43,18 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "admin";
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
       final response = await apiService.getAllUsers('Bearer $token');
       final listAccount = index == 0
           ? response.data
+              .where((element) =>
+                  element.email != email &&
+                  (element.userRole == "ADMIN" || element.userRole == "STAFF"))
+              .toList()
           : response.data
-              .where((element) => element.userRole == status)
+              .where((element) =>
+                  element.email != email && element.userRole == status)
               .toList();
 
       emit(RefreshLoaded(index, listAccount));

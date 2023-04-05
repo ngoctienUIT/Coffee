@@ -36,10 +36,7 @@ class _MainPageState extends State<MainPage> {
           action: (now) => currentBackPressTime = now,
           currentBackPressTime: currentBackPressTime,
         ),
-        child: PageStorage(
-          bucket: bucket,
-          child: screens[currentTab],
-        ),
+        child: PageStorage(bucket: bucket, child: screens[currentTab]),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
@@ -57,7 +54,7 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.user),
-            label: 'user'.translate(context),
+            label: 'staff'.translate(context),
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.bars),

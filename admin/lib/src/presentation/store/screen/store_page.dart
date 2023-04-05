@@ -194,9 +194,9 @@ class _StoreViewState extends State<StoreView> {
             borderRadius: BorderRadius.circular(15),
           ),
           child: Text(
-            // store.checkOpen()
-            //     ? "open".translate(context):
-            "close".translate(context),
+            store.checkOpen()
+                ? "open".translate(context)
+                : "close".translate(context),
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,

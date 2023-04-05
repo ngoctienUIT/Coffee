@@ -33,13 +33,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       if (image.isNotEmpty) {
-        user.imageUrl = await uploadImage(email);
+        user.imageUrl = await uploadImage(user.email);
       }
-      final response = await apiService.updateExistingUser(
-          "Bearer $token", email, user.toJson());
-
+      await apiService.updateExistingUser(
+          "Bearer $token", user.email, user.toJson());
       emit(SaveProfileLoaded());
     } catch (e) {
       emit(SaveProfileError(serverStatus(e)));

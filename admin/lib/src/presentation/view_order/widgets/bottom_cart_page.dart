@@ -19,7 +19,7 @@ class BottomCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150,
+      height: 200,
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
@@ -45,6 +45,14 @@ class BottomCartPage extends StatelessWidget {
             ],
           ),
           customButton(
+            text: "order_completed".translate(context),
+            onPress: () => orderCompleted().then((value) {
+              onPress();
+              Navigator.pop(context);
+            }),
+            isOnPress: true,
+          ),
+          customButton(
             text: "cancel_order".translate(context),
             onPress: () => cancelOrder().then((value) {
               onPress();
@@ -64,6 +72,18 @@ class BottomCartPage extends StatelessWidget {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       await apiService.cancelOrder("Bearer $token", id);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future orderCompleted() async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      await apiService.closeSuccessOrder("Bearer $token", id);
     } catch (e) {
       print(e);
     }

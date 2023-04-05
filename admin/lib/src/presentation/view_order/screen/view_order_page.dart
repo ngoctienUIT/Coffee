@@ -13,16 +13,11 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage({
-    Key? key,
-    required this.order,
-    required this.onPress,
-    required this.index,
-  }) : super(key: key);
+  const ViewOrderPage({Key? key, required this.order, required this.onPress})
+      : super(key: key);
 
   final OrderResponse order;
   final VoidCallback onPress;
-  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +47,7 @@ class ViewOrderPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: index == 0
+      bottomSheet: order.orderStatus == "PLACED"
           ? BottomCartPage(
               total: order.orderAmount!,
               id: order.orderId!,

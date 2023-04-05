@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
@@ -60,7 +61,6 @@ class BodyOrder extends StatelessWidget {
                               .read<OrderBloc>()
                               .add(RefreshData(indexState));
                         },
-                        index: indexState,
                       ),
                       begin: const Offset(1, 0),
                     ));
@@ -143,7 +143,7 @@ class BodyOrder extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "${"total_order".translate(context)}: ${order.orderAmount}đ",
+                        "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
                       ),
                     ),
                   ],
@@ -158,6 +158,10 @@ class BodyOrder extends StatelessWidget {
   }
 
   Widget itemOrder(BuildContext context, OrderResponse order) {
+    int number = 0;
+    for (var item in order.orderItems!) {
+      number += item.quantity;
+    }
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -176,12 +180,22 @@ class BodyOrder extends StatelessWidget {
             bodyItem(order),
             const Divider(),
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                "${"into_money".translate(context)}: 500.000đ",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+            Row(
+              children: [
+                Text(
+                  "×$number ${"product".translate(context)}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.statusBarColor,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "${"into_money".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             const Divider(),

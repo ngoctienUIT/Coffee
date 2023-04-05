@@ -118,7 +118,9 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
           return Column(
             children: [
               ClipOval(
-                child: Image.asset(AppImages.imgLogo, height: 100),
+                child: (state.user.imageUrl == null
+                    ? Image.asset(AppImages.imgNonAvatar, height: 100)
+                    : Image.network(state.user.imageUrl!, height: 100)),
               ),
               const SizedBox(height: 10),
               Text(

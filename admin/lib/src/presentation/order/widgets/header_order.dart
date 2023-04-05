@@ -42,8 +42,8 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
           indicatorColor: Colors.green,
           tabs: [
             Tab(text: "all".translate(context)),
-            Tab(text: "delivering".translate(context)),
-            Tab(text: "delivered".translate(context)),
+            Tab(text: "placed".translate(context)),
+            Tab(text: "completed".translate(context)),
             Tab(text: "cancelled".translate(context)),
           ],
         ),

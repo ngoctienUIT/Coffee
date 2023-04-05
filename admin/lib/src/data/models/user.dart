@@ -18,7 +18,7 @@ class User {
     required this.phoneNumber,
     required this.password,
     this.imageUrl,
-    this.userRole = "CUSTOMER",
+    this.userRole = "ADMIN",
   });
 
   factory User.fromUserResponse(UserResponse userResponse) {

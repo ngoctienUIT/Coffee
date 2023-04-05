@@ -1,3 +1,6 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'store_response.g.dart';
@@ -71,4 +74,8 @@ class StoreResponse {
       _$StoreResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$StoreResponseToJson(this);
+
+  bool checkOpen() =>
+      openingHour.toTime().toInt() <= TimeOfDay.now().toInt() &&
+      TimeOfDay.now().toInt() <= closingHour.toTime().toInt();
 }
