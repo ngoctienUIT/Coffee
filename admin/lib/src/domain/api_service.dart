@@ -67,11 +67,11 @@ abstract class ApiService {
   Future<HttpResponse<UserResponse>> getUserByID(@Path("id") String id);
 
   @GET("/user")
-  Future<HttpResponse<UserResponse>> getAllUsers(
+  Future<HttpResponse<List<UserResponse>>> getAllUsers(
       @Header('Authorization') String token);
 
   @GET("/user/search/name?q={name}")
-  Future<HttpResponse<UserResponse>> searchUserByName(
+  Future<HttpResponse<List<UserResponse>>> searchUserByName(
       @Path("name") String name);
 
   //product

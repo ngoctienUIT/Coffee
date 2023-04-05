@@ -112,9 +112,11 @@ class BodyOrder extends StatelessWidget {
           final user = snapshot.requireData;
           return Row(
             children: [
-              user.imageUrl == null
-                  ? Image.asset("assets/tea.png", height: 100)
-                  : Image.network(user.imageUrl!, height: 100),
+              ClipOval(
+                child: user.imageUrl == null
+                    ? Image.asset(AppImages.imgNonAvatar, height: 100)
+                    : Image.network(user.imageUrl!, height: 100),
+              ),
               const SizedBox(width: 20),
               Expanded(
                 child: Column(

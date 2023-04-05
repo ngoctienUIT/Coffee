@@ -257,14 +257,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<UserResponse>> getAllUsers(token) async {
+  Future<HttpResponse<List<UserResponse>>> getAllUsers(token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<UserResponse>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<UserResponse>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -276,19 +276,21 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = UserResponse.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => UserResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<UserResponse>> searchUserByName(name) async {
+  Future<HttpResponse<List<UserResponse>>> searchUserByName(name) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<UserResponse>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<UserResponse>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -300,7 +302,9 @@ class _ApiService implements ApiService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = UserResponse.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => UserResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
