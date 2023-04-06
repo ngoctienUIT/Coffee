@@ -1,8 +1,10 @@
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_product_catalogues_page.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/product_catalogues_event.dart';
@@ -15,22 +17,31 @@ class ProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
-      body: BlocProvider(
-        create: (context) => ProductCataloguesBloc()..add(FetchData()),
-        child: ProductCataloguesView(onPick: onPick),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.of(context).push(createRoute(
-          //   screen: const AddProductPage(),
-          //   begin: const Offset(0, 1),
-          // ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
+    return BlocProvider(
+      create: (context) => ProductCataloguesBloc()..add(FetchData()),
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
+        body: ProductCataloguesView(onPick: onPick),
+        floatingActionButton:
+            BlocBuilder<ProductCataloguesBloc, ProductCataloguesState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddProductCataloguesPage(
+                    onChange: () {
+                      context.read<ProductCataloguesBloc>().add(FetchData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
   }

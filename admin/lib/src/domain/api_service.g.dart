@@ -631,10 +631,13 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<ProductCataloguesResponse>> createNewProductCatalogue(
-      productCatalogues) async {
+    token,
+    productCatalogues,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(productCatalogues);
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -658,12 +661,14 @@ class _ApiService implements ApiService {
   @override
   Future<HttpResponse<ProductCataloguesResponse>>
       updateExistingProductCatalogue(
+    token,
     productCatalogues,
     id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(productCatalogues);
     final _result = await _dio.fetch<Map<String, dynamic>>(

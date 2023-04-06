@@ -132,11 +132,13 @@ abstract class ApiService {
 
   @POST('/product-catalogues')
   Future<HttpResponse<ProductCataloguesResponse>> createNewProductCatalogue(
+      @Header("Authorization") token,
       @Body() Map<String, dynamic> productCatalogues);
 
   @POST('/product-catalogues/{id}')
   Future<HttpResponse<ProductCataloguesResponse>>
       updateExistingProductCatalogue(
+    @Header("Authorization") token,
     @Body() Map<String, dynamic> productCatalogues,
     @Path("id") String id,
   );

@@ -26,22 +26,30 @@ class _BodyProductPageState extends State<BodyProductPage> {
 
   Widget header() {
     return BlocBuilder<ProductBloc, ProductState>(
-      buildWhen: (previous, current) =>
-          current is ProductLoading ||
-          current is ProductLoaded ||
-          current is ProductError,
+      buildWhen: (previous, current) => current is! RefreshLoading,
       builder: (context, state) {
         if (state is InitState || state is ProductLoading) {
           return _buildLoading();
         }
-        if (state is ProductError) {
-          return Center(child: Text(state.message!));
+        if (state is ProductError || state is RefreshError) {
+          return Center(
+            child: Text(state is ProductError
+                ? state.message!
+                : (state as RefreshError).message!),
+          );
         }
-        if (state is ProductLoaded) {
+        if (state is ProductLoaded || state is RefreshLoaded) {
+          int index = state is ProductLoaded
+              ? state.index
+              : (state as RefreshLoaded).index;
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: descriptionLine(
-              text: state.listProductCatalogues[state.index].name.toUpperCase(),
+              text: context
+                  .read<ProductBloc>()
+                  .listProductCatalogues[index]
+                  .name
+                  .toUpperCase(),
             ),
           );
         }

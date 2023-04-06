@@ -1,10 +1,169 @@
+import 'dart:io';
+
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../core/function/loading_animation.dart';
+import '../../../core/utils/constants/app_images.dart';
+import '../../../data/models/product_catalogues.dart';
+import '../../add_product/widgets/bottom_pick_image.dart';
+import '../../forgot_password/widgets/app_bar_general.dart';
+import '../../login/widgets/custom_button.dart';
+import '../../product/widgets/description_line.dart';
+import '../../signup/widgets/custom_text_input.dart';
+import '../bloc/add_product_catalogues_bloc.dart';
+import '../bloc/add_product_catalogues_event.dart';
+import '../bloc/add_product_catalogues_state.dart';
 
 class AddProductCataloguesPage extends StatelessWidget {
-  const AddProductCataloguesPage({Key? key}) : super(key: key);
+  const AddProductCataloguesPage({Key? key, required this.onChange})
+      : super(key: key);
+
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return BlocProvider(
+      create: (context) => AddProductCataloguesBloc(),
+      child: Scaffold(
+        appBar:
+            const AppBarGeneral(elevation: 0, title: "Thêm ProductCatalogues"),
+        body: AddProductCataloguesView(onChange: onChange),
+      ),
+    );
+  }
+}
+
+class AddProductCataloguesView extends StatefulWidget {
+  const AddProductCataloguesView({Key? key, required this.onChange})
+      : super(key: key);
+
+  final VoidCallback onChange;
+
+  @override
+  State<AddProductCataloguesView> createState() =>
+      _AddProductCataloguesViewState();
+}
+
+class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  File? image;
+
+  @override
+  void initState() {
+    nameController.addListener(() => checkEmpty());
+    descriptionController.addListener(() => checkEmpty());
+    super.initState();
+  }
+
+  void checkEmpty() {
+    if (nameController.text.isNotEmpty &&
+        descriptionController.text.isNotEmpty &&
+        image != null) {
+      context.read<AddProductCataloguesBloc>().add(SaveButtonEvent(true));
+    } else {
+      context.read<AddProductCataloguesBloc>().add(SaveButtonEvent(false));
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AddProductCataloguesBloc, AddProductCataloguesState>(
+      listener: (context, state) {
+        if (state is AddProductCataloguesSuccessState) {
+          Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
+          widget.onChange();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is AddProductCataloguesLoadingState) {
+          loadingAnimation(context);
+        }
+      },
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(10),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              productCataloguesImage(),
+              const SizedBox(height: 30),
+              descriptionLine(text: "Tên loại sản phẩm"),
+              const SizedBox(height: 10),
+              CustomTextInput(
+                controller: nameController,
+                hint: "Tên loại sản phẩm",
+                title: "Tên loại sản phẩm",
+              ),
+              const SizedBox(height: 10),
+              descriptionLine(text: "Mô tả"),
+              const SizedBox(height: 10),
+              CustomTextInput(
+                controller: descriptionController,
+                hint: "Mô tả",
+                title: "Mô tả",
+              ),
+              const SizedBox(height: 10),
+              saveButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget productCataloguesImage() {
+    return BlocBuilder<AddProductCataloguesBloc, AddProductCataloguesState>(
+      buildWhen: (previous, current) => current is ChangeImageState,
+      builder: (context, state) {
+        checkEmpty();
+        return InkWell(
+          onTap: () => showMyBottomSheet(context, (image) {
+            this.image = image;
+            context
+                .read<AddProductCataloguesBloc>()
+                .add(ChangeImageEvent(image == null ? "" : image.path));
+          }),
+          child: image == null
+              ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+              : Image.file(image!, height: 150, width: 150),
+        );
+      },
+    );
+  }
+
+  Widget saveButton() {
+    return BlocBuilder<AddProductCataloguesBloc, AddProductCataloguesState>(
+      buildWhen: (previous, current) => current is SaveButtonState,
+      builder: (context, state) {
+        return customButton(
+          text: "save".translate(context),
+          isOnPress: state is SaveButtonState ? state.isContinue : false,
+          onPress: () {
+            if (_formKey.currentState!.validate()) {
+              context
+                  .read<AddProductCataloguesBloc>()
+                  .add(CreateProductCataloguesEvent(ProductCatalogues(
+                    name: nameController.text,
+                    description: descriptionController.text,
+                  )));
+            }
+          },
+        );
+      },
+    );
   }
 }
