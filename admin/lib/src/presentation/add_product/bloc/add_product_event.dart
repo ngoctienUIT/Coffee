@@ -8,7 +8,17 @@ class CreateProductEvent extends AddProductEvent {
   CreateProductEvent(this.product);
 }
 
-class ChangeImageEvent extends AddProductEvent {}
+class ChangeImageEvent extends AddProductEvent {
+  String image;
+
+  ChangeImageEvent(this.image);
+}
+
+class ChangeCatalogueEvent extends AddProductEvent {
+  String id;
+
+  ChangeCatalogueEvent(this.id);
+}
 
 class SaveButtonEvent extends AddProductEvent {
   bool isContinue;

@@ -4,6 +4,8 @@ class InitState extends AddProductState {}
 
 class ChangeImageState extends AddProductState {}
 
+class ChangeCatalogueState extends AddProductState {}
+
 class SaveButtonState extends AddProductState {
   bool isContinue;
 

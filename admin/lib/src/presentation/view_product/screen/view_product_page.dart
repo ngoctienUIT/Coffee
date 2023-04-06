@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
 import 'package:coffee_admin/src/domain/repositories/product/product_response.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/app_bar_product.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/body_product.dart';
@@ -56,11 +57,13 @@ class _ViewProductPageState extends State<ViewProductPage> {
                 },
               ),
               SliverToBoxAdapter(
-                child: Image.network(
-                  widget.product.image!,
-                  height: 300,
-                  width: 300,
-                ),
+                child: widget.product.image == null
+                    ? Image.asset(AppImages.imgLogo, width: 300, height: 300)
+                    : Image.network(
+                        widget.product.image!,
+                        height: 300,
+                        width: 300,
+                      ),
               ),
               BodyProduct(isTop: isTop),
             ],

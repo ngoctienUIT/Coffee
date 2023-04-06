@@ -141,6 +141,14 @@ abstract class ApiService {
     @Path("id") String id,
   );
 
+  @POST('/product-catalogues/{id}/products')
+  Future<HttpResponse<ProductCataloguesResponse>>
+      updateProductIdsProductCatalogues(
+    @Header("Authorization") token,
+    @Body() List<String> list,
+    @Path("id") String id,
+  );
+
   @POST('/product-catalogues/{id}/{field}')
   Future<HttpResponse<ProductCataloguesResponse>>
       updateProductCatalogueFieldValue(

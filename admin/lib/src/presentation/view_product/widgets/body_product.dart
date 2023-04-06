@@ -18,7 +18,7 @@ class BodyProduct extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: AnimatedContainer(
-        height: MediaQuery.of(context).size.height - 90,
+        height: MediaQuery.of(context).size.height - 80,
         decoration: BoxDecoration(
           borderRadius: isTop
               ? const BorderRadius.vertical(top: Radius.circular(20))

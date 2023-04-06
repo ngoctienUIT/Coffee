@@ -13,7 +13,7 @@ ProductCataloguesResponse _$ProductCataloguesResponseFromJson(
       name: json['productCatalogueName'] as String,
       description: json['description'] as String,
       image: json['imageUrl'] as String,
-      subCatalogues: (json['subCatalogues'] as List<dynamic>?)
+      associatedProductIds: (json['associatedProductIds'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
     );
@@ -25,5 +25,5 @@ Map<String, dynamic> _$ProductCataloguesResponseToJson(
       'productCatalogueName': instance.name,
       'description': instance.description,
       'imageUrl': instance.image,
-      'subCatalogues': instance.subCatalogues,
+      'associatedProductIds': instance.associatedProductIds,
     };

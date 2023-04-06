@@ -16,15 +16,15 @@ class ProductCataloguesResponse {
   @JsonKey(name: "imageUrl")
   final String image;
 
-  @JsonKey(name: "subCatalogues")
-  final List<String>? subCatalogues;
+  @JsonKey(name: "associatedProductIds")
+  final List<String>? associatedProductIds;
 
   ProductCataloguesResponse({
     required this.id,
     required this.name,
     required this.description,
     required this.image,
-    required this.subCatalogues,
+    required this.associatedProductIds,
   });
 
   factory ProductCataloguesResponse.fromJson(Map<String, dynamic> json) =>

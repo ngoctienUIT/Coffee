@@ -12,10 +12,10 @@ class Product {
   List<Topping>? toppingOptions;
   List<bool>? chooseTopping;
   List<Tag>? tags;
-  final int price;
-  final int S;
-  final int M;
-  final int L;
+  int price;
+  int S;
+  int M;
+  int L;
   int sizeIndex;
   int number;
 
@@ -121,7 +121,7 @@ class Product {
       'name': name,
       'price': price,
       // 'currency': currency,
-      // 'imageUrl': image,
+      'imageUrl': image,
       'description': description,
       // 'toppingOptions': toppingOptions,
       // 'tags': tags,
