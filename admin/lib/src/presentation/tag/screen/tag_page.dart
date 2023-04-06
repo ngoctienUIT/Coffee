@@ -63,8 +63,6 @@ class TagView extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               itemCount: state.listTag.length,
               itemBuilder: (context, index) {
-                String color =
-                    "FF${state.listTag[index].tagColorCode!.split("#").last}";
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
@@ -74,51 +72,7 @@ class TagView extends StatelessWidget {
                             Navigator.pop(context);
                           }
                         : null,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              state.listTag[index].tagName!,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: AppColors.statusBarColor,
-                              ),
-                            ),
-                            if (state.listTag[index].tagDescription != null)
-                              Text(
-                                state.listTag[index].tagDescription!,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: AppColors.statusBarColor,
-                                ),
-                              ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Color(int.parse(color, radix: 16)),
-                                  borderRadius: BorderRadius.circular(20)),
-                              padding: const EdgeInsets.all(5),
-                              child: Text(
-                                state.listTag[index].tagColorCode!,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: tagItem(state.listTag[index]),
                   ),
                 );
               },
@@ -127,6 +81,54 @@ class TagView extends StatelessWidget {
         }
         return Container();
       },
+    );
+  }
+
+  Widget tagItem(TagResponse tag) {
+    String color = "FF${tag.tagColorCode!.split("#").last}";
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              tag.tagName!,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.statusBarColor,
+              ),
+            ),
+            if (tag.tagDescription != null)
+              Text(
+                tag.tagDescription!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.statusBarColor,
+                ),
+              ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Color(int.parse(color, radix: 16)),
+                  borderRadius: BorderRadius.circular(20)),
+              padding: const EdgeInsets.all(5),
+              child: Text(
+                tag.tagColorCode!,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

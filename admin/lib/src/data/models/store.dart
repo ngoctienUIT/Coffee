@@ -34,4 +34,18 @@ class Store {
   });
 
   // factory Store.fromStoreResponse
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": storeName,
+      "hotlineNumber": hotlineNumber,
+      "imageUrl": imageUrl,
+      "address1": address1,
+      "address2": address2,
+      "address3": address3,
+      "address4": address4,
+      "openingHour": openingHour,
+      "closingHour": closingHour,
+    };
+  }
 }

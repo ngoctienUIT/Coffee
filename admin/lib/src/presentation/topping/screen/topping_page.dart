@@ -73,60 +73,7 @@ class ToppingView extends StatelessWidget {
                             Navigator.pop(context);
                           }
                         : null,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5, horizontal: 10),
-                        child: Row(
-                          children: [
-                            state.listTopping[index].imageUrl.isEmpty
-                                ? Image.asset(
-                                    AppImages.imgLogo,
-                                    height: 80,
-                                    width: 80,
-                                  )
-                                : Image.network(
-                                    state.listTopping[index].imageUrl,
-                                    height: 80,
-                                    width: 80,
-                                  ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  state.listTopping[index].toppingName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: AppColors.statusBarColor,
-                                  ),
-                                ),
-                                Text(
-                                  state.listTopping[index].description,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: AppColors.statusBarColor,
-                                  ),
-                                ),
-                                Text(
-                                  state.listTopping[index].pricePerService
-                                      .toCurrency(),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: AppColors.statusBarColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    child: itemTopping(state.listTopping[index]),
                   ),
                 );
               },
@@ -135,6 +82,61 @@ class ToppingView extends StatelessWidget {
         }
         return Container();
       },
+    );
+  }
+
+  Widget itemTopping(ToppingResponse topping) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Row(
+          children: [
+            topping.imageUrl.isEmpty
+                ? Image.asset(
+                    AppImages.imgLogo,
+                    height: 80,
+                    width: 80,
+                  )
+                : Image.network(
+                    topping.imageUrl,
+                    height: 80,
+                    width: 80,
+                  ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  topping.toppingName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.statusBarColor,
+                  ),
+                ),
+                Text(
+                  topping.description,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.statusBarColor,
+                  ),
+                ),
+                Text(
+                  topping.pricePerService.toCurrency(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.statusBarColor,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

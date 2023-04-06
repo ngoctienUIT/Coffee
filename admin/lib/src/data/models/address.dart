@@ -58,6 +58,8 @@ class AddressAPI {
     );
   }
 
+  bool checkNull() => province == null || district == null || ward == null;
+
   AddressAPI copyWith({
     String? name,
     String? phone,
