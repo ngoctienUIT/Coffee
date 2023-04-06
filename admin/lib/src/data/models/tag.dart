@@ -25,7 +25,7 @@ class Tag {
   Map<String, dynamic> toJson() {
     return {
       "name": tagName,
-      "tagDescription": tagDescription,
+      "description": tagDescription,
     };
   }
 }

@@ -1,18 +1,18 @@
 import '../../domain/repositories/topping/topping_response.dart';
 
 class Topping {
-  final String toppingId;
-  final String toppingName;
-  final String description;
-  final String imageUrl;
-  final int pricePerService;
-  final bool isCheck;
+  String? toppingId;
+  String toppingName;
+  String description;
+  String? imageUrl;
+  int pricePerService;
+  bool isCheck;
 
   Topping({
-    required this.toppingId,
+    this.toppingId,
     required this.toppingName,
     required this.description,
-    required this.imageUrl,
+    this.imageUrl,
     required this.pricePerService,
     this.isCheck = false,
   });
@@ -25,5 +25,14 @@ class Topping {
       imageUrl: topping.imageUrl,
       pricePerService: topping.pricePerService,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": toppingName,
+      "description": description,
+      "imageUrl": imageUrl,
+      "pricePerService": pricePerService,
+    };
   }
 }

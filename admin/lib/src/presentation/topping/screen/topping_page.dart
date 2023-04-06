@@ -18,22 +18,30 @@ class ToppingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
-      body: BlocProvider(
-        create: (context) => ToppingBloc()..add(FetchData()),
-        child: ToppingView(onPick: onPick),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: const AddToppingPage(),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
+    return BlocProvider(
+      create: (context) => ToppingBloc()..add(FetchData()),
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
+        body: ToppingView(onPick: onPick),
+        floatingActionButton: BlocBuilder<ToppingBloc, ToppingState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddToppingPage(
+                    onChange: () {
+                      context.read<ToppingBloc>().add(FetchData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
   }

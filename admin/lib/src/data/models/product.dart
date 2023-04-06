@@ -106,7 +106,7 @@ class Product {
   ItemOrder toItemOrder() {
     List<String> list = toppingOptions!
         .where((element) => chooseTopping![toppingOptions!.indexOf(element)])
-        .map((e) => e.toppingId)
+        .map((e) => e.toppingId!)
         .toList();
     return ItemOrder(
       productId: id!,
