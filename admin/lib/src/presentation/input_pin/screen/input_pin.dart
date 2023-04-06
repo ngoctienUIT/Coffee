@@ -7,19 +7,21 @@ import '../../../core/function/server_status.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
-import '../../input_pin/screen/input_pin.dart';
+import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
+import '../../new_password/screen/new_password_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
-import '../widgets/app_bar_general.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+class InputPin extends StatefulWidget {
+  const InputPin({Key? key, required this.resetCredential}) : super(key: key);
+
+  final String resetCredential;
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<InputPin> createState() => _InputPinState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _InputPinState extends State<InputPin> {
   TextEditingController controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -48,25 +50,29 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     height: 200,
                   ),
                 ),
-                Text("forgot_your_password".translate(context)),
+                const Text("Nhập vào mã PIN"),
                 const SizedBox(height: 20),
                 CustomTextInput(
                   controller: controller,
-                  hint: "email_phone_number".translate(context),
-                  typeInput: const [TypeInput.phone, TypeInput.email],
+                  hint: "PIN",
+                  typeInput: const [TypeInput.text],
                 ),
                 const SizedBox(height: 20),
-                Text("enter_email_phone_reset_password".translate(context)),
+                const Text(
+                    "Nhập vào mã PIN đã được gửi vào email của bạn"),
                 const SizedBox(height: 50),
                 customButton(
                   text: "continue".translate(context),
                   onPress: () {
                     if (_formKey.currentState!.validate()) {
                       sendApi().then((value) {
-                        Navigator.of(context).push(createRoute(
-                          screen: InputPin(resetCredential: value!),
-                          begin: const Offset(1, 0),
-                        ));
+                        if (value) {
+                          Navigator.of(context).pushReplacement(createRoute(
+                            screen: NewPasswordPage(
+                                resetCredential: widget.resetCredential),
+                            begin: const Offset(1, 0),
+                          ));
+                        }
                       });
                     }
                   },
@@ -80,14 +86,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  Future<String?> sendApi() async {
+  Future<bool> sendApi() async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      return (await apiService.resetPasswordIssue(controller.text)).data;
+      return (await apiService.validateResetTokenClient(
+              widget.resetCredential, controller.text))
+          .data;
     } catch (e) {
       print(serverStatus(e));
-      return null;
+      return false;
     }
   }
 }

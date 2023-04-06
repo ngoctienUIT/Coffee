@@ -3,6 +3,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -33,7 +34,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
+  DateTime? selectedDate;
   bool isEdit = false;
   bool isMale = true;
 
@@ -44,6 +45,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
     phoneController.text = widget.user.phoneNumber;
     emailController.text = widget.user.email;
     isMale = widget.user.isMale;
+    if (widget.user.birthOfDate != null) {
+      selectedDate = widget.user.birthOfDate!.toDateTime();
+    }
     super.initState();
   }
 
@@ -91,6 +95,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
             .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
               displayName: nameController.text,
               isMale: isMale,
+              birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
             )));
       }
     } else {
@@ -138,7 +143,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         const SizedBox(height: 10),
         CustomPickerWidget(
           checkEdit: isEdit,
-          text: "birthday".translate(context),
+          text: selectedDate == null
+              ? "birthday".translate(context)
+              : DateFormat("dd/MM/yyyy").format(selectedDate!),
           onPress: () => selectDate(),
         ),
         const SizedBox(height: 10),
@@ -164,12 +171,13 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDate) {
-      setState(() => selectedDate = picked);
+      selectedDate = picked;
+      if (mounted) context.read<ProfileBloc>().add(ChangeBirthDayEvent());
     }
   }
 }

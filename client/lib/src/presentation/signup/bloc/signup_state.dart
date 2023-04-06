@@ -24,3 +24,7 @@ class HidePasswordState extends SignUpState {
 }
 
 class TextChangeState extends SignUpState {}
+
+class ChangeBirthdayState extends SignUpState {}
+
+class ChangeGenderState extends SignUpState {}

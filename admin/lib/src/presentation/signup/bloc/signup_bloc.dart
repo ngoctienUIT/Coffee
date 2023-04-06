@@ -19,13 +19,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
 
     on<TextChangeEvent>((event, emit) => emit(TextChangeState()));
+
+    on<ChangeBirthdayEvent>((event, emit) => emit(ChangeBirthdayState()));
   }
 
   Future signUpWithEmailPassword(User user, Emitter emit) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.signup(user.toJson());
+      await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
     } catch (e) {
       emit(SignUpErrorState(status: serverStatus(e)!));

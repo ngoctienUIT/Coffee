@@ -24,6 +24,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       image = event.image;
       emit(ChangeAvatarState());
     });
+
+    on<ChangeBirthdayEvent>((event, emit) => emit(ChangeBirthdayState()));
   }
 
   Future saveProfile(User user, Emitter emit) async {

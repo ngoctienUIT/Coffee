@@ -20,6 +20,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     on<SaveProfileEvent>((event, emit) => saveProfile(event.user, emit));
 
+    on<ChangeBirthDayEvent>((event, emit) => emit(ChangeBirthDayState()));
+
     on<PickAvatarEvent>((event, emit) {
       image = event.image;
       emit(ChangeAvatarState());

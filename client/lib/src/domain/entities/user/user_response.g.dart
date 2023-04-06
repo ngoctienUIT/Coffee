@@ -15,6 +15,7 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
       phoneNumber: json['phoneNumber'] as String,
       hashedPassword: json['hashedPassword'] as String,
       imageUrl: json['imageUrl'] as String?,
+      birthOfDate: json['birthOfDate'] as String?,
       userRole: json['userRole'] as String,
       accountProvider: json['accountProvider'] as String?,
       accountProviderReferenceUid:
@@ -27,6 +28,7 @@ Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
       'username': instance.username,
       'displayName': instance.displayName,
       'isMale': instance.isMale,
+      'birthOfDate': instance.birthOfDate,
       'email': instance.email,
       'phoneNumber': instance.phoneNumber,
       'hashedPassword': instance.hashedPassword,

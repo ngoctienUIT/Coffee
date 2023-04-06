@@ -16,6 +16,9 @@ class UserResponse {
   @JsonKey(name: "isMale")
   final bool isMale;
 
+  @JsonKey(name: "birthOfDate")
+  final String? birthOfDate;
+
   @JsonKey(name: "email")
   final String email;
 
@@ -46,6 +49,7 @@ class UserResponse {
     required this.phoneNumber,
     required this.hashedPassword,
     this.imageUrl,
+    this.birthOfDate,
     required this.userRole,
     required this.accountProvider,
     this.accountProviderReferenceUid,

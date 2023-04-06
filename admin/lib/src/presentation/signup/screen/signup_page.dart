@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -65,6 +66,7 @@ class _SignUpViewState extends State<SignUpView> {
   bool hide = true;
   String selectedRole = "ADMIN";
   bool isMale = true;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -203,15 +205,26 @@ class _SignUpViewState extends State<SignUpView> {
           ),
         ),
         const SizedBox(height: 10),
-        CustomPickerWidget(
-          checkEdit: true,
-          text: "birthday".translate(context),
-          // onPress: () => selectDate(),
-        ),
+        birthday(),
         const SizedBox(height: 10),
         registerContact(),
         passwordInput(),
       ],
+    );
+  }
+
+  Widget birthday() {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => current is ChangeBirthdayState,
+      builder: (context, state) {
+        return CustomPickerWidget(
+          checkEdit: true,
+          text: selectedDate == null
+              ? "birthday".translate(context)
+              : DateFormat("dd/MM/yyyy").format(selectedDate!),
+          onPress: () => selectDate(),
+        );
+      },
     );
   }
 
@@ -300,11 +313,25 @@ class _SignUpViewState extends State<SignUpView> {
                     phoneNumber: phoneController.text,
                     password: passwordController.text,
                     userRole: selectedRole,
+                    birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
                   )));
             }
           },
         );
       },
     );
+  }
+
+  void selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+      if (mounted) context.read<SignUpBloc>().add(ChangeBirthdayEvent());
+    }
   }
 }

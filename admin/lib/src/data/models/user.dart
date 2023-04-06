@@ -8,6 +8,7 @@ class User {
   final String phoneNumber;
   String password;
   String? imageUrl;
+  String? birthOfDate;
   final String userRole;
 
   User({
@@ -17,6 +18,7 @@ class User {
     required this.email,
     required this.phoneNumber,
     required this.password,
+    this.birthOfDate,
     this.imageUrl,
     this.userRole = "ADMIN",
   });
@@ -31,26 +33,27 @@ class User {
       password: userResponse.hashedPassword,
       userRole: userResponse.userRole,
       imageUrl: userResponse.imageUrl,
+      birthOfDate: userResponse.birthOfDate,
     );
   }
 
   User copyWith({
     final String? displayName,
     final bool? isMale,
-    final String? email,
-    final String? phoneNumber,
     final String? imageUrl,
     final String? password,
+    final String? birthOfDate,
   }) {
     return User(
       username: username,
       displayName: displayName ?? this.displayName,
       isMale: isMale ?? this.isMale,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
+      email: email,
+      phoneNumber: phoneNumber,
       password: password ?? this.password,
       imageUrl: imageUrl ?? this.imageUrl,
       userRole: userRole,
+      birthOfDate: birthOfDate ?? this.birthOfDate,
     );
   }
 
@@ -63,6 +66,7 @@ class User {
       "hashedPassword": password,
       "userRole": userRole,
       "imageUrl": imageUrl,
+      "birthOfDate": birthOfDate,
     };
   }
 }

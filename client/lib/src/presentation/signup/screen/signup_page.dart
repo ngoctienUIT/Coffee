@@ -6,6 +6,7 @@ import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
@@ -68,6 +69,7 @@ class _SignUpViewState extends State<SignUpView> {
   final _formKey = GlobalKey<FormState>();
   bool hide = true;
   bool isMale = true;
+  DateTime? selectedDate;
 
   @override
   void initState() {
@@ -165,7 +167,21 @@ class _SignUpViewState extends State<SignUpView> {
       children: [
         registerName(),
         const SizedBox(height: 10),
-        CustomPickerWidget(
+        gender(),
+        const SizedBox(height: 10),
+        birthday(),
+        const SizedBox(height: 10),
+        registerContact(),
+        passwordInput(),
+      ],
+    );
+  }
+
+  Widget gender() {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => current is ChangeGenderState,
+      builder: (context, state) {
+        return CustomPickerWidget(
           checkEdit: true,
           text:
               isMale ? "male".translate(context) : "female".translate(context),
@@ -173,21 +189,28 @@ class _SignUpViewState extends State<SignUpView> {
             context: context,
             isMale: isMale,
             onPress: (isMale) {
+              this.isMale = isMale;
+              context.read<SignUpBloc>().add(ChangeGenderEvent());
               Navigator.pop(context);
-              setState(() => this.isMale = isMale);
             },
           ),
-        ),
-        const SizedBox(height: 10),
-        CustomPickerWidget(
+        );
+      },
+    );
+  }
+
+  Widget birthday() {
+    return BlocBuilder<SignUpBloc, SignUpState>(
+      buildWhen: (previous, current) => current is ChangeBirthdayState,
+      builder: (context, state) {
+        return CustomPickerWidget(
           checkEdit: true,
-          text: "birthday".translate(context),
-          // onPress: () => selectDate(),
-        ),
-        const SizedBox(height: 10),
-        registerContact(),
-        passwordInput(),
-      ],
+          text: selectedDate == null
+              ? "birthday".translate(context)
+              : DateFormat("dd/MM/yyyy").format(selectedDate!),
+          onPress: () => selectDate(),
+        );
+      },
     );
   }
 
@@ -268,15 +291,15 @@ class _SignUpViewState extends State<SignUpView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
-                    user: User(
-                      username: emailController.text,
-                      displayName: nameController.text,
-                      isMale: isMale,
-                      email: emailController.text,
-                      phoneNumber: phoneController.text,
-                      password: passwordController.text,
-                    ),
-                  ));
+                      user: User(
+                    username: emailController.text,
+                    displayName: nameController.text,
+                    isMale: isMale,
+                    email: emailController.text,
+                    phoneNumber: phoneController.text,
+                    password: passwordController.text,
+                    birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
+                  )));
             }
           },
         );
@@ -327,5 +350,18 @@ class _SignUpViewState extends State<SignUpView> {
         )
       ],
     );
+  }
+
+  void selectDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null && picked != selectedDate) {
+      selectedDate = picked;
+      if (mounted) context.read<SignUpBloc>().add(ChangeBirthdayEvent());
+    }
   }
 }

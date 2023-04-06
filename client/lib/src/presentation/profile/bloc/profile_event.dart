@@ -19,3 +19,5 @@ class PickAvatarEvent extends ProfileEvent {
 
   PickAvatarEvent(this.image);
 }
+
+class ChangeBirthdayEvent extends ProfileEvent {}

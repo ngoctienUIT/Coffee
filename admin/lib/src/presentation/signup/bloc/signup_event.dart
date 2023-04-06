@@ -21,3 +21,5 @@ class HidePasswordEvent extends SignUpEvent {
 }
 
 class TextChangeEvent extends SignUpEvent {}
+
+class ChangeBirthdayEvent extends SignUpEvent {}
