@@ -1,7 +1,9 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/topping/topping_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -25,10 +27,10 @@ class ToppingPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigator.of(context).push(createRoute(
-          //   screen: const AddProductPage(),
-          //   begin: const Offset(0, 1),
-          // ));
+          Navigator.of(context).push(createRoute(
+            screen: const AddToppingPage(),
+            begin: const Offset(0, 1),
+          ));
         },
         backgroundColor: AppColors.statusBarColor,
         child: const Icon(Icons.add),

@@ -88,6 +88,14 @@ class _AddStoreViewState extends State<AddStoreView> {
   }
 
   @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<AddStoreBloc, AddStoreState>(
       listener: (context, state) {

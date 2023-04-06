@@ -1,6 +1,8 @@
+import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/tag/tag_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -15,22 +17,28 @@ class TagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Tags", elevation: 0),
-      body: BlocProvider(
-        create: (context) => TagBloc()..add(FetchData()),
-        child: TagView(onPick: onPick),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.of(context).push(createRoute(
-          //   screen: const AddProductPage(),
-          //   begin: const Offset(0, 1),
-          // ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
+    return BlocProvider(
+      create: (context) => TagBloc()..add(FetchData()),
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        appBar: const AppBarGeneral(title: "Tags", elevation: 0),
+        body: TagView(onPick: onPick),
+        floatingActionButton: BlocBuilder<TagBloc, TagState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddTagPage(
+                    onChange: () => context.read<TagBloc>().add(FetchData()),
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
   }

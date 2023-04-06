@@ -1,13 +1,13 @@
 import '../../domain/repositories/tag/tag_response.dart';
 
 class Tag {
-  final String tagId;
+  final String? tagId;
   final String? tagName;
   final String? tagDescription;
   final String? tagColorCode;
 
   Tag({
-    required this.tagId,
+    this.tagId,
     this.tagName,
     this.tagDescription,
     this.tagColorCode,
@@ -20,5 +20,12 @@ class Tag {
       tagDescription: tagResponse.tagDescription,
       tagName: tagResponse.tagColorCode,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": tagName,
+      "tagDescription": tagDescription,
+    };
   }
 }
