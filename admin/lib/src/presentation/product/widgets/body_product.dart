@@ -77,20 +77,24 @@ class _BodyProductPageState extends State<BodyProductPage> {
           );
         }
         if (state is ProductLoaded || state is RefreshLoaded) {
+          int index = state is ProductLoaded
+              ? state.index
+              : (state as RefreshLoaded).index;
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: RefreshIndicator(
                 onRefresh: () async {
-                  int index = state is ProductLoaded
-                      ? state.index
-                      : (state as RefreshLoaded).index;
                   context.read<ProductBloc>().add(RefreshData(index));
                 },
                 child: ListItemProduct(
-                    listProduct: state is ProductLoaded
-                        ? state.listProduct
-                        : (state as RefreshLoaded).listProduct),
+                  listProduct: state is ProductLoaded
+                      ? state.listProduct
+                      : (state as RefreshLoaded).listProduct,
+                  onDelete: (id) {
+                    context.read<ProductBloc>().add(DeleteEvent(index, id));
+                  },
+                ),
               ),
             ),
           );

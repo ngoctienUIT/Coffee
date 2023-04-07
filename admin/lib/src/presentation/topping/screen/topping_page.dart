@@ -2,6 +2,8 @@ import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -63,6 +65,8 @@ class ToppingView extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is ToppingLoaded) {
+          final listTopping = state.listTopping;
+
           return RefreshIndicator(
             onRefresh: () async {
               context.read<ToppingBloc>().add(FetchData());
@@ -71,19 +75,46 @@ class ToppingView extends StatelessWidget {
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
-              padding: const EdgeInsets.all(10),
-              itemCount: state.listTopping.length,
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+              itemCount: listTopping.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
                     onTap: onPick != null
                         ? () {
-                            onPick!(state.listTopping[index]);
+                            onPick!(listTopping[index]);
                             Navigator.pop(context);
                           }
                         : null,
-                    child: itemTopping(state.listTopping[index]),
+                    child: Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.35,
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {},
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.penToSquare,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          SlidableAction(
+                            onPressed: (context) {
+                              context.read<ToppingBloc>().add(
+                                  DeleteEvent(listTopping[index].toppingId));
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.trash,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ],
+                      ),
+                      child: itemTopping(listTopping[index]),
+                    ),
                   ),
                 );
               },

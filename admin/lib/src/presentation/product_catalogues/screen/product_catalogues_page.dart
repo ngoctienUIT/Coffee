@@ -3,6 +3,8 @@ import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -63,6 +65,7 @@ class ProductCataloguesView extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is ProductCataloguesLoaded) {
+          final listProductCatalogues = state.listProductCatalogues;
           return RefreshIndicator(
             onRefresh: () async {
               context.read<ProductCataloguesBloc>().add(FetchData());
@@ -71,39 +74,46 @@ class ProductCataloguesView extends StatelessWidget {
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
-              padding: const EdgeInsets.all(10),
-              itemCount: state.listProductCatalogues.length,
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+              itemCount: listProductCatalogues.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
                     onTap: onPick != null
                         ? () {
-                            onPick!(state.listProductCatalogues[index]);
+                            onPick!(listProductCatalogues[index]);
                             Navigator.pop(context);
                           }
                         : null,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Row(
+                    child: Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.32,
                         children: [
-                          Image.network(
-                            state.listProductCatalogues[index].image,
-                            height: 80,
-                            width: 80,
+                          SlidableAction(
+                            onPressed: (context) {},
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.penToSquare,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          Text(
-                            state.listProductCatalogues[index].name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: AppColors.statusBarColor,
-                            ),
+                          SlidableAction(
+                            onPressed: (context) {
+                              context.read<ProductCataloguesBloc>().add(
+                                  DeleteEvent(listProductCatalogues[index].id));
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.trash,
+                            borderRadius: BorderRadius.circular(15),
                           ),
                         ],
                       ),
+                      child:
+                          productCataloguesItem(listProductCatalogues[index]),
                     ),
                   ),
                 );
@@ -113,6 +123,40 @@ class ProductCataloguesView extends StatelessWidget {
         }
         return Container();
       },
+    );
+  }
+
+  Widget productCataloguesItem(ProductCataloguesResponse productCatalogues) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Row(
+        children: [
+          Image.network(productCatalogues.image, height: 80, width: 80),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  productCatalogues.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: AppColors.statusBarColor,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  productCatalogues.description,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 

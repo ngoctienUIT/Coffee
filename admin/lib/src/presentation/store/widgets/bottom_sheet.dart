@@ -38,7 +38,7 @@ void showStoreBottomSheet(BuildContext context, StoreResponse store) {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: customButton(
-                text: "order_here".translate(context).toUpperCase(),
+                text: "Chỉnh sửa",
                 isOnPress: true,
                 onPress: () {},
               ),

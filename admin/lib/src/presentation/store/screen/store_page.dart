@@ -117,7 +117,11 @@ class _StoreViewState extends State<StoreView> {
                     extentRatio: 0.2,
                     children: [
                       SlidableAction(
-                        onPressed: (context) {},
+                        onPressed: (context) {
+                          context.read<StoreBloc>().add(DeleteEvent(
+                              state.listStore[index].storeId,
+                              searchAddressController.text));
+                        },
                         backgroundColor: AppColors.statusBarColor,
                         foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
                         icon: FontAwesomeIcons.trash,

@@ -25,10 +25,7 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      await apiService.createNewTag(
-        'Bearer $token',
-        tag.toJson(),
-      );
+      await apiService.createNewTag('Bearer $token', tag.toJson());
       emit(AddTagSuccessState());
     } catch (e) {
       emit(AddTagErrorState(serverStatus(e)!));
@@ -44,10 +41,7 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       await apiService.updateExistingTag(
-        'Bearer $token',
-        tag.toJson(),
-        tag.tagId!,
-      );
+          'Bearer $token', tag.toJson(), tag.tagId!);
       emit(AddTagSuccessState());
     } catch (e) {
       emit(AddTagErrorState(serverStatus(e)!));

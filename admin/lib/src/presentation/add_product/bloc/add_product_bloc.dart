@@ -36,25 +36,23 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
   Future createProduct(Product product, Emitter emit) async {
     try {
-    emit(AddProductLoadingState());
-    ApiService apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
-    final prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("token") ?? "";
-    if (image.isNotEmpty) {
-      product.image = await uploadImage(image.split("/").last);
-    }
-    final catalogueResponse =
-        await apiService.getProductCatalogueByID(catalogueID);
-    final response = await apiService.createNewProduct(
-      'Bearer $token',
-      product.toJson(),
-    );
-    List<String> list = catalogueResponse.data.associatedProductIds!;
-    list.add(response.data.id);
-    await apiService.updateProductIdsProductCatalogues(
-        'Bearer $token', list, catalogueID);
-    emit(AddProductSuccessState());
+      emit(AddProductLoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      if (image.isNotEmpty) {
+        product.image = await uploadImage(image.split("/").last);
+      }
+      final catalogueResponse =
+          await apiService.getProductCatalogueByID(catalogueID);
+      final response =
+          await apiService.createNewProduct('Bearer $token', product.toJson());
+      List<String> list = catalogueResponse.data.associatedProductIds!;
+      list.add(response.data.id);
+      await apiService.updateProductIdsProductCatalogues(
+          'Bearer $token', list, catalogueID);
+      emit(AddProductSuccessState());
     } catch (e) {
       if (serverStatus(e) != null) {
         emit(AddProductErrorState(serverStatus(e)!));

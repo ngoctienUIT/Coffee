@@ -9,10 +9,12 @@ import '../../../domain/repositories/product/product_response.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
-  const ListItemProduct({Key? key, required this.listProduct})
+  const ListItemProduct(
+      {Key? key, required this.listProduct, required this.onDelete})
       : super(key: key);
 
   final List<ProductResponse> listProduct;
+  final Function(String id) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class ListItemProduct extends StatelessWidget {
                 extentRatio: 0.2,
                 children: [
                   SlidableAction(
-                    onPressed: (context) {},
+                    onPressed: (context) => onDelete(listProduct[index].id),
                     backgroundColor: AppColors.statusBarColor,
                     foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
                     icon: FontAwesomeIcons.trash,

@@ -57,7 +57,10 @@ class _SearchViewState extends State<SearchView> {
         if (state is SearchLoaded) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ListItemProduct(listProduct: state.listProduct),
+            child: ListItemProduct(
+              listProduct: state.listProduct,
+              onDelete: (id) {},
+            ),
           );
         }
         return Container();

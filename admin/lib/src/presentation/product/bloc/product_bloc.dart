@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
@@ -14,6 +15,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<FetchData>((event, emit) => getData(emit));
 
     on<RefreshData>((event, emit) => getDataProduct(event.index, emit));
+
+    on<DeleteEvent>(
+        (event, emit) => deleteProduct(event.id, event.index, emit));
   }
 
   Future getData(Emitter emit) async {
@@ -43,6 +47,29 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final listProduct = response.data;
 
       emit(RefreshLoaded(index, listProduct));
+    } catch (e) {
+      emit(RefreshError(serverStatus(e)!));
+      print(e);
+    }
+  }
+
+  Future deleteProduct(String id, int index, Emitter emit) async {
+    try {
+      emit(RefreshLoading());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      await apiService.removeProductByID('Bearer $token', id);
+      final catalogueResponse = await apiService
+          .getProductCatalogueByID(listProductCatalogues[index].id);
+      List<String> list = catalogueResponse.data.associatedProductIds!;
+      list.remove(id);
+      await apiService.updateProductIdsProductCatalogues(
+          'Bearer $token', list, listProductCatalogues[index].id);
+      final response = await apiService.getAllProductsFromProductCatalogueID(
+          listProductCatalogues[index].id);
+      emit(RefreshLoaded(index, response.data));
     } catch (e) {
       emit(RefreshError(serverStatus(e)!));
       print(e);

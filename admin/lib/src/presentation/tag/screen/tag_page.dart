@@ -1,6 +1,8 @@
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -57,9 +59,12 @@ class TagView extends StatelessWidget {
           return _buildLoading();
         }
         if (state is TagError) {
-          return Center(child: Text(state.message!));
+          return Center(
+            child: Text(state.message!),
+          );
         }
         if (state is TagLoaded) {
+          final listTag = state.listTag;
           return RefreshIndicator(
             onRefresh: () async {
               context.read<TagBloc>().add(FetchData());
@@ -68,19 +73,47 @@ class TagView extends StatelessWidget {
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
-              padding: const EdgeInsets.all(10),
-              itemCount: state.listTag.length,
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+              itemCount: listTag.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
                     onTap: onPick != null
                         ? () {
-                            onPick!(state.listTag[index]);
+                            onPick!(listTag[index]);
                             Navigator.pop(context);
                           }
                         : null,
-                    child: tagItem(state.listTag[index]),
+                    child: Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.3,
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {},
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.penToSquare,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          SlidableAction(
+                            onPressed: (context) {
+                              context
+                                  .read<TagBloc>()
+                                  .add(DeleteEvent(listTag[index].tagId));
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.trash,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ],
+                      ),
+                      child: tagItem(listTag[index]),
+                    ),
                   ),
                 );
               },
@@ -103,6 +136,7 @@ class TagView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(width: double.infinity),
             Text(
               tag.tagName!,
               style: const TextStyle(
@@ -111,6 +145,7 @@ class TagView extends StatelessWidget {
                 color: AppColors.statusBarColor,
               ),
             ),
+            const SizedBox(height: 5),
             if (tag.tagDescription != null)
               Text(
                 tag.tagDescription!,
@@ -120,16 +155,17 @@ class TagView extends StatelessWidget {
                   color: AppColors.statusBarColor,
                 ),
               ),
+            const SizedBox(height: 5),
             Container(
               decoration: BoxDecoration(
-                  color: Color(int.parse(color, radix: 16)),
-                  borderRadius: BorderRadius.circular(20)),
+                color: Color(int.parse(color, radix: 16)),
+                borderRadius: BorderRadius.circular(30),
+              ),
               padding: const EdgeInsets.all(5),
               child: Text(
                 tag.tagColorCode!,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
                   color: Colors.white,
                 ),
               ),

@@ -111,7 +111,7 @@ abstract class ApiService {
 
   @DELETE('/product/{id}')
   Future<HttpResponse<ProductResponse>> removeProductByID(
-      @Path("id") String id);
+      @Header("Authorization") token, @Path("id") String id);
 
   //product-catalogues
   @GET('/product-catalogues')
@@ -167,7 +167,9 @@ abstract class ApiService {
 
   @DELETE('/product-catalogues/{id}')
   Future<HttpResponse<ProductCataloguesResponse>> removeProductCataloguesByID(
-      @Path("id") String id);
+    @Header("Authorization") token,
+    @Path("id") String id,
+  );
 
   //coupon
   @GET('/coupon')
@@ -275,7 +277,7 @@ abstract class ApiService {
   );
 
   @DELETE('/tag/{id}')
-  Future<HttpResponse<TagResponse>> removeByID(
+  Future<HttpResponse<TagResponse>> removeTagByID(
     @Header("Authorization") token,
     @Path("id") String id,
   );
