@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/data/models/product_catalogues.dart';
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_product_catalogues_page.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_bloc.dart';
@@ -77,6 +78,7 @@ class ProductCataloguesView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
               itemCount: listProductCatalogues.length,
               itemBuilder: (context, index) {
+                final myContext = context;
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
@@ -92,7 +94,21 @@ class ProductCataloguesView extends StatelessWidget {
                         extentRatio: 0.32,
                         children: [
                           SlidableAction(
-                            onPressed: (context) {},
+                            onPressed: (context) {
+                              Navigator.of(context).push(createRoute(
+                                screen: AddProductCataloguesPage(
+                                  productCatalogues:
+                                      ProductCatalogues.fromResponse(
+                                          listProductCatalogues[index]),
+                                  onChange: () {
+                                    myContext
+                                        .read<ProductCataloguesBloc>()
+                                        .add(FetchData());
+                                  },
+                                ),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
                             backgroundColor: AppColors.statusBarColor,
                             foregroundColor:
                                 const Color.fromRGBO(231, 231, 231, 1),

@@ -56,6 +56,9 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
+      if (image.isNotEmpty) {
+        topping.imageUrl = await uploadImage(image.split("/").last);
+      }
       await apiService.updateExistingTopping(
         topping.toppingId!,
         'Bearer $token',

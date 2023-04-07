@@ -1,3 +1,5 @@
+import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+
 class ProductCatalogues {
   String? id;
   String name;
@@ -10,6 +12,15 @@ class ProductCatalogues {
     required this.description,
     this.image,
   });
+
+  factory ProductCatalogues.fromResponse(ProductCataloguesResponse catalogues) {
+    return ProductCatalogues(
+      name: catalogues.name,
+      description: catalogues.description,
+      id: catalogues.id,
+      image: catalogues.image,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

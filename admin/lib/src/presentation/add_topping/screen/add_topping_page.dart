@@ -19,9 +19,11 @@ import '../bloc/add_topping_event.dart';
 import '../bloc/add_topping_state.dart';
 
 class AddToppingPage extends StatelessWidget {
-  const AddToppingPage({Key? key, required this.onChange}) : super(key: key);
+  const AddToppingPage({Key? key, required this.onChange, this.topping})
+      : super(key: key);
 
   final VoidCallback onChange;
+  final Topping? topping;
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +31,18 @@ class AddToppingPage extends StatelessWidget {
       create: (context) => AddToppingBloc(),
       child: Scaffold(
         appBar: const AppBarGeneral(elevation: 0, title: "Thêm Topping"),
-        body: AddToppingView(onChange: onChange),
+        body: AddToppingView(onChange: onChange, topping: topping),
       ),
     );
   }
 }
 
 class AddToppingView extends StatefulWidget {
-  const AddToppingView({Key? key, required this.onChange}) : super(key: key);
+  const AddToppingView({Key? key, required this.onChange, this.topping})
+      : super(key: key);
 
   final VoidCallback onChange;
+  final Topping? topping;
 
   @override
   State<AddToppingView> createState() => _AddToppingViewState();
@@ -50,9 +54,16 @@ class _AddToppingViewState extends State<AddToppingView> {
   TextEditingController descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File? image;
+  String? imageNetwork;
 
   @override
   void initState() {
+    if (widget.topping != null) {
+      nameController.text = widget.topping!.toppingName;
+      priceController.text = widget.topping!.pricePerService.toString();
+      descriptionController.text = widget.topping!.description;
+      imageNetwork = widget.topping!.imageUrl;
+    }
     nameController.addListener(() => checkEmpty());
     priceController.addListener(() => checkEmpty());
     descriptionController.addListener(() => checkEmpty());
@@ -63,7 +74,7 @@ class _AddToppingViewState extends State<AddToppingView> {
     if (nameController.text.isNotEmpty &&
         priceController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
-        image != null) {
+        (image != null || imageNetwork != null)) {
       context.read<AddToppingBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddToppingBloc>().add(SaveButtonEvent(false));
@@ -151,7 +162,9 @@ class _AddToppingViewState extends State<AddToppingView> {
                 .add(ChangeImageEvent(image == null ? "" : image.path));
           }),
           child: image == null
-              ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+              ? (imageNetwork != null
+                  ? Image.network(imageNetwork!, height: 150, width: 150)
+                  : Image.asset(AppImages.imgAddImage, height: 150, width: 150))
               : Image.file(image!, height: 150, width: 150),
         );
       },
@@ -167,11 +180,21 @@ class _AddToppingViewState extends State<AddToppingView> {
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<AddToppingBloc>().add(CreateToppingEvent(Topping(
-                    toppingName: nameController.text,
-                    description: descriptionController.text,
-                    pricePerService: int.parse(priceController.text),
-                  )));
+              if (widget.topping == null) {
+                context.read<AddToppingBloc>().add(CreateToppingEvent(Topping(
+                      toppingName: nameController.text,
+                      description: descriptionController.text,
+                      pricePerService: int.parse(priceController.text),
+                    )));
+              } else {
+                context.read<AddToppingBloc>().add(UpdateToppingEvent(Topping(
+                      toppingName: nameController.text,
+                      description: descriptionController.text,
+                      pricePerService: int.parse(priceController.text),
+                      imageUrl: imageNetwork,
+                      toppingId: widget.topping!.toppingId,
+                    )));
+              }
             }
           },
         );

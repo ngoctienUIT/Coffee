@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,6 +79,7 @@ class ToppingView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
               itemCount: listTopping.length,
               itemBuilder: (context, index) {
+                final myContext = context;
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
@@ -93,7 +95,20 @@ class ToppingView extends StatelessWidget {
                         extentRatio: 0.35,
                         children: [
                           SlidableAction(
-                            onPressed: (context) {},
+                            onPressed: (context) {
+                              Navigator.of(context).push(createRoute(
+                                screen: AddToppingPage(
+                                  topping: Topping.fromToppingResponse(
+                                      listTopping[index]),
+                                  onChange: () {
+                                    myContext
+                                        .read<ToppingBloc>()
+                                        .add(FetchData());
+                                  },
+                                ),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
                             backgroundColor: AppColors.statusBarColor,
                             foregroundColor:
                                 const Color.fromRGBO(231, 231, 231, 1),

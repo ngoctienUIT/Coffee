@@ -4,6 +4,8 @@ import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_event.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -71,12 +73,40 @@ class CouponView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: TicketWidget(
-                    onPress: () {},
-                    title: state.listCoupon[index].couponName,
-                    content: state.listCoupon[index].content,
-                    image: "assets/banner.jpg",
-                    date: state.listCoupon[index].dueDate,
+                  child: Slidable(
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      extentRatio: 0.3,
+                      children: [
+                        SlidableAction(
+                          onPressed: (context) {},
+                          backgroundColor: AppColors.statusBarColor,
+                          foregroundColor:
+                              const Color.fromRGBO(231, 231, 231, 1),
+                          icon: FontAwesomeIcons.penToSquare,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        SlidableAction(
+                          onPressed: (context) {
+                            context
+                                .read<CouponBloc>()
+                                .add(DeleteEvent(state.listCoupon[index].id));
+                          },
+                          backgroundColor: AppColors.statusBarColor,
+                          foregroundColor:
+                              const Color.fromRGBO(231, 231, 231, 1),
+                          icon: FontAwesomeIcons.trash,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ],
+                    ),
+                    child: TicketWidget(
+                      onPress: () {},
+                      title: state.listCoupon[index].couponName,
+                      content: state.listCoupon[index].content,
+                      image: "assets/banner.jpg",
+                      date: state.listCoupon[index].dueDate,
+                    ),
                   ),
                 );
               },

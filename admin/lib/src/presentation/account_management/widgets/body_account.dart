@@ -1,4 +1,3 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +10,7 @@ import '../../profile/screen/profile_page.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
 import '../bloc/account_state.dart';
+import 'item_account.dart';
 
 class BodyAccount extends StatelessWidget {
   const BodyAccount({Key? key}) : super(key: key);
@@ -78,7 +78,7 @@ class BodyAccount extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: itemAccount(context, listAccount[index])),
+                      child: ItemAccount(user: listAccount[index])),
                 );
               },
             ),
@@ -90,50 +90,4 @@ class BodyAccount extends StatelessWidget {
   }
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
-
-  Widget itemAccount(BuildContext context, UserResponse user) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-          // margin: const EdgeInsets.symmetric(vertical: 5),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Row(
-            children: [
-              ClipOval(
-                child: user.imageUrl == null
-                    ? Image.asset(AppImages.imgNonAvatar, height: 100)
-                    : Image.network(user.imageUrl!, height: 100),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.displayName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text("Email: ${user.email}"),
-                    const SizedBox(height: 10),
-                    Text(
-                        "${"phone_number".translate(context)}: ${user.phoneNumber}"),
-                    const SizedBox(height: 10),
-                    Text(user.userRole)
-                  ],
-                ),
-              ),
-            ],
-          )),
-    );
-  }
 }

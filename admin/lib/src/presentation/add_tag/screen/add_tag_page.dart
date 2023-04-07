@@ -13,9 +13,11 @@ import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
 
 class AddTagPage extends StatelessWidget {
-  const AddTagPage({Key? key, required this.onChange}) : super(key: key);
+  const AddTagPage({Key? key, required this.onChange, this.tag})
+      : super(key: key);
 
   final VoidCallback onChange;
+  final Tag? tag;
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +25,18 @@ class AddTagPage extends StatelessWidget {
       create: (context) => AddTagBloc(),
       child: Scaffold(
         appBar: const AppBarGeneral(elevation: 0, title: "Thêm tag"),
-        body: AddTagView(onChange: onChange),
+        body: AddTagView(onChange: onChange, tag: tag),
       ),
     );
   }
 }
 
 class AddTagView extends StatefulWidget {
-  const AddTagView({Key? key, required this.onChange}) : super(key: key);
+  const AddTagView({Key? key, required this.onChange, this.tag})
+      : super(key: key);
 
   final VoidCallback onChange;
+  final Tag? tag;
 
   @override
   State<AddTagView> createState() => _AddTagViewState();
@@ -41,18 +45,26 @@ class AddTagView extends StatefulWidget {
 class _AddTagViewState extends State<AddTagView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController colorController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
+    if (widget.tag != null) {
+      nameController.text = widget.tag!.tagName!;
+      descriptionController.text = widget.tag!.tagDescription ?? "";
+      colorController.text = widget.tag!.tagColorCode!;
+    }
     nameController.addListener(() => checkEmpty());
     descriptionController.addListener(() => checkEmpty());
+    colorController.addListener(() => checkEmpty());
     super.initState();
   }
 
   void checkEmpty() {
     if (nameController.text.isNotEmpty &&
-        descriptionController.text.isNotEmpty) {
+        descriptionController.text.isNotEmpty &&
+        colorController.text.isNotEmpty) {
       context.read<AddTagBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddTagBloc>().add(SaveButtonEvent(false));
@@ -63,6 +75,7 @@ class _AddTagViewState extends State<AddTagView> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
+    colorController.dispose();
     super.dispose();
   }
 
@@ -104,6 +117,14 @@ class _AddTagViewState extends State<AddTagView> {
                 title: "Mô tả",
               ),
               const SizedBox(height: 10),
+              descriptionLine(text: "Màu sắc"),
+              const SizedBox(height: 10),
+              CustomTextInput(
+                controller: colorController,
+                hint: "Màu sắc",
+                title: "Màu sắc",
+              ),
+              const SizedBox(height: 10),
               saveButton(),
               const SizedBox(height: 50),
             ],
@@ -122,9 +143,20 @@ class _AddTagViewState extends State<AddTagView> {
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
               if (_formKey.currentState!.validate()) {
-                context.read<AddTagBloc>().add(CreateTagEvent(Tag(
-                    tagName: nameController.text,
-                    tagDescription: descriptionController.text)));
+                if (widget.tag == null) {
+                  context.read<AddTagBloc>().add(CreateTagEvent(Tag(
+                        tagName: nameController.text,
+                        tagDescription: descriptionController.text,
+                        tagColorCode: colorController.text,
+                      )));
+                } else {
+                  context.read<AddTagBloc>().add(UpdateTagEvent(Tag(
+                        tagId: widget.tag!.tagId,
+                        tagName: nameController.text,
+                        tagDescription: descriptionController.text,
+                        tagColorCode: colorController.text,
+                      )));
+                }
               }
             });
       },

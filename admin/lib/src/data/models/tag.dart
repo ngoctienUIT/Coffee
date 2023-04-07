@@ -18,7 +18,7 @@ class Tag {
       tagId: tagResponse.tagId,
       tagColorCode: tagResponse.tagColorCode,
       tagDescription: tagResponse.tagDescription,
-      tagName: tagResponse.tagColorCode,
+      tagName: tagResponse.tagName,
     );
   }
 
@@ -26,6 +26,7 @@ class Tag {
     return {
       "name": tagName,
       "description": tagDescription,
+      "color": tagColorCode,
     };
   }
 }

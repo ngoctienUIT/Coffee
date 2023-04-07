@@ -18,10 +18,12 @@ import '../bloc/add_product_catalogues_event.dart';
 import '../bloc/add_product_catalogues_state.dart';
 
 class AddProductCataloguesPage extends StatelessWidget {
-  const AddProductCataloguesPage({Key? key, required this.onChange})
+  const AddProductCataloguesPage(
+      {Key? key, required this.onChange, this.productCatalogues})
       : super(key: key);
 
   final VoidCallback onChange;
+  final ProductCatalogues? productCatalogues;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +32,22 @@ class AddProductCataloguesPage extends StatelessWidget {
       child: Scaffold(
         appBar:
             const AppBarGeneral(elevation: 0, title: "Thêm ProductCatalogues"),
-        body: AddProductCataloguesView(onChange: onChange),
+        body: AddProductCataloguesView(
+          onChange: onChange,
+          productCatalogues: productCatalogues,
+        ),
       ),
     );
   }
 }
 
 class AddProductCataloguesView extends StatefulWidget {
-  const AddProductCataloguesView({Key? key, required this.onChange})
+  const AddProductCataloguesView(
+      {Key? key, required this.onChange, this.productCatalogues})
       : super(key: key);
 
   final VoidCallback onChange;
+  final ProductCatalogues? productCatalogues;
 
   @override
   State<AddProductCataloguesView> createState() =>
@@ -52,9 +59,15 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
   TextEditingController descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File? image;
+  String? imageNetwork;
 
   @override
   void initState() {
+    if (widget.productCatalogues != null) {
+      nameController.text = widget.productCatalogues!.name;
+      descriptionController.text = widget.productCatalogues!.description;
+      imageNetwork = widget.productCatalogues!.image;
+    }
     nameController.addListener(() => checkEmpty());
     descriptionController.addListener(() => checkEmpty());
     super.initState();
@@ -63,7 +76,7 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
   void checkEmpty() {
     if (nameController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
-        image != null) {
+        (image != null || imageNetwork!.isNotEmpty)) {
       context.read<AddProductCataloguesBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddProductCataloguesBloc>().add(SaveButtonEvent(false));
@@ -137,9 +150,11 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
                 .read<AddProductCataloguesBloc>()
                 .add(ChangeImageEvent(image == null ? "" : image.path));
           }),
-          child: image == null
-              ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
-              : Image.file(image!, height: 150, width: 150),
+          child: (image == null
+              ? (imageNetwork != null
+                  ? Image.network(imageNetwork!, height: 150, width: 150)
+                  : Image.asset(AppImages.imgAddImage, height: 150, width: 150))
+              : Image.file(image!, height: 150, width: 150)),
         );
       },
     );
@@ -154,12 +169,23 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context
-                  .read<AddProductCataloguesBloc>()
-                  .add(CreateProductCataloguesEvent(ProductCatalogues(
-                    name: nameController.text,
-                    description: descriptionController.text,
-                  )));
+              if (widget.productCatalogues == null) {
+                context
+                    .read<AddProductCataloguesBloc>()
+                    .add(CreateProductCataloguesEvent(ProductCatalogues(
+                      name: nameController.text,
+                      description: descriptionController.text,
+                    )));
+              } else {
+                context
+                    .read<AddProductCataloguesBloc>()
+                    .add(UpdateProductCataloguesEvent(ProductCatalogues(
+                      name: nameController.text,
+                      description: descriptionController.text,
+                      image: widget.productCatalogues!.image,
+                      id: widget.productCatalogues!.id,
+                    )));
+              }
             }
           },
         );

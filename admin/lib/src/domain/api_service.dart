@@ -202,12 +202,10 @@ abstract class ApiService {
     @Body() dynamic fieldValue,
   );
 
-  @POST('/coupon/{id}')
+  @DELETE('/coupon/{id}')
   Future<HttpResponse<CouponResponse>> removeCouponByID(
     @Path("id") String id,
-    @Path("field") String field,
     @Header("Authorization") token,
-    @Body() Map<String, dynamic> coupon,
   );
 
   //stores

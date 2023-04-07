@@ -61,6 +61,9 @@ class AddProductCataloguesBloc
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
+      if (image.isNotEmpty) {
+        productCatalogues.image = await uploadImage(image.split("/").last);
+      }
       await apiService.updateExistingProductCatalogue(
         'Bearer $token',
         productCatalogues.toJson(),

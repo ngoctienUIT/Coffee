@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/tag.dart';
 import '../../../domain/repositories/tag/tag_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/tag_bloc.dart';
@@ -76,6 +77,7 @@ class TagView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
               itemCount: listTag.length,
               itemBuilder: (context, index) {
+                final myContext = context;
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
@@ -91,7 +93,17 @@ class TagView extends StatelessWidget {
                         extentRatio: 0.3,
                         children: [
                           SlidableAction(
-                            onPressed: (context) {},
+                            onPressed: (context) {
+                              Navigator.of(context).push(createRoute(
+                                screen: AddTagPage(
+                                  tag: Tag.fromTagResponse(listTag[index]),
+                                  onChange: () {
+                                    myContext.read<TagBloc>().add(FetchData());
+                                  },
+                                ),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
                             backgroundColor: AppColors.statusBarColor,
                             foregroundColor:
                                 const Color.fromRGBO(231, 231, 231, 1),
