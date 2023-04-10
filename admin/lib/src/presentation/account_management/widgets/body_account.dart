@@ -19,25 +19,18 @@ class BodyAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, state) {
-        if (state is InitState ||
-            state is AccountLoading ||
-            state is RefreshLoading) {
+        if (state is InitState || state is AccountLoading) {
           return _buildLoading();
         }
-        if (state is AccountError || state is RefreshError) {
+        if (state is AccountError) {
           return Center(
-            child: Text(state is AccountError
-                ? state.message!
-                : (state as RefreshError).message!),
+            child: Text(state.message!),
           );
         }
-        if (state is AccountLoaded || state is RefreshLoaded) {
-          List<UserResponse> listAccount = state is AccountLoaded
-              ? state.listAccount
-              : (state as RefreshLoaded).listAccount;
-          int indexState = state is AccountLoaded
-              ? state.index
-              : (state as RefreshLoaded).index;
+        if (state is AccountLoaded) {
+          List<UserResponse> listAccount = state.listAccount;
+          int indexState = state.index;
+
           return RefreshIndicator(
             onRefresh: () async {
               context.read<AccountBloc>().add(RefreshData(indexState));
@@ -69,7 +62,10 @@ class BodyAccount extends StatelessWidget {
                         extentRatio: 0.2,
                         children: [
                           SlidableAction(
-                            onPressed: (context) {},
+                            onPressed: (context) {
+                              context.read<AccountBloc>().add(DeleteEvent(
+                                  listAccount[index].id, indexState));
+                            },
                             backgroundColor: AppColors.statusBarColor,
                             foregroundColor:
                                 const Color.fromRGBO(231, 231, 231, 1),

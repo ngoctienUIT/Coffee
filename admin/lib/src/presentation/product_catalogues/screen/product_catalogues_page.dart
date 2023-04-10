@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_product_catalogues_page.dart';
@@ -14,9 +15,11 @@ import '../bloc/product_catalogues_event.dart';
 import '../bloc/product_catalogues_state.dart';
 
 class ProductCataloguesPage extends StatelessWidget {
-  const ProductCataloguesPage({Key? key, this.onPick}) : super(key: key);
+  const ProductCataloguesPage({Key? key, this.onPick, this.id})
+      : super(key: key);
 
   final Function(ProductCataloguesResponse catalogue)? onPick;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class ProductCataloguesPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
-        body: ProductCataloguesView(onPick: onPick),
+        body: ProductCataloguesView(onPick: onPick, id: id),
         floatingActionButton:
             BlocBuilder<ProductCataloguesBloc, ProductCataloguesState>(
           builder: (context, state) {
@@ -51,9 +54,11 @@ class ProductCataloguesPage extends StatelessWidget {
 }
 
 class ProductCataloguesView extends StatelessWidget {
-  const ProductCataloguesView({Key? key, this.onPick}) : super(key: key);
+  const ProductCataloguesView({Key? key, this.onPick, this.id})
+      : super(key: key);
 
   final Function(ProductCataloguesResponse catalogue)? onPick;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -88,48 +93,73 @@ class ProductCataloguesView extends StatelessWidget {
                             Navigator.pop(context);
                           }
                         : null,
-                    child: Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.32,
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              Navigator.of(context).push(createRoute(
-                                screen: AddProductCataloguesPage(
-                                  productCatalogues:
-                                      ProductCatalogues.fromResponse(
-                                          listProductCatalogues[index]),
-                                  onChange: () {
-                                    myContext
-                                        .read<ProductCataloguesBloc>()
-                                        .add(FetchData());
-                                  },
+                    child: Stack(
+                      children: [
+                        Slidable(
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            extentRatio: 0.32,
+                            children: [
+                              SlidableAction(
+                                onPressed: (context) {
+                                  Navigator.of(context).push(createRoute(
+                                    screen: AddProductCataloguesPage(
+                                      productCatalogues:
+                                          ProductCatalogues.fromResponse(
+                                              listProductCatalogues[index]),
+                                      onChange: () {
+                                        myContext
+                                            .read<ProductCataloguesBloc>()
+                                            .add(FetchData());
+                                      },
+                                    ),
+                                    begin: const Offset(0, 1),
+                                  ));
+                                },
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.penToSquare,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              SlidableAction(
+                                onPressed: (context) {
+                                  context.read<ProductCataloguesBloc>().add(
+                                      DeleteEvent(
+                                          listProductCatalogues[index].id));
+                                },
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.trash,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ],
+                          ),
+                          child: productCataloguesItem(
+                              listProductCatalogues[index]),
+                        ),
+                        if (id == listProductCatalogues[index].id)
+                          Positioned(
+                            right: 5,
+                            top: 5,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomLeft: Radius.circular(10),
                                 ),
-                                begin: const Offset(0, 1),
-                              ));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.penToSquare,
-                            borderRadius: BorderRadius.circular(15),
+                              ),
+                              child:
+                                  Text("current_selection".translate(context)),
+                            ),
                           ),
-                          SlidableAction(
-                            onPressed: (context) {
-                              context.read<ProductCataloguesBloc>().add(
-                                  DeleteEvent(listProductCatalogues[index].id));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.trash,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ],
-                      ),
-                      child:
-                          productCataloguesItem(listProductCatalogues[index]),
+                      ],
                     ),
                   ),
                 );

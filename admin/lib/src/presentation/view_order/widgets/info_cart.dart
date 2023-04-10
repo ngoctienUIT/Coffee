@@ -3,15 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../domain/entities/user/user_response.dart';
 import '../../../domain/repositories/order/order_response.dart';
 import 'item_info.dart';
 
 class InfoCart extends StatelessWidget {
-  const InfoCart({Key? key, required this.isBringBack, required this.order})
-      : super(key: key);
+  const InfoCart({
+    Key? key,
+    required this.isBringBack,
+    required this.order,
+    required this.user,
+  }) : super(key: key);
 
   final bool isBringBack;
   final OrderResponse order;
+  final UserResponse user;
   final Color selectedColor = AppColors.statusBarColor;
   final Color unselectedColor = AppColors.unselectedColor;
 
@@ -65,6 +71,8 @@ class InfoCart extends StatelessWidget {
             ),
           ),
           const Divider(),
+          userInfo(),
+          const Divider(),
           isBringBack ? bringBack() : atTable(),
           const Divider(),
           Padding(
@@ -83,6 +91,15 @@ class InfoCart extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget userInfo() {
+    return Column(
+      children: [
+        itemInfo(Icons.person, user.displayName),
+        itemInfo(Icons.phone, user.phoneNumber),
+      ],
     );
   }
 

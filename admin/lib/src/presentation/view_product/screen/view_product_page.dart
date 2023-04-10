@@ -13,6 +13,7 @@ import '../bloc/view_product_event.dart';
 
 class ViewProductPage extends StatefulWidget {
   const ViewProductPage({Key? key, required this.product}) : super(key: key);
+
   final ProductResponse product;
 
   @override
@@ -51,7 +52,10 @@ class _ViewProductPageState extends State<ViewProductPage> {
                 name: widget.product.name,
                 onEdit: () {
                   Navigator.of(context).push(createRoute(
-                    screen: const AddProductPage(),
+                    screen: AddProductPage(
+                      onChange: () {},
+                      product: Product.fromProductResponse(widget.product),
+                    ),
                     begin: const Offset(0, 1),
                   ));
                 },

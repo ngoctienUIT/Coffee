@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
+import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_event.dart';
@@ -18,12 +20,15 @@ import '../../../core/utils/constants/constants.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
 import '../../signup/widgets/custom_text_input.dart';
+import '../../topping/screen/topping_page.dart';
 import '../widgets/bottom_pick_image.dart';
 
 class AddProductPage extends StatelessWidget {
-  const AddProductPage({Key? key, this.product}) : super(key: key);
+  const AddProductPage({Key? key, this.product, required this.onChange})
+      : super(key: key);
 
   final Product? product;
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -44,16 +49,18 @@ class AddProductPage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: AddProductView(product: product),
+        body: AddProductView(product: product, onChange: onChange),
       ),
     );
   }
 }
 
 class AddProductView extends StatefulWidget {
-  const AddProductView({Key? key, this.product}) : super(key: key);
+  const AddProductView({Key? key, this.product, required this.onChange})
+      : super(key: key);
 
   final Product? product;
+  final VoidCallback onChange;
 
   @override
   State<AddProductView> createState() => _AddProductViewState();
@@ -68,15 +75,21 @@ class _AddProductViewState extends State<AddProductView> {
   TextEditingController lController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   File? image;
+  String? imageNetwork;
   late Product product;
+  List<Topping> listTopping = [];
   ProductCataloguesResponse? catalogues;
 
   @override
   void initState() {
     if (widget.product != null) {
       product = widget.product!.copyWith();
-      nameController.text = product.name;
-      priceController.text = product.price.toString();
+      nameController.text = widget.product!.name;
+      priceController.text = widget.product!.price.toString();
+      sController.text = widget.product!.S.toString();
+      mController.text = widget.product!.M.toString();
+      lController.text = widget.product!.L.toString();
+      imageNetwork = widget.product!.image;
       descriptionController.text = product.description!;
     }
     nameController.addListener(() => checkEmpty());
@@ -95,7 +108,7 @@ class _AddProductViewState extends State<AddProductView> {
         mController.text.isNotEmpty &&
         lController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
-        image != null &&
+        (image != null || widget.product != null) &&
         catalogues != null) {
       context.read<AddProductBloc>().add(SaveButtonEvent(true));
     } else {
@@ -116,11 +129,13 @@ class _AddProductViewState extends State<AddProductView> {
     return BlocListener<AddProductBloc, AddProductState>(
       listener: (context, state) {
         if (state is AddProductSuccessState) {
+          widget.onChange();
           Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
-          Future.delayed(
-            const Duration(seconds: 3),
-            () => Navigator.pop(context),
-          );
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is AddProductLoadingState) {
+          loadingAnimation(context);
         }
       },
       child: SingleChildScrollView(
@@ -201,6 +216,8 @@ class _AddProductViewState extends State<AddProductView> {
                 title: "product_description".translate(context).toLowerCase(),
               ),
               const SizedBox(height: 10),
+              addTopping(),
+              const SizedBox(height: 10),
               saveButton(),
             ],
           ),
@@ -221,6 +238,7 @@ class _AddProductViewState extends State<AddProductView> {
             Navigator.of(context).push(
               createRoute(
                   screen: ProductCataloguesPage(
+                    id: catalogues != null ? catalogues!.id : null,
                     onPick: (catalogue) {
                       catalogues = catalogue;
                       context
@@ -249,10 +267,67 @@ class _AddProductViewState extends State<AddProductView> {
                 .add(ChangeImageEvent(image == null ? "" : image.path));
           }),
           child: image == null
-              ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+              ? (imageNetwork == null
+                  ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+                  : Image.network(imageNetwork!, width: 150, height: 150))
               : Image.file(image!, height: 150, width: 150),
         );
       },
+    );
+  }
+
+  Widget addTopping() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            descriptionLine(text: "Thêm Topping"),
+            const Spacer(),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(createRoute(
+                    screen: ToppingPage(
+                      listTopping:
+                          listTopping.map((e) => e.toppingId!).toList(),
+                      onPick: (list) {
+                        listTopping = list;
+                        context
+                            .read<AddProductBloc>()
+                            .add(ChangeToppingEvent());
+                      },
+                    ),
+                    begin: const Offset(0, 1),
+                  ));
+                },
+                child: const Text("Thêm"))
+          ],
+        ),
+        BlocBuilder<AddProductBloc, AddProductState>(
+          buildWhen: (previous, current) => current is ChangeToppingState,
+          builder: (context, state) {
+            return listTopping.isEmpty
+                ? const Text("Không có topping!")
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: listTopping.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          listTopping[index].toppingName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.statusBarColor,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+          },
+        )
+      ],
     );
   }
 
@@ -273,11 +348,20 @@ class _AddProductViewState extends State<AddProductView> {
                       M: int.parse(mController.text),
                       L: int.parse(lController.text),
                       S: int.parse(sController.text),
+                      toppingOptions: listTopping,
                     )));
               } else {
-                context
-                    .read<AddProductBloc>()
-                    .add(UpdateProductEvent(product.copyWith()));
+                context.read<AddProductBloc>().add(UpdateProductEvent(Product(
+                      name: nameController.text,
+                      price: int.parse(priceController.text),
+                      description: descriptionController.text,
+                      M: int.parse(mController.text),
+                      L: int.parse(lController.text),
+                      S: int.parse(sController.text),
+                      image: widget.product!.image,
+                      toppingOptions: listTopping,
+                      id: widget.product!.id,
+                    )));
               }
             }
           },

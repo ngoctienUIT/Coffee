@@ -1,6 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
+import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,16 +9,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../domain/repositories/topping/topping_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/topping_bloc.dart';
 import '../bloc/topping_event.dart';
 import '../bloc/topping_state.dart';
 
 class ToppingPage extends StatelessWidget {
-  const ToppingPage({Key? key, this.onPick}) : super(key: key);
+  const ToppingPage({Key? key, this.onPick, this.listTopping})
+      : super(key: key);
 
-  final Function(ToppingResponse topping)? onPick;
+  final Function(List<Topping> list)? onPick;
+  final List<String>? listTopping;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class ToppingPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
-        body: ToppingView(onPick: onPick),
+        body: ToppingView(onPick: onPick, listTopping: listTopping),
         floatingActionButton: BlocBuilder<ToppingBloc, ToppingState>(
           builder: (context, state) {
             return FloatingActionButton(
@@ -50,14 +52,24 @@ class ToppingPage extends StatelessWidget {
   }
 }
 
-class ToppingView extends StatelessWidget {
-  const ToppingView({Key? key, this.onPick}) : super(key: key);
+class ToppingView extends StatefulWidget {
+  const ToppingView({Key? key, this.onPick, this.listTopping})
+      : super(key: key);
 
-  final Function(ToppingResponse catalogue)? onPick;
+  final Function(List<Topping> list)? onPick;
+  final List<String>? listTopping;
+
+  @override
+  State<ToppingView> createState() => _ToppingViewState();
+}
+
+class _ToppingViewState extends State<ToppingView> {
+  List<Topping> listTopping = [];
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ToppingBloc, ToppingState>(
+      buildWhen: (previous, current) => current is! PickState,
       builder: (context, state) {
         if (state is InitState || state is ToppingLoading) {
           return _buildLoading();
@@ -66,82 +78,134 @@ class ToppingView extends StatelessWidget {
           return Center(child: Text(state.message!));
         }
         if (state is ToppingLoaded) {
-          final listTopping = state.listTopping;
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<ToppingBloc>().add(FetchData());
-            },
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
-              itemCount: listTopping.length,
-              itemBuilder: (context, index) {
-                final myContext = context;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: InkWell(
-                    onTap: onPick != null
-                        ? () {
-                            onPick!(listTopping[index]);
-                            Navigator.pop(context);
-                          }
-                        : null,
-                    child: Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.35,
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              Navigator.of(context).push(createRoute(
-                                screen: AddToppingPage(
-                                  topping: Topping.fromToppingResponse(
-                                      listTopping[index]),
-                                  onChange: () {
-                                    myContext
-                                        .read<ToppingBloc>()
-                                        .add(FetchData());
-                                  },
-                                ),
-                                begin: const Offset(0, 1),
-                              ));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.penToSquare,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          SlidableAction(
-                            onPressed: (context) {
-                              context.read<ToppingBloc>().add(
-                                  DeleteEvent(listTopping[index].toppingId));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.trash,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ],
-                      ),
-                      child: itemTopping(listTopping[index]),
-                    ),
+          listTopping = state.listTopping
+              .map((e) => Topping.fromToppingResponse(e))
+              .toList();
+          if (widget.listTopping != null) {
+            for (int i = 0; i < listTopping.length; i++) {
+              if (widget.listTopping!.contains(listTopping[i].toppingId)) {
+                listTopping[i].isCheck = true;
+              }
+            }
+          }
+          return widget.onPick == null
+              ? RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<ToppingBloc>().add(FetchData());
+                  },
+                  child: listToppingWidget(listTopping),
+                )
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      listToppingWidget(listTopping),
+                      buttonSave(),
+                      const SizedBox(height: 80),
+                    ],
                   ),
                 );
-              },
-            ),
-          );
         }
         return Container();
       },
     );
   }
 
-  Widget itemTopping(ToppingResponse topping) {
+  Widget buttonSave() {
+    return BlocBuilder<ToppingBloc, ToppingState>(
+      buildWhen: (previous, current) => current is PickState,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: customButton(
+            text: "Lưu",
+            isOnPress: true,
+            onPress: () {
+              widget.onPick!(
+                  listTopping.where((element) => element.isCheck).toList());
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget listToppingWidget(List<Topping> listTopping) {
+    return ListView.builder(
+      physics: widget.onPick == null
+          ? const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            )
+          : const NeverScrollableScrollPhysics(),
+      shrinkWrap: widget.onPick == null ? false : true,
+      padding: EdgeInsets.fromLTRB(10, 10, 10, widget.onPick == null ? 60 : 10),
+      itemCount: listTopping.length,
+      itemBuilder: (context, index) {
+        final myContext = context;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: widget.onPick != null
+              ? Row(
+                  children: [
+                    BlocBuilder<ToppingBloc, ToppingState>(
+                      buildWhen: (previous, current) => current is PickState,
+                      builder: (context, state) {
+                        return Checkbox(
+                          value: listTopping[index].isCheck,
+                          onChanged: (value) {
+                            listTopping[index].isCheck = value!;
+                            context.read<ToppingBloc>().add(PickEvent());
+                          },
+                        );
+                      },
+                    ),
+                    Expanded(child: itemTopping(listTopping[index])),
+                  ],
+                )
+              : Slidable(
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    extentRatio: 0.35,
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          Navigator.of(context).push(createRoute(
+                            screen: AddToppingPage(
+                              topping: listTopping[index],
+                              onChange: () {
+                                myContext.read<ToppingBloc>().add(FetchData());
+                              },
+                            ),
+                            begin: const Offset(0, 1),
+                          ));
+                        },
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.penToSquare,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      SlidableAction(
+                        onPressed: (context) {
+                          context
+                              .read<ToppingBloc>()
+                              .add(DeleteEvent(listTopping[index].toppingId!));
+                        },
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.trash,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ],
+                  ),
+                  child: itemTopping(listTopping[index]),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget itemTopping(Topping topping) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -150,14 +214,14 @@ class ToppingView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           children: [
-            topping.imageUrl.isEmpty
+            topping.imageUrl!.isEmpty
                 ? Image.asset(
                     AppImages.imgLogo,
                     height: 80,
                     width: 80,
                   )
                 : Image.network(
-                    topping.imageUrl,
+                    topping.imageUrl!,
                     height: 80,
                     width: 80,
                   ),

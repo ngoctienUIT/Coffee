@@ -51,21 +51,31 @@ class BodyOrder extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               itemCount: listOrder.length,
               itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(
-                      screen: ViewOrderPage(
-                        order: listOrder[index],
-                        onPress: () {
-                          context
-                              .read<OrderBloc>()
-                              .add(RefreshData(indexState));
+                return FutureBuilder(
+                  future: getUserInfo(listOrder[index].userId!),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final user = snapshot.requireData;
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(createRoute(
+                            screen: ViewOrderPage(
+                              user: user,
+                              order: listOrder[index],
+                              onPress: () {
+                                context
+                                    .read<OrderBloc>()
+                                    .add(RefreshData(indexState));
+                              },
+                            ),
+                            begin: const Offset(1, 0),
+                          ));
                         },
-                      ),
-                      begin: const Offset(1, 0),
-                    ));
+                        child: itemOrder(context, listOrder[index], user),
+                      );
+                    }
+                    return _buildLoading();
                   },
-                  child: itemOrder(context, listOrder[index]),
                 );
               },
             ),
@@ -104,60 +114,53 @@ class BodyOrder extends StatelessWidget {
     return (await apiService.getUserByID(id)).data;
   }
 
-  Widget bodyItem(OrderResponse order) {
-    return FutureBuilder<UserResponse>(
-      future: getUserInfo(order.userId!),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final user = snapshot.requireData;
-          return Row(
+  Widget bodyItem(
+      BuildContext context, OrderResponse order, UserResponse user) {
+    return Row(
+      children: [
+        ClipOval(
+          child: user.imageUrl == null
+              ? Image.asset(AppImages.imgNonAvatar, height: 100)
+              : Image.network(user.imageUrl!, height: 100),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipOval(
-                child: user.imageUrl == null
-                    ? Image.asset(AppImages.imgNonAvatar, height: 100)
-                    : Image.network(user.imageUrl!, height: 100),
+              Text(
+                user.displayName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      user.displayName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text("Ngày tạo: ${order.createdDate}"),
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text("Ngày giao: ${order.lastUpdated}"),
-                    ),
-                    const SizedBox(height: 10),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
-                      ),
-                    ),
-                  ],
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text("Ngày tạo: ${order.createdDate}"),
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text("Ngày giao: ${order.lastUpdated}"),
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
                 ),
               ),
             ],
-          );
-        }
-        return _buildLoading();
-      },
+          ),
+        ),
+      ],
     );
   }
 
-  Widget itemOrder(BuildContext context, OrderResponse order) {
+  Widget itemOrder(
+      BuildContext context, OrderResponse order, UserResponse user) {
     int number = 0;
     for (var item in order.orderItems!) {
       number += item.quantity;
@@ -177,7 +180,7 @@ class BodyOrder extends StatelessWidget {
           children: [
             headerItem(order),
             const Divider(),
-            bodyItem(order),
+            bodyItem(context, order, user),
             const Divider(),
             const SizedBox(height: 10),
             Row(

@@ -11,6 +11,8 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
   ToppingBloc() : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
+    on<PickEvent>((event, emit) => emit(PickState()));
+
     on<DeleteEvent>((event, emit) => deleteTopping(event.id, emit));
   }
 

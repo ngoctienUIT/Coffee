@@ -12,7 +12,6 @@ class AppBarProduct extends StatelessWidget {
 
   final bool isTop;
   final String name;
-
   final VoidCallback onEdit;
 
   @override

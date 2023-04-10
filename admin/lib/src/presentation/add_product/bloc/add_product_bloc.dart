@@ -26,6 +26,8 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       emit(ChangeCatalogueState());
     });
 
+    on<ChangeToppingEvent>((event, emit) => emit(ChangeToppingState()));
+
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -62,22 +64,22 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   }
 
   Future updateProduct(Product product, Emitter emit) async {
-    try {
-      emit(AddProductLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      final response = await apiService.updateExistingProducts(
-        product.id!,
-        'Bearer $token',
-        product.toJson(),
-      );
-      emit(AddProductSuccessState());
-    } catch (e) {
-      emit(AddProductErrorState(serverStatus(e)!));
-      print(e);
+    // try {
+    emit(AddProductLoadingState());
+    ApiService apiService =
+        ApiService(Dio(BaseOptions(contentType: "application/json")));
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("token") ?? "";
+    if (image.isNotEmpty) {
+      product.image = await uploadImage(image.split("/").last);
     }
+    await apiService.updateExistingProducts(
+        product.id!, 'Bearer $token', product.toJson());
+    emit(AddProductSuccessState());
+    // } catch (e) {
+    //   emit(AddProductErrorState(serverStatus(e)!));
+    //   print(e);
+    // }
   }
 
   Future<String> uploadImage(String name) async {

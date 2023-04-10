@@ -6,6 +6,8 @@ class InitState extends ToppingState {}
 
 class ToppingLoading extends ToppingState {}
 
+class PickState extends ToppingState {}
+
 class ToppingLoaded extends ToppingState {
   final List<ToppingResponse> listTopping;
 

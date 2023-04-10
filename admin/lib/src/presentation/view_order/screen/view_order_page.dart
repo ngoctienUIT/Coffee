@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:flutter/material.dart';
 
 import '../../../data/models/product.dart';
@@ -13,26 +13,32 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage({Key? key, required this.order, required this.onPress})
-      : super(key: key);
+  const ViewOrderPage({
+    Key? key,
+    required this.order,
+    required this.onPress,
+    required this.user,
+  }) : super(key: key);
 
   final OrderResponse order;
+  final UserResponse user;
   final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarGeneral(
-        title: "customer_name".translate(context),
-        elevation: 0,
-      ),
+      appBar: AppBarGeneral(title: user.displayName, elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              InfoCart(isBringBack: order.address1 != null, order: order),
+              InfoCart(
+                isBringBack: order.address1 != null,
+                order: order,
+                user: user,
+              ),
               const SizedBox(height: 10),
               ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),

@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,15 +28,30 @@ class ProductPage extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(createRoute(
-              screen: const AddProductPage(),
-              begin: const Offset(0, 1),
-            ));
+        floatingActionButton: BlocBuilder<ProductBloc, ProductState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddProductPage(
+                    onChange: () {
+                      context.read<ProductBloc>().state;
+                      int index = 0;
+                      if (state is RefreshLoaded) {
+                        index = state.index;
+                      } else {
+                        index = 0;
+                      }
+                      context.read<ProductBloc>().add(RefreshData(index));
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            );
           },
-          backgroundColor: AppColors.statusBarColor,
-          child: const Icon(Icons.add),
         ),
       ),
     );

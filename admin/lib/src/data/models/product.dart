@@ -123,13 +123,9 @@ class Product {
       // 'currency': currency,
       'imageUrl': image,
       'description': description,
-      // 'toppingOptions': toppingOptions,
+      'toppingIds': toppingOptions!.map((e) => e.toppingId).toList(),
       // 'tags': tags,
-      'upsizeOptions': {
-        "S": S,
-        "M": M,
-        "L": L,
-      },
+      'upsizeOptions': {"S": S, "M": M, "L": L},
     };
   }
 }

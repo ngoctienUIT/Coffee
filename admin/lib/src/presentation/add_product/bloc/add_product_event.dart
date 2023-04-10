@@ -31,3 +31,5 @@ class UpdateProductEvent extends AddProductEvent {
 
   UpdateProductEvent(this.product);
 }
+
+class ChangeToppingEvent extends AddProductEvent {}
