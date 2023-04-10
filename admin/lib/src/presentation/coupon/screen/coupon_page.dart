@@ -76,7 +76,7 @@ class CouponView extends StatelessWidget {
                   child: Slidable(
                     endActionPane: ActionPane(
                       motion: const ScrollMotion(),
-                      extentRatio: 0.3,
+                      extentRatio: 0.32,
                       children: [
                         SlidableAction(
                           onPressed: (context) {},

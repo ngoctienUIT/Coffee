@@ -1,11 +1,17 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/store/store_response.dart';
+import '../../add_store/screen/add_store_page.dart';
 import '../../login/widgets/custom_button.dart';
 
-void showStoreBottomSheet(BuildContext context, StoreResponse store) {
+void showStoreBottomSheet(
+  BuildContext context,
+  StoreResponse store,
+  VoidCallback onChange,
+) {
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -20,7 +26,9 @@ void showStoreBottomSheet(BuildContext context, StoreResponse store) {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -40,7 +48,18 @@ void showStoreBottomSheet(BuildContext context, StoreResponse store) {
               child: customButton(
                 text: "Chỉnh sửa",
                 isOnPress: true,
-                onPress: () {},
+                onPress: () {
+                  Navigator.of(context).push(createRoute(
+                    screen: AddStorePage(
+                      store: store,
+                      onChange: () {
+                        onChange();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    begin: const Offset(0, 1),
+                  ));
+                },
               ),
             ),
           ],

@@ -5,6 +5,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
 import 'package:coffee_admin/src/data/models/address.dart';
 import 'package:coffee_admin/src/data/models/store.dart';
+import 'package:coffee_admin/src/domain/repositories/store/store_response.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/district_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/province_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.dart';
@@ -25,9 +26,11 @@ import '../bloc/add_store_state.dart';
 import '../widgets/country_dropdown.dart';
 
 class AddStorePage extends StatelessWidget {
-  const AddStorePage({Key? key, this.store}) : super(key: key);
+  const AddStorePage({Key? key, this.store, required this.onChange})
+      : super(key: key);
 
-  final Store? store;
+  final VoidCallback onChange;
+  final StoreResponse? store;
 
   @override
   Widget build(BuildContext context) {
@@ -35,16 +38,18 @@ class AddStorePage extends StatelessWidget {
       create: (context) => AddStoreBloc(),
       child: Scaffold(
         appBar: const AppBarGeneral(elevation: 0, title: "Thêm cửa hàng"),
-        body: AddStoreView(store: store),
+        body: AddStoreView(store: store, onChange: onChange),
       ),
     );
   }
 }
 
 class AddStoreView extends StatefulWidget {
-  const AddStoreView({Key? key, this.store}) : super(key: key);
+  const AddStoreView({Key? key, this.store, required this.onChange})
+      : super(key: key);
 
-  final Store? store;
+  final VoidCallback onChange;
+  final StoreResponse? store;
 
   @override
   State<AddStoreView> createState() => _AddStoreViewState();
@@ -66,6 +71,16 @@ class _AddStoreViewState extends State<AddStoreView> {
       nameController.text = widget.store!.storeName!;
       phoneController.text = widget.store!.hotlineNumber!;
       addressController.text = widget.store!.address1!;
+      // addressAPI.province = dvhcvn.findLevel1ByName(widget.store!.address4!);
+      // addressAPI.district = dvhcvn
+      //     .findLevel1ByName(widget.store!.address4!)!
+      //     .findLevel2ByName(widget.store!.address3!);
+      // addressAPI.ward = dvhcvn
+      //     .findLevel1ByName(widget.store!.address4!)!
+      //     .findLevel2ByName(widget.store!.address3!)!
+      //     .findLevel3ByName(widget.store!.address2!);
+      open = widget.store!.openingHour.toTime();
+      close = widget.store!.closingHour.toTime();
     }
     nameController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
@@ -77,7 +92,7 @@ class _AddStoreViewState extends State<AddStoreView> {
     if (nameController.text.isNotEmpty &&
         phoneController.text.isNotEmpty &&
         addressController.text.isNotEmpty &&
-        image != null &&
+        (image != null || widget.store != null) &&
         close != null &&
         open != null &&
         !addressAPI.checkNull()) {
@@ -100,6 +115,7 @@ class _AddStoreViewState extends State<AddStoreView> {
     return BlocListener<AddStoreBloc, AddStoreState>(
       listener: (context, state) {
         if (state is AddStoreSuccessState) {
+          widget.onChange();
           Fluttertoast.showToast(msg: "Thêm cửa hàng thành công");
           Navigator.pop(context);
           Navigator.pop(context);
@@ -229,7 +245,7 @@ class _AddStoreViewState extends State<AddStoreView> {
           checkEdit: true,
           text: open == null ? "Mở cửa" : open!.toTimeString(),
           onPress: () async {
-            open = await selectedTime();
+            open = await selectedTime(open);
             if (mounted) context.read<AddStoreBloc>().add(ChangeOpenEvent());
           },
         );
@@ -245,7 +261,7 @@ class _AddStoreViewState extends State<AddStoreView> {
           checkEdit: true,
           text: close == null ? "Đóng cửa" : close!.toTimeString(),
           onPress: () async {
-            close = await selectedTime();
+            close = await selectedTime(close);
             if (mounted) context.read<AddStoreBloc>().add(ChangeCloseEvent());
           },
         );
@@ -265,9 +281,14 @@ class _AddStoreViewState extends State<AddStoreView> {
                 .read<AddStoreBloc>()
                 .add(ChangeImageEvent(image == null ? "" : image.path));
           }),
-          child: image == null
-              ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
-              : Image.file(image!, height: 150, width: 150),
+          child: widget.store == null
+              ? (image == null
+                  ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+                  : Image.file(image!, height: 150, width: 150))
+              : Image.network(
+                  "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                  height: 150,
+                  width: 150),
         );
       },
     );
@@ -282,16 +303,32 @@ class _AddStoreViewState extends State<AddStoreView> {
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<AddStoreBloc>().add(CreateStoreEvent(Store(
-                    storeName: nameController.text,
-                    hotlineNumber: phoneController.text,
-                    address1: addressController.text,
-                    address2: addressAPI.ward!.name,
-                    address3: addressAPI.district!.name,
-                    address4: addressAPI.province!.name,
-                    openingHour: open!.toTimeString(),
-                    closingHour: close!.toTimeString(),
-                  )));
+              if (widget.store == null) {
+                context.read<AddStoreBloc>().add(CreateStoreEvent(Store(
+                      storeName: nameController.text,
+                      hotlineNumber: phoneController.text,
+                      address1: addressController.text,
+                      address2: addressAPI.ward!.name,
+                      address3: addressAPI.district!.name,
+                      address4: addressAPI.province!.name,
+                      openingHour: open!.toTimeString(),
+                      closingHour: close!.toTimeString(),
+                    )));
+              } else {
+                context.read<AddStoreBloc>().add(UpdateStoreEvent(Store(
+                      storeId: widget.store!.storeId,
+                      storeName: nameController.text,
+                      hotlineNumber: phoneController.text,
+                      address1: addressController.text,
+                      address2: addressAPI.ward!.name,
+                      address3: addressAPI.district!.name,
+                      address4: addressAPI.province!.name,
+                      openingHour: open!.toTimeString(),
+                      closingHour: close!.toTimeString(),
+                      imageUrl: widget.store!.imageUrl,
+                      registrationDate: widget.store!.registrationDate,
+                    )));
+              }
             }
           },
         );
@@ -299,6 +336,6 @@ class _AddStoreViewState extends State<AddStoreView> {
     );
   }
 
-  Future<TimeOfDay?> selectedTime() =>
-      showTimePicker(initialTime: TimeOfDay.now(), context: context);
+  Future<TimeOfDay?> selectedTime(TimeOfDay? init) =>
+      showTimePicker(initialTime: init ?? TimeOfDay.now(), context: context);
 }

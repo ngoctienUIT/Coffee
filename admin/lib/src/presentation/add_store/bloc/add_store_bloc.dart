@@ -44,10 +44,7 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
       if (image.isNotEmpty) {
         store.imageUrl = await uploadImage(image.split("/").last);
       }
-      final response = await apiService.registerNewStore(
-        'Bearer $token',
-        store.toJson(),
-      );
+      await apiService.registerNewStore('Bearer $token', store.toJson());
       emit(AddStoreSuccessState());
     } catch (e) {
       if (serverStatus(e) != null) {
@@ -64,11 +61,11 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      final response = await apiService.updateExistingStore(
-        store.storeId!,
-        'Bearer $token',
-        store.toJson(),
-      );
+      if (image.isNotEmpty) {
+        store.imageUrl = await uploadImage(image.split("/").last);
+      }
+      await apiService.updateExistingStore(
+          store.storeId!, 'Bearer $token', store.toJson());
       emit(AddStoreSuccessState());
     } catch (e) {
       emit(AddStoreErrorState(serverStatus(e)!));

@@ -33,8 +33,6 @@ class Store {
     this.lastUpdateDate,
   });
 
-  // factory Store.fromStoreResponse
-
   Map<String, dynamic> toJson() {
     return {
       "name": storeName,

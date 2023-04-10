@@ -51,7 +51,9 @@ class _StoreViewState extends State<StoreView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(createRoute(
-            screen: const AddStorePage(),
+            screen: AddStorePage(
+              onChange: () {},
+            ),
             begin: const Offset(0, 1),
           ));
         },
@@ -101,38 +103,50 @@ class _StoreViewState extends State<StoreView> {
           return Center(child: Text(state.message!));
         }
         if (state is StoreLoaded) {
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: state.listStore.length,
-            padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () => showStoreBottomSheet(
-                  context,
-                  state.listStore[index],
-                ),
-                child: Slidable(
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    extentRatio: 0.2,
-                    children: [
-                      SlidableAction(
-                        onPressed: (context) {
-                          context.read<StoreBloc>().add(DeleteEvent(
-                              state.listStore[index].storeId,
-                              searchAddressController.text));
-                        },
-                        backgroundColor: AppColors.statusBarColor,
-                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                        icon: FontAwesomeIcons.trash,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ],
-                  ),
-                  child: itemStore(state.listStore[index]),
-                ),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context
+                  .read<StoreBloc>()
+                  .add(SearchStore(storeName: searchAddressController.text));
             },
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: state.listStore.length,
+              padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () => showStoreBottomSheet(
+                    context,
+                    state.listStore[index],
+                    () {
+                      context.read<StoreBloc>().add(
+                          SearchStore(storeName: searchAddressController.text));
+                    },
+                  ),
+                  child: Slidable(
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      extentRatio: 0.2,
+                      children: [
+                        SlidableAction(
+                          onPressed: (context) {
+                            context.read<StoreBloc>().add(DeleteEvent(
+                                state.listStore[index].storeId,
+                                searchAddressController.text));
+                          },
+                          backgroundColor: AppColors.statusBarColor,
+                          foregroundColor:
+                              const Color.fromRGBO(231, 231, 231, 1),
+                          icon: FontAwesomeIcons.trash,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ],
+                    ),
+                    child: itemStore(state.listStore[index]),
+                  ),
+                );
+              },
+            ),
           );
         }
         return Container();
