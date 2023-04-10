@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -32,40 +33,14 @@ class InfoCart extends StatelessWidget {
               children: [
                 Text("${"method".translate(context)}:"),
                 const Spacer(),
-                Container(
-                  height: 40,
-                  width: 90,
-                  decoration: BoxDecoration(
-                    color: isBringBack ? unselectedColor : selectedColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "at_table".translate(context),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                itemType(
+                  "at_table".translate(context),
+                  isBringBack ? unselectedColor : selectedColor,
                 ),
                 const SizedBox(width: 10),
-                Container(
-                  height: 40,
-                  width: 90,
-                  decoration: BoxDecoration(
-                    color: isBringBack ? selectedColor : unselectedColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "bring_back".translate(context),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                itemType(
+                  "bring_back".translate(context),
+                  isBringBack ? selectedColor : unselectedColor,
                 ),
               ],
             ),

@@ -1,10 +1,10 @@
 class Coupon {
   final String? id;
-  final String couponName;
-  final String couponCode;
-  final String content;
-  final String imageUrl;
-  final String dueDate;
+  String couponName;
+  String couponCode;
+  String content;
+  String? imageUrl;
+  String dueDate;
   double? discountRate;
   int? discountAmount;
   int? discountRateCapAmount;
@@ -15,7 +15,7 @@ class Coupon {
     required this.couponName,
     required this.couponCode,
     required this.content,
-    required this.imageUrl,
+    this.imageUrl,
     required this.dueDate,
     this.discountRate,
     this.discountAmount,
@@ -33,6 +33,7 @@ class Coupon {
       "rate": discountRate,
       "capAmount": discountRateCapAmount,
       "minimumAmountCriterion": minimumOrderAmountCriterion,
+      "amount": discountAmount,
     };
   }
 

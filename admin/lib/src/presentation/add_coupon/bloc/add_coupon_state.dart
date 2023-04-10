@@ -4,6 +4,8 @@ class InitState extends AddCouponState {}
 
 class ChangeImageState extends AddCouponState {}
 
+class ChangeTypeState extends AddCouponState {}
+
 class ChangeDateState extends AddCouponState {}
 
 class SaveButtonState extends AddCouponState {

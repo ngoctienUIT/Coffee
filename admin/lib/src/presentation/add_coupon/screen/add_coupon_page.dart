@@ -1,13 +1,17 @@
 import 'dart:io';
 
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/coupon.dart';
+import 'package:coffee_admin/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_event.dart';
+import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/constants/constants.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
@@ -17,9 +21,11 @@ import '../bloc/add_coupon_state.dart';
 import '../widgets/custom_picker_widget.dart';
 
 class AddCouponPage extends StatelessWidget {
-  const AddCouponPage({Key? key, this.coupon}) : super(key: key);
+  const AddCouponPage({Key? key, this.coupon, required this.onChange})
+      : super(key: key);
 
-  final Coupon? coupon;
+  final VoidCallback onChange;
+  final CouponResponse? coupon;
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +45,18 @@ class AddCouponPage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: const AddCouponView(),
+        body: AddCouponView(coupon: coupon, onChange: onChange),
       ),
     );
   }
 }
 
 class AddCouponView extends StatefulWidget {
-  const AddCouponView({Key? key, this.coupon}) : super(key: key);
+  const AddCouponView({Key? key, this.coupon, required this.onChange})
+      : super(key: key);
 
-  final Coupon? coupon;
+  final CouponResponse? coupon;
+  final VoidCallback onChange;
 
   @override
   State<AddCouponView> createState() => _AddCouponViewState();
@@ -56,25 +64,35 @@ class AddCouponView extends StatefulWidget {
 
 class _AddCouponViewState extends State<AddCouponView> {
   TextEditingController titleController = TextEditingController();
-  TextEditingController specialController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
   TextEditingController minApplyController = TextEditingController();
+  TextEditingController rateController = TextEditingController();
+  TextEditingController capAmountController = TextEditingController();
   TextEditingController contentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   DateTime selectedDate = DateTime.now();
   File? image;
-  late Coupon coupon;
+  String? imageNetWork;
+  bool isRate = true;
+  final Color selectedColor = AppColors.statusBarColor;
+  final Color unselectedColor = AppColors.unselectedColor;
 
   @override
   void initState() {
     if (widget.coupon != null) {
-      coupon = widget.coupon!.copyWith();
-      titleController.text = coupon.couponName;
-      specialController.text = coupon.discountRateCapAmount.toString();
-      minApplyController.text = coupon.minimumOrderAmountCriterion.toString();
-      contentController.text = coupon.content;
+      titleController.text = widget.coupon!.couponName;
+      amountController.text = widget.coupon!.discountAmount.toString();
+      rateController.text = widget.coupon!.discountRate.toString();
+      contentController.text = widget.coupon!.content;
+      capAmountController.text =
+          widget.coupon!.discountRateCapAmount.toString();
+      minApplyController.text =
+          widget.coupon!.minimumOrderAmountCriterion.toString();
+      imageNetWork = widget.coupon!.imageUrl;
+      isRate = widget.coupon!.discountRate != null;
     }
     titleController.addListener(() => checkEmpty());
-    specialController.addListener(() => checkEmpty());
+    amountController.addListener(() => checkEmpty());
     minApplyController.addListener(() => checkEmpty());
     contentController.addListener(() => checkEmpty());
     super.initState();
@@ -82,9 +100,12 @@ class _AddCouponViewState extends State<AddCouponView> {
 
   void checkEmpty() {
     if (titleController.text.isNotEmpty &&
-        specialController.text.isNotEmpty &&
         contentController.text.isNotEmpty &&
-        minApplyController.text.isNotEmpty) {
+        minApplyController.text.isNotEmpty &&
+        (image != null || widget.coupon != null) &&
+        (amountController.text.isNotEmpty ||
+            (rateController.text.isNotEmpty &&
+                capAmountController.text.isNotEmpty))) {
       context.read<AddCouponBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddCouponBloc>().add(SaveButtonEvent(false));
@@ -94,9 +115,11 @@ class _AddCouponViewState extends State<AddCouponView> {
   @override
   void dispose() {
     titleController.dispose();
-    specialController.dispose();
+    amountController.dispose();
     contentController.dispose();
     minApplyController.dispose();
+    capAmountController.dispose();
+    rateController.dispose();
     super.dispose();
   }
 
@@ -105,11 +128,13 @@ class _AddCouponViewState extends State<AddCouponView> {
     return BlocListener<AddCouponBloc, AddCouponState>(
       listener: (context, state) {
         if (state is AddCouponSuccessState) {
+          widget.onChange();
           Fluttertoast.showToast(msg: "Thêm coupon thành công");
-          Future.delayed(
-            const Duration(seconds: 3),
-            () => Navigator.pop(context),
-          );
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is AddCouponLoadingState) {
+          loadingAnimation(context);
         }
       },
       child: SingleChildScrollView(
@@ -134,16 +159,10 @@ class _AddCouponViewState extends State<AddCouponView> {
               const SizedBox(height: 10),
               orderDate(),
               const SizedBox(height: 10),
-              descriptionLine(text: "promotion".translate(context)),
+              typeCoupon(),
               const SizedBox(height: 10),
-              CustomTextInput(
-                controller: specialController,
-                hint: "100.000đ",
-                keyboardType: TextInputType.number,
-                title: "promotion".translate(context).toLowerCase(),
-              ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Min"),
+              descriptionLine(text: "Tối thiểu"),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: minApplyController,
@@ -169,6 +188,87 @@ class _AddCouponViewState extends State<AddCouponView> {
     );
   }
 
+  Widget typeCoupon() {
+    return BlocBuilder<AddCouponBloc, AddCouponState>(
+      buildWhen: (previous, current) => current is ChangeTypeState,
+      builder: (context, state) {
+        return Column(
+          children: [
+            descriptionLine(text: "Loại Coupon"),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    isRate = !isRate;
+                    context.read<AddCouponBloc>().add(ChangeTypeEvent());
+                  },
+                  child: itemType(
+                    "Tiền mặt",
+                    isRate ? unselectedColor : selectedColor,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                InkWell(
+                  onTap: () {
+                    isRate = !isRate;
+                    context.read<AddCouponBloc>().add(ChangeTypeEvent());
+                  },
+                  child: itemType(
+                    "Tỷ lệ",
+                    isRate ? selectedColor : unselectedColor,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            isRate ? rateType() : amountType(),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget rateType() {
+    return Column(
+      children: [
+        descriptionLine(text: "Tỷ lệ"),
+        const SizedBox(height: 10),
+        CustomTextInput(
+          controller: rateController,
+          hint: "10%",
+          keyboardType: TextInputType.number,
+          title: "promotion".translate(context).toLowerCase(),
+        ),
+        const SizedBox(height: 10),
+        descriptionLine(text: "Tối đa"),
+        const SizedBox(height: 10),
+        CustomTextInput(
+          controller: capAmountController,
+          hint: "100.000đ",
+          keyboardType: TextInputType.number,
+          title: "promotion".translate(context).toLowerCase(),
+        ),
+      ],
+    );
+  }
+
+  Widget amountType() {
+    return Column(
+      children: [
+        descriptionLine(text: "promotion".translate(context)),
+        const SizedBox(height: 10),
+        CustomTextInput(
+          controller: amountController,
+          hint: "100.000đ",
+          keyboardType: TextInputType.number,
+          title: "promotion".translate(context).toLowerCase(),
+        ),
+      ],
+    );
+  }
+
   Widget orderDate() {
     return BlocBuilder<AddCouponBloc, AddCouponState>(
       buildWhen: (previous, current) => current is ChangeDateState,
@@ -188,10 +288,14 @@ class _AddCouponViewState extends State<AddCouponView> {
         return InkWell(
           onTap: () => showMyBottomSheet(context, (image) {
             this.image = image;
-            context.read<AddCouponBloc>().add(ChangeImageEvent());
+            context
+                .read<AddCouponBloc>()
+                .add(ChangeImageEvent(image == null ? "" : image.path));
           }),
           child: image == null
-              ? Image.asset("assets/tea.png", height: 150, width: 150)
+              ? (imageNetWork == null
+                  ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
+                  : Image.network(imageNetWork!, width: 150, height: 150))
               : Image.file(image!, height: 150, width: 150),
         );
       },
@@ -209,18 +313,36 @@ class _AddCouponViewState extends State<AddCouponView> {
               if (_formKey.currentState!.validate()) {
                 if (widget.coupon == null) {
                   context.read<AddCouponBloc>().add(CreateCouponEvent(Coupon(
-                      couponName: titleController.text,
-                      couponCode: "couponCode",
-                      content: contentController.text,
-                      imageUrl: "imageUrl",
-                      dueDate: DateFormat("dd/MM/yyyy").format(selectedDate),
-                      discountRateCapAmount: int.parse(specialController.text),
-                      minimumOrderAmountCriterion:
-                          int.parse(minApplyController.text))));
+                        couponName: titleController.text,
+                        couponCode: "couponCode",
+                        content: contentController.text,
+                        dueDate: DateFormat("dd/MM/yyyy").format(selectedDate),
+                        minimumOrderAmountCriterion:
+                            int.parse(minApplyController.text),
+                        discountRateCapAmount:
+                            isRate ? int.parse(capAmountController.text) : null,
+                        discountRate:
+                            isRate ? double.parse(rateController.text) : null,
+                        discountAmount:
+                            isRate ? null : int.parse(amountController.text),
+                      )));
                 } else {
-                  context
-                      .read<AddCouponBloc>()
-                      .add(UpdateCouponEvent(coupon.copyWith()));
+                  context.read<AddCouponBloc>().add(UpdateCouponEvent(Coupon(
+                        couponName: titleController.text,
+                        couponCode: "couponCode",
+                        content: contentController.text,
+                        imageUrl: imageNetWork,
+                        dueDate: DateFormat("dd/MM/yyyy").format(selectedDate),
+                        minimumOrderAmountCriterion:
+                            int.parse(minApplyController.text),
+                        discountRateCapAmount:
+                            isRate ? int.parse(capAmountController.text) : null,
+                        discountRate:
+                            isRate ? double.parse(rateController.text) : null,
+                        discountAmount:
+                            isRate ? null : int.parse(amountController.text),
+                        id: widget.coupon!.id,
+                      )));
                 }
               }
             });
@@ -236,7 +358,7 @@ class _AddCouponViewState extends State<AddCouponView> {
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDate) {
-      context.read<AddCouponBloc>().add(ChangeDateEvent());
+      if (mounted) context.read<AddCouponBloc>().add(ChangeDateEvent());
       selectedDate = picked;
     }
   }

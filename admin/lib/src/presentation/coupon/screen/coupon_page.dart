@@ -17,30 +17,38 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      appBar: AppBar(
+    return BlocProvider(
+      create: (context) => CouponBloc()..add(FetchData()),
+      child: Scaffold(
         backgroundColor: AppColors.bgColor,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          "all_vouchers".translate(context),
-          style: const TextStyle(color: Colors.black),
+        appBar: AppBar(
+          backgroundColor: AppColors.bgColor,
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            "all_vouchers".translate(context),
+            style: const TextStyle(color: Colors.black),
+          ),
         ),
-      ),
-      body: BlocProvider(
-        create: (context) => CouponBloc()..add(FetchData()),
-        child: const SafeArea(child: CouponView()),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: const AddCouponPage(),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
+        body: const CouponView(),
+        floatingActionButton: BlocBuilder<CouponBloc, CouponState>(
+          builder: (context, state) {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddCouponPage(
+                    onChange: () {
+                      context.read<CouponBloc>().add(FetchData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            );
+          },
+        ),
       ),
     );
   }
@@ -76,10 +84,20 @@ class CouponView extends StatelessWidget {
                   child: Slidable(
                     endActionPane: ActionPane(
                       motion: const ScrollMotion(),
-                      extentRatio: 0.32,
+                      extentRatio: 0.35,
                       children: [
                         SlidableAction(
-                          onPressed: (context) {},
+                          onPressed: (context) {
+                            Navigator.of(context).push(createRoute(
+                              screen: AddCouponPage(
+                                onChange: () {
+                                  context.read<CouponBloc>().add(FetchData());
+                                },
+                                coupon: state.listCoupon[index],
+                              ),
+                              begin: const Offset(0, 1),
+                            ));
+                          },
                           backgroundColor: AppColors.statusBarColor,
                           foregroundColor:
                               const Color.fromRGBO(231, 231, 231, 1),

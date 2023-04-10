@@ -8,7 +8,13 @@ class CreateCouponEvent extends AddCouponEvent {
   CreateCouponEvent(this.coupon);
 }
 
-class ChangeImageEvent extends AddCouponEvent {}
+class ChangeImageEvent extends AddCouponEvent {
+  String image;
+
+  ChangeImageEvent(this.image);
+}
+
+class ChangeTypeEvent extends AddCouponEvent {}
 
 class ChangeDateEvent extends AddCouponEvent {}
 

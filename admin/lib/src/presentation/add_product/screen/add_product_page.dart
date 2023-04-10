@@ -76,21 +76,19 @@ class _AddProductViewState extends State<AddProductView> {
   final _formKey = GlobalKey<FormState>();
   File? image;
   String? imageNetwork;
-  late Product product;
   List<Topping> listTopping = [];
   ProductCataloguesResponse? catalogues;
 
   @override
   void initState() {
     if (widget.product != null) {
-      product = widget.product!.copyWith();
       nameController.text = widget.product!.name;
       priceController.text = widget.product!.price.toString();
       sController.text = widget.product!.S.toString();
       mController.text = widget.product!.M.toString();
       lController.text = widget.product!.L.toString();
       imageNetwork = widget.product!.image;
-      descriptionController.text = product.description!;
+      descriptionController.text = widget.product!.description!;
     }
     nameController.addListener(() => checkEmpty());
     priceController.addListener(() => checkEmpty());

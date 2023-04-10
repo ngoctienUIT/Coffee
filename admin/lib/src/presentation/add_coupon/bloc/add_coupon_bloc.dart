@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,8 +12,15 @@ import 'add_coupon_event.dart';
 import 'add_coupon_state.dart';
 
 class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
+  String image = "";
+
   AddCouponBloc() : super(InitState()) {
-    on<ChangeImageEvent>((event, emit) => emit(ChangeImageState()));
+    on<ChangeImageEvent>((event, emit) {
+      image = event.image;
+      emit(ChangeImageState());
+    });
+
+    on<ChangeTypeEvent>((event, emit) => emit(ChangeTypeState()));
 
     on<ChangeDateEvent>((event, emit) => emit(ChangeDateState()));
 
@@ -29,10 +39,10 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      await apiService.createNewCoupon(
-        'Bearer $token',
-        coupon.toJson(),
-      );
+      if (image.isNotEmpty) {
+        coupon.imageUrl = await uploadImage(image.split("/").last);
+      }
+      await apiService.createNewCoupon('Bearer $token', coupon.toJson());
       emit(AddCouponSuccessState());
     } catch (e) {
       emit(AddCouponErrorState(serverStatus(e)!));
@@ -47,15 +57,21 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
+      if (image.isNotEmpty) {
+        coupon.imageUrl = await uploadImage(image.split("/").last);
+      }
       await apiService.updateExistingCoupon(
-        coupon.id!,
-        'Bearer $token',
-        coupon.toJson(),
-      );
+          coupon.id!, 'Bearer $token', coupon.toJson());
       emit(AddCouponSuccessState());
     } catch (e) {
       emit(AddCouponErrorState(serverStatus(e)!));
       print(e);
     }
+  }
+
+  Future<String> uploadImage(String name) async {
+    Reference upload = FirebaseStorage.instance.ref().child("coupon/$name");
+    await upload.putFile(File(image));
+    return await upload.getDownloadURL();
   }
 }
