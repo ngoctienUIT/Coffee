@@ -47,8 +47,8 @@ class OrderResponse {
   @JsonKey(name: "orderAmount")
   int? orderAmount;
 
-  @JsonKey(name: "appliedCoupons")
-  List<CouponResponse>? appliedCoupons;
+  @JsonKey(name: "appliedCoupon")
+  CouponResponse? appliedCoupon;
 
   @JsonKey(name: "orderStatus")
   String? orderStatus;
@@ -70,7 +70,7 @@ class OrderResponse {
     this.address3,
     this.address4,
     this.orderAmount,
-    this.appliedCoupons,
+    this.appliedCoupon,
     this.orderStatus,
     this.orderCustomerNote,
   });
@@ -79,4 +79,12 @@ class OrderResponse {
       _$OrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderResponseToJson(this);
+
+  int getTotal() {
+    int total = 0;
+    for (var item in orderItems!) {
+      total += item.getTotal();
+    }
+    return total;
+  }
 }

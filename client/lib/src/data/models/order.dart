@@ -43,37 +43,27 @@ class Order {
   });
 
   Map<String, dynamic> toJson() {
-    if (selectedPickupOption == "AT_STORE") {
-      return {
-        "userId": userId,
-        "orderItems": orderItems.map((e) => e.toJson()).toList(),
-        "paymentMethod": "CASH",
-        "pickupOptions": selectedPickupOption,
-        "couponId": null,
-        "storeId": storeId,
-        "orderNote": orderNote,
-      };
-    } else {
-      return {
-        "userId": userId,
-        "orderItems": orderItems.map((e) => e.toJson()).toList(),
-        "paymentMethod": "CASH",
-        "pickupOptions": selectedPickupOption,
-        "couponId": null,
-        "address1": address1,
-        "address2": address2,
-        "address3": address3,
-        "address4": address4,
-        "orderNote": orderNote,
-      };
-    }
+    return {
+      "orderId": orderId,
+      "userId": userId,
+      "orderItems": orderItems.map((e) => e.toJson()).toList(),
+      "paymentMethod": "CASH",
+      "pickupOptions": selectedPickupOption,
+      "couponId": appliedCoupons ?? "",
+      "storeId": storeId,
+      "address1": address1,
+      "address2": address2,
+      "address3": address3,
+      "address4": address4,
+      "orderNote": orderNote,
+    };
   }
 
   void addAddress(Address address) {
-    address1 = address.province;
-    address2 = address.district;
-    address3 = address.ward;
-    address4 = address.address;
+    address4 = address.province;
+    address3 = address.district;
+    address2 = address.ward;
+    address1 = address.address;
   }
 
   void removeAddress() {

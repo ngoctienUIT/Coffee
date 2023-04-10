@@ -839,14 +839,14 @@ class _ApiService implements ApiService {
   @override
   Future<HttpResponse<OrderResponse>> attachCouponToOrder(
     token,
-    id,
     couponID,
+    id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    final _data = couponID;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<OrderResponse>>(Options(
       method: 'POST',
@@ -855,7 +855,7 @@ class _ApiService implements ApiService {
     )
             .compose(
               _dio.options,
-              '/order/${id}/attach/${couponID}',
+              '/order/${id}/coupons',
               queryParameters: queryParameters,
               data: _data,
             )

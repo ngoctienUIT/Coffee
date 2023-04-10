@@ -26,12 +26,12 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       address3: json['address3'] as String?,
       address4: json['address4'] as String?,
       orderAmount: json['orderAmount'] as int?,
-      appliedCoupons: (json['appliedCoupons'] as List<dynamic>?)
-          ?.map((e) => CouponResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
       orderStatus: json['orderStatus'] as String?,
       orderCustomerNote: json['orderCustomerNote'] as String?,
-    );
+    )..appliedCoupon = json['appliedCoupon'] == null
+        ? null
+        : CouponResponse.fromJson(
+            json['appliedCoupon'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
     <String, dynamic>{
@@ -48,7 +48,7 @@ Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
       'address3': instance.address3,
       'address4': instance.address4,
       'orderAmount': instance.orderAmount,
-      'appliedCoupons': instance.appliedCoupons,
+      'appliedCoupon': instance.appliedCoupon,
       'orderStatus': instance.orderStatus,
       'orderCustomerNote': instance.orderCustomerNote,
     };

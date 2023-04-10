@@ -17,9 +17,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({Key? key, required this.onRemove}) : super(key: key);
+  const CartPage({Key? key, required this.onChange}) : super(key: key);
 
-  final VoidCallback onRemove;
+  final VoidCallback onChange;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -30,28 +30,29 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CartBloc()..add(GetOrderSpending()),
-      child: CartView(onRemove: widget.onRemove),
+      child: CartView(onChange: widget.onChange),
     );
   }
 }
 
 class CartView extends StatelessWidget {
-  const CartView({Key? key, required this.onRemove}) : super(key: key);
+  const CartView({Key? key, required this.onChange}) : super(key: key);
 
-  final VoidCallback onRemove;
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, state) {
         if (state is RemoveOrderSuccessState) {
-          onRemove();
+          onChange();
           Navigator.pop(context);
         }
         if (state is DeleteProductSuccessState) {
           context.read<CartBloc>().add(GetOrderSpending());
         }
         if (state is PlaceOrderSuccessState) {
+          onChange();
           Fluttertoast.showToast(msg: "Đặt hàng thành công");
           Navigator.pop(context);
         }
@@ -71,13 +72,13 @@ class CartView extends StatelessWidget {
             Address? address;
             if (state.order!.address1 != null) {
               address = Address(
-                address: state.order!.address1!,
                 phone: "",
                 name: "",
                 country: "Việt Nam",
                 province: state.order!.address4!,
                 district: state.order!.address3!,
                 ward: state.order!.address2!,
+                address: state.order!.address1!,
               );
             }
             return Scaffold(
@@ -104,7 +105,12 @@ class CartView extends StatelessWidget {
                         onChange: (total) {},
                       ),
                       const SizedBox(height: 10),
-                      AddCoupons(coupons: state.order!.appliedCoupons),
+                      AddCoupons(
+                        coupons: state.order!.appliedCoupon,
+                        onPress: (id) {
+                          context.read<CartBloc>().add(AttachCouponToOrder(id));
+                        },
+                      ),
                       const SizedBox(height: 10),
                       TotalPayment(order: state.order!),
                       const SizedBox(height: 10),

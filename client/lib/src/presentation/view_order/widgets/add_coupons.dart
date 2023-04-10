@@ -6,7 +6,7 @@ import '../../../domain/repositories/coupon/coupon_response.dart';
 
 class AddCoupons extends StatelessWidget {
   const AddCoupons({Key? key, this.listCoupon}) : super(key: key);
-  final List<CouponResponse>? listCoupon;
+  final CouponResponse? listCoupon;
 
   @override
   Widget build(BuildContext context) {

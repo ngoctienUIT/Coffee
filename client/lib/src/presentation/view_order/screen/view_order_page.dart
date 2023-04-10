@@ -41,9 +41,9 @@ class ViewOrderPage extends StatelessWidget {
               const SizedBox(height: 10),
               ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
-              if (order.appliedCoupons != null)
-                AddCoupons(listCoupon: order.appliedCoupons!),
-              if (order.appliedCoupons != null) const SizedBox(height: 10),
+              if (order.appliedCoupon != null)
+                AddCoupons(listCoupon: order.appliedCoupon!),
+              if (order.appliedCoupon != null) const SizedBox(height: 10),
               TotalPayment(order: order),
               const SizedBox(height: 10),
               const PaymentMethods(value: 1),

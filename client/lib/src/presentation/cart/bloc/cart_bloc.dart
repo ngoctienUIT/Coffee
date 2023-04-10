@@ -91,17 +91,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
       print(order.selectedPickupOption);
-      // if (isBringBack) {
-      //   order.addAddress(address!);
-      //   // order.storeId = null;
-      //   print(order.storeId);
-      // } else {
-      //   order.removeAddress();
-      //   order.storeId = storeID;
-      // }
-      await apiService.updatePendingOrder(
+      if (isBringBack) {
+        order.addAddress(address!);
+        // order.storeId = null;
+        // print(order.storeId);
+      } else {
+        order.removeAddress();
+        order.storeId = storeID;
+      }
+      final orderResponse = await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);
-      // getOrderSpending(emit);
+      emit(GetOrderSuccessState(orderResponse.data));
     } catch (e) {
       emit(GetOrderErrorState(serverStatus(e)!));
       print(serverStatus(e));
@@ -186,7 +186,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       final orderSpending = response.data;
       final responseCoupon = await apiService.attachCouponToOrder(
-          "Bearer $token", orderSpending[0].orderId!, id);
+          "Bearer $token", id, orderSpending[0].orderId!);
       emit(GetOrderSuccessState(responseCoupon.data));
     } catch (e) {
       emit(GetOrderErrorState(serverStatus(e)!));

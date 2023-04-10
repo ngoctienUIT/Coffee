@@ -39,9 +39,11 @@ class _InfoCartState extends State<InfoCart> {
   void initState() {
     store = widget.store;
     address = widget.address;
+    isBringBack = widget.address != null;
     if (widget.note != null) {
       noteController.text = widget.note!;
     }
+    print("address$address");
     super.initState();
   }
 
@@ -189,47 +191,25 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget bringBack() {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(
-              screen: AddAddressPage(
-                address: address,
-                onSave: (address) => setState(() {
-                  this.address = address;
-                  context
-                      .read<CartBloc>()
-                      .add(ChangeMethod(isBringBack: true, address: address));
-                }),
-              ),
-              begin: const Offset(1, 0),
-            ));
-          },
-          child: itemInfo(Icons.phone, address == null ? "" : address!.phone),
-        ),
-        const Divider(),
-        InkWell(
-          onTap: () {
-            Navigator.of(context).push(createRoute(
-              screen: AddAddressPage(
-                address: address,
-                onSave: (address) => setState(() {
-                  this.address = address;
-                  context
-                      .read<CartBloc>()
-                      .add(ChangeMethod(isBringBack: true, address: address));
-                }),
-              ),
-              begin: const Offset(1, 0),
-            ));
-          },
-          child: itemInfo(
-            Icons.location_on,
-            address == null ? "" : address!.getAddress(),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(createRoute(
+          screen: AddAddressPage(
+            address: address,
+            onSave: (address) => setState(() {
+              this.address = address;
+              context
+                  .read<CartBloc>()
+                  .add(ChangeMethod(isBringBack: true, address: address));
+            }),
           ),
-        ),
-      ],
+          begin: const Offset(1, 0),
+        ));
+      },
+      child: itemInfo(
+        Icons.location_on,
+        address == null ? "" : address!.getAddress(),
+      ),
     );
   }
 }

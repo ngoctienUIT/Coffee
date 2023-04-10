@@ -70,7 +70,7 @@ class BottomSheetOrder extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(createRoute(
                       screen: CartPage(
-                        onRemove: () {
+                        onChange: () {
                           context.read<OrderBloc>().add(AddProductToCart());
                         },
                       ),
