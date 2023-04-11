@@ -43,10 +43,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    AppImages.imgLogo,
-                    height: 200,
-                  ),
+                  child: Image.asset(AppImages.imgLogo, height: 200),
                 ),
                 Text("forgot_your_password".translate(context)),
                 const SizedBox(height: 20),

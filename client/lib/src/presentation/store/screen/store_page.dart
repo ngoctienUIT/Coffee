@@ -6,6 +6,7 @@ import 'package:coffee/src/presentation/store/bloc/store_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
@@ -13,40 +14,39 @@ import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 
 class StorePage extends StatelessWidget {
-  const StorePage({Key? key, this.onPress, required this.isPick, this.storeID})
+  const StorePage({Key? key, this.onPress, required this.isPick})
       : super(key: key);
 
   final Function(StoreResponse store)? onPress;
   final bool isPick;
-  final String? storeID;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StoreBloc>(
       create: (_) => StoreBloc()..add(FetchData()),
-      child: StoreView(onPress: onPress, isPick: isPick, storeID: storeID),
+      child: StoreView(onPress: onPress, isPick: isPick),
     );
   }
 }
 
 class StoreView extends StatefulWidget {
-  const StoreView({Key? key, this.onPress, required this.isPick, this.storeID})
+  const StoreView({Key? key, this.onPress, required this.isPick})
       : super(key: key);
 
   final Function(StoreResponse store)? onPress;
   final bool isPick;
-  final String? storeID;
 
   @override
   State<StoreView> createState() => _StoreViewState();
 }
 
 class _StoreViewState extends State<StoreView> {
-  TextEditingController searchAddressController = TextEditingController();
+  TextEditingController searchStoreController = TextEditingController();
+  String? storeID;
 
   @override
   void dispose() {
-    searchAddressController.dispose();
+    searchStoreController.dispose();
     super.dispose();
   }
 
@@ -80,7 +80,7 @@ class _StoreViewState extends State<StoreView> {
         onChanged: (value) {
           context.read<StoreBloc>().add(SearchStore(storeName: value));
         },
-        controller: searchAddressController,
+        controller: searchStoreController,
         hint: "address_search".translate(context),
         radius: 90,
         contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -114,13 +114,23 @@ class _StoreViewState extends State<StoreView> {
                 onTap: () => showStoreBottomSheet(
                   context,
                   state.listStore[index],
-                  () {
-                    widget.onPress!(state.listStore[index]);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                  () async {
+                    if (widget.onPress != null) {
+                      widget.onPress!(state.listStore[index]);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    } else {
+                      SharedPreferences.getInstance().then((value) {
+                        value.setString(
+                            "storeID", state.listStore[index].storeId);
+                        context.read<StoreBloc>().add(
+                            SearchStore(storeName: searchStoreController.text));
+                        Navigator.pop(context);
+                      });
+                    }
                   },
                 ),
-                child: itemStore(state.listStore[index]),
+                child: itemStore(state.listStore[index], state.id),
               );
             },
           );
@@ -132,7 +142,7 @@ class _StoreViewState extends State<StoreView> {
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
-  Widget itemStore(StoreResponse store) {
+  Widget itemStore(StoreResponse store, String id) {
     return Stack(
       children: [
         Card(
@@ -153,7 +163,7 @@ class _StoreViewState extends State<StoreView> {
             ),
           ),
         ),
-        if (store.storeId == widget.storeID)
+        if (store.storeId == id)
           Positioned(
             right: 5,
             bottom: 5,

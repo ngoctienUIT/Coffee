@@ -2,6 +2,7 @@ import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
 import '../../../domain/repositories/order/order_response.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../domain/repositories/store/store_response.dart';
 
 abstract class OrderState {}
 
@@ -14,9 +15,17 @@ class OrderLoaded extends OrderState {
   final List<ProductResponse> listProduct;
   final List<ProductCataloguesResponse> listProductCatalogues;
   final OrderResponse? order;
+  final StoreResponse? store;
+  final bool isBringBack;
 
-  OrderLoaded(
-      this.index, this.listProduct, this.listProductCatalogues, this.order);
+  OrderLoaded({
+    required this.index,
+    required this.listProduct,
+    required this.listProductCatalogues,
+    this.order,
+    this.store,
+    required this.isBringBack,
+  });
 }
 
 class OrderError extends OrderState {
@@ -40,8 +49,10 @@ class RefreshOrderError extends OrderState {
 
 class AddProductToCartLoaded extends OrderState {
   final OrderResponse? order;
+  final StoreResponse? store;
+  final bool isBringBack;
 
-  AddProductToCartLoaded(this.order);
+  AddProductToCartLoaded(this.order, this.store, this.isBringBack);
 }
 
 class AddProductToCartError extends OrderState {

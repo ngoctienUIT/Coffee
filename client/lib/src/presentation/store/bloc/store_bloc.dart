@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
@@ -18,8 +19,10 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       emit(StoreLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String id = prefs.getString("storeID") ?? "";
       final response = await apiService.getAllStores();
-      emit(StoreLoaded(response.data));
+      emit(StoreLoaded(response.data, id));
     } catch (e) {
       emit(StoreError(serverStatus(e)));
       print(e);
@@ -31,9 +34,11 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       emit(StoreLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String id = prefs.getString("storeID") ?? "";
       final response = await apiService.searchStoresByName(query);
 
-      emit(StoreLoaded(response.data));
+      emit(StoreLoaded(response.data, id));
     } catch (e) {
       emit(StoreError(serverStatus(e)));
       print(e);

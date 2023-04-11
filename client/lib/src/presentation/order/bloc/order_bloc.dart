@@ -33,11 +33,21 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
+      String? storeID = prefs.getString("storeID");
+      bool isBringBack = prefs.getBool("isBringBack") ?? true;
       final orderResponse =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final store =
+          storeID == null ? null : await apiService.getStoreByID(storeID);
 
-      emit(OrderLoaded(0, listProduct, listProductCatalogues,
-          orderResponse.data.isEmpty ? null : orderResponse.data[0]));
+      emit(OrderLoaded(
+        index: 0,
+        listProduct: listProduct,
+        listProductCatalogues: listProductCatalogues,
+        order: orderResponse.data.isEmpty ? null : orderResponse.data[0],
+        store: storeID == null ? null : store!.data,
+        isBringBack: isBringBack,
+      ));
     } catch (e) {
       emit(OrderError(serverStatus(e)!));
       print(e);
@@ -67,11 +77,19 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
+      String? storeID = prefs.getString("storeID");
+      bool isBringBack = prefs.getBool("isBringBack") ?? true;
+
       final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final store =
+          storeID == null ? null : await apiService.getStoreByID(storeID);
 
       emit(AddProductToCartLoaded(
-          response.data.isEmpty ? null : response.data[0]));
+        response.data.isEmpty ? null : response.data[0],
+        storeID == null ? null : store!.data,
+        isBringBack,
+      ));
     } catch (e) {
       emit(AddProductToCartError(serverStatus(e)));
       print(e);

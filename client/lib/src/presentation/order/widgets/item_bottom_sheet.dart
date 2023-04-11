@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/constants/app_colors.dart';
+
 Widget itemBottomSheet({
   required String title,
   required String content,
@@ -13,7 +15,7 @@ Widget itemBottomSheet({
         border: Border.all(color: Colors.red),
         borderRadius: BorderRadius.circular(15),
       ),
-      height: 100,
+      height: 110,
       // margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(5),
       child: Row(
@@ -26,15 +28,35 @@ Widget itemBottomSheet({
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 10),
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    InkWell(
+                      onTap: () {},
+                      child: const Text(
+                        "Sửa",
+                        style: TextStyle(
+                          color: AppColors.statusBarColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
                 ),
                 const Spacer(),
-                Text(content),
+                Text(
+                  content,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 10),
               ],
             ),

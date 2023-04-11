@@ -41,14 +41,16 @@ class _NewPasswordViewState extends State<NewPasswordView> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isHide = false;
+  bool isHide = true;
 
   @override
   void initState() {
     newPasswordController.addListener(() {
+      checkEmpty();
       context.read<NewPasswordBloc>().add(TextChangeEvent());
     });
     confirmPasswordController.addListener(() {
+      checkEmpty();
       context.read<NewPasswordBloc>().add(TextChangeEvent());
     });
     super.initState();
@@ -76,7 +78,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
+    return BlocListener<NewPasswordBloc, NewPasswordState>(
       listener: (context, state) {
         if (state is ChangePasswordSuccessState) {
           Navigator.of(context).pushAndRemoveUntil(
@@ -110,7 +112,8 @@ class _NewPasswordViewState extends State<NewPasswordView> {
                 const SizedBox(height: 10),
                 inputPassword(),
                 const Spacer(),
-                const SizedBox(height: 10)
+                const SizedBox(height: 10),
+                buttonWidget(),
               ],
             ),
           ),
@@ -121,11 +124,12 @@ class _NewPasswordViewState extends State<NewPasswordView> {
 
   Widget buttonWidget() {
     return BlocBuilder<NewPasswordBloc, NewPasswordState>(
-      buildWhen: (previous, current) => current is ContinueState,
+      buildWhen: (previous, current) =>
+          current is ContinueState || current is InitState,
       builder: (context, state) {
         return customButton(
           text: "change_password".translate(context),
-          isOnPress: (state as ContinueState).isContinue,
+          isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<NewPasswordBloc>().add(ChangePasswordEvent(

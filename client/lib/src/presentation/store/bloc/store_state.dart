@@ -8,7 +8,9 @@ class StoreLoading extends StoreState {}
 
 class StoreLoaded extends StoreState {
   final List<StoreResponse> listStore;
-  StoreLoaded(this.listStore);
+  String id;
+
+  StoreLoaded(this.listStore, this.id);
 }
 
 class StoreError extends StoreState {

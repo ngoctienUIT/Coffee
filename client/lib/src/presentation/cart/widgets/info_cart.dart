@@ -43,7 +43,6 @@ class _InfoCartState extends State<InfoCart> {
     if (widget.note != null) {
       noteController.text = widget.note!;
     }
-    print("address$address");
     super.initState();
   }
 
@@ -145,7 +144,6 @@ class _InfoCartState extends State<InfoCart> {
       onTap: () {
         Navigator.of(context).push(createRoute(
           screen: StorePage(
-            storeID: store == null ? null : store!.storeId,
             isPick: true,
             onPress: (store) => setState(() {
               this.store = store;
