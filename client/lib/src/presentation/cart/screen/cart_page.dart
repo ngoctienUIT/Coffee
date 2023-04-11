@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
@@ -12,7 +13,6 @@ import 'package:coffee/src/presentation/cart/widgets/total_payment.dart';
 import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/utils/constants/constants.dart';
 
@@ -44,27 +44,20 @@ class CartView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, state) {
-        if (state is RemoveOrderSuccessState) {
+        if (state is GetOrderSuccessState) {
           onChange();
           Navigator.pop(context);
-        }
-        if (state is DeleteProductSuccessState) {
-          context.read<CartBloc>().add(GetOrderSpending());
-        }
-        if (state is PlaceOrderSuccessState) {
-          onChange();
-          Fluttertoast.showToast(msg: "Đặt hàng thành công");
-          Navigator.pop(context);
-        }
-      },
-      builder: (context, state) {
-        print("cart page: $state");
-        if (state is InitState || state is GetOrderLoadingState) {
-          return _buildLoading();
         }
         if (state is GetOrderErrorState) {
-          return Center(child: Text(state.error));
+          Navigator.pop(context);
         }
+        if (state is GetOrderLoadingState) {
+          loadingAnimation(context);
+        }
+      },
+      buildWhen: (previous, current) => current is GetOrderSuccessState,
+      builder: (context, state) {
+        print("cart page: $state");
         if (state is GetOrderSuccessState) {
           if (state.order == null) {
             return emptyCart(context);

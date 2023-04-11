@@ -5,8 +5,11 @@ String? serverStatus(dynamic error) {
   switch (error.runtimeType) {
     case DioError:
       final res = (error as DioError).response;
-      Fluttertoast.showToast(msg: res!.data.toString());
-      return res.data.toString();
+      if (res != null) {
+        Fluttertoast.showToast(msg: res.data.toString());
+        return res.data.toString();
+      }
+      return null;
     default:
       return null;
   }

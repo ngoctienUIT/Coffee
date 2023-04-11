@@ -26,7 +26,7 @@ class ItemOrder {
     return ItemOrder(
       productId: itemOrder.product.id,
       quantity: itemOrder.quantity,
-      toppingIds: [],
+      toppingIds: itemOrder.toppings.map((e) => e.toppingId).toList(),
       selectedSize: itemOrder.selectedSize == "S"
           ? 0
           : (itemOrder.selectedSize == "M" ? 1 : 2),

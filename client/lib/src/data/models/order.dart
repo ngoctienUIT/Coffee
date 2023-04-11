@@ -87,7 +87,9 @@ class Order {
       address2: orderResponse.address2,
       address3: orderResponse.address3,
       address4: orderResponse.address4,
-      appliedCoupons: null,
+      appliedCoupons: orderResponse.appliedCoupon == null
+          ? null
+          : orderResponse.appliedCoupon!.id,
       createdDate: orderResponse.createdDate,
       lastUpdated: orderResponse.lastUpdated,
       orderAmount: orderResponse.orderAmount,

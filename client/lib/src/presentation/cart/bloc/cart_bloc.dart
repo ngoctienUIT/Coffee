@@ -3,6 +3,7 @@ import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/server_status.dart';
@@ -55,7 +56,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future placeOrder(Emitter emit) async {
     try {
-      emit(PlaceOrderLoadingState());
+      emit(GetOrderLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
@@ -65,9 +66,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       List<OrderResponse> orderSpending = response.data;
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
-      emit(PlaceOrderSuccessState());
+      emit(GetOrderSuccessState(null));
+      Fluttertoast.showToast(msg: "Đặt hàng thành công");
     } catch (e) {
-      emit(PlaceOrderErrorState(serverStatus(e)!));
+      emit(GetOrderErrorState(serverStatus(e)!));
       print(serverStatus(e));
     }
   }
@@ -126,13 +128,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       }
     } catch (e) {
       emit(GetOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      print(e);
     }
   }
 
   Future deleteOrderSpending(Emitter emit) async {
     try {
-      emit(RemoveOrderLoadingState());
+      emit(GetOrderLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
@@ -140,16 +142,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       String email = prefs.getString("username") ?? "";
 
       await apiService.removePendingOrder("Bearer $token", email);
-      emit(RemoveOrderSuccessState());
+      emit(GetOrderSuccessState(null));
+      Fluttertoast.showToast(msg: "Xóa giỏ hàng thành công");
     } catch (e) {
-      emit(RemoveOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      emit(GetOrderErrorState(serverStatus(e).toString()));
+      print(e);
     }
   }
 
   Future deleteProduct(String id, Emitter emit) async {
     try {
-      emit(DeleteProductLoadingState());
+      emit(GetOrderLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
@@ -162,14 +165,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       order.orderItems =
           order.orderItems.where((element) => element.productId != id).toList();
       if (order.orderItems.isEmpty) {
-        apiService.removePendingOrder("Bearer $token", email);
+        await apiService.removePendingOrder("Bearer $token", email);
+        emit(GetOrderSuccessState(null));
       } else {
-        await apiService.updatePendingOrder(
-            "Bearer $token", order.toJson(), order.orderId!);
+        emit(GetOrderSuccessState((await apiService.updatePendingOrder(
+                "Bearer $token", order.toJson(), order.orderId!))
+            .data));
       }
-      emit(DeleteProductSuccessState(id));
     } catch (e) {
-      emit(DeleteProductErrorState(serverStatus(e)!));
+      emit(GetOrderErrorState(serverStatus(e)!));
       print(serverStatus(e));
     }
   }
