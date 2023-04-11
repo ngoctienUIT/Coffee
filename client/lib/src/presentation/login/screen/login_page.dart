@@ -262,7 +262,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "Sign in with Google",
+          text: "Login with Google",
           onPress: () {
             context.read<LoginBloc>().add(LoginWithGoogleEvent());
           },

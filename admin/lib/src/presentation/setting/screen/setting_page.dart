@@ -1,10 +1,14 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../domain/api_service.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../change_password/screen/change_password_page.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
+import '../../login/screen/login_page.dart';
 import '../../other/widgets/group_item_other.dart';
 import '../../other/widgets/item_other.dart';
 
@@ -25,7 +29,7 @@ class SettingPage extends StatelessWidget {
               itemOther(
                 "delete_account".translate(context),
                 Icons.delete_forever,
-                () {},
+                () => _showAlertDialog(context),
               ),
             ]),
             groupItemOther("security".translate(context), [
@@ -44,5 +48,57 @@ class SettingPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future _showAlertDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('delete_account'.translate(context)),
+          content: Text('you_want_delete_your_account'.translate(context)),
+          actions: [
+            TextButton(
+              child: Text('cancel'.translate(context)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('ok'.translate(context)),
+              onPressed: () async {
+                bool check = await deleteAccount();
+                if (check && context.mounted) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    createRoute(
+                      screen: const LoginPage(),
+                      begin: const Offset(0, 1),
+                    ),
+                    (route) => false,
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> deleteAccount() async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String id = prefs.getString("userID") ?? "";
+      String token = prefs.getString("token") ?? "";
+      await apiService.removeUserByID("Bearer $token", id);
+      prefs.setBool("isLogin", false);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

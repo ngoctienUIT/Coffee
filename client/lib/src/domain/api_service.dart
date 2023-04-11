@@ -23,9 +23,22 @@ abstract class ApiService {
   Future<HttpResponse<UserResponse>> signup(@Body() Map<String, dynamic> user);
 
   //login
-  @POST("/user/login-oauth2")
+  @POST("/user/oauth2/login")
   Future<HttpResponse<LoginResponse>> loginCredentialTokenOAuth2(
       @Body() Map<String, dynamic> user);
+
+  @POST("/user/oauth2/link")
+  Future<HttpResponse<LoginResponse>> linkAccountWithOAuth2Provider(
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> user,
+  );
+
+  @POST("/user/oauth2/unlink?userId={id}&providerName=GOOGLE")
+  Future<HttpResponse<LoginResponse>> unlinkAccountWithOAuth2Provider(
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> user,
+    @Path("id") String id,
+  );
 
   //login
   @POST("/user/login")
@@ -65,7 +78,10 @@ abstract class ApiService {
 
   // Get user by ID
   @DELETE("/user/{id}")
-  Future<HttpResponse> removeUserByID(@Path("id") String id);
+  Future<HttpResponse> removeUserByID(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
 
   // Remove user by ID
   @GET("/user/{id}")

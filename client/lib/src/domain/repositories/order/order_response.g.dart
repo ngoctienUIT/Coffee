@@ -26,12 +26,13 @@ OrderResponse _$OrderResponseFromJson(Map<String, dynamic> json) =>
       address3: json['address3'] as String?,
       address4: json['address4'] as String?,
       orderAmount: json['orderAmount'] as int?,
+      appliedCoupon: json['appliedCoupon'] == null
+          ? null
+          : CouponResponse.fromJson(
+              json['appliedCoupon'] as Map<String, dynamic>),
       orderStatus: json['orderStatus'] as String?,
       orderCustomerNote: json['orderCustomerNote'] as String?,
-    )..appliedCoupon = json['appliedCoupon'] == null
-        ? null
-        : CouponResponse.fromJson(
-            json['appliedCoupon'] as Map<String, dynamic>);
+    );
 
 Map<String, dynamic> _$OrderResponseToJson(OrderResponse instance) =>
     <String, dynamic>{

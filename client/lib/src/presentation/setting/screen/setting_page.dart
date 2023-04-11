@@ -92,7 +92,9 @@ class SettingPage extends StatelessWidget {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String id = prefs.getString("userID") ?? "";
-      await apiService.removeUserByID(id);
+      String token = prefs.getString("token") ?? "";
+      await apiService.removeUserByID("Bearer $token", id);
+      prefs.setBool("isLogin", false);
       return true;
     } catch (e) {
       print(e);

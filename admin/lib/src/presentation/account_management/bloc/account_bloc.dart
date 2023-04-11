@@ -76,7 +76,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "admin";
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      apiService.removeUserByID(id);
+      apiService.removeUserByID('Bearer $token', id);
       final response = await apiService.getAllUsers('Bearer $token');
       final listAccount = index == 0
           ? response.data

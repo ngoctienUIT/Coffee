@@ -43,7 +43,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginSuccessState());
     } catch (e) {
       emit(LoginErrorState(status: serverStatus(e)!));
-      print(serverStatus(e));
+      print(e);
     }
   }
 
@@ -72,9 +72,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginSuccessState());
       } else {
         emit(LoginErrorState(status: ""));
+        GoogleSignIn().signOut();
       }
     } catch (e) {
-      print("error $e");
+      GoogleSignIn().signOut();
+      print("error ${serverStatus(e)}");
+      // print("error $e");
       emit(LoginErrorState(status: e.toString()));
     }
   }
