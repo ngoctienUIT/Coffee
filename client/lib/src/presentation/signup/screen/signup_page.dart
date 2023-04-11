@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/input_info/screen/input_info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_bloc.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_event.dart';
@@ -116,6 +117,12 @@ class _SignUpViewState extends State<SignUpView> {
         if (state is SignUpSuccessState) {
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
+            begin: const Offset(0, 1),
+          ));
+        }
+        if (state is SignUpGoogleSuccessState) {
+          Navigator.of(context).pushReplacement(createRoute(
+            screen: InputInfoPage(account: state.account),
             begin: const Offset(0, 1),
           ));
         }

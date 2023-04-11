@@ -67,7 +67,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         print("token: ${googleAuth.accessToken}");
         SharedPreferences.getInstance().then((value) {
           value.setString("userID", response.data.userResponse.id);
-          value.setString("token", googleAuth.accessToken!);
+          value.setString("token", response.data.accessToken);
+          value.setBool("isLogin", true);
         });
         emit(LoginSuccessState());
       } else {

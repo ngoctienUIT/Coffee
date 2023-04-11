@@ -1,3 +1,5 @@
+import 'package:google_sign_in/google_sign_in.dart';
+
 abstract class SignUpState {}
 
 class InitState extends SignUpState {}
@@ -9,6 +11,19 @@ class SignUpSuccessState extends SignUpState {}
 class SignUpErrorState extends SignUpState {
   String status;
   SignUpErrorState({required this.status});
+}
+
+class SignUpGoogleLoadingState extends SignUpState {}
+
+class SignUpGoogleSuccessState extends SignUpState {
+  GoogleSignInAccount account;
+
+  SignUpGoogleSuccessState(this.account);
+}
+
+class SignUpGoogleErrorState extends SignUpState {
+  String status;
+  SignUpGoogleErrorState({required this.status});
 }
 
 class ContinueState extends SignUpState {

@@ -35,6 +35,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   DateTime? selectedDate;
   bool isEdit = false;
   bool isMale = true;
+  bool isLink = false;
 
   @override
   void initState() {
@@ -86,8 +87,15 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                           const Text("Google"),
                           const Spacer(),
                           Switch(
-                            value: false,
-                            onChanged: (value) {},
+                            value: isLink,
+                            onChanged: (value) {
+                              isLink = !isLink;
+                              if (isLink) {
+                                context
+                                    .read<ProfileBloc>()
+                                    .add(LinkAccountWithGoogleEvent());
+                              }
+                            },
                           ),
                         ],
                       ),

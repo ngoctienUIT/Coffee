@@ -49,17 +49,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
             await googleUser.authentication;
         print("token: ${googleAuth.accessToken}");
 
-        emit(SignUpSuccessState());
-
-        // final credential = GoogleAuthProvider.credential(
-        //   accessToken: googleAuth.accessToken,
-        //   idToken: googleAuth.idToken,
-        // );
+        emit(SignUpGoogleSuccessState(googleUser));
       } else {
+        GoogleSignIn().signOut();
         emit(SignUpErrorState(status: ""));
       }
     } catch (e) {
       print(e);
+      GoogleSignIn().signOut();
       emit(SignUpErrorState(status: serverStatus(e)!));
     }
   }

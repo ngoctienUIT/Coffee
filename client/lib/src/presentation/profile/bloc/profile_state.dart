@@ -20,3 +20,12 @@ class SaveProfileError extends ProfileState {
 class ChangeAvatarState extends ProfileState {}
 
 class ChangeBirthdayState extends ProfileState {}
+
+class LinkAccountWithGoogleSuccessState extends ProfileState {}
+
+class LinkAccountWithGoogleLoadingState extends ProfileState {}
+
+class LinkAccountWithGoogleErrorState extends ProfileState {
+  final String? message;
+  LinkAccountWithGoogleErrorState(this.message);
+}
