@@ -41,7 +41,7 @@ class CouponView extends StatelessWidget {
           return _buildLoading();
         }
         if (state is CouponError) {
-          return Center(child: Text(state.message!));
+          return Center(child: Text(state.message.toString()));
         }
         if (state is CouponLoaded) {
           return RefreshIndicator(
@@ -56,7 +56,7 @@ class CouponView extends StatelessWidget {
                   child: TicketWidget(
                     onPress: () => onPress!(state.listCoupon[index].id),
                     title: state.listCoupon[index].couponName,
-                    image: state.listCoupon[index].imageUrl,
+                    image: state.listCoupon[index].imageUrl.toString(),
                     content: state.listCoupon[index].content,
                     date: state.listCoupon[index].dueDate,
                   ),

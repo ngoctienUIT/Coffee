@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
 import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
@@ -67,8 +68,14 @@ class BodyOtherPage extends StatelessWidget {
                   begin: const Offset(1, 0),
                 ));
               }),
-              itemOther("activity".translate(context),
-                  Icons.card_giftcard_rounded, () {}),
+              itemOther(
+                  "activity".translate(context), Icons.card_giftcard_rounded,
+                  () {
+                Navigator.of(context).push(createRoute(
+                  screen: const ActivityPage(isAppBar: true),
+                  begin: const Offset(1, 0),
+                ));
+              }),
             ]),
             groupItemOther("general_info".translate(context), [
               itemOther("policy".translate(context), Icons.file_copy, () {

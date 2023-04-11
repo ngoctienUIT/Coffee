@@ -56,7 +56,7 @@ class BuildListItemProduct extends StatelessWidget {
       width: 80,
       child: Column(
         children: [
-          Image.asset(listItemProduct[0]["image"]!, height: 70),
+          Image.asset(AppImages.imgLogo, height: 70),
           const SizedBox(height: 5),
           Text(
             productCatalogues.name.toUpperCase(),

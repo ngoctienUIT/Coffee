@@ -54,7 +54,11 @@ class _StoreViewState extends State<StoreView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: CustomAppBar(elevation: 0, isPick: widget.isPick),
+      appBar: CustomAppBar(
+        elevation: 0,
+        isPick: widget.isPick,
+        title: "Cửa hàng",
+      ),
       body: SafeArea(
         child: Column(
           children: [

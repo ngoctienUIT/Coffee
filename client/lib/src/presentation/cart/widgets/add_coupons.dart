@@ -54,7 +54,7 @@ class _AddCouponsState extends State<AddCoupons> {
               width: MediaQuery.of(context).size.width - 50,
               onPress: null,
               title: widget.coupons!.couponName,
-              image: widget.coupons!.imageUrl,
+              image: widget.coupons!.imageUrl.toString(),
               date: widget.coupons!.dueDate,
             ),
           if (widget.coupons != null) const SizedBox(height: 10),

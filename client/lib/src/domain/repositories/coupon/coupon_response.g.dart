@@ -12,7 +12,7 @@ CouponResponse _$CouponResponseFromJson(Map<String, dynamic> json) =>
       couponName: json['couponName'] as String,
       couponCode: json['couponCode'] as String,
       content: json['content'] as String,
-      imageUrl: json['imageUrl'] as String,
+      imageUrl: json['imageUrl'] as String?,
       dueDate: json['dueDate'] as String,
     );
 

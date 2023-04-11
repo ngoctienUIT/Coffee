@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../view_order/screen/view_order_page.dart';
 
 class ListActivity extends StatelessWidget {
@@ -67,39 +69,37 @@ class ListActivity extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Row(
           children: [
-            Image.asset("assets/tea.png", height: 50),
+            Image.asset(AppImages.imgLogo, height: 70),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        order.orderId.toString(),
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      order.orderId.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.statusBarColor,
                       ),
-                      const Spacer(),
-                      Text(
-                        order.orderAmount.toString(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Text(order.orderStatus.toString()),
-                      const Spacer(),
-                      Text(order.createdDate.toString()),
-                    ],
-                  )
+                  Text("Ngày tạo: ${order.createdDate}"),
+                  const SizedBox(height: 10),
+                  Text("Trạng thái: ${order.orderStatus}"),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Tổng đơn: ${order.orderAmount!.toCurrency()}",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.statusBarColor,
+                    ),
+                  ),
                 ],
               ),
             ),

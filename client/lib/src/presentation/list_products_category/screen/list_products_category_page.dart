@@ -1,7 +1,6 @@
 import 'package:coffee/src/presentation/order/widgets/bottom_sheet_order.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/app_strings.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../order/widgets/grid_item_order.dart';
 import '../../order/widgets/list_item_order.dart';
@@ -22,11 +21,8 @@ class _ListProductsCategoryPageState extends State<ListProductsCategoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarGeneral(
-        title: listItemProduct[widget.index]["name"]!,
-        elevation: 0,
-        icon: Icons.close,
-      ),
+      appBar:
+          const AppBarGeneral(title: "test", elevation: 0, icon: Icons.close),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(

@@ -10,7 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class ActivityPage extends StatelessWidget {
-  const ActivityPage({Key? key}) : super(key: key);
+  const ActivityPage({Key? key, this.isAppBar = false}) : super(key: key);
+
+  final bool isAppBar;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,11 @@ class ActivityPage extends StatelessWidget {
       create: (context) => ActivityBloc()..add(FetchData(0)),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
-        appBar: const CustomAppBar(elevation: 0, isPick: false),
+        appBar: CustomAppBar(
+          elevation: 0,
+          isPick: isAppBar,
+          title: "Hoạt động",
+        ),
         body: SafeArea(
           child: BlocBuilder<ActivityBloc, ActivityState>(
             builder: (context, state) => const ActivityView(),

@@ -125,15 +125,9 @@ class InfoCart extends StatelessWidget {
   }
 
   Widget bringBack() {
-    return Column(
-      children: [
-        itemInfo(Icons.phone, order.address1 == null ? "" : ""),
-        const Divider(),
-        itemInfo(
-          Icons.location_on,
-          "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
-        ),
-      ],
+    return itemInfo(
+      Icons.location_on,
+      "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
     );
   }
 }

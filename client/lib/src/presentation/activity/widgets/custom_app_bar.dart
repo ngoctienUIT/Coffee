@@ -7,16 +7,18 @@ import '../../../core/function/route_function.dart';
 import '../../search/screen/search_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key? key, this.elevation, required this.isPick})
+  const CustomAppBar(
+      {Key? key, this.elevation, required this.isPick, required this.title})
       : super(key: key);
 
   final double? elevation;
   final bool isPick;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return isPick
-        ? const AppBarGeneral(elevation: 0, title: "Store")
+        ? AppBarGeneral(elevation: 0, title: title)
         : AppBar(
             backgroundColor: Colors.white,
             elevation: elevation,

@@ -17,7 +17,7 @@ class CouponResponse {
   final String content;
 
   @JsonKey(name: "imageUrl")
-  final String imageUrl;
+  final String? imageUrl;
 
   @JsonKey(name: "dueDate")
   final String dueDate;
