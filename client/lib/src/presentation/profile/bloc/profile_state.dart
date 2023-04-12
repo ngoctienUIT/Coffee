@@ -29,3 +29,12 @@ class LinkAccountWithGoogleErrorState extends ProfileState {
   final String? message;
   LinkAccountWithGoogleErrorState(this.message);
 }
+
+class UnlinkAccountWithGoogleSuccessState extends ProfileState {}
+
+class UnlinkAccountWithGoogleLoadingState extends ProfileState {}
+
+class UnlinkAccountWithGoogleErrorState extends ProfileState {
+  final String? message;
+  UnlinkAccountWithGoogleErrorState(this.message);
+}

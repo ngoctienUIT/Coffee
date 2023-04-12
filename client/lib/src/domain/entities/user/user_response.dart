@@ -1,3 +1,4 @@
+import 'package:coffee/src/domain/repositories/provider/provider_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_response.g.dart';
@@ -34,11 +35,8 @@ class UserResponse {
   @JsonKey(name: "userRole")
   final String userRole;
 
-  @JsonKey(name: "accountProvider")
-  final String? accountProvider;
-
-  @JsonKey(name: "accountProviderReferenceUid")
-  final String? accountProviderReferenceUid;
+  @JsonKey(name: "associatedProviders")
+  final ProviderResponse? accountProvider;
 
   UserResponse({
     required this.id,
@@ -52,7 +50,6 @@ class UserResponse {
     this.birthOfDate,
     required this.userRole,
     required this.accountProvider,
-    this.accountProviderReferenceUid,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) =>

@@ -28,15 +28,14 @@ abstract class ApiService {
       @Body() Map<String, dynamic> user);
 
   @POST("/user/oauth2/link")
-  Future<HttpResponse<LoginResponse>> linkAccountWithOAuth2Provider(
+  Future<HttpResponse> linkAccountWithOAuth2Provider(
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> user,
   );
 
   @POST("/user/oauth2/unlink?userId={id}&providerName=GOOGLE")
-  Future<HttpResponse<LoginResponse>> unlinkAccountWithOAuth2Provider(
+  Future<HttpResponse> unlinkAccountWithOAuth2Provider(
     @Header('Authorization') String token,
-    @Body() Map<String, dynamic> user,
     @Path("id") String id,
   );
 

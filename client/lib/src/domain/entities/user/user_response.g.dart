@@ -17,9 +17,10 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
       imageUrl: json['imageUrl'] as String?,
       birthOfDate: json['birthOfDate'] as String?,
       userRole: json['userRole'] as String,
-      accountProvider: json['accountProvider'] as String?,
-      accountProviderReferenceUid:
-          json['accountProviderReferenceUid'] as String?,
+      accountProvider: json['associatedProviders'] == null
+          ? null
+          : ProviderResponse.fromJson(
+              json['associatedProviders'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
@@ -34,6 +35,5 @@ Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
       'hashedPassword': instance.hashedPassword,
       'imageUrl': instance.imageUrl,
       'userRole': instance.userRole,
-      'accountProvider': instance.accountProvider,
-      'accountProviderReferenceUid': instance.accountProviderReferenceUid,
+      'associatedProviders': instance.accountProvider,
     };

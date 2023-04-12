@@ -42,6 +42,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
     nameController.text = widget.user.displayName;
     phoneController.text = widget.user.phoneNumber;
     emailController.text = widget.user.email;
+    if (widget.user.accountProvider != null) {
+      isLink = widget.user.accountProvider!.google != null;
+    }
     isMale = widget.user.isMale;
     if (widget.user.birthOfDate != null) {
       selectedDate = widget.user.birthOfDate!.toDateTime();
@@ -52,11 +55,26 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
-      listenWhen: (previous, current) => current is SaveProfileLoaded,
+      listenWhen: (previous, current) =>
+          current is SaveProfileLoaded ||
+          current is LinkAccountWithGoogleSuccessState ||
+          current is UnlinkAccountWithGoogleSuccessState,
       listener: (context, state) {
-        context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-        Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
-        widget.onChange();
+        if (state is SaveProfileLoaded) {
+          context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+          Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+          widget.onChange();
+        }
+        if (state is LinkAccountWithGoogleSuccessState) {
+          Fluttertoast.showToast(
+              msg: "Liên kết tài khoản Google thành công");
+          widget.onChange();
+        }
+        if (state is UnlinkAccountWithGoogleSuccessState) {
+          Fluttertoast.showToast(
+              msg: "Hủy liên kết tài khoản Google thành công");
+          widget.onChange();
+        }
       },
       child: Container(
         decoration: const BoxDecoration(
@@ -76,30 +94,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                       padding: const EdgeInsets.all(10),
                       child: body(),
                     ),
-                    Container(
-                      height: 50,
-                      color: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Image.asset(AppImages.imgGoogle, height: 40),
-                          const SizedBox(width: 10),
-                          const Text("Google"),
-                          const Spacer(),
-                          Switch(
-                            value: isLink,
-                            onChanged: (value) {
-                              isLink = !isLink;
-                              if (isLink) {
-                                context
-                                    .read<ProfileBloc>()
-                                    .add(LinkAccountWithGoogleEvent());
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    )
+                    linkGoogle(),
                   ],
                 );
               },
@@ -107,6 +102,58 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget linkGoogle() {
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (previous, current) =>
+          current is InitState ||
+          current is LinkAccountWithGoogleLoadingState ||
+          current is LinkAccountWithGoogleSuccessState ||
+          current is LinkAccountWithGoogleErrorState,
+      builder: (context, state) {
+        if (state is LinkAccountWithGoogleLoadingState ||
+            state is LinkAccountWithGoogleSuccessState ||
+            state is UnlinkAccountWithGoogleLoadingState ||
+            state is UnlinkAccountWithGoogleSuccessState) {
+          isLink = true;
+        }
+        if (state is LinkAccountWithGoogleErrorState ||
+            state is UnlinkAccountWithGoogleErrorState) {
+          isLink = false;
+        }
+        return Container(
+          height: 50,
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Image.asset(AppImages.imgGoogle, height: 40),
+              const SizedBox(width: 10),
+              const Text("Google"),
+              const Spacer(),
+              Switch(
+                value: isLink,
+                onChanged: (value) {
+                  isLink = !isLink;
+                  if (widget.user.accountProvider != null &&
+                      widget.user.accountProvider!.google == null &&
+                      isLink) {
+                    context
+                        .read<ProfileBloc>()
+                        .add(LinkAccountWithGoogleEvent());
+                  } else {
+                    context
+                        .read<ProfileBloc>()
+                        .add(UnlinkAccountWithGoogleEvent());
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

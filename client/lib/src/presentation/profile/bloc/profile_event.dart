@@ -23,3 +23,5 @@ class PickAvatarEvent extends ProfileEvent {
 class ChangeBirthdayEvent extends ProfileEvent {}
 
 class LinkAccountWithGoogleEvent extends ProfileEvent {}
+
+class UnlinkAccountWithGoogleEvent extends ProfileEvent {}

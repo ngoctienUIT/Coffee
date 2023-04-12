@@ -6,6 +6,7 @@ import 'package:coffee/src/presentation/profile/bloc/profile_state.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,6 +25,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<LinkAccountWithGoogleEvent>(
         (event, emit) => linkAccountWithGoogleEvent(emit));
 
+    on<UnlinkAccountWithGoogleEvent>(
+        (event, emit) => unlinkAccountWithGoogleEvent(emit));
+
     on<PickAvatarEvent>((event, emit) {
       image = event.image;
       emit(ChangeAvatarState());
@@ -34,17 +38,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future linkAccountWithGoogleEvent(Emitter emit) async {
     try {
+      emit(LinkAccountWithGoogleLoadingState());
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       if (googleUser != null) {
-        emit(LinkAccountWithGoogleLoadingState());
         ApiService apiService =
             ApiService(Dio(BaseOptions(contentType: "application/json")));
         final prefs = await SharedPreferences.getInstance();
         String token = prefs.getString("token") ?? "";
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        apiService.linkAccountWithOAuth2Provider("Bearer $token", {
+
+        await apiService.linkAccountWithOAuth2Provider("Bearer $token", {
           "oauth2ProviderUserId": googleUser.id,
           "oauth2ProviderUserIdentity": googleUser.email,
           "oauth2ProviderAccessToken": googleAuth.accessToken,
@@ -52,9 +57,41 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         });
         emit(LinkAccountWithGoogleSuccessState());
       }
-    } catch (e) {
+    } on DioError catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
-      emit(LinkAccountWithGoogleErrorState(serverStatus(e)!));
+      emit(LinkAccountWithGoogleErrorState(e.toString()));
+      print(e);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      GoogleSignIn().signOut();
+      emit(LinkAccountWithGoogleErrorState(e.toString()));
+      print(e);
+    }
+  }
+
+  Future unlinkAccountWithGoogleEvent(Emitter emit) async {
+    try {
+      emit(UnlinkAccountWithGoogleLoadingState());
+
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String userID = prefs.getString("userID") ?? "";
+
+      await apiService.unlinkAccountWithOAuth2Provider("Bearer $token", userID);
+      GoogleSignIn().signOut();
+      emit(UnlinkAccountWithGoogleSuccessState());
+    } on DioError catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      GoogleSignIn().signOut();
+      emit(UnlinkAccountWithGoogleErrorState(e.toString()));
+      print(e);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      GoogleSignIn().signOut();
+      emit(UnlinkAccountWithGoogleErrorState(e.toString()));
       print(e);
     }
   }
