@@ -2,9 +2,9 @@ import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
@@ -33,23 +33,30 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      String? storeID = prefs.getString("storeID");
+      String storeID = prefs.getString("storeID") ?? "";
       bool isBringBack = prefs.getBool("isBringBack") ?? true;
       final orderResponse =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       final store =
-          storeID == null ? null : await apiService.getStoreByID(storeID);
+          storeID.isEmpty ? null : await apiService.getStoreByID(storeID);
 
       emit(OrderLoaded(
         index: 0,
         listProduct: listProduct,
         listProductCatalogues: listProductCatalogues,
         order: orderResponse.data.isEmpty ? null : orderResponse.data[0],
-        store: storeID == null ? null : store!.data,
+        store: storeID.isEmpty ? null : store!.data,
         isBringBack: isBringBack,
       ));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(OrderError(error));
+      print(error);
     } catch (e) {
-      emit(OrderError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(OrderError(e.toString()));
       print(e);
     }
   }
@@ -64,8 +71,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final listProduct = response.data;
 
       emit(RefreshOrderLoaded(index, listProduct));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(RefreshOrderError(error));
+      print(error);
     } catch (e) {
-      emit(RefreshOrderError(serverStatus(e)));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(RefreshOrderError(e.toString()));
       print(e);
     }
   }
@@ -77,21 +91,28 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
-      String? storeID = prefs.getString("storeID");
+      String storeID = prefs.getString("storeID") ?? "";
       bool isBringBack = prefs.getBool("isBringBack") ?? true;
 
       final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       final store =
-          storeID == null ? null : await apiService.getStoreByID(storeID);
+          storeID.isEmpty ? null : await apiService.getStoreByID(storeID);
 
       emit(AddProductToCartLoaded(
         response.data.isEmpty ? null : response.data[0],
-        storeID == null ? null : store!.data,
+        storeID.isEmpty ? null : store!.data,
         isBringBack,
       ));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductToCartError(error));
+      print(error);
     } catch (e) {
-      emit(AddProductToCartError(serverStatus(e)));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductToCartError(e.toString()));
       print(e);
     }
   }

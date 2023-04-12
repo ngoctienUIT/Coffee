@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'store_event.dart';
 import 'store_state.dart';
@@ -23,8 +23,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllStores();
       emit(StoreLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(StoreError(error));
+      print(error);
     } catch (e) {
-      emit(StoreError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(StoreError(e.toString()));
       print(e);
     }
   }
@@ -39,8 +46,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       await apiService.removeStoreByID(id, "Bearer $token");
       final response = await apiService.searchStoresByName(query);
       emit(StoreLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(StoreError(error));
+      print(error);
     } catch (e) {
-      emit(StoreError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(StoreError(e.toString()));
       print(e);
     }
   }
@@ -52,8 +66,15 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.searchStoresByName(query);
       emit(StoreLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(StoreError(error));
+      print(error);
     } catch (e) {
-      emit(StoreError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(StoreError(e.toString()));
       print(e);
     }
   }

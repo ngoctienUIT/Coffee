@@ -2,9 +2,9 @@ import 'package:coffee_admin/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
@@ -31,8 +31,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
       final listProduct = productResponse.data;
       emit(ProductLoaded(0, listProduct, listProductCatalogues));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ProductError(error));
+      print(error);
     } catch (e) {
-      emit(ProductError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ProductError(e.toString()));
       print(e);
     }
   }
@@ -47,8 +54,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final listProduct = response.data;
 
       emit(RefreshLoaded(index, listProduct));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(RefreshError(error));
+      print(error);
     } catch (e) {
-      emit(RefreshError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(RefreshError(e.toString()));
       print(e);
     }
   }
@@ -70,8 +84,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
       emit(RefreshLoaded(index, response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(RefreshError(error));
+      print(error);
     } catch (e) {
-      emit(RefreshError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(RefreshError(e.toString()));
       print(e);
     }
   }

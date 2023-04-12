@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'coupon_event.dart';
 import 'coupon_state.dart';
@@ -22,8 +22,15 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
       final response = await apiService.getAllCoupons();
 
       emit(CouponLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(CouponError(error));
+      print(error);
     } catch (e) {
-      emit(CouponError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(CouponError(e.toString()));
       print(e);
     }
   }
@@ -38,8 +45,15 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
       await apiService.removeCouponByID(id, 'Bearer $token');
       final response = await apiService.getAllCoupons();
       emit(CouponLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(CouponError(error));
+      print(error);
     } catch (e) {
-      emit(CouponError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(CouponError(e.toString()));
       print(e);
     }
   }

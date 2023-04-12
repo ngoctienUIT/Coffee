@@ -20,13 +20,23 @@ class _MainPageState extends State<MainPage> {
   DateTime? currentBackPressTime;
   final PageStorageBucket bucket = PageStorageBucket();
   final PageController _pageController = PageController();
-  List<Widget> screens = [
-    const HomePage(key: PageStorageKey<String>('HomePage')),
-    const OrderPage(key: PageStorageKey<String>('OrderPage')),
-    const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
-    const StorePage(key: PageStorageKey<String>('StorePage'), isPick: false),
-    const OtherPage(key: PageStorageKey<String>('OtherPage')),
-  ];
+  late List<Widget> screens;
+
+  @override
+  void initState() {
+    screens = [
+      const HomePage(key: PageStorageKey<String>('HomePage')),
+      const OrderPage(key: PageStorageKey<String>('OrderPage')),
+      const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
+      StorePage(
+        key: const PageStorageKey<String>('StorePage'),
+        isPick: false,
+        onChange: () => toPage(1),
+      ),
+      const OtherPage(key: PageStorageKey<String>('OtherPage')),
+    ];
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -53,15 +63,19 @@ class _MainPageState extends State<MainPage> {
       ),
       bottomNavigationBar: BottomBar(
         currentTab: currentTab,
-        onTab: (int value) {
-          _pageController.animateToPage(
-            value,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
+        onTab: (value) {
+          toPage(value);
           setState(() => currentTab = value);
         },
       ),
+    );
+  }
+
+  void toPage(int index) {
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
     );
   }
 }

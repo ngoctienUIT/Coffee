@@ -3,9 +3,9 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/input_pin/screen/input_pin.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/function/server_status.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
@@ -82,9 +82,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       return (await apiService.resetPasswordIssue(controller.text)).data;
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      print(error);
     } catch (e) {
-      print(serverStatus(e));
-      return null;
+      Fluttertoast.showToast(msg: e.toString());
+      print(e);
     }
+    return null;
   }
 }

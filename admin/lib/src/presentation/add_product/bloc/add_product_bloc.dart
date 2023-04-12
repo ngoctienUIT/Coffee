@@ -6,9 +6,9 @@ import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
@@ -55,10 +55,15 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       await apiService.updateProductIdsProductCatalogues(
           'Bearer $token', list, catalogueID);
       emit(AddProductSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductErrorState(error));
+      print(error);
     } catch (e) {
-      if (serverStatus(e) != null) {
-        emit(AddProductErrorState(serverStatus(e)!));
-      }
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductErrorState(e.toString()));
       print(e);
     }
   }
@@ -76,8 +81,15 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       await apiService.updateExistingProducts(
           product.id!, 'Bearer $token', product.toJson());
       emit(AddProductSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddProductErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductErrorState(e.toString()));
       print(e);
     }
   }

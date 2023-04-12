@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../data/models/topping.dart';
 import '../../../domain/api_service.dart';
 import 'add_topping_event.dart';
@@ -43,8 +43,15 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
         topping.toJson(),
       );
       emit(AddToppingSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddToppingErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddToppingErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddToppingErrorState(e.toString()));
       print(e);
     }
   }
@@ -65,8 +72,15 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
         topping.toJson(),
       );
       emit(AddToppingSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddToppingErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddToppingErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddToppingErrorState(e.toString()));
       print(e);
     }
   }

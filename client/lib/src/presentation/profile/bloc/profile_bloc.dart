@@ -10,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
@@ -58,10 +57,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(LinkAccountWithGoogleSuccessState());
       }
     } on DioError catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
-      emit(LinkAccountWithGoogleErrorState(e.toString()));
-      print(e);
+      emit(LinkAccountWithGoogleErrorState(error));
+      print(error);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
@@ -84,10 +85,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleSuccessState());
     } on DioError catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
-      emit(UnlinkAccountWithGoogleErrorState(e.toString()));
-      print(e);
+      emit(UnlinkAccountWithGoogleErrorState(error));
+      print(error);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
@@ -111,8 +114,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           "Bearer $token", email, user.toJson());
 
       emit(SaveProfileLoaded());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(SaveProfileError(error));
+      print(error);
     } catch (e) {
-      emit(SaveProfileError(serverStatus(e)));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(SaveProfileError(e.toString()));
       print(e);
     }
   }

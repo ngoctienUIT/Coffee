@@ -14,26 +14,28 @@ import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 
 class StorePage extends StatelessWidget {
-  const StorePage({Key? key, this.onPress, required this.isPick})
+  const StorePage({Key? key, this.onPress, required this.isPick, this.onChange})
       : super(key: key);
 
   final Function(StoreResponse store)? onPress;
+  final VoidCallback? onChange;
   final bool isPick;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StoreBloc>(
       create: (_) => StoreBloc()..add(FetchData()),
-      child: StoreView(onPress: onPress, isPick: isPick),
+      child: StoreView(onPress: onPress, isPick: isPick, onChange: onChange),
     );
   }
 }
 
 class StoreView extends StatefulWidget {
-  const StoreView({Key? key, this.onPress, required this.isPick})
+  const StoreView({Key? key, this.onPress, required this.isPick, this.onChange})
       : super(key: key);
 
   final Function(StoreResponse store)? onPress;
+  final VoidCallback? onChange;
   final bool isPick;
 
   @override
@@ -114,7 +116,7 @@ class _StoreViewState extends State<StoreView> {
                 onTap: () => showStoreBottomSheet(
                   context,
                   state.listStore[index],
-                  () async {
+                  () {
                     if (widget.onPress != null) {
                       widget.onPress!(state.listStore[index]);
                       Navigator.pop(context);
@@ -126,6 +128,9 @@ class _StoreViewState extends State<StoreView> {
                         context.read<StoreBloc>().add(
                             SearchStore(storeName: searchStoreController.text));
                         Navigator.pop(context);
+                        if (widget.onChange != null) {
+                          widget.onChange!();
+                        }
                       });
                     }
                   },

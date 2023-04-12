@@ -2,9 +2,9 @@ import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_ca
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class ProductCataloguesBloc
@@ -22,8 +22,15 @@ class ProductCataloguesBloc
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllProductCatalogues();
       emit(ProductCataloguesLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ProductCataloguesError(error));
+      print(error);
     } catch (e) {
-      emit(ProductCataloguesError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ProductCataloguesError(e.toString()));
       print(e);
     }
   }
@@ -38,8 +45,15 @@ class ProductCataloguesBloc
       await apiService.removeProductCataloguesByID("Bearer $token", id);
       final response = await apiService.getAllProductCatalogues();
       emit(ProductCataloguesLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ProductCataloguesError(error));
+      print(error);
     } catch (e) {
-      emit(ProductCataloguesError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ProductCataloguesError(e.toString()));
       print(e);
     }
   }

@@ -7,12 +7,14 @@ Widget itemBottomSheet({
   required String content,
   required String image,
   required VoidCallback onPress,
+  required VoidCallback onEdit,
+  required Color borderColor,
 }) {
   return InkWell(
     onTap: onPress,
     child: Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.red),
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(15),
       ),
       height: 110,
@@ -39,7 +41,7 @@ Widget itemBottomSheet({
                     ),
                     const Spacer(),
                     InkWell(
-                      onTap: () {},
+                      onTap: onEdit,
                       child: const Text(
                         "Sửa",
                         style: TextStyle(

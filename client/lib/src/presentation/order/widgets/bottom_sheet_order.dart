@@ -61,6 +61,12 @@ class BottomSheetOrder extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () => showMyBottomSheet(context, (isBring) {
+                      SharedPreferences.getInstance().then((value) {
+                        value.setBool("isBringBack", isBring);
+                        context.read<OrderBloc>().add(AddProductToCart());
+                        Navigator.pop(context);
+                      });
+                    }, (isBring) {
                       Navigator.of(context).push(createRoute(
                         screen: StorePage(
                           isPick: true,
@@ -75,7 +81,7 @@ class BottomSheetOrder extends StatelessWidget {
                         ),
                         begin: const Offset(1, 0),
                       ));
-                    }, store),
+                    }, store, isBringBack),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,7 +147,9 @@ class BottomSheetOrder extends StatelessWidget {
   void showMyBottomSheet(
     BuildContext context,
     Function(bool isBring) onPress,
+    Function(bool isBring) onEdit,
     StoreResponse? store,
+    bool isBringBack,
   ) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -170,7 +178,11 @@ class BottomSheetOrder extends StatelessWidget {
                       : '''${store.storeName}
 ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                   image: AppImages.imgLogo,
+                  borderColor: isBringBack
+                      ? AppColors.borderColor
+                      : AppColors.statusBarColor,
                   onPress: () => onPress(false),
+                  onEdit: () => onEdit(false),
                 ),
               ),
               Padding(
@@ -182,7 +194,11 @@ ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                       : '''${store.storeName}
 ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                   image: AppImages.imgLogo,
+                  borderColor: isBringBack
+                      ? AppColors.statusBarColor
+                      : AppColors.borderColor,
                   onPress: () => onPress(true),
+                  onEdit: () => onEdit(true),
                 ),
               ),
             ],

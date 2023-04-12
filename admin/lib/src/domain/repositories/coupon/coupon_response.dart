@@ -17,7 +17,7 @@ class CouponResponse {
   final String content;
 
   @JsonKey(name: "imageUrl")
-  final String imageUrl;
+  final String? imageUrl;
 
   @JsonKey(name: "dueDate")
   final String dueDate;
@@ -39,7 +39,7 @@ class CouponResponse {
     required this.couponName,
     required this.couponCode,
     required this.content,
-    required this.imageUrl,
+    this.imageUrl,
     required this.dueDate,
     this.discountRate,
     this.discountAmount,

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'topping_event.dart';
 import 'topping_state.dart';
@@ -23,8 +23,16 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllToppings();
       emit(ToppingLoaded(response.data));
+    } on DioError catch (e) {
+      if (e.response != null) {
+        String error = e.response!.data.toString();
+        Fluttertoast.showToast(msg: error);
+        emit(ToppingError(error));
+        print(error);
+      }
     } catch (e) {
-      emit(ToppingError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ToppingError(e.toString()));
       print(e);
     }
   }
@@ -39,8 +47,16 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
       await apiService.removeToppingByID("Bearer $token", id);
       final response = await apiService.getAllToppings();
       emit(ToppingLoaded(response.data));
+    } on DioError catch (e) {
+      if (e.response != null) {
+        String error = e.response!.data.toString();
+        Fluttertoast.showToast(msg: error);
+        emit(ToppingError(error));
+        print(error);
+      }
     } catch (e) {
-      emit(ToppingError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ToppingError(e.toString()));
       print(e);
     }
   }

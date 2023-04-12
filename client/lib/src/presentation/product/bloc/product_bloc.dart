@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../data/models/order.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/api_service.dart';
@@ -48,8 +47,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           emit: emit,
         );
       }
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductToOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductToOrderErrorState(e.toString()));
       print(e);
     }
   }
@@ -77,8 +83,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       Fluttertoast.showToast(
           msg: "Thêm sản phẩm vào giỏ hàng thành công");
       emit(AddProductToOrderSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductToOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductToOrderErrorState(e.toString()));
+      print(e);
     }
   }
 
@@ -107,8 +121,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       Fluttertoast.showToast(
           msg: "Thêm sản phẩm vào giỏ hàng thành công");
       emit(AddProductToOrderSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddProductToOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddProductToOrderErrorState(e.toString()));
+      print(e);
     }
   }
 
@@ -144,8 +166,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         order.orderId!,
       );
       emit(UpdateSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(UpdateErrorState(error));
+      print(error);
     } catch (e) {
-      emit(UpdateErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(UpdateErrorState(e.toString()));
       print(e);
     }
   }
@@ -174,8 +203,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         );
       }
       emit(DeleteSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(DeleteErrorState(error));
+      print(error);
     } catch (e) {
-      emit(DeleteErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(DeleteErrorState(e.toString()));
       print(e);
     }
   }

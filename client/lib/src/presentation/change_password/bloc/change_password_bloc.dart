@@ -1,9 +1,9 @@
 import 'package:coffee/src/data/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
@@ -34,9 +34,16 @@ class ChangePasswordBloc
       await apiService.updateExistingUser(
           "Bearer $token", email, user.toJson());
       emit(ChangePasswordSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ChangePasswordErrorState(status: error));
+      print(error);
     } catch (e) {
-      emit(ChangePasswordErrorState(status: serverStatus(e)!));
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ChangePasswordErrorState(status: e.toString()));
+      print(e);
     }
   }
 }

@@ -2,9 +2,9 @@ import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/domain/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../core/function/server_status.dart';
 import 'signup_event.dart';
 import 'signup_state.dart';
 
@@ -34,8 +34,15 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(SignUpErrorState(status: error));
+      print(error);
     } catch (e) {
-      emit(SignUpErrorState(status: serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(SignUpErrorState(status: e.toString()));
       print(e);
     }
   }
@@ -54,10 +61,16 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         GoogleSignIn().signOut();
         emit(SignUpErrorState(status: ""));
       }
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(SignUpErrorState(status: error));
+      print(error);
     } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      emit(SignUpErrorState(status: e.toString()));
       print(e);
-      GoogleSignIn().signOut();
-      emit(SignUpErrorState(status: serverStatus(e)!));
     }
   }
 }

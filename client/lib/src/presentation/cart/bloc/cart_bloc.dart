@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../data/models/address.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
@@ -49,8 +48,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      print(error);
     } catch (e) {
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      print(e);
     }
   }
 
@@ -68,9 +73,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
       emit(GetOrderSuccessState(null));
       Fluttertoast.showToast(msg: "Đặt hàng thành công");
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
     }
   }
 
@@ -104,9 +116,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final orderResponse = await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);
       emit(GetOrderSuccessState(orderResponse.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
     }
   }
 
@@ -126,8 +145,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       } else {
         emit(GetOrderSuccessState(orderSpending[0]));
       }
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
       print(e);
     }
   }
@@ -144,8 +170,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.removePendingOrder("Bearer $token", email);
       emit(GetOrderSuccessState(null));
       Fluttertoast.showToast(msg: "Xóa giỏ hàng thành công");
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e).toString()));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
       print(e);
     }
   }
@@ -172,9 +205,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                 "Bearer $token", order.toJson(), order.orderId!))
             .data));
       }
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
     }
   }
 
@@ -192,9 +232,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final responseCoupon = await apiService.attachCouponToOrder(
           "Bearer $token", id, orderSpending[0].orderId!);
       emit(GetOrderSuccessState(responseCoupon.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
     } catch (e) {
-      emit(GetOrderErrorState(serverStatus(e)!));
-      print(serverStatus(e));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'new_password_event.dart';
 import 'new_password_state.dart';
@@ -26,8 +26,15 @@ class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.issueNewPasswordUser(resetCredential, password);
       emit(ChangePasswordSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ChangePasswordErrorState(status: error));
+      print(error);
     } catch (e) {
-      emit(ChangePasswordErrorState(status: serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ChangePasswordErrorState(status: e.toString()));
       print(e);
     }
   }

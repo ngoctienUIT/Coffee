@@ -1,9 +1,9 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/function/server_status.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/api_service.dart';
@@ -93,9 +93,15 @@ class _InputPinState extends State<InputPin> {
       return (await apiService.validateResetTokenClient(
               widget.resetCredential, controller.text))
           .data;
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      print(error);
     } catch (e) {
-      print(serverStatus(e));
-      return false;
+      Fluttertoast.showToast(msg: e.toString());
+      print(e);
     }
+    return false;
   }
 }

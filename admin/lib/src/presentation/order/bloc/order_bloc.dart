@@ -2,9 +2,9 @@ import 'package:coffee_admin/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
@@ -27,8 +27,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           .toList();
 
       emit(OrderLoaded(0, listOrder));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(OrderError(error));
+      print(error);
     } catch (e) {
-      emit(OrderError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(OrderError(e.toString()));
       print(e);
     }
   }
@@ -52,8 +59,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
               .toList();
 
       emit(RefreshLoaded(index, listOrder));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(RefreshError(error));
+      print(error);
     } catch (e) {
-      emit(RefreshError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(RefreshError(e.toString()));
       print(e);
     }
   }

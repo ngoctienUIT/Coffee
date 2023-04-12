@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../data/models/coupon.dart';
 import '../../../domain/api_service.dart';
 import 'add_coupon_event.dart';
@@ -44,8 +44,15 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
       }
       await apiService.createNewCoupon('Bearer $token', coupon.toJson());
       emit(AddCouponSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddCouponErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddCouponErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddCouponErrorState(e.toString()));
       print(e);
     }
   }
@@ -63,8 +70,15 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
       await apiService.updateExistingCoupon(
           coupon.id!, 'Bearer $token', coupon.toJson());
       emit(AddCouponSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddCouponErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddCouponErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddCouponErrorState(e.toString()));
       print(e);
     }
   }

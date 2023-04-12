@@ -2,9 +2,9 @@ import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
@@ -34,8 +34,15 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
                   element.orderStatus == "CANCELLED")
               .toList();
       emit(ActivityLoaded(listOrder: listOder, index: index));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(ActivityError(message: error, index: index));
+      print(error);
     } catch (e) {
-      emit(ActivityError(message: serverStatus(e)!, index: index));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(ActivityError(message: e.toString(), index: index));
       print(e);
     }
   }

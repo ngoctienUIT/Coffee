@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../data/models/tag.dart';
 import '../../../domain/api_service.dart';
 import 'add_tag_event.dart';
@@ -27,8 +27,15 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
       String token = prefs.getString("token") ?? "";
       await apiService.createNewTag('Bearer $token', tag.toJson());
       emit(AddTagSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddTagErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddTagErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddTagErrorState(e.toString()));
       print(e);
     }
   }
@@ -43,8 +50,15 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
       await apiService.updateExistingTag(
           'Bearer $token', tag.toJson(), tag.tagId!);
       emit(AddTagSuccessState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(AddTagErrorState(error));
+      print(error);
     } catch (e) {
-      emit(AddTagErrorState(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(AddTagErrorState(e.toString()));
       print(e);
     }
   }

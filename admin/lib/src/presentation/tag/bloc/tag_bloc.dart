@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/server_status.dart';
 import '../../../domain/api_service.dart';
 import 'tag_event.dart';
 import 'tag_state.dart';
@@ -21,8 +21,15 @@ class TagBloc extends Bloc<TagEvent, TagState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllTags();
       emit(TagLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(TagError(error));
+      print(error);
     } catch (e) {
-      emit(TagError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(TagError(e.toString()));
       print(e);
     }
   }
@@ -37,8 +44,15 @@ class TagBloc extends Bloc<TagEvent, TagState> {
       await apiService.removeTagByID('Bearer $token', id);
       final response = await apiService.getAllTags();
       emit(TagLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(TagError(error));
+      print(error);
     } catch (e) {
-      emit(TagError(serverStatus(e)!));
+      Fluttertoast.showToast(msg: e.toString());
+      emit(TagError(e.toString()));
       print(e);
     }
   }
