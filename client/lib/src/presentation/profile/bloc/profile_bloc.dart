@@ -110,7 +110,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (image.isNotEmpty) {
         user.imageUrl = await uploadImage(email);
       }
-      final response = await apiService.updateExistingUser(
+      await apiService.updateExistingUser(
           "Bearer $token", email, user.toJson());
 
       emit(SaveProfileLoaded());

@@ -89,6 +89,8 @@ class CartView extends StatelessWidget {
                         store: state.order!.selectedPickupStore,
                         address: address,
                         note: state.order!.orderCustomerNote,
+                        selectedPickupOption:
+                            state.order!.selectedPickupOption!,
                       ),
                       const SizedBox(height: 10),
                       ListProduct(
@@ -113,7 +115,7 @@ class CartView extends StatelessWidget {
                   ),
                 ),
               ),
-              bottomSheet: BottomCartPage(total: state.order!.orderAmount!),
+              bottomSheet: BottomCartPage(order: state.order!),
             );
           }
         }
@@ -140,6 +142,4 @@ class CartView extends StatelessWidget {
       ),
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

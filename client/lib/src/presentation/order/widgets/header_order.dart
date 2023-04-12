@@ -88,9 +88,9 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
               isScrollable: true,
               labelColor: Colors.black87,
               // labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+              unselectedLabelColor: AppColors.statusBarColor,
               // unselectedLabelStyle: const TextStyle(fontSize: 16),
-              indicatorColor: Colors.green,
+              indicatorColor: AppColors.statusBarColor,
               tabs: List.generate(
                 state.listProductCatalogues.length,
                 (index) {

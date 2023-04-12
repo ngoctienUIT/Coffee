@@ -96,7 +96,9 @@ class Order {
       orderStatus: orderResponse.orderStatus,
       selectedPaymentMethod: orderResponse.selectedPaymentMethod,
       selectedPickupOption: orderResponse.selectedPickupOption,
-      storeId: orderResponse.selectedPickupStore!.storeId,
+      storeId: orderResponse.selectedPickupStore == null
+          ? null
+          : orderResponse.selectedPickupStore!.storeId,
       orderNote: orderResponse.orderCustomerNote,
     );
   }

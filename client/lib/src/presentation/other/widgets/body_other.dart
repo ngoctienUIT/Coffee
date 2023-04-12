@@ -103,6 +103,7 @@ class BodyOtherPage extends StatelessWidget {
                   SharedPreferences.getInstance().then((value) {
                     value.setBool("isLogin", false);
                     value.setString("storeID", "");
+                    value.setBool("isBringBack", false);
                   });
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(

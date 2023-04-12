@@ -16,12 +16,18 @@ import '../bloc/cart_bloc.dart';
 import '../bloc/cart_event.dart';
 
 class InfoCart extends StatefulWidget {
-  const InfoCart({Key? key, this.store, this.address, this.note})
-      : super(key: key);
+  const InfoCart({
+    Key? key,
+    this.store,
+    this.address,
+    this.note,
+    required this.selectedPickupOption,
+  }) : super(key: key);
 
   final StoreResponse? store;
   final Address? address;
   final String? note;
+  final String selectedPickupOption;
 
   @override
   State<InfoCart> createState() => _InfoCartState();
@@ -39,7 +45,7 @@ class _InfoCartState extends State<InfoCart> {
   void initState() {
     store = widget.store;
     address = widget.address;
-    isBringBack = widget.address != null;
+    isBringBack = widget.selectedPickupOption == "DELIVERY";
     if (widget.note != null) {
       noteController.text = widget.note!;
     }

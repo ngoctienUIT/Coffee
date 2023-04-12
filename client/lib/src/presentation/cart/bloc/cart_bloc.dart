@@ -102,8 +102,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       List<OrderResponse> orderSpending = response.data;
+      print(orderSpending[0].toJson());
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
+      prefs.setBool("isBringBack", isBringBack);
       print(order.selectedPickupOption);
       if (isBringBack) {
         order.addAddress(address!);
@@ -112,6 +114,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       } else {
         order.removeAddress();
         order.storeId = storeID;
+        prefs.setString("storeID", storeID!);
       }
       final orderResponse = await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);

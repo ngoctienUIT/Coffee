@@ -71,12 +71,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String? storeID = prefs.getString("storeID");
+      bool isBringBack = prefs.getBool("isBringBack") ?? false;
+
       await apiService.createNewOrder(
         "Bearer $token",
         Order(
           userId: userID,
           storeId: storeID ?? "6425d2c7cf1d264dca4bcc82",
-          selectedPickupOption: "AT_STORE",
+          selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
           orderItems: [product.toItemOrder()],
         ).toJson(),
       );
@@ -114,10 +116,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         order.orderItems[index].quantity += product.number;
       }
       await apiService.updatePendingOrder(
-        "Bearer $token",
-        order.toJson(),
-        order.orderId!,
-      );
+          "Bearer $token", order.toJson(), order.orderId!);
       Fluttertoast.showToast(
           msg: "Thêm sản phẩm vào giỏ hàng thành công");
       emit(AddProductToOrderSuccessState());
@@ -197,10 +196,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         await apiService.removePendingOrder("Bearer $token", email);
       } else {
         await apiService.updatePendingOrder(
-          "Bearer $token",
-          order.toJson(),
-          order.orderId!,
-        );
+            "Bearer $token", order.toJson(), order.orderId!);
       }
       emit(DeleteSuccessState());
     } on DioError catch (e) {
