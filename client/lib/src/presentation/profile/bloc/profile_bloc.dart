@@ -37,10 +37,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future linkAccountWithGoogleEvent(Emitter emit) async {
     try {
-      emit(LinkAccountWithGoogleLoadingState());
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       if (googleUser != null) {
+        emit(LinkAccountWithGoogleLoadingState());
+
         ApiService apiService =
             ApiService(Dio(BaseOptions(contentType: "application/json")));
         final prefs = await SharedPreferences.getInstance();
@@ -55,6 +56,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           "oauth2ProviderProviderName": "GOOGLE"
         });
         emit(LinkAccountWithGoogleSuccessState());
+      } else {
+        Fluttertoast.showToast(msg: "Hủy bỏ liên kết");
+        emit(LinkAccountWithGoogleErrorState("Hủy bỏ liên kết"));
       }
     } on DioError catch (e) {
       String error =

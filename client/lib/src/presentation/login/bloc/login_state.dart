@@ -11,6 +11,15 @@ class LoginErrorState extends LoginState {
   LoginErrorState({required this.status});
 }
 
+class LoginGoogleLoadingState extends LoginState {}
+
+class LoginGoogleSuccessState extends LoginState {}
+
+class LoginGoogleErrorState extends LoginState {
+  String status;
+  LoginGoogleErrorState({required this.status});
+}
+
 class RememberState extends LoginState {}
 
 class ContinueState extends LoginState {

@@ -77,7 +77,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         "Bearer $token",
         Order(
           userId: userID,
-          storeId: storeID ?? "6425d2c7cf1d264dca4bcc82",
+          storeId: storeID == null || storeID.isEmpty
+              ? "6425d2c7cf1d264dca4bcc82"
+              : storeID,
           selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
           orderItems: [product.toItemOrder()],
         ).toJson(),

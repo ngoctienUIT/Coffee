@@ -6,16 +6,20 @@ class AppBarGeneral extends StatelessWidget implements PreferredSizeWidget {
     this.elevation,
     this.title,
     this.icon = Icons.arrow_back_ios_new_rounded,
+    this.backgroundColor = Colors.white,
+    this.onBack,
   }) : super(key: key);
 
   final String? title;
   final double? elevation;
   final IconData icon;
+  final Color backgroundColor;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       elevation: elevation,
       title: title != null
           ? Text(title!, style: const TextStyle(color: Colors.black))
@@ -23,7 +27,10 @@ class AppBarGeneral extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(icon),
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (onBack != null) onBack!();
+          Navigator.pop(context);
+        },
       ),
     );
   }

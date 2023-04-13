@@ -122,7 +122,7 @@ class _SignUpViewState extends State<SignUpView> {
           ));
         }
         if (state is SignUpGoogleSuccessState) {
-          Navigator.of(context).pushReplacement(createRoute(
+          Navigator.of(context).push(createRoute(
             screen: InputInfoPage(account: state.account),
             begin: const Offset(0, 1),
           ));

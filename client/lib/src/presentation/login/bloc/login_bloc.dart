@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
       if (googleUser != null) {
-        emit(LoginLoadingState());
+        emit(LoginGoogleLoadingState());
 
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
@@ -75,11 +75,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         SharedPreferences.getInstance().then((value) {
           value.setString("userID", response.data.userResponse.id);
           value.setString("token", response.data.accessToken);
+          value.setString("username", googleUser.email);
           value.setBool("isLogin", true);
         });
-        emit(LoginSuccessState());
+        emit(LoginGoogleSuccessState());
       } else {
-        emit(LoginErrorState(status: ""));
+        emit(LoginGoogleErrorState(status: ""));
         GoogleSignIn().signOut();
       }
     } on DioError catch (e) {
@@ -87,12 +88,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           e.response != null ? e.response!.data.toString() : e.toString();
       Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
-      emit(LoginErrorState(status: error));
+      emit(LoginGoogleErrorState(status: error));
       print(error);
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
-      emit(LoginErrorState(status: e.toString()));
+      emit(LoginGoogleErrorState(status: e.toString()));
       print(e);
     }
   }

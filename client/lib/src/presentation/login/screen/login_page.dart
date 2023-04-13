@@ -106,26 +106,33 @@ class _LoginViewState extends State<LoginView> {
     prefs.setString('password', passwordController.text);
   }
 
+  void loginSuccess() {
+    isLogin = true;
+    Fluttertoast.showToast(msg: "Đăng nhập thành công");
+    context
+        .read<LanguageCubit>()
+        .startNewTimer(context, const Duration(hours: 1));
+    Navigator.of(context).pushReplacement(createRoute(
+      screen: const MainPage(),
+      begin: const Offset(0, 1),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
-          Fluttertoast.showToast(msg: "Đăng nhập thành công");
-          isLogin = true;
           saveLogin();
-          context
-              .read<LanguageCubit>()
-              .startNewTimer(context, const Duration(hours: 1));
-          Navigator.of(context).pushReplacement(createRoute(
-            screen: const MainPage(),
-            begin: const Offset(0, 1),
-          ));
+          loginSuccess();
         }
-        if (state is LoginLoadingState) {
+        if (state is LoginGoogleSuccessState) {
+          loginSuccess();
+        }
+        if (state is LoginLoadingState || state is LoginGoogleLoadingState) {
           loadingAnimation(context);
         }
-        if (state is LoginErrorState) {
+        if (state is LoginErrorState || state is LoginGoogleErrorState) {
           Navigator.pop(context);
         }
       },

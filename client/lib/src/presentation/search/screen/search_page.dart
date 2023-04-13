@@ -1,3 +1,4 @@
+import 'package:coffee/src/presentation/order/widgets/list_product_loading.dart';
 import 'package:coffee/src/presentation/search/bloc/search_bloc.dart';
 import 'package:coffee/src/presentation/search/bloc/search_event.dart';
 import 'package:coffee/src/presentation/search/bloc/search_state.dart';
@@ -45,12 +46,7 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        header(),
-        body(),
-      ],
-    );
+    return Column(children: [header(), body()]);
   }
 
   Widget header() {
@@ -85,12 +81,6 @@ class _SearchViewState extends State<SearchView> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
-        if (state is InitState || state is SearchLoading) {
-          return _buildLoading();
-        }
-        if (state is SearchError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is SearchLoaded) {
           return Expanded(
             child: Padding(
@@ -101,7 +91,7 @@ class _SearchViewState extends State<SearchView> {
             ),
           );
         }
-        return Container();
+        return Expanded(child: listProductLoading());
       },
     );
   }

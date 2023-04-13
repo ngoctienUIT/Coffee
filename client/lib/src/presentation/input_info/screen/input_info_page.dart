@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/input_info/bloc/input_info_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,12 +28,23 @@ class InputInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgCreamColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: BlocProvider(
-            create: (context) => InputInfoBloc(),
-            child: InputInfoView(account: account),
+      appBar: AppBarGeneral(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        onBack: () => GoogleSignIn().signOut(),
+      ),
+      body: WillPopScope(
+        onWillPop: () {
+          GoogleSignIn().signOut();
+          return Future.value(true);
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: BlocProvider(
+              create: (context) => InputInfoBloc(),
+              child: InputInfoView(account: account),
+            ),
           ),
         ),
       ),

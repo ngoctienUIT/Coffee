@@ -137,9 +137,10 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                 value: isLink,
                 onChanged: (value) {
                   isLink = !isLink;
-                  if (widget.user.accountProvider != null &&
-                      widget.user.accountProvider!.google == null &&
-                      isLink) {
+                  print(widget.user.accountProvider);
+                  if (isLink &&
+                      widget.user.accountProvider != null &&
+                      widget.user.accountProvider!.google == null) {
                     context
                         .read<ProfileBloc>()
                         .add(LinkAccountWithGoogleEvent());
