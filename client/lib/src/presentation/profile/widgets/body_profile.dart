@@ -90,10 +90,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                 if (state is EditProfileSate) isEdit = state.isEdit;
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: body(),
-                    ),
+                    Padding(padding: const EdgeInsets.all(10), child: body()),
                     linkGoogle(),
                   ],
                 );

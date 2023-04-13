@@ -72,14 +72,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final prefs = await SharedPreferences.getInstance();
       String? storeID = prefs.getString("storeID");
       bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      print(storeID);
 
       await apiService.createNewOrder(
         "Bearer $token",
         Order(
           userId: userID,
-          storeId: storeID == null || storeID.isEmpty
-              ? "6425d2c7cf1d264dca4bcc82"
-              : storeID,
+          storeId: (storeID != null && storeID.isNotEmpty)
+              ? storeID
+              : "6425d2c7cf1d264dca4bcc82",
           selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
           orderItems: [product.toItemOrder()],
         ).toJson(),
@@ -117,6 +118,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       } else {
         order.orderItems[index].quantity += product.number;
       }
+      order.storeId ??= "6425d2c7cf1d264dca4bcc82";
+      print(order.toJson());
       await apiService.updatePendingOrder(
           "Bearer $token", order.toJson(), order.orderId!);
       Fluttertoast.showToast(
@@ -160,12 +163,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         }
         order.orderItems[index].toppingIds = list;
       }
-
+      order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       await apiService.updatePendingOrder(
-        "Bearer $token",
-        order.toJson(),
-        order.orderId!,
-      );
+          "Bearer $token", order.toJson(), order.orderId!);
       emit(UpdateSuccessState());
     } on DioError catch (e) {
       String error =

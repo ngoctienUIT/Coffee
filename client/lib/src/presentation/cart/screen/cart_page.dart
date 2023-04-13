@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
@@ -65,9 +66,6 @@ class CartView extends StatelessWidget {
             Address? address;
             if (state.order!.address1 != null) {
               address = Address(
-                phone: "",
-                name: "",
-                country: "Việt Nam",
                 province: state.order!.address4!,
                 district: state.order!.address3!,
                 ward: state.order!.address2!,
@@ -76,9 +74,11 @@ class CartView extends StatelessWidget {
             }
             return Scaffold(
               backgroundColor: AppColors.bgColor,
-              appBar: AppBarCart(clearCart: () {
-                context.read<CartBloc>().add(DeleteOrderEvent());
-              }),
+              appBar: AppBarCart(
+                clearCart: () => _showAlertDialog(context, () {
+                  context.read<CartBloc>().add(DeleteOrderEvent());
+                }),
+              ),
               body: Padding(
                 padding: const EdgeInsets.all(10),
                 child: SingleChildScrollView(
@@ -119,7 +119,7 @@ class CartView extends StatelessWidget {
             );
           }
         }
-        return Container();
+        return Scaffold(body: Container());
       },
     );
   }
@@ -140,6 +140,35 @@ class CartView extends StatelessWidget {
           onPress: () => Navigator.pop(context),
         ),
       ),
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback okPress) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận"),
+          content: const Text(
+              "Bạn có muốn xóa tất cả các mục trong giỏ hàng của bạn?"),
+          actions: [
+            TextButton(
+              child: Text('cancel'.translate(context)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                okPress();
+                Navigator.pop(context);
+              },
+              child: Text('ok'.translate(context)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

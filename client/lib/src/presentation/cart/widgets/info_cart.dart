@@ -81,7 +81,14 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? unselectedColor : selectedColor,
                     ),
                     onPressed: () {
-                      setState(() => isBringBack = false);
+                      if (isBringBack) {
+                        _showAlertDialog(context, () {
+                          setState(() => isBringBack = false);
+                          context
+                              .read<CartBloc>()
+                              .add(ChangeMethod(isBringBack: false));
+                        }, isBringBack);
+                      }
                     },
                     child: Text("at_table".translate(context)),
                   ),
@@ -99,7 +106,14 @@ class _InfoCartState extends State<InfoCart> {
                           isBringBack ? selectedColor : unselectedColor,
                     ),
                     onPressed: () {
-                      setState(() => isBringBack = true);
+                      if (!isBringBack) {
+                        _showAlertDialog(context, () {
+                          setState(() => isBringBack = true);
+                          context
+                              .read<CartBloc>()
+                              .add(ChangeMethod(isBringBack: true));
+                        }, isBringBack);
+                      }
                     },
                     child: Text("bring_back".translate(context)),
                   ),
@@ -214,6 +228,39 @@ class _InfoCartState extends State<InfoCart> {
         Icons.location_on,
         address == null ? "" : address!.getAddress(),
       ),
+    );
+  }
+
+  Future _showAlertDialog(
+    BuildContext context,
+    VoidCallback okPress,
+    bool isBring,
+  ) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Xác nhận"),
+          content: Text(
+              "Bạn muốn thay đổi phương thức từ ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}"),
+          actions: [
+            TextButton(
+              child: Text('cancel'.translate(context)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                okPress();
+                Navigator.pop(context);
+              },
+              child: Text('ok'.translate(context)),
+            ),
+          ],
+        );
+      },
     );
   }
 }

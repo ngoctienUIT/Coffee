@@ -30,7 +30,7 @@ class UserResponse {
   final String hashedPassword;
 
   @JsonKey(name: "imageUrl")
-  final String? imageUrl;
+  String? imageUrl;
 
   @JsonKey(name: "userRole")
   final String userRole;

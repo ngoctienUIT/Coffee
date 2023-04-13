@@ -19,6 +19,8 @@ class SaveProfileError extends ProfileState {
 
 class ChangeAvatarState extends ProfileState {}
 
+class DeleteAvatarState extends ProfileState {}
+
 class ChangeBirthdayState extends ProfileState {}
 
 class LinkAccountWithGoogleSuccessState extends ProfileState {}

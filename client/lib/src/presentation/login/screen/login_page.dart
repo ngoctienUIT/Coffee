@@ -180,9 +180,9 @@ class _LoginViewState extends State<LoginView> {
           key: _formKey,
           child: CustomTextInput(
             controller: phoneController,
-            hint: "email_phone_number".translate(context),
+            hint: "Email",
             keyboardType: TextInputType.emailAddress,
-            typeInput: const [TypeInput.phone, TypeInput.email],
+            typeInput: const [TypeInput.email],
             // inputFormatters: [
             //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
             // ],

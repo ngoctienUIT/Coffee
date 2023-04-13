@@ -1,8 +1,6 @@
 import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 
 class Address {
-  String name;
-  String phone;
   String country;
   String province;
   String district;
@@ -11,9 +9,7 @@ class Address {
 
   Address({
     required this.address,
-    required this.phone,
-    required this.name,
-    required this.country,
+    this.country = "Việt Nam",
     required this.province,
     required this.district,
     required this.ward,
@@ -23,8 +19,6 @@ class Address {
 }
 
 class AddressAPI {
-  String? name;
-  String? phone;
   String? country;
   dvhcvn.Level1? province;
   dvhcvn.Level2? district;
@@ -33,8 +27,6 @@ class AddressAPI {
 
   AddressAPI({
     this.address,
-    this.phone,
-    this.name,
     this.country = "Việt Nam",
     this.province,
     this.district,
@@ -43,8 +35,6 @@ class AddressAPI {
 
   factory AddressAPI.fromAddress(Address address) {
     return AddressAPI(
-      phone: address.phone,
-      name: address.name,
       address: address.address,
       province: dvhcvn.findLevel1ByName(address.province),
       district: dvhcvn
@@ -59,8 +49,6 @@ class AddressAPI {
   }
 
   AddressAPI copyWith({
-    String? name,
-    String? phone,
     String? country,
     dvhcvn.Level1? province,
     dvhcvn.Level2? district,
@@ -68,8 +56,6 @@ class AddressAPI {
     String? address,
   }) {
     return AddressAPI(
-      name: name ?? this.name,
-      phone: phone ?? this.phone,
       country: country ?? this.country,
       address: address ?? this.address,
       district: district ?? this.district,
@@ -81,12 +67,17 @@ class AddressAPI {
   Address toAddress() {
     return Address(
       address: address ?? "",
-      phone: phone ?? "",
-      name: name ?? "",
       country: country ?? "Việt Nam",
       province: province != null ? province!.name : "",
       district: district != null ? district!.name : "",
       ward: ward != null ? ward!.name : "",
     );
   }
+
+  bool checkNull() =>
+      province == null ||
+      district == null ||
+      ward == null ||
+      address == null ||
+      address!.isEmpty;
 }

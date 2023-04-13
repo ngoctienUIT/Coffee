@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../coupon/widgets/app_bar_general.dart';
+import '../bloc/profile_state.dart';
 import '../widgets/body_profile.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -24,11 +26,21 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: AppColors.statusBarColor,
         appBar:
             AppBarGeneral(title: "profile".translate(context), elevation: 0),
-        body: Column(
-          children: [
-            HeaderProfilePage(avatar: user.imageUrl),
-            Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
-          ],
+        body: BlocListener<ProfileBloc, ProfileState>(
+          listener: (context, state) {
+            if (state is SaveProfileLoading) {
+              loadingAnimation(context);
+            }
+            if (state is SaveProfileLoaded || state is SaveProfileError) {
+              Navigator.pop(context);
+            }
+          },
+          child: Column(
+            children: [
+              HeaderProfilePage(user: user, onChange: onChange),
+              Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
+            ],
+          ),
         ),
       ),
     );
