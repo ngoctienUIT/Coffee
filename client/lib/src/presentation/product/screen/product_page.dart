@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee/src/presentation/product/widgets/body_product.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/product.dart';
+import '../../store/widgets/item_loading.dart';
 import '../widgets/app_bar_product.dart';
 
 class ProductPage extends StatelessWidget {
@@ -74,10 +76,12 @@ class _ProductViewState extends State<ProductView> {
           slivers: [
             AppBarProduct(isTop: isTop, name: widget.product.name),
             SliverToBoxAdapter(
-              child: Image.network(
-                widget.product.image!,
+              child: CachedNetworkImage(
                 height: 300,
                 width: 300,
+                imageUrl: widget.product.image!,
+                placeholder: (context, url) => itemLoading(300, 300, 0),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
             BodyProduct(isTop: isTop, onPress: widget.onPress)

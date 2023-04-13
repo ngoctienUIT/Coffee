@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
@@ -12,6 +15,7 @@ import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
+import '../widgets/item_loading.dart';
 
 class StorePage extends StatelessWidget {
   const StorePage({Key? key, this.onPress, required this.isPick, this.onChange})
@@ -100,12 +104,6 @@ class _StoreViewState extends State<StoreView> {
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
         print(state);
-        if (state is InitState || state is StoreLoading) {
-          return _buildLoading();
-        }
-        if (state is StoreError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is StoreLoaded) {
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
@@ -140,12 +138,51 @@ class _StoreViewState extends State<StoreView> {
             },
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    var rng = Random();
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      itemBuilder: (context, index) {
+        return Card(
+          child: Row(
+            children: [
+              const SizedBox(width: 10),
+              itemLoading(100, 100, 0),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    itemLoading(20, double.infinity, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(20, rng.nextDouble() * 150 + 100, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, double.infinity, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, rng.nextDouble() * 150 + 100, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, 200, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, 200, 10),
+                    const SizedBox(height: 5),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Widget itemStore(StoreResponse store, String id) {
     return Stack(
@@ -156,11 +193,14 @@ class _StoreViewState extends State<StoreView> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Image.network(
-                  "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                CachedNetworkImage(
                   height: 100,
                   width: 100,
                   fit: BoxFit.fitHeight,
+                  imageUrl:
+                      "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                  placeholder: (context, url) => itemLoading(100, 100, 0),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
                 const SizedBox(width: 10),
                 Expanded(child: infoStore(store))

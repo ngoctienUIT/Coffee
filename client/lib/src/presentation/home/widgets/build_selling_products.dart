@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
+import '../../store/widgets/item_loading.dart';
 
 class BuildListSellingProducts extends StatelessWidget {
   const BuildListSellingProducts({Key? key, required this.listProduct})
@@ -48,9 +50,12 @@ class BuildListSellingProducts extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              Image.network(
-                listProduct[index].image!,
+              CachedNetworkImage(
                 height: 120,
+                width: 120,
+                imageUrl: listProduct[index].image!,
+                placeholder: (context, url) => itemLoading(120, 120, 0),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
               const Spacer(),
               Align(

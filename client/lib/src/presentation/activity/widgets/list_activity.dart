@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
@@ -5,9 +7,11 @@ import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../store/widgets/item_loading.dart';
 import '../../view_order/screen/view_order_page.dart';
 
 class ListActivity extends StatelessWidget {
@@ -17,12 +21,6 @@ class ListActivity extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ActivityBloc, ActivityState>(
       builder: (context, state) {
-        if (state is InitState || state is ActivityLoading) {
-          return _buildLoading();
-        }
-        if (state is ActivityError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is ActivityLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -56,12 +54,53 @@ class ListActivity extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    var rng = Random();
+    return ListView.builder(
+      padding: const EdgeInsets.all(10),
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Card(
+          child: Row(
+            children: [
+              const SizedBox(width: 10),
+              itemLoading(70, 70, 0),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const SizedBox(height: 8),
+                    itemLoading(20, double.infinity, 10),
+                    const SizedBox(height: 8),
+                    itemLoading(15, 150, 10),
+                    const SizedBox(height: 8),
+                    itemLoading(15, 100, 10),
+                    const SizedBox(height: 8),
+                    itemLoading(20, rng.nextDouble() * 50 + 100, 10),
+                    const SizedBox(height: 8),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: const Icon(Icons.arrow_forward_ios_outlined),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Widget itemActivity(OrderResponse order) {
     return Card(

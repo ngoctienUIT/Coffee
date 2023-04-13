@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/constants/app_strings.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../domain/repositories/store/store_response.dart';
 import '../../login/widgets/custom_button.dart';
+import 'item_loading.dart';
 
 void showStoreBottomSheet(
     BuildContext context, StoreResponse store, VoidCallback onPress) {
@@ -25,8 +27,13 @@ void showStoreBottomSheet(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                    CachedNetworkImage(
+                      imageUrl:
+                          "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                      placeholder: (context, url) =>
+                          itemLoading(double.infinity, double.infinity, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                     const SizedBox(height: 20),
                     nameAndAddress(store),

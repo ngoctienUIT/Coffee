@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_event.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_state.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/coupon/widgets/ticket_widget.dart';
+import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,12 +40,6 @@ class CouponView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CouponBloc, CouponState>(
       builder: (context, state) {
-        if (state is InitState || state is CouponLoading) {
-          return _buildLoading();
-        }
-        if (state is CouponError) {
-          return Center(child: Text(state.message.toString()));
-        }
         if (state is CouponLoaded) {
           return RefreshIndicator(
             onRefresh: () async {},
@@ -65,10 +62,82 @@ class CouponView extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(10),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: itemTicketLoading(),
+        );
+      },
+    );
+  }
+
+  Widget itemTicketLoading() {
+    var rng = Random();
+    return Container(
+      width: double.infinity,
+      height: 130,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 37,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          ClipPath(
+            clipper: const TicketClipper(
+              borderRadius: 10,
+              clipRadius: 7,
+              smallClipRadius: 2,
+              numberOfSmallClips: 8,
+              ticketHeight: 130,
+            ),
+            child: Container(color: Colors.white),
+          ),
+          SizedBox(
+            height: 130,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: itemLoading(100, 100, 0),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+                        const Spacer(),
+                        itemLoading(15, double.infinity, 10),
+                        const SizedBox(height: 5),
+                        itemLoading(15, rng.nextDouble() * 100 + 100, 10),
+                        const Spacer(),
+                        itemLoading(15, 150, 10),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }

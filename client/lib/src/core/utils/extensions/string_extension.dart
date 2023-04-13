@@ -18,7 +18,7 @@ extension EmailValidator on String {
   }
 
   bool isSpecialCharacters() {
-    return RegExp(r"[^\w\s]").hasMatch(this);
+    return RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(this);
   }
 
   TimeOfDay toTime() {

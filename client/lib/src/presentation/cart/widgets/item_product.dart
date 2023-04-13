@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
+
+import '../../store/widgets/item_loading.dart';
 
 class ItemProduct extends StatefulWidget {
   const ItemProduct({
@@ -34,7 +37,14 @@ class _ItemProductState extends State<ItemProduct> {
             children: [
               widget.product.image == null
                   ? Image.asset("assets/tea.png", height: 50, width: 50)
-                  : Image.network(widget.product.image!, height: 50, width: 50),
+                  : CachedNetworkImage(
+                      height: 50,
+                      width: 50,
+                      imageUrl: widget.product.image!,
+                      placeholder: (context, url) => itemLoading(50, 50, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

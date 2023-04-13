@@ -41,7 +41,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       emit(ActivityError(message: error, index: index));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      Fluttertoast.showToast(
+        msg: e.toString(),
+      );
       emit(ActivityError(message: e.toString(), index: index));
       print(e);
     }

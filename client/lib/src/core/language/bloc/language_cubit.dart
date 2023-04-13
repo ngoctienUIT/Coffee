@@ -38,7 +38,7 @@ class LanguageCubit extends Cubit<LanguageState> {
   void checkLogin(BuildContext context) {
     SharedPreferences.getInstance().then((value) {
       String? timeLogin = value.getString('timeLogin');
-      Duration duration = timeLogin!.toDateTime().difference(DateTime.now());
+      Duration duration = DateTime.now().difference(timeLogin!.toDateTime());
       startNewTimer(context, duration);
     });
   }
@@ -50,7 +50,10 @@ class LanguageCubit extends Cubit<LanguageState> {
           "timeLogin",
           DateFormat("dd/MM/yyyy hh:mm:ss")
               .format(DateTime.now().add(duration)));
+      print(DateFormat("dd/MM/yyyy hh:mm:ss")
+          .format(DateTime.now().add(duration)));
     });
+    print(duration);
     _timer = Timer.periodic(duration, (_) {
       _timedOut();
       Navigator.of(context).pushAndRemoveUntil(

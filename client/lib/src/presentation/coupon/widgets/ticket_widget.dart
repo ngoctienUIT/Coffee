@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 
 class TicketWidget extends StatelessWidget {
@@ -69,10 +71,14 @@ class TicketWidget extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 13),
-                    child: Image.asset(
-                      "assets/banner.jpg",
+                    child: CachedNetworkImage(
                       height: ticketHeight - 30,
                       width: ticketHeight - 30,
+                      imageUrl: image,
+                      placeholder: (context, url) =>
+                          itemLoading(ticketHeight - 30, ticketHeight - 30, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                   Expanded(

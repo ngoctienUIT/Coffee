@@ -27,15 +27,6 @@ class BottomSheetOrder extends StatelessWidget {
           current is! RefreshOrderLoaded &&
           current is! RefreshOrderError,
       builder: (context, state) {
-        if (state is InitState || state is OrderLoading) {
-          return _buildLoading();
-        }
-        if (state is OrderError || state is AddProductToCartError) {
-          String? message = state is OrderError
-              ? state.message
-              : (state as AddProductToCartError).message;
-          return Center(child: Text(message.toString()));
-        }
         if (state is OrderLoaded || state is AddProductToCartLoaded) {
           final order = state is OrderLoaded
               ? state.order
@@ -137,12 +128,48 @@ class BottomSheetOrder extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading(context);
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: const BoxDecoration(color: AppColors.statusBarColor),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.location_on,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "at_table".translate(context),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_down_outlined,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: double.infinity,
+            child: cartNumber(0),
+          ),
+        ],
+      ),
+    );
+  }
 
   void showMyBottomSheet(
     BuildContext context,

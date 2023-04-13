@@ -93,7 +93,8 @@ class _SignUpViewState extends State<SignUpView> {
         passwordController.text.isNotEmpty &&
         confirmPasswordController.text.isNotEmpty &&
         nameController.text.isNotEmpty &&
-        emailController.text.isNotEmpty) {
+        emailController.text.isNotEmpty &&
+        selectedDate != null) {
       context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: true));
     } else {
       context.read<SignUpBloc>().add(ClickSignUpEvent(isContinue: false));
@@ -210,6 +211,7 @@ class _SignUpViewState extends State<SignUpView> {
     return BlocBuilder<SignUpBloc, SignUpState>(
       buildWhen: (previous, current) => current is ChangeBirthdayState,
       builder: (context, state) {
+        checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
           text: selectedDate == null
@@ -364,7 +366,7 @@ class _SignUpViewState extends State<SignUpView> {
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;

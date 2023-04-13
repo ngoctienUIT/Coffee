@@ -132,22 +132,19 @@ class _LoginViewState extends State<LoginView> {
       child: Container(
         height: MediaQuery.of(context).size.height - 35,
         padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              loginTitle(),
-              const SizedBox(height: 20),
-              loginInput(),
-              rememberLogin(),
-              const SizedBox(height: 10),
-              loginButton(),
-              const SizedBox(height: 20),
-              socialLogin(),
-              const Spacer(),
-              signup(),
-            ],
-          ),
+        child: Column(
+          children: [
+            loginTitle(),
+            const SizedBox(height: 20),
+            loginInput(),
+            rememberLogin(),
+            const SizedBox(height: 10),
+            loginButton(),
+            const SizedBox(height: 20),
+            socialLogin(),
+            const Spacer(),
+            signup(),
+          ],
         ),
       ),
     );
@@ -172,14 +169,17 @@ class _LoginViewState extends State<LoginView> {
   Widget loginInput() {
     return Column(
       children: [
-        CustomTextInput(
-          controller: phoneController,
-          hint: "email_phone_number".translate(context),
-          keyboardType: TextInputType.emailAddress,
-          typeInput: const [TypeInput.phone, TypeInput.email],
-          // inputFormatters: [
-          //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
-          // ],
+        Form(
+          key: _formKey,
+          child: CustomTextInput(
+            controller: phoneController,
+            hint: "email_phone_number".translate(context),
+            keyboardType: TextInputType.emailAddress,
+            typeInput: const [TypeInput.phone, TypeInput.email],
+            // inputFormatters: [
+            //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+            // ],
+          ),
         ),
         const SizedBox(height: 10),
         BlocBuilder<LoginBloc, LoginState>(

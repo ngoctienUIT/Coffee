@@ -37,6 +37,7 @@ class _MainPageState extends State<MainPage> {
       ),
       const OtherPage(key: PageStorageKey<String>('OtherPage')),
     ];
+    context.read<LanguageCubit>().checkLogin(context);
     super.initState();
   }
 
@@ -48,7 +49,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<LanguageCubit>().checkLogin(context);
     return Scaffold(
       body: WillPopScope(
         onWillPop: () => onWillPop(

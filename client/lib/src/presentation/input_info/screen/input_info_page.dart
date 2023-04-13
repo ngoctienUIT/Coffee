@@ -67,7 +67,9 @@ class _InputInfoViewState extends State<InputInfoView> {
   }
 
   void checkEmpty() {
-    if (phoneController.text.isNotEmpty && nameController.text.isNotEmpty) {
+    if (phoneController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        selectedDate != null) {
       context.read<InputInfoBloc>().add(ClickSubmitEvent(isContinue: true));
     } else {
       context.read<InputInfoBloc>().add(ClickSubmitEvent(isContinue: false));
@@ -172,6 +174,7 @@ class _InputInfoViewState extends State<InputInfoView> {
     return BlocBuilder<InputInfoBloc, InputInfoState>(
       buildWhen: (previous, current) => current is ChangeBirthdayState,
       builder: (context, state) {
+        checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
           text: selectedDate == null
@@ -245,7 +248,7 @@ class _InputInfoViewState extends State<InputInfoView> {
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;

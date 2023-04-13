@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee/src/presentation/order/widgets/grid_item_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../domain/repositories/product/product_response.dart';
 import '../../home/widgets/description_line.dart';
+import '../../store/widgets/item_loading.dart';
 import 'list_item_order.dart';
 
 class BodyOrderPage extends StatefulWidget {
@@ -27,16 +31,8 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
   Widget header() {
     return BlocBuilder<OrderBloc, OrderState>(
       buildWhen: (previous, current) =>
-          current is OrderLoading ||
-          current is OrderLoaded ||
-          current is OrderError,
+          current is OrderLoading || current is OrderLoaded,
       builder: (context, state) {
-        if (state is InitState || state is OrderLoading) {
-          return _buildLoading();
-        }
-        if (state is OrderError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is OrderLoaded) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -67,7 +63,7 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
             ),
           );
         }
-        return Container();
+        return _buildLoadingHeader();
       },
     );
   }
@@ -79,18 +75,6 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
           current is! AddProductToCartError,
       builder: (context, state) {
         print(state);
-        if (state is InitState ||
-            state is OrderLoading ||
-            state is RefreshOrderLoading) {
-          return _buildLoading();
-        }
-        if (state is OrderError || state is RefreshOrderError) {
-          return Center(
-            child: Text(state is OrderError
-                ? state.message!
-                : (state as RefreshOrderError).message!),
-          );
-        }
         if (state is OrderLoaded || state is RefreshOrderLoaded) {
           List<ProductResponse> listProduct = state is OrderLoaded
               ? state.listProduct
@@ -122,10 +106,91 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
             ),
           );
         }
-        return Container();
+        return Expanded(child: _buildLoadingBody());
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoadingBody() {
+    var rng = Random();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Card(
+              child: Row(
+                children: [
+                  Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Image.asset(
+                      "assets/traditional_coffee.png",
+                      height: 100,
+                      width: 100,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        itemLoading(20, rng.nextDouble() * 50 + 100, 10),
+                        const SizedBox(height: 10),
+                        itemLoading(15, double.infinity, 10),
+                        const SizedBox(height: 10),
+                        itemLoading(15, rng.nextDouble() * 50 + 150, 10),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  itemLoading(30, 100, 10),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildLoadingHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 40,
+              width: 150,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+          ),
+          const Spacer(),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: const Icon(Icons.menu, color: Colors.grey, size: 35),
+          ),
+          Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: const Icon(
+              Icons.grid_view_rounded,
+              color: Colors.grey,
+              size: 35,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
