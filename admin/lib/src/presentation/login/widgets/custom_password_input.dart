@@ -31,7 +31,10 @@ class CustomPasswordInput extends StatelessWidget {
         if (confirmPassword != null && confirmPassword != value) {
           return "confirmation_password_not_match".translate(context);
         }
-        if (value!.isEmpty) {
+        if (!value!.isSpecialCharacters()) {
+          return "Cần phải có ký tự đặc biệt";
+        }
+        if (value.isEmpty) {
           return "please_enter_password".translate(context);
         }
         if (value.length < 8) {

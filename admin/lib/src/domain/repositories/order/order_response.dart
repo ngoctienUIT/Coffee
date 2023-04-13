@@ -79,4 +79,12 @@ class OrderResponse {
       _$OrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$OrderResponseToJson(this);
+
+  int getTotal() {
+    int total = 0;
+    for (var item in orderItems!) {
+      total += item.getTotal();
+    }
+    return total;
+  }
 }

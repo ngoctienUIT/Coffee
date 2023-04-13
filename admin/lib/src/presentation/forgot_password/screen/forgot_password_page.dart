@@ -52,8 +52,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 const SizedBox(height: 20),
                 CustomTextInput(
                   controller: controller,
-                  hint: "email_phone_number".translate(context),
-                  typeInput: const [TypeInput.phone, TypeInput.email],
+                  hint: "Email",
+                  typeInput: const [TypeInput.email],
                 ),
                 const SizedBox(height: 20),
                 Text("enter_email_phone_reset_password".translate(context)),

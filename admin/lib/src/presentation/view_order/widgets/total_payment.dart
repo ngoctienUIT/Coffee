@@ -26,7 +26,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("subtotal".translate(context)),
                 const Spacer(),
-                Text(order.orderAmount!.toCurrency()),
+                Text(order.getTotal().toCurrency()),
               ],
             ),
             const SizedBox(height: 10),
@@ -34,7 +34,7 @@ class TotalPayment extends StatelessWidget {
               children: [
                 Text("discount_code".translate(context)),
                 const Spacer(),
-                Text(order.orderAmount!.toCurrency())
+                Text((order.getTotal() - order.orderAmount!).toCurrency())
               ],
             ),
             const SizedBox(height: 10),

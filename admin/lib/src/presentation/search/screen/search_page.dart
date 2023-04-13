@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,12 +49,6 @@ class _SearchViewState extends State<SearchView> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
-        if (state is InitState || state is SearchLoading) {
-          return _buildLoading();
-        }
-        if (state is SearchError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is SearchLoaded) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -63,10 +58,8 @@ class _SearchViewState extends State<SearchView> {
             ),
           );
         }
-        return Container();
+        return listProductLoading();
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

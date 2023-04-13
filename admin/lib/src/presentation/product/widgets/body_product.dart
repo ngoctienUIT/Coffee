@@ -1,5 +1,7 @@
+import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
@@ -28,16 +30,6 @@ class _BodyProductPageState extends State<BodyProductPage> {
     return BlocBuilder<ProductBloc, ProductState>(
       buildWhen: (previous, current) => current is! RefreshLoading,
       builder: (context, state) {
-        if (state is InitState || state is ProductLoading) {
-          return _buildLoading();
-        }
-        if (state is ProductError || state is RefreshError) {
-          return Center(
-            child: Text(state is ProductError
-                ? state.message!
-                : (state as RefreshError).message!),
-          );
-        }
         if (state is ProductLoaded || state is RefreshLoaded) {
           int index = state is ProductLoaded
               ? state.index
@@ -53,7 +45,7 @@ class _BodyProductPageState extends State<BodyProductPage> {
             ),
           );
         }
-        return Container();
+        return _buildLoadingHeader();
       },
     );
   }
@@ -63,19 +55,6 @@ class _BodyProductPageState extends State<BodyProductPage> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
-
-        if (state is InitState ||
-            state is ProductLoading ||
-            state is RefreshLoading) {
-          return _buildLoading();
-        }
-        if (state is ProductError || state is RefreshError) {
-          return Center(
-            child: Text(state is ProductError
-                ? state.message!
-                : (state as RefreshError).message!),
-          );
-        }
         if (state is ProductLoaded || state is RefreshLoaded) {
           int index = state is ProductLoaded
               ? state.index
@@ -99,10 +78,29 @@ class _BodyProductPageState extends State<BodyProductPage> {
             ),
           );
         }
-        return Container();
+        return Expanded(child: listProductLoading());
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoadingHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: 40,
+            width: 150,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

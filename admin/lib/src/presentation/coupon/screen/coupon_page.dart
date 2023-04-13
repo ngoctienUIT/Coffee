@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_event.dart';
@@ -10,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
+import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';
 
 class CouponPage extends StatelessWidget {
@@ -61,12 +64,6 @@ class CouponView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<CouponBloc, CouponState>(
       builder: (context, state) {
-        if (state is InitState || state is CouponLoading) {
-          return _buildLoading();
-        }
-        if (state is CouponError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is CouponLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -122,7 +119,7 @@ class CouponView extends StatelessWidget {
                       onPress: () {},
                       title: state.listCoupon[index].couponName,
                       content: state.listCoupon[index].content,
-                      image: "assets/banner.jpg",
+                      image: state.listCoupon[index].imageUrl ?? "",
                       date: state.listCoupon[index].dueDate,
                     ),
                   ),
@@ -131,10 +128,81 @@ class CouponView extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(10),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: itemTicketLoading(),
+        );
+      },
+    );
+  }
+
+  Widget itemTicketLoading() {
+    var rng = Random();
+    return Container(
+      width: double.infinity,
+      height: 130,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 37,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          ClipPath(
+            clipper: const TicketClipper(
+              borderRadius: 10,
+              clipRadius: 7,
+              smallClipRadius: 2,
+              numberOfSmallClips: 8,
+            ),
+            child: Container(color: Colors.white),
+          ),
+          SizedBox(
+            height: 130,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 13),
+                  child: itemLoading(100, 100, 0),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+                        const Spacer(),
+                        itemLoading(15, double.infinity, 10),
+                        const SizedBox(height: 5),
+                        itemLoading(15, rng.nextDouble() * 100 + 100, 10),
+                        const Spacer(),
+                        itemLoading(15, 150, 10),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }

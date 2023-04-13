@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -66,12 +69,6 @@ class _HeaderProductPageState extends State<HeaderProductPage>
           current is ProductLoaded ||
           current is ProductError,
       builder: (context, state) {
-        if (state is InitState || state is ProductLoading) {
-          return _buildLoading();
-        }
-        if (state is ProductError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is ProductLoaded) {
           _productController = TabController(
               length: state.listProductCatalogues.length, vsync: this);
@@ -98,9 +95,13 @@ class _HeaderProductPageState extends State<HeaderProductPage>
                     width: MediaQuery.of(context).size.width / 3.7,
                     child: Column(
                       children: [
-                        Image.network(
-                          state.listProductCatalogues[index].image,
+                        CachedNetworkImage(
                           height: 70,
+                          width: 70,
+                          imageUrl: state.listProductCatalogues[index].image,
+                          placeholder: (context, url) => productItemLoading(70),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
                         Text(
                           state.listProductCatalogues[index].name.toUpperCase(),
@@ -116,10 +117,42 @@ class _HeaderProductPageState extends State<HeaderProductPage>
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    return SizedBox(
+      height: 120,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              children: [
+                productItemLoading(70),
+                const SizedBox(height: 5),
+                Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 35,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

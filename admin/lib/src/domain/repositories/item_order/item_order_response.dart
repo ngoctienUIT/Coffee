@@ -30,4 +30,17 @@ class ItemOrderResponse {
       _$ItemOrderResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$ItemOrderResponseToJson(this);
+
+  int getTotal() {
+    int total = product.price +
+        (selectedSize == "S"
+            ? product.upsizeOptions.s!
+            : (selectedSize == "M"
+                ? product.upsizeOptions.m
+                : product.upsizeOptions.l));
+    for (var item in toppings) {
+      total += item.pricePerService;
+    }
+    return total * quantity;
+  }
 }

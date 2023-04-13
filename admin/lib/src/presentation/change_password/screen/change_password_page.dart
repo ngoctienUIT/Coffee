@@ -92,24 +92,21 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           Navigator.pop(context);
         }
       },
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "change_password".translate(context),
-              style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text("password_needs_characters".translate(context)),
-            const SizedBox(height: 10),
-            passwordInput(),
-            const Spacer(),
-            changePasswordButton(),
-            const SizedBox(height: 10)
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "change_password".translate(context),
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Text("password_needs_characters".translate(context)),
+          const SizedBox(height: 10),
+          passwordInput(),
+          const Spacer(),
+          changePasswordButton(),
+          const SizedBox(height: 10)
+        ],
       ),
     );
   }
@@ -128,19 +125,26 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               onPress: () => changeHide(),
             ),
             const SizedBox(height: 10),
-            CustomPasswordInput(
-              controller: newPasswordController,
-              hint: "enter_new_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : hide,
-              onPress: () => changeHide(),
-            ),
-            const SizedBox(height: 10),
-            CustomPasswordInput(
-              controller: confirmPasswordController,
-              confirmPassword: newPasswordController.text,
-              hint: "confirm_password".translate(context),
-              hide: state is HidePasswordState ? state.isHide : hide,
-              onPress: () => changeHide(),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  CustomPasswordInput(
+                    controller: newPasswordController,
+                    hint: "enter_new_password".translate(context),
+                    hide: state is HidePasswordState ? state.isHide : hide,
+                    onPress: () => changeHide(),
+                  ),
+                  const SizedBox(height: 10),
+                  CustomPasswordInput(
+                    controller: confirmPasswordController,
+                    confirmPassword: newPasswordController.text,
+                    hint: "confirm_password".translate(context),
+                    hide: state is HidePasswordState ? state.isHide : hide,
+                    onPress: () => changeHide(),
+                  ),
+                ],
+              ),
             ),
           ],
         );
