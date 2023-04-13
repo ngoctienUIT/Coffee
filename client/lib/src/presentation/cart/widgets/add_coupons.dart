@@ -7,11 +7,13 @@ import '../../coupon/screen/coupon_page.dart';
 import '../../coupon/widgets/ticket_widget.dart';
 
 class AddCoupons extends StatefulWidget {
-  const AddCoupons({Key? key, this.coupons, required this.onPress})
+  const AddCoupons(
+      {Key? key, this.coupons, required this.onPress, required this.onDelete})
       : super(key: key);
 
   final CouponResponse? coupons;
   final Function(String id) onPress;
+  final VoidCallback onDelete;
 
   @override
   State<AddCoupons> createState() => _AddCouponsState();
@@ -27,6 +29,11 @@ class _AddCouponsState extends State<AddCoupons> {
             onTap: () {
               Navigator.of(context).push(createRoute(
                 screen: CouponPage(
+                  id: widget.coupons != null ? widget.coupons!.id : null,
+                  onDelete: () {
+                    Navigator.pop(context);
+                    widget.onDelete();
+                  },
                   onPress: (id) {
                     Navigator.pop(context);
                     widget.onPress(id);

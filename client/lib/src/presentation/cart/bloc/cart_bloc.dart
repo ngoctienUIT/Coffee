@@ -28,6 +28,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<AttachCouponToOrder>(
         (event, emit) => attachCouponToOrder(event.id, emit));
 
+    on<DeleteCouponOrder>((event, emit) => deleteCouponOrder(emit));
+
     on<PlaceOrder>((event, emit) => placeOrder(emit));
 
     on<AddNote>((event, emit) => addNote(event.note));
@@ -235,6 +237,36 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final orderSpending = response.data;
       final responseCoupon = await apiService.attachCouponToOrder(
           "Bearer $token", id, orderSpending[0].orderId!);
+      emit(GetOrderSuccessState(responseCoupon.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(GetOrderErrorState(error));
+      print(error);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      emit(GetOrderErrorState(e.toString()));
+      print(e);
+    }
+  }
+
+  Future deleteCouponOrder(Emitter emit) async {
+    try {
+      emit(GetOrderLoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "";
+      final response =
+          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final orderSpending = response.data;
+      Order order = Order.fromOrderResponse(orderSpending[0]);
+      order.appliedCoupons = null;
+      final responseCoupon = await apiService.updatePendingOrder(
+          "Bearer $token", order.toJson(), orderSpending[0].orderId!);
+
       emit(GetOrderSuccessState(responseCoupon.data));
     } on DioError catch (e) {
       String error =

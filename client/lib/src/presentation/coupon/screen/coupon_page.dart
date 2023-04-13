@@ -13,9 +13,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class CouponPage extends StatelessWidget {
-  const CouponPage({Key? key, this.onPress}) : super(key: key);
+  const CouponPage({Key? key, this.onPress, this.id, this.onDelete})
+      : super(key: key);
 
   final Function(String id)? onPress;
+  final VoidCallback? onDelete;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +26,23 @@ class CouponPage extends StatelessWidget {
       create: (context) => CouponBloc()..add(FetchData()),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
-        appBar:
-            AppBarGeneral(title: "your_offer".translate(context), elevation: 0),
-        body: CouponView(onPress: onPress),
+        appBar: AppBarGeneral(
+          title: "your_offer".translate(context),
+          elevation: 0,
+          onAction: onDelete,
+          action: id == null ? null : "Loại bỏ coupon",
+        ),
+        body: CouponView(onPress: onPress, id: id),
       ),
     );
   }
 }
 
 class CouponView extends StatelessWidget {
-  const CouponView({Key? key, this.onPress}) : super(key: key);
+  const CouponView({Key? key, this.onPress, this.id}) : super(key: key);
 
   final Function(String id)? onPress;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +58,36 @@ class CouponView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: TicketWidget(
-                    onPress: () => onPress!(state.listCoupon[index].id),
-                    title: state.listCoupon[index].couponName,
-                    image: state.listCoupon[index].imageUrl.toString(),
-                    content: state.listCoupon[index].content,
-                    date: state.listCoupon[index].dueDate,
+                  child: Stack(
+                    children: [
+                      TicketWidget(
+                        onPress: () => onPress!(state.listCoupon[index].id),
+                        title: state.listCoupon[index].couponName,
+                        image: state.listCoupon[index].imageUrl.toString(),
+                        content: state.listCoupon[index].content,
+                        date: state.listCoupon[index].dueDate,
+                      ),
+                      if (id == state.listCoupon[index].id)
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomLeft: Radius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              "current_selection".translate(context),
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 );
               },

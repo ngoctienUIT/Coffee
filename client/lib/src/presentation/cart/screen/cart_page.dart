@@ -102,6 +102,9 @@ class CartView extends StatelessWidget {
                       const SizedBox(height: 10),
                       AddCoupons(
                         coupons: state.order!.appliedCoupon,
+                        onDelete: () {
+                          context.read<CartBloc>().add(DeleteCouponOrder());
+                        },
                         onPress: (id) {
                           context.read<CartBloc>().add(AttachCouponToOrder(id));
                         },

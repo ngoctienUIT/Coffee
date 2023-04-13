@@ -18,6 +18,8 @@ class AttachCouponToOrder extends CartEvent {
   AttachCouponToOrder(this.id);
 }
 
+class DeleteCouponOrder extends CartEvent {}
+
 class ChangeMethod extends CartEvent {
   bool isBringBack;
   Address? address;
