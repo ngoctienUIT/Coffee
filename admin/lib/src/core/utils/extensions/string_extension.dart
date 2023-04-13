@@ -30,8 +30,22 @@ extension EmailValidator on String {
     return TimeOfDay(hour: int.parse(list[0]), minute: int.parse(list[1]));
   }
 
-  DateTime toDateTime() {
+  Duration toDuration() {
+    final list = split(":");
+    return Duration(
+        hours: int.parse(list[0]),
+        minutes: int.parse(list[1]),
+        seconds: int.parse(list[2]));
+  }
+
+  DateTime toDate() {
     final list = split("/");
     return DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
+  }
+
+  DateTime toDateTime() {
+    String firstStr = split(" ").first;
+    String lastStr = split(" ").last;
+    return firstStr.toDate().add(lastStr.toDuration());
   }
 }

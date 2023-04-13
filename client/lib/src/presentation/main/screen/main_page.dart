@@ -1,8 +1,10 @@
+import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
 import 'package:coffee/src/presentation/other/screen/other_page.dart';
 import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/on_will_pop.dart';
 import '../../activity/screen/activity_page.dart';
@@ -46,6 +48,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    context.read<LanguageCubit>().checkLogin(context);
     return Scaffold(
       body: WillPopScope(
         onWillPop: () => onWillPop(

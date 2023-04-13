@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../info/screen/info_page.dart';
 import '../../profile/screen/profile_page.dart';
@@ -119,6 +120,7 @@ class BodyOtherPage extends StatelessWidget {
                 text: "logout".translate(context),
                 isOnPress: true,
                 onPress: () {
+                  context.read<LanguageCubit>().stopTimer();
                   Navigator.of(context).pushReplacement(createRoute(
                     screen: const LoginPage(),
                     begin: const Offset(0, 1),

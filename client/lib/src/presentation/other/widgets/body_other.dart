@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
@@ -100,6 +101,7 @@ class BodyOtherPage extends StatelessWidget {
                 isOnPress: true,
                 onPress: () {
                   GoogleSignIn().signOut();
+                  context.read<LanguageCubit>().stopTimer();
                   SharedPreferences.getInstance().then((value) {
                     value.setBool("isLogin", false);
                     value.setString("storeID", "");

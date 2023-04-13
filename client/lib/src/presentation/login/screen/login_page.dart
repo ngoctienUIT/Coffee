@@ -1,11 +1,13 @@
 import 'package:coffee/main.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/on_will_pop.dart';
@@ -109,8 +111,12 @@ class _LoginViewState extends State<LoginView> {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccessState) {
+          Fluttertoast.showToast(msg: "Đăng nhập thành công");
           isLogin = true;
           saveLogin();
+          context
+              .read<LanguageCubit>()
+              .startNewTimer(context, const Duration(hours: 1));
           Navigator.of(context).pushReplacement(createRoute(
             screen: const MainPage(),
             begin: const Offset(0, 1),

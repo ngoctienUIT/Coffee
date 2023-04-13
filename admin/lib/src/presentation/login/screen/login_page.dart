@@ -1,11 +1,13 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../main.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
@@ -107,7 +109,11 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           isLogin = true;
+          Fluttertoast.showToast(msg: "Đăng nhập thành công");
           saveLogin();
+          context
+              .read<LanguageCubit>()
+              .startNewTimer(context, const Duration(hours: 1));
           Navigator.of(context).pushReplacement(createRoute(
             screen: const MainPage(),
             begin: const Offset(0, 1),

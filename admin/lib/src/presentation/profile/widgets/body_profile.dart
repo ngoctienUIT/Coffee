@@ -46,7 +46,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
     emailController.text = widget.user.email;
     isMale = widget.user.isMale;
     if (widget.user.birthOfDate != null) {
-      selectedDate = widget.user.birthOfDate!.toDateTime();
+      selectedDate = widget.user.birthOfDate!.toDate();
     }
     super.initState();
   }

@@ -1,10 +1,12 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
@@ -23,6 +25,18 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   language = prefs.getInt('language');
   isLogin = prefs.getBool('isLogin') ?? false;
+  String? timeLogin = prefs.getString('timeLogin');
+  if (isLogin &&
+      timeLogin != null &&
+      timeLogin.toDateTime().compareTo(DateTime.now()) <= 0) {
+    isLogin = false;
+    GoogleSignIn().signOut();
+    SharedPreferences.getInstance().then((value) {
+      value.setBool("isLogin", false);
+      value.setString("storeID", "");
+      value.setBool("isBringBack", false);
+    });
+  }
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -38,7 +52,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(
-          create: (_) => LanguageCubit(language: language),
+          create: (context) => LanguageCubit(language: language),
         ),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
