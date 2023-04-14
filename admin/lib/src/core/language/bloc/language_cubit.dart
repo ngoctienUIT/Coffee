@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -33,6 +34,15 @@ class LanguageCubit extends Cubit<LanguageState> {
     emit(const LanguageChange(Locale('en')));
   }
 
+  void checkLogin(BuildContext context) {
+    SharedPreferences.getInstance().then((value) {
+      String? timeLogin = value.getString('timeLogin');
+      Duration duration = DateTime.now().difference(timeLogin!.toDateTime());
+      print(DateFormat("dd/MM/yyyy hh:mm").format(timeLogin.toDateTime()));
+      if (duration.inSeconds > 0) startNewTimer(context, duration);
+    });
+  }
+
   Future startNewTimer(BuildContext context, Duration duration) async {
     stopTimer();
     SharedPreferences.getInstance().then((value) {
@@ -40,7 +50,10 @@ class LanguageCubit extends Cubit<LanguageState> {
           "timeLogin",
           DateFormat("dd/MM/yyyy hh:mm:ss")
               .format(DateTime.now().add(duration)));
+      print(DateFormat("dd/MM/yyyy hh:mm:ss")
+          .format(DateTime.now().add(duration)));
     });
+    print(duration);
     _timer = Timer.periodic(duration, (_) {
       _timedOut();
       Navigator.of(context).pushAndRemoveUntil(

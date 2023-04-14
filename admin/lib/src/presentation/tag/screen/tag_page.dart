@@ -10,16 +10,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/tag.dart';
-import '../../../domain/repositories/tag/tag_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
+import '../../login/widgets/custom_button.dart';
 import '../bloc/tag_bloc.dart';
 import '../bloc/tag_event.dart';
 import '../bloc/tag_state.dart';
 
 class TagPage extends StatelessWidget {
-  const TagPage({Key? key, this.onPick}) : super(key: key);
+  const TagPage({Key? key, this.onPick, this.listTag}) : super(key: key);
 
-  final Function(TagResponse tag)? onPick;
+  final Function(List<Tag> listTag)? onPick;
+  final List<String>? listTag;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class TagPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: const AppBarGeneral(title: "Tags", elevation: 0),
-        body: TagView(onPick: onPick),
+        body: TagView(onPick: onPick, listTag: listTag),
         floatingActionButton: BlocBuilder<TagBloc, TagState>(
           builder: (context, state) {
             return FloatingActionButton(
@@ -50,89 +51,151 @@ class TagPage extends StatelessWidget {
   }
 }
 
-class TagView extends StatelessWidget {
-  const TagView({Key? key, this.onPick}) : super(key: key);
+class TagView extends StatefulWidget {
+  const TagView({Key? key, this.onPick, this.listTag}) : super(key: key);
 
-  final Function(TagResponse catalogue)? onPick;
+  final Function(List<Tag> listTag)? onPick;
+  final List<String>? listTag;
+
+  @override
+  State<TagView> createState() => _TagViewState();
+}
+
+class _TagViewState extends State<TagView> {
+  List<Tag> listTag = [];
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TagBloc, TagState>(
+      buildWhen: (previous, current) => current is! PickState,
       builder: (context, state) {
         if (state is TagLoaded) {
-          final listTag = state.listTag;
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<TagBloc>().add(FetchData());
-            },
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
-              itemCount: listTag.length,
-              itemBuilder: (context, index) {
-                final myContext = context;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: InkWell(
-                    onTap: onPick != null
-                        ? () {
-                            onPick!(listTag[index]);
-                            Navigator.pop(context);
-                          }
-                        : null,
-                    child: Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.3,
-                        children: [
-                          SlidableAction(
-                            onPressed: (context) {
-                              Navigator.of(context).push(createRoute(
-                                screen: AddTagPage(
-                                  tag: Tag.fromTagResponse(listTag[index]),
-                                  onChange: () {
-                                    myContext.read<TagBloc>().add(FetchData());
-                                  },
-                                ),
-                                begin: const Offset(0, 1),
-                              ));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.penToSquare,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          SlidableAction(
-                            onPressed: (context) {
-                              context
-                                  .read<TagBloc>()
-                                  .add(DeleteEvent(listTag[index].tagId));
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.trash,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ],
-                      ),
-                      child: tagItem(listTag[index]),
-                    ),
+          listTag = state.listTag.map((e) => Tag.fromTagResponse(e)).toList();
+          if (widget.listTag != null) {
+            for (int i = 0; i < listTag.length; i++) {
+              if (widget.listTag!.contains(listTag[i].tagId)) {
+                listTag[i].isCheck = true;
+              }
+            }
+          }
+          return widget.onPick == null
+              ? RefreshIndicator(
+                  onRefresh: () async {
+                    context.read<TagBloc>().add(FetchData());
+                  },
+                  child: listTagWidget(listTag),
+                )
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      listTagWidget(listTag),
+                      buttonSave(),
+                      const SizedBox(height: 80),
+                    ],
                   ),
                 );
-              },
-            ),
-          );
         }
         return _buildLoading();
       },
     );
   }
 
-  Widget tagItem(TagResponse tag) {
+  Widget buttonSave() {
+    return BlocBuilder<TagBloc, TagState>(
+      buildWhen: (previous, current) => current is PickState,
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: customButton(
+            text: "Lưu",
+            isOnPress: true,
+            onPress: () {
+              widget.onPick!(
+                  listTag.where((element) => element.isCheck).toList());
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget listTagWidget(List<Tag> listTag) {
+    return ListView.builder(
+      physics: widget.onPick == null
+          ? const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            )
+          : const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, widget.onPick == null ? 60 : 10),
+      shrinkWrap: widget.onPick == null ? false : true,
+      itemCount: listTag.length,
+      itemBuilder: (context, index) {
+        final myContext = context;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5),
+          child: widget.onPick != null
+              ? Row(
+                  children: [
+                    BlocBuilder<TagBloc, TagState>(
+                      buildWhen: (previous, current) => current is PickState,
+                      builder: (context, state) {
+                        return Checkbox(
+                          value: listTag[index].isCheck,
+                          onChanged: (value) {
+                            listTag[index].isCheck = value!;
+                            context.read<TagBloc>().add(PickEvent());
+                          },
+                        );
+                      },
+                    ),
+                    Expanded(child: tagItem(listTag[index])),
+                  ],
+                )
+              : Slidable(
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    extentRatio: 0.3,
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          Navigator.of(context).push(createRoute(
+                            screen: AddTagPage(
+                              tag: listTag[index],
+                              onChange: () {
+                                myContext.read<TagBloc>().add(FetchData());
+                              },
+                            ),
+                            begin: const Offset(0, 1),
+                          ));
+                        },
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.penToSquare,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      SlidableAction(
+                        onPressed: (context) {
+                          context
+                              .read<TagBloc>()
+                              .add(DeleteEvent(listTag[index].tagId!));
+                        },
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.trash,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ],
+                  ),
+                  child: tagItem(listTag[index]),
+                ),
+        );
+      },
+    );
+  }
+
+  Widget tagItem(Tag tag) {
     String color = "FF${tag.tagColorCode!.split("#").last}";
     return Card(
       child: Padding(
@@ -181,30 +244,44 @@ class TagView extends StatelessWidget {
   }
 
   Widget _buildLoading() {
-    var rng = Random();
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+      padding: EdgeInsets.fromLTRB(10, 10, 10, widget.onPick == null ? 60 : 10),
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 5),
-                itemLoading(20, rng.nextDouble() * 100 + 100, 10),
-                const SizedBox(height: 5),
-                itemLoading(15, rng.nextDouble() * 150 + 100, 10),
-                const SizedBox(height: 5),
-                itemLoading(25, 100, 20),
-                const SizedBox(height: 5),
-              ],
-            ),
-          ),
-        );
+        return widget.onPick != null
+            ? Row(
+                children: [
+                  Checkbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                  Expanded(child: tagItemLoading()),
+                ],
+              )
+            : tagItemLoading();
       },
+    );
+  }
+
+  Widget tagItemLoading() {
+    var rng = Random();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 5),
+            itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+            const SizedBox(height: 5),
+            itemLoading(15, rng.nextDouble() * 150 + 100, 10),
+            const SizedBox(height: 5),
+            itemLoading(25, 100, 20),
+            const SizedBox(height: 5),
+          ],
+        ),
+      ),
     );
   }
 }

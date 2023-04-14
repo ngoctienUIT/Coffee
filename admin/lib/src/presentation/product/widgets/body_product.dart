@@ -67,6 +67,18 @@ class _BodyProductPageState extends State<BodyProductPage> {
                   context.read<ProductBloc>().add(RefreshData(index));
                 },
                 child: ListItemProduct(
+                  productCatalogues:
+                      context.read<ProductBloc>().listProductCatalogues[
+                          state is RefreshLoaded ? state.index : 0],
+                  onChange: () {
+                    int index = 0;
+                    if (state is RefreshLoaded) {
+                      index = state.index;
+                    } else {
+                      index = 0;
+                    }
+                    context.read<ProductBloc>().add(RefreshData(index));
+                  },
                   listProduct: state is ProductLoaded
                       ? state.listProduct
                       : (state as RefreshLoaded).listProduct,

@@ -11,6 +11,7 @@ import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_event
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/description_line.dart';
+import 'package:coffee_admin/src/presentation/tag/screen/tag_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/tag.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
@@ -26,11 +28,16 @@ import '../../topping/screen/topping_page.dart';
 import '../widgets/bottom_pick_image.dart';
 
 class AddProductPage extends StatelessWidget {
-  const AddProductPage({Key? key, this.product, required this.onChange})
-      : super(key: key);
+  const AddProductPage({
+    Key? key,
+    this.product,
+    required this.onChange,
+    this.productCatalogues,
+  }) : super(key: key);
 
   final Product? product;
   final VoidCallback onChange;
+  final ProductCataloguesResponse? productCatalogues;
 
   @override
   Widget build(BuildContext context) {
@@ -51,18 +58,24 @@ class AddProductPage extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        body: AddProductView(product: product, onChange: onChange),
+        body: AddProductView(
+          product: product,
+          onChange: onChange,
+          productCatalogues: productCatalogues,
+        ),
       ),
     );
   }
 }
 
 class AddProductView extends StatefulWidget {
-  const AddProductView({Key? key, this.product, required this.onChange})
+  const AddProductView(
+      {Key? key, this.product, required this.onChange, this.productCatalogues})
       : super(key: key);
 
   final Product? product;
   final VoidCallback onChange;
+  final ProductCataloguesResponse? productCatalogues;
 
   @override
   State<AddProductView> createState() => _AddProductViewState();
@@ -79,11 +92,13 @@ class _AddProductViewState extends State<AddProductView> {
   File? image;
   String? imageNetwork;
   List<Topping> listTopping = [];
+  List<Tag> listTag = [];
   ProductCataloguesResponse? catalogues;
 
   @override
   void initState() {
     if (widget.product != null) {
+      catalogues = widget.productCatalogues;
       nameController.text = widget.product!.name;
       priceController.text = widget.product!.price.toString();
       sController.text = widget.product!.S.toString();
@@ -91,6 +106,8 @@ class _AddProductViewState extends State<AddProductView> {
       lController.text = widget.product!.L.toString();
       imageNetwork = widget.product!.image;
       descriptionController.text = widget.product!.description!;
+      listTopping = widget.product!.toppingOptions ?? [];
+      listTag = widget.product!.tags ?? [];
     }
     nameController.addListener(() => checkEmpty());
     priceController.addListener(() => checkEmpty());
@@ -218,6 +235,8 @@ class _AddProductViewState extends State<AddProductView> {
               const SizedBox(height: 10),
               addTopping(),
               const SizedBox(height: 10),
+              addTag(),
+              const SizedBox(height: 10),
               saveButton(),
             ],
           ),
@@ -291,22 +310,20 @@ class _AddProductViewState extends State<AddProductView> {
             descriptionLine(text: "Thêm Topping"),
             const Spacer(),
             TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(createRoute(
-                    screen: ToppingPage(
-                      listTopping:
-                          listTopping.map((e) => e.toppingId!).toList(),
-                      onPick: (list) {
-                        listTopping = list;
-                        context
-                            .read<AddProductBloc>()
-                            .add(ChangeToppingEvent());
-                      },
-                    ),
-                    begin: const Offset(0, 1),
-                  ));
-                },
-                child: const Text("Thêm"))
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: ToppingPage(
+                    listTopping: listTopping.map((e) => e.toppingId!).toList(),
+                    onPick: (list) {
+                      listTopping = list;
+                      context.read<AddProductBloc>().add(ChangeToppingEvent());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              child: const Text("Thêm"),
+            )
           ],
         ),
         BlocBuilder<AddProductBloc, AddProductState>(
@@ -324,6 +341,59 @@ class _AddProductViewState extends State<AddProductView> {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
                           listTopping[index].toppingName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: AppColors.statusBarColor,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+          },
+        )
+      ],
+    );
+  }
+
+  Widget addTag() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            descriptionLine(text: "Thêm Tag"),
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: TagPage(
+                    listTag: listTag.map((e) => e.tagId!).toList(),
+                    onPick: (list) {
+                      listTag = list;
+                      context.read<AddProductBloc>().add(ChangeTagEvent());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              child: const Text("Thêm"),
+            )
+          ],
+        ),
+        BlocBuilder<AddProductBloc, AddProductState>(
+          buildWhen: (previous, current) => current is ChangeTagState,
+          builder: (context, state) {
+            return listTag.isEmpty
+                ? const Text("Không có tag!")
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: listTag.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Text(
+                          listTag[index].tagName!,
                           style: const TextStyle(
                             fontSize: 16,
                             color: AppColors.statusBarColor,
@@ -356,6 +426,7 @@ class _AddProductViewState extends State<AddProductView> {
                       L: int.parse(lController.text),
                       S: int.parse(sController.text),
                       toppingOptions: listTopping,
+                      tags: listTag,
                     )));
               } else {
                 context.read<AddProductBloc>().add(UpdateProductEvent(Product(
@@ -368,6 +439,7 @@ class _AddProductViewState extends State<AddProductView> {
                       image: widget.product!.image,
                       toppingOptions: listTopping,
                       id: widget.product!.id,
+                      tags: listTag,
                     )));
               }
             }

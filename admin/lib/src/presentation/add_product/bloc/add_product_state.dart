@@ -6,6 +6,8 @@ class ChangeImageState extends AddProductState {}
 
 class ChangeToppingState extends AddProductState {}
 
+class ChangeTagState extends AddProductState {}
+
 class ChangeCatalogueState extends AddProductState {}
 
 class SaveButtonState extends AddProductState {

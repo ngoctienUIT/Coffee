@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,15 +11,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/user.dart';
 import '../../order/widgets/item_loading.dart';
+import '../../view_image/screen/view_image.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
 
 class HeaderProfilePage extends StatefulWidget {
-  const HeaderProfilePage({Key? key, this.avatar}) : super(key: key);
+  const HeaderProfilePage(
+      {Key? key, required this.user, required this.onChange})
+      : super(key: key);
 
-  final String? avatar;
+  final UserResponse user;
+  final VoidCallback onChange;
 
   @override
   State<HeaderProfilePage> createState() => _HeaderProfilePageState();
@@ -58,24 +64,31 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
   Widget imageWidget() {
     return BlocBuilder<ProfileBloc, ProfileState>(
       buildWhen: (previous, current) =>
-          current is EditProfileSate || current is ChangeAvatarState,
+          current is EditProfileSate ||
+          current is ChangeAvatarState ||
+          current is DeleteAvatarState,
       builder: (context, state) {
         if (state is EditProfileSate) isEdit = state.isEdit;
-
+        if (state is DeleteAvatarState) {
+          widget.user.imageUrl = null;
+          widget.onChange();
+        }
         return InkWell(
-          onTap: isEdit ? () => showMyBottomSheet() : null,
+          onTap: widget.user.imageUrl != null || isEdit
+              ? () => showMyBottomSheet()
+              : null,
           child: ClipOval(
             child: image == null
-                ? (widget.avatar == null
+                ? widget.user.imageUrl == null
                     ? Image.asset(AppImages.imgNonAvatar, height: 80)
                     : CachedNetworkImage(
                         height: 80,
                         width: 80,
-                        imageUrl: widget.avatar!,
-                        placeholder: (context, url) => itemLoading(80, 80, 0),
+                        imageUrl: widget.user.imageUrl!,
+                        placeholder: (context, url) => itemLoading(80, 80, 90),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
-                      ))
+                      )
                 : Image.file(image!, height: 80),
           ),
         );
@@ -91,32 +104,47 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
       ),
       builder: (context) {
         return Container(
-          height: 350,
+          height: isEdit ? 350 : 150,
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           child: Column(
             children: [
-              itemAction("take_photo".translate(context), () async {
+              if (isEdit)
+                itemAction("take_photo".translate(context), () async {
+                  Navigator.pop(context);
+                  var status = await Permission.camera.status;
+                  if (status.isDenied) {
+                    await Permission.camera.request();
+                  }
+                  status = await Permission.camera.status;
+                  if (status.isGranted) pickAvatar(true);
+                }),
+              if (isEdit)
+                itemAction("select_image_gallery".translate(context), () async {
+                  Navigator.pop(context);
+                  var status = await Permission.storage.status;
+                  if (status.isDenied) {
+                    await Permission.storage.request();
+                  }
+                  status = await Permission.storage.status;
+                  if (status.isGranted) pickAvatar(false);
+                }),
+              itemAction("view_profile_picture".translate(context), () {
                 Navigator.pop(context);
-                var status = await Permission.camera.status;
-                if (status.isDenied) {
-                  await Permission.camera.request();
-                }
-                status = await Permission.camera.status;
-                if (status.isGranted) pickAvatar(true);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ViewImage(url: widget.user.imageUrl!),
+                    ));
               }),
-              itemAction("select_image_gallery".translate(context), () async {
-                Navigator.pop(context);
-                var status = await Permission.storage.status;
-                if (status.isDenied) {
-                  await Permission.storage.request();
-                }
-                status = await Permission.storage.status;
-                if (status.isGranted) pickAvatar(false);
-              }),
-              itemAction("view_profile_picture".translate(context), () {}),
-              itemAction("delete_profile_picture".translate(context), () {}),
+              if (isEdit)
+                itemAction("delete_profile_picture".translate(context), () {
+                  Navigator.pop(context);
+                  context.read<ProfileBloc>().add(
+                      DeleteAvatarEvent(User.fromUserResponse(widget.user)));
+                }),
               itemAction(
                 "cancel".translate(context),
                 () => Navigator.pop(context),

@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<LanguageCubit>(
-          create: (_) => LanguageCubit(language: language),
+          create: (context) => LanguageCubit(language: language),
         ),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(

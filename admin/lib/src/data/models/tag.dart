@@ -5,12 +5,14 @@ class Tag {
   final String? tagName;
   final String? tagDescription;
   final String? tagColorCode;
+  bool isCheck;
 
   Tag({
     this.tagId,
     this.tagName,
     this.tagDescription,
     this.tagColorCode,
+    this.isCheck = false,
   });
 
   factory Tag.fromTagResponse(TagResponse tagResponse) {

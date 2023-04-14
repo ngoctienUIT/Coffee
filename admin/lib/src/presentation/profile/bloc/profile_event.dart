@@ -21,3 +21,9 @@ class PickAvatarEvent extends ProfileEvent {
 }
 
 class ChangeBirthDayEvent extends ProfileEvent {}
+
+class DeleteAvatarEvent extends ProfileEvent {
+  User user;
+
+  DeleteAvatarEvent(this.user);
+}

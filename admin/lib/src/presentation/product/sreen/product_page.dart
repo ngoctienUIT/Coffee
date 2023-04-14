@@ -35,7 +35,6 @@ class ProductPage extends StatelessWidget {
                 Navigator.of(context).push(createRoute(
                   screen: AddProductPage(
                     onChange: () {
-                      context.read<ProductBloc>().state;
                       int index = 0;
                       if (state is RefreshLoaded) {
                         index = state.index;

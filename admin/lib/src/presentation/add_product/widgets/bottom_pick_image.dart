@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/presentation/view_image/screen/view_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -16,7 +15,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
     ),
     builder: (context) {
       return Container(
-        height: 350,
+        height: 220,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
@@ -39,17 +38,6 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
               }
               status = await Permission.storage.status;
               if (status.isGranted) onPick(await pickAvatar(false));
-            }),
-            itemAction("see_product_picture".translate(context), () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ViewImage(url: ""),
-                  ));
-            }),
-            itemAction("delete_product_image".translate(context), () {
-              Navigator.pop(context);
-              onPick(null);
             }),
             itemAction(
                 "cancel".translate(context), () => Navigator.pop(context)),

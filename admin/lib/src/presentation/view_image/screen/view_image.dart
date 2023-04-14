@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../../order/widgets/item_loading.dart';
 
 class ViewImage extends StatefulWidget {
   const ViewImage({Key? key, required this.url}) : super(key: key);
@@ -62,7 +65,16 @@ class _ViewImageImageState extends State<ViewImage> {
               clipBehavior: Clip.none,
               minScale: 1,
               maxScale: 4,
-              child: Image.asset(widget.url),
+              child: CachedNetworkImage(
+                height: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width,
+                imageUrl: widget.url,
+                placeholder: (context, url) => itemLoading(
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.width,
+                    0),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
           ),
         ),

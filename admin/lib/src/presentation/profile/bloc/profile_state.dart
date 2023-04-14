@@ -19,4 +19,6 @@ class SaveProfileError extends ProfileState {
 
 class ChangeAvatarState extends ProfileState {}
 
+class DeleteAvatarState extends ProfileState {}
+
 class ChangeBirthDayState extends ProfileState {}

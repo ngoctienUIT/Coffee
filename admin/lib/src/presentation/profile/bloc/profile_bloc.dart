@@ -20,6 +20,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     on<SaveProfileEvent>((event, emit) => saveProfile(event.user, emit));
 
+    on<DeleteAvatarEvent>((event, emit) => deleteAvatar(event.user, emit));
+
     on<ChangeBirthDayEvent>((event, emit) => emit(ChangeBirthDayState()));
 
     on<PickAvatarEvent>((event, emit) {
@@ -50,6 +52,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
       emit(SaveProfileError(e.toString()));
+      print(e);
+    }
+  }
+
+  Future deleteAvatar(User user, Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "admin";
+      user.imageUrl = null;
+      await apiService.updateExistingUser(
+          "Bearer $token", email, user.toJson());
+
+      emit(DeleteAvatarState());
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      Fluttertoast.showToast(msg: error);
+      emit(DeleteAvatarState());
+      print(error);
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+      emit(DeleteAvatarState());
       print(e);
     }
   }

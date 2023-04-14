@@ -1,8 +1,10 @@
+import 'package:coffee_admin/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/on_will_pop.dart';
@@ -20,13 +22,22 @@ class _MainPageState extends State<MainPage> {
   final PageStorageBucket bucket = PageStorageBucket();
   DateTime? currentBackPressTime;
   int currentTab = 0;
-  List<Widget> screens = [
-    const OrderPage(key: PageStorageKey<String>('HomePage')),
-    const ProductPage(key: PageStorageKey<String>('OrderPage')),
-    const CouponPage(key: PageStorageKey<String>('ActivityPage')),
-    const AccountManagementPage(key: PageStorageKey<String>('AccountManage')),
-    const OtherPage(key: PageStorageKey<String>('OtherPage')),
-  ];
+  late List<Widget> screens;
+
+  @override
+  void initState() {
+    screens = [
+      const OrderPage(key: PageStorageKey<String>('HomePage')),
+      const ProductPage(key: PageStorageKey<String>('OrderPage')),
+      const CouponPage(key: PageStorageKey<String>('ActivityPage')),
+      const AccountManagementPage(key: PageStorageKey<String>('AccountManage')),
+      const OtherPage(key: PageStorageKey<String>('OtherPage')),
+    ];
+    context
+        .read<LanguageCubit>()
+        .startNewTimer(context, const Duration(hours: 1));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

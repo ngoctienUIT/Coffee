@@ -16,3 +16,5 @@ class TagError extends TagState {
   final String? message;
   TagError(this.message);
 }
+
+class PickState extends TagState {}

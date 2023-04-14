@@ -28,6 +28,8 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
 
     on<ChangeToppingEvent>((event, emit) => emit(ChangeToppingState()));
 
+    on<ChangeTagEvent>((event, emit) => emit(ChangeTagState()));
+
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 

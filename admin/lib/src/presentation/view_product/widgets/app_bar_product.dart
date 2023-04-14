@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class AppBarProduct extends StatelessWidget {
-  const AppBarProduct({
-    Key? key,
-    required this.isTop,
-    required this.name,
-    required this.onEdit,
-  }) : super(key: key);
+  const AppBarProduct(
+      {Key? key, required this.isTop, required this.name, this.onEdit})
+      : super(key: key);
 
   final bool isTop;
   final String name;
-  final VoidCallback onEdit;
+  final VoidCallback? onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +25,14 @@ class AppBarProduct extends StatelessWidget {
         ),
       ),
       actions: [
-        IconButton(
-          onPressed: onEdit,
-          icon: Icon(
-            Icons.edit,
-            color: isTop ? AppColors.statusBarColor : Colors.white,
+        if (onEdit != null)
+          IconButton(
+            onPressed: onEdit,
+            icon: Icon(
+              Icons.edit,
+              color: isTop ? AppColors.statusBarColor : Colors.white,
+            ),
           ),
-        ),
       ],
       expandedHeight: 0,
       pinned: true,

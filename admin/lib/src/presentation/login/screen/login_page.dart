@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../main.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
@@ -103,22 +102,21 @@ class _LoginViewState extends State<LoginView> {
     prefs.setString('password', passwordController.text);
   }
 
+  void loginSuccess() {
+    isLogin = true;
+    Fluttertoast.showToast(msg: "Đăng nhập thành công");
+    saveLogin();
+    Navigator.of(context).pushReplacement(createRoute(
+      screen: const MainPage(),
+      begin: const Offset(0, 1),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (_, state) {
-        if (state is LoginSuccessState) {
-          isLogin = true;
-          Fluttertoast.showToast(msg: "Đăng nhập thành công");
-          saveLogin();
-          context
-              .read<LanguageCubit>()
-              .startNewTimer(context, const Duration(hours: 1));
-          Navigator.of(context).pushReplacement(createRoute(
-            screen: const MainPage(),
-            begin: const Offset(0, 1),
-          ));
-        }
+        if (state is LoginSuccessState) loginSuccess();
       },
       child: Container(
         height: MediaQuery.of(context).size.height - 35,

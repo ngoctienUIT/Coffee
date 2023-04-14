@@ -7,16 +7,23 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/product/product_response.dart';
+import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
-  const ListItemProduct(
-      {Key? key, required this.listProduct, required this.onDelete})
-      : super(key: key);
+  const ListItemProduct({
+    Key? key,
+    this.productCatalogues,
+    required this.listProduct,
+    required this.onDelete,
+    this.onChange,
+  }) : super(key: key);
 
+  final ProductCataloguesResponse? productCatalogues;
   final List<ProductResponse> listProduct;
   final Function(String id) onDelete;
+  final VoidCallback? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,11 @@ class ListItemProduct extends StatelessWidget {
           return InkWell(
             onTap: () {
               Navigator.of(context).push(createRoute(
-                screen: ViewProductPage(product: listProduct[index]),
+                screen: ViewProductPage(
+                  productCatalogues: productCatalogues,
+                  product: listProduct[index],
+                  onChange: onChange == null ? () {} : onChange!,
+                ),
                 begin: const Offset(0, 1),
               ));
             },

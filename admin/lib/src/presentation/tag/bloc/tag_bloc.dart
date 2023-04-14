@@ -11,6 +11,8 @@ class TagBloc extends Bloc<TagEvent, TagState> {
   TagBloc() : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
+    on<PickEvent>((event, emit) => emit(PickState()));
+
     on<DeleteEvent>((event, emit) => deleteTag(event.id, emit));
   }
 

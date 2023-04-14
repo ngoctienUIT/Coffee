@@ -124,7 +124,7 @@ class Product {
       'imageUrl': image,
       'description': description,
       'toppingIds': toppingOptions!.map((e) => e.toppingId).toList(),
-      // 'tags': tags,
+      'tagIds': tags!.map((e) => e.tagId).toList(),
       'upsizeOptions': {"S": S, "M": M, "L": L},
     };
   }

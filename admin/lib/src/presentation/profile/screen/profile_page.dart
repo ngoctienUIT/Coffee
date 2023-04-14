@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
             AppBarGeneral(title: "profile".translate(context), elevation: 0),
         body: Column(
           children: [
-            HeaderProfilePage(avatar: user.imageUrl),
+            HeaderProfilePage(user: user, onChange: onChange),
             Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
           ],
         ),

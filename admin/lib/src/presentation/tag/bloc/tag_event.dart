@@ -7,3 +7,5 @@ class DeleteEvent extends TagEvent {
 
   DeleteEvent(this.id);
 }
+
+class PickEvent extends TagEvent {}

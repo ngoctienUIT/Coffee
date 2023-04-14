@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
 import 'package:coffee_admin/src/domain/repositories/product/product_response.dart';
+import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/app_bar_product.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/body_product.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,16 @@ import '../bloc/view_product_bloc.dart';
 import '../bloc/view_product_event.dart';
 
 class ViewProductPage extends StatefulWidget {
-  const ViewProductPage({Key? key, required this.product}) : super(key: key);
+  const ViewProductPage({
+    Key? key,
+    required this.product,
+    required this.onChange,
+    this.productCatalogues,
+  }) : super(key: key);
 
   final ProductResponse product;
+  final ProductCataloguesResponse? productCatalogues;
+  final VoidCallback onChange;
 
   @override
   State<ViewProductPage> createState() => _ViewProductPageState();
@@ -52,15 +60,22 @@ class _ViewProductPageState extends State<ViewProductPage> {
               AppBarProduct(
                 isTop: isTop,
                 name: widget.product.name,
-                onEdit: () {
-                  Navigator.of(context).push(createRoute(
-                    screen: AddProductPage(
-                      onChange: () {},
-                      product: Product.fromProductResponse(widget.product),
-                    ),
-                    begin: const Offset(0, 1),
-                  ));
-                },
+                onEdit: widget.productCatalogues == null
+                    ? null
+                    : () {
+                        Navigator.of(context).push(createRoute(
+                          screen: AddProductPage(
+                            productCatalogues: widget.productCatalogues,
+                            onChange: () {
+                              widget.onChange();
+                              Navigator.pop(context);
+                            },
+                            product:
+                                Product.fromProductResponse(widget.product),
+                          ),
+                          begin: const Offset(0, 1),
+                        ));
+                      },
               ),
               SliverToBoxAdapter(
                 child: widget.product.image == null

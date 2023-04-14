@@ -112,12 +112,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       builder: (context, state) {
         if (state is LinkAccountWithGoogleLoadingState ||
             state is LinkAccountWithGoogleSuccessState ||
-            state is UnlinkAccountWithGoogleLoadingState ||
-            state is UnlinkAccountWithGoogleSuccessState) {
+            state is UnlinkAccountWithGoogleErrorState) {
           isLink = true;
         }
-        if (state is LinkAccountWithGoogleErrorState ||
-            state is UnlinkAccountWithGoogleErrorState) {
+        if (state is UnlinkAccountWithGoogleLoadingState ||
+            state is UnlinkAccountWithGoogleSuccessState ||
+            state is LinkAccountWithGoogleErrorState) {
           isLink = false;
         }
         return Container(

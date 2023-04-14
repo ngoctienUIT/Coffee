@@ -33,3 +33,5 @@ class UpdateProductEvent extends AddProductEvent {
 }
 
 class ChangeToppingEvent extends AddProductEvent {}
+
+class ChangeTagEvent extends AddProductEvent {}
