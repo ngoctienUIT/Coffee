@@ -6,16 +6,18 @@ class AppBarGeneral extends StatelessWidget implements PreferredSizeWidget {
     this.elevation,
     this.title,
     this.icon = Icons.arrow_back_ios_new_rounded,
+    this.backgroundColor = Colors.white,
   }) : super(key: key);
 
   final String? title;
   final double? elevation;
   final IconData icon;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       elevation: elevation,
       title: title != null
           ? Text(title!, style: const TextStyle(color: Colors.black))

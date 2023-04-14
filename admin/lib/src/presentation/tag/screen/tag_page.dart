@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
+import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -56,14 +59,6 @@ class TagView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TagBloc, TagState>(
       builder: (context, state) {
-        if (state is InitState || state is TagLoading) {
-          return _buildLoading();
-        }
-        if (state is TagError) {
-          return Center(
-            child: Text(state.message!),
-          );
-        }
         if (state is TagLoaded) {
           final listTag = state.listTag;
           return RefreshIndicator(
@@ -132,7 +127,7 @@ class TagView extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
@@ -140,9 +135,6 @@ class TagView extends StatelessWidget {
   Widget tagItem(TagResponse tag) {
     String color = "FF${tag.tagColorCode!.split("#").last}";
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Column(
@@ -188,5 +180,31 @@ class TagView extends StatelessWidget {
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    var rng = Random();
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 5),
+                itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+                const SizedBox(height: 5),
+                itemLoading(15, rng.nextDouble() * 150 + 100, 10),
+                const SizedBox(height: 5),
+                itemLoading(25, 100, 20),
+                const SizedBox(height: 5),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

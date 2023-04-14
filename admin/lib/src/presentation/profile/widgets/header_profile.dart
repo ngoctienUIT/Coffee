@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../order/widgets/item_loading.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -66,7 +68,14 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
             child: image == null
                 ? (widget.avatar == null
                     ? Image.asset(AppImages.imgNonAvatar, height: 80)
-                    : Image.network(widget.avatar!, height: 80))
+                    : CachedNetworkImage(
+                        height: 80,
+                        width: 80,
+                        imageUrl: widget.avatar!,
+                        placeholder: (context, url) => itemLoading(80, 80, 0),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ))
                 : Image.file(image!, height: 80),
           ),
         );

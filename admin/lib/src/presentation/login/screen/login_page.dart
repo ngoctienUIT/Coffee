@@ -106,7 +106,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
+      listener: (_, state) {
         if (state is LoginSuccessState) {
           isLogin = true;
           Fluttertoast.showToast(msg: "Đăng nhập thành công");

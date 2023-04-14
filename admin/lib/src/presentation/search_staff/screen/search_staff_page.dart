@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -52,12 +53,6 @@ class _SearchStaffViewState extends State<SearchStaffView> {
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
-        if (state is InitState || state is SearchLoading) {
-          return _buildLoading();
-        }
-        if (state is SearchError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is SearchLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -108,10 +103,8 @@ class _SearchStaffViewState extends State<SearchStaffView> {
                 )),
           );
         }
-        return Container();
+        return listAccountLoading();
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

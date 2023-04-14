@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
 import 'package:coffee_admin/src/domain/repositories/product/product_response.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/app_bar_product.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/function/route_function.dart';
 import '../../../data/models/product.dart';
 import '../../add_product/screen/add_product_page.dart';
+import '../../order/widgets/item_loading.dart';
 import '../bloc/view_product_bloc.dart';
 import '../bloc/view_product_event.dart';
 
@@ -63,10 +65,13 @@ class _ViewProductPageState extends State<ViewProductPage> {
               SliverToBoxAdapter(
                 child: widget.product.image == null
                     ? Image.asset(AppImages.imgLogo, width: 300, height: 300)
-                    : Image.network(
-                        widget.product.image!,
+                    : CachedNetworkImage(
                         height: 300,
                         width: 300,
+                        imageUrl: widget.product.image!,
+                        placeholder: (context, url) => itemLoading(300, 300, 0),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
               ),
               BodyProduct(isTop: isTop),

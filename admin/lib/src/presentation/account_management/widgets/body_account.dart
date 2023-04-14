@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
+import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -19,14 +20,6 @@ class BodyAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AccountBloc, AccountState>(
       builder: (context, state) {
-        if (state is InitState || state is AccountLoading) {
-          return _buildLoading();
-        }
-        if (state is AccountError) {
-          return Center(
-            child: Text(state.message!),
-          );
-        }
         if (state is AccountLoaded) {
           List<UserResponse> listAccount = state.listAccount;
           int indexState = state.index;
@@ -80,10 +73,8 @@ class BodyAccount extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return listAccountLoading();
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

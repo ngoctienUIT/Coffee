@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import '../../../data/models/product_catalogues.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
+import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/add_product_catalogues_bloc.dart';
@@ -152,7 +154,14 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
           }),
           child: (image == null
               ? (imageNetwork != null
-                  ? Image.network(imageNetwork!, height: 150, width: 150)
+                  ? CachedNetworkImage(
+                      height: 150,
+                      width: 150,
+                      imageUrl: imageNetwork!,
+                      placeholder: (context, url) => itemLoading(150, 150, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    )
                   : Image.asset(AppImages.imgAddImage, height: 150, width: 150))
               : Image.file(image!, height: 150, width: 150)),
         );

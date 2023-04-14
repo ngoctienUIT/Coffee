@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
@@ -17,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
+import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/description_line.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -285,10 +287,14 @@ class _AddStoreViewState extends State<AddStoreView> {
               ? (image == null
                   ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
                   : Image.file(image!, height: 150, width: 150))
-              : Image.network(
-                  "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+              : CachedNetworkImage(
                   height: 150,
-                  width: 150),
+                  width: 150,
+                  imageUrl:
+                      "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                  placeholder: (context, url) => itemLoading(150, 150, 0),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
         );
       },
     );

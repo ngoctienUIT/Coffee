@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
+import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +15,7 @@ import '../../../core/utils/constants/constants.dart';
 import '../../../domain/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
 import '../bloc/order_event.dart';
+import 'item_loading.dart';
 
 class BodyOrder extends StatelessWidget {
   const BodyOrder({Key? key}) : super(key: key);
@@ -21,18 +24,6 @@ class BodyOrder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        if (state is InitState ||
-            state is OrderLoading ||
-            state is RefreshLoading) {
-          return _buildLoading();
-        }
-        if (state is OrderError || state is RefreshError) {
-          return Center(
-            child: Text(state is OrderError
-                ? state.message!
-                : (state as RefreshError).message!),
-          );
-        }
         if (state is OrderLoaded || state is RefreshLoaded) {
           List<OrderResponse> listOrder = state is OrderLoaded
               ? state.listOrder
@@ -74,24 +65,30 @@ class BodyOrder extends StatelessWidget {
                         child: itemOrder(context, listOrder[index], user),
                       );
                     }
-                    return _buildLoading();
+                    return itemOrderLoading();
                   },
                 );
               },
             ),
           );
         }
-        return Container();
+        return listOrderLoading();
       },
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
-
   Widget headerItem(OrderResponse order) {
     return Row(
       children: [
-        Image.asset(AppImages.imgVietNam, height: 40),
+        CachedNetworkImage(
+          height: 40,
+          width: 40,
+          fit: BoxFit.fitHeight,
+          imageUrl:
+              "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+          placeholder: (context, url) => itemLoading(40, 40, 0),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
@@ -121,7 +118,13 @@ class BodyOrder extends StatelessWidget {
         ClipOval(
           child: user.imageUrl == null
               ? Image.asset(AppImages.imgNonAvatar, height: 100)
-              : Image.network(user.imageUrl!, height: 100),
+              : CachedNetworkImage(
+                  height: 100,
+                  width: 100,
+                  imageUrl: user.imageUrl!,
+                  placeholder: (context, url) => itemLoading(100, 100, 0),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                ),
         ),
         const SizedBox(width: 20),
         Expanded(
@@ -166,9 +169,6 @@ class BodyOrder extends StatelessWidget {
       number += item.quantity;
     }
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Container(
         // margin: const EdgeInsets.symmetric(vertical: 5),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),

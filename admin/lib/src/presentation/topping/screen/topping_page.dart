@@ -1,7 +1,11 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
+import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -71,12 +75,6 @@ class _ToppingViewState extends State<ToppingView> {
     return BlocBuilder<ToppingBloc, ToppingState>(
       buildWhen: (previous, current) => current is! PickState,
       builder: (context, state) {
-        if (state is InitState || state is ToppingLoading) {
-          return _buildLoading();
-        }
-        if (state is ToppingError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is ToppingLoaded) {
           listTopping = state.listTopping
               .map((e) => Topping.fromToppingResponse(e))
@@ -106,7 +104,7 @@ class _ToppingViewState extends State<ToppingView> {
                   ),
                 );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
@@ -207,23 +205,19 @@ class _ToppingViewState extends State<ToppingView> {
 
   Widget itemTopping(Topping topping) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         child: Row(
           children: [
             topping.imageUrl!.isEmpty
-                ? Image.asset(
-                    AppImages.imgLogo,
+                ? Image.asset(AppImages.imgLogo, height: 80, width: 80)
+                : CachedNetworkImage(
                     height: 80,
                     width: 80,
-                  )
-                : Image.network(
-                    topping.imageUrl!,
-                    height: 80,
-                    width: 80,
+                    imageUrl: topping.imageUrl!,
+                    placeholder: (context, url) => itemLoading(80, 80, 0),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,5 +254,52 @@ class _ToppingViewState extends State<ToppingView> {
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    return ListView.builder(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, widget.onPick == null ? 60 : 10),
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return widget.onPick != null
+            ? Row(
+                children: [
+                  Checkbox(
+                    value: false,
+                    onChanged: (value) {},
+                  ),
+                  Expanded(child: itemToppingLoading()),
+                ],
+              )
+            : itemToppingLoading();
+      },
+    );
+  }
+
+  Widget itemToppingLoading() {
+    var rng = Random();
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            const SizedBox(width: 10),
+            itemLoading(80, 80, 0),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+                  const SizedBox(height: 10),
+                  itemLoading(15, rng.nextDouble() * 150 + 100, 10),
+                  const SizedBox(height: 10),
+                  itemLoading(15, 100, 10),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
@@ -17,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../order/widgets/item_loading.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -267,7 +269,14 @@ class _AddProductViewState extends State<AddProductView> {
           child: image == null
               ? (imageNetwork == null
                   ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
-                  : Image.network(imageNetwork!, width: 150, height: 150))
+                  : CachedNetworkImage(
+                      height: 150,
+                      width: 150,
+                      imageUrl: imageNetwork!,
+                      placeholder: (context, url) => itemLoading(150, 150, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ))
               : Image.file(image!, height: 150, width: 150),
         );
       },

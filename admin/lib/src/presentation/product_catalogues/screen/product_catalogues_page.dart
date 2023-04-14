@@ -1,7 +1,11 @@
+import 'dart:math';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_product_catalogues_page.dart';
+import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
+import '../../order/widgets/item_loading.dart';
 import '../bloc/product_catalogues_event.dart';
 import '../bloc/product_catalogues_state.dart';
 
@@ -64,12 +69,6 @@ class ProductCataloguesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ProductCataloguesBloc, ProductCataloguesState>(
       builder: (context, state) {
-        if (state is InitState || state is ProductCataloguesLoading) {
-          return _buildLoading();
-        }
-        if (state is ProductCataloguesError) {
-          return Center(child: Text(state.message!));
-        }
         if (state is ProductCataloguesLoaded) {
           final listProductCatalogues = state.listProductCatalogues;
           return RefreshIndicator(
@@ -155,8 +154,10 @@ class ProductCataloguesView extends StatelessWidget {
                                   bottomLeft: Radius.circular(10),
                                 ),
                               ),
-                              child:
-                                  Text("current_selection".translate(context)),
+                              child: Text(
+                                "current_selection".translate(context),
+                                style: const TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                       ],
@@ -167,19 +168,22 @@ class ProductCataloguesView extends StatelessWidget {
             ),
           );
         }
-        return Container();
+        return _buildLoading();
       },
     );
   }
 
   Widget productCataloguesItem(ProductCataloguesResponse productCatalogues) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Row(
         children: [
-          Image.network(productCatalogues.image, height: 80, width: 80),
+          CachedNetworkImage(
+            height: 80,
+            width: 80,
+            imageUrl: productCatalogues.image,
+            placeholder: (context, url) => itemLoading(80, 80, 0),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,5 +210,33 @@ class ProductCataloguesView extends StatelessWidget {
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget _buildLoading() {
+    var rng = Random();
+    return ListView.builder(
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Card(
+          child: Row(
+            children: [
+              productItemLoading(80),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    itemLoading(20, rng.nextDouble() * 100 + 100, 10),
+                    const SizedBox(height: 10),
+                    itemLoading(15, double.infinity, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, double.infinity, 10),
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

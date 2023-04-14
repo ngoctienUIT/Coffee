@@ -39,7 +39,7 @@ class LanguageCubit extends Cubit<LanguageState> {
     SharedPreferences.getInstance().then((value) {
       String? timeLogin = value.getString('timeLogin');
       Duration duration = DateTime.now().difference(timeLogin!.toDateTime());
-      startNewTimer(context, duration);
+      if (duration.inSeconds > 0) startNewTimer(context, duration);
     });
   }
 

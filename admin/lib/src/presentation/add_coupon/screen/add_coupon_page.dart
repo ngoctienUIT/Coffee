@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/coupon.dart';
@@ -14,6 +15,7 @@ import 'package:intl/intl.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
+import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/add_coupon_bloc.dart';
@@ -295,7 +297,14 @@ class _AddCouponViewState extends State<AddCouponView> {
           child: image == null
               ? (imageNetWork == null
                   ? Image.asset(AppImages.imgAddImage, height: 150, width: 150)
-                  : Image.network(imageNetWork!, width: 150, height: 150))
+                  : CachedNetworkImage(
+                      height: 150,
+                      width: 150,
+                      imageUrl: imageNetWork!,
+                      placeholder: (context, url) => itemLoading(150, 150, 0),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ))
               : Image.file(image!, height: 150, width: 150),
         );
       },
@@ -354,7 +363,7 @@ class _AddCouponViewState extends State<AddCouponView> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(1900),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
     if (picked != null && picked != selectedDate) {

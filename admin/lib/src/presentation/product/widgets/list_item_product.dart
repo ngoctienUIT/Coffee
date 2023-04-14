@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/product/product_response.dart';
+import '../../order/widgets/item_loading.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
@@ -58,23 +60,19 @@ class ListItemProduct extends StatelessWidget {
 
   Widget itemOrder(int index) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Row(
           children: [
             listProduct[index].image == null
-                ? Image.asset(
-                    AppImages.imgLogo,
+                ? Image.asset(AppImages.imgLogo, height: 100, width: 100)
+                : CachedNetworkImage(
                     height: 100,
                     width: 100,
-                  )
-                : Image.network(
-                    listProduct[index].image!,
-                    height: 100,
-                    width: 100,
+                    imageUrl: listProduct[index].image!,
+                    placeholder: (context, url) => itemLoading(100, 100, 0),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
             Expanded(
               child: Column(

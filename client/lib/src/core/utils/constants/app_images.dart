@@ -10,4 +10,5 @@ class AppImages {
   static const String imgCOD = 'assets/images/cod.png';
   static const String imgNonAvatar = 'assets/images/img_non_avatar.jpg';
   static const String imgGoogle = 'assets/images/google.png';
+  static const String imgBuyMeCoffee = "assets/images/buy-me-a-coffee.png";
 }

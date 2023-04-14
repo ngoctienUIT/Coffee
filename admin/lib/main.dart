@@ -52,7 +52,17 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Coffee Admin',
             theme: ThemeData(
+              dialogTheme: DialogTheme(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               primarySwatch: Colors.blue,
+              cardTheme: CardTheme(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
               appBarTheme: const AppBarTheme(
                 systemOverlayStyle: SystemUiOverlayStyle(
                   statusBarColor: AppColors.statusBarColor,

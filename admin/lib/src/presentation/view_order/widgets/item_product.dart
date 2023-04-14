@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/product.dart';
+import '../../order/widgets/item_loading.dart';
 
 class ItemProduct extends StatelessWidget {
   const ItemProduct({Key? key, required this.index, required this.product})
@@ -21,7 +23,13 @@ class ItemProduct extends StatelessWidget {
           if (index != 0) const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
-              Image.network(product.image!, height: 50, width: 50),
+              CachedNetworkImage(
+                height: 50,
+                width: 50,
+                imageUrl: product.image!,
+                placeholder: (context, url) => itemLoading(50, 50, 0),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
