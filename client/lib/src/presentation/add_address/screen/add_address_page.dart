@@ -4,6 +4,7 @@ import 'package:coffee/src/presentation/add_address/widgets/app_bar_add_address.
 import 'package:coffee/src/presentation/add_address/widgets/edit_address.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
@@ -59,17 +60,20 @@ class _AddAddressPageState extends State<AddAddressPage> {
           child: customButton(
             text: "save".translate(context),
             isOnPress: true,
-            onPress: () {
+            onPress: () async {
               if (addressAPI
                   .copyWith(address: addressController.text)
                   .checkNull()) {
                 Fluttertoast.showToast(
                     msg: "Vui lòng nhập đầy đủ địa chỉ");
               } else {
-                widget.onSave(addressAPI
+                final myAddress = addressAPI
                     .copyWith(address: addressController.text)
-                    .toAddress());
+                    .toAddress();
+                widget.onSave(myAddress);
                 Navigator.pop(context);
+                final prefs = await SharedPreferences.getInstance();
+                prefs.setString("address", myAddress.getAddress());
               }
             },
           ),

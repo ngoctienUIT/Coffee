@@ -32,18 +32,19 @@ class SettingPage extends StatelessWidget {
                 () => _showAlertDialog(context),
               ),
             ]),
-            groupItemOther("security".translate(context), [
-              itemOther(
-                "change_password".translate(context),
-                Icons.lock,
-                () {
-                  Navigator.of(context).push(createRoute(
-                    screen: ChangePasswordPage(user: user),
-                    begin: const Offset(1, 0),
-                  ));
-                },
-              ),
-            ]),
+            if (user.hashedPassword.isNotEmpty)
+              groupItemOther("security".translate(context), [
+                itemOther(
+                  "change_password".translate(context),
+                  Icons.lock,
+                  () {
+                    Navigator.of(context).push(createRoute(
+                      screen: ChangePasswordPage(user: user),
+                      begin: const Offset(1, 0),
+                    ));
+                  },
+                ),
+              ]),
           ],
         ),
       ),

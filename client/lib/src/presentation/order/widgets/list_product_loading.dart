@@ -5,6 +5,18 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../store/widgets/item_loading.dart';
 
+Widget itemProductLoading(double height) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Image.asset(
+      "assets/traditional_coffee.png",
+      height: height,
+      width: height,
+    ),
+  );
+}
+
 Widget listProductLoading() {
   var rng = Random();
   return Padding(
@@ -19,15 +31,7 @@ Widget listProductLoading() {
           child: Card(
             child: Row(
               children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Image.asset(
-                    "assets/traditional_coffee.png",
-                    height: 100,
-                    width: 100,
-                  ),
-                ),
+                itemProductLoading(100),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,6 +46,7 @@ Widget listProductLoading() {
                 ),
                 const SizedBox(width: 10),
                 itemLoading(30, 100, 10),
+                const SizedBox(width: 10),
               ],
             ),
           ),

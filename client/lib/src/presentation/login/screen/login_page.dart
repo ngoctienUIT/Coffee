@@ -100,10 +100,16 @@ class _LoginViewState extends State<LoginView> {
 
   Future saveLogin() async {
     final prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString("username") ?? "";
     prefs.setBool("isLogin", true);
     prefs.setBool('isRemember', isRemember);
     prefs.setString('username', phoneController.text);
     prefs.setString('password', passwordController.text);
+    if (username != phoneController.text) {
+      prefs.setString("storeID", "");
+      prefs.setString("address", "");
+      prefs.setBool("isBringBack", false);
+    }
   }
 
   void loginSuccess() {
@@ -126,9 +132,8 @@ class _LoginViewState extends State<LoginView> {
           saveLogin();
           loginSuccess();
         }
-        if (state is LoginGoogleSuccessState) {
-          loginSuccess();
-        }
+        if (state is LoginGoogleSuccessState) loginSuccess();
+
         if (state is LoginLoadingState || state is LoginGoogleLoadingState) {
           loadingAnimation(context);
         }

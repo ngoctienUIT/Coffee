@@ -7,7 +7,7 @@ import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_colors.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
-import '../../store/widgets/item_loading.dart';
+import 'list_product_loading.dart';
 
 class GridItemOrder extends StatelessWidget {
   const GridItemOrder({Key? key, required this.listProduct, this.onPress})
@@ -55,7 +55,7 @@ class GridItemOrder extends StatelessWidget {
                 height: 80,
                 width: 80,
                 imageUrl: listProduct[index].image!,
-                placeholder: (context, url) => itemLoading(80, 80, 0),
+                placeholder: (context, url) => itemProductLoading(80),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),

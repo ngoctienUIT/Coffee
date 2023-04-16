@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/function/route_function.dart';
 import '../../../data/models/product.dart';
 import '../../add_product/screen/add_product_page.dart';
-import '../../order/widgets/item_loading.dart';
+import '../../product/widgets/list_product_loading.dart';
 import '../bloc/view_product_bloc.dart';
 import '../bloc/view_product_event.dart';
 
@@ -84,7 +84,7 @@ class _ViewProductPageState extends State<ViewProductPage> {
                         height: 300,
                         width: 300,
                         imageUrl: widget.product.image!,
-                        placeholder: (context, url) => itemLoading(300, 300, 0),
+                        placeholder: (context, url) => productItemLoading(300),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                       ),

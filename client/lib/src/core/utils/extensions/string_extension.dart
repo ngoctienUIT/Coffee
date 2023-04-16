@@ -1,3 +1,5 @@
+import 'package:coffee/src/data/models/address.dart';
+import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
 
 import '../../language/localization/app_localizations.dart';
@@ -47,5 +49,14 @@ extension EmailValidator on String {
 
   String translate(BuildContext context) {
     return AppLocalizations.of(context).translate(this);
+  }
+
+  AddressAPI toAddressAPI() {
+    List<String> list = split(", ");
+    dvhcvn.Level1? province = dvhcvn.findLevel1ByName(list[3]);
+    dvhcvn.Level2? district = province!.findLevel2ByName(list[2]);
+    dvhcvn.Level3? ward = district!.findLevel3ByName(list[1]);
+    return AddressAPI(
+        province: province, district: district, ward: ward, address: list[0]);
   }
 }

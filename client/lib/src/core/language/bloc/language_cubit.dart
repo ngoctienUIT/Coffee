@@ -76,10 +76,7 @@ class LanguageCubit extends Cubit<LanguageState> {
     stopTimer();
     Fluttertoast.showToast(msg: "Hết hạn đăng nhập");
     GoogleSignIn().signOut();
-    SharedPreferences.getInstance().then((value) {
-      value.setBool("isLogin", false);
-      value.setString("storeID", "");
-      value.setBool("isBringBack", false);
-    });
+    SharedPreferences.getInstance()
+        .then((value) => value.setBool("isLogin", false));
   }
 }

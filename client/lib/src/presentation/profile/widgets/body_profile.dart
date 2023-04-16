@@ -108,7 +108,10 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           current is InitState ||
           current is LinkAccountWithGoogleLoadingState ||
           current is LinkAccountWithGoogleSuccessState ||
-          current is LinkAccountWithGoogleErrorState,
+          current is LinkAccountWithGoogleErrorState ||
+          current is UnlinkAccountWithGoogleLoadingState ||
+          current is UnlinkAccountWithGoogleSuccessState ||
+          current is UnlinkAccountWithGoogleErrorState,
       builder: (context, state) {
         if (state is LinkAccountWithGoogleLoadingState ||
             state is LinkAccountWithGoogleSuccessState ||
@@ -133,18 +136,22 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               Switch(
                 value: isLink,
                 onChanged: (value) {
-                  isLink = !isLink;
-                  print(widget.user.accountProvider);
-                  if (isLink &&
-                      widget.user.accountProvider != null &&
-                      widget.user.accountProvider!.google == null) {
-                    context
-                        .read<ProfileBloc>()
-                        .add(LinkAccountWithGoogleEvent());
+                  if (widget.user.hashedPassword.isNotEmpty) {
+                    isLink = value;
+                    if (isLink &&
+                        widget.user.accountProvider != null &&
+                        widget.user.accountProvider!.google == null) {
+                      context
+                          .read<ProfileBloc>()
+                          .add(LinkAccountWithGoogleEvent());
+                    } else {
+                      context
+                          .read<ProfileBloc>()
+                          .add(UnlinkAccountWithGoogleEvent());
+                    }
                   } else {
-                    context
-                        .read<ProfileBloc>()
-                        .add(UnlinkAccountWithGoogleEvent());
+                    Fluttertoast.showToast(
+                        msg: "Bạn không thể hủy liên kết google");
                   }
                 },
               ),
@@ -243,7 +250,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;

@@ -102,11 +102,8 @@ class BodyOtherPage extends StatelessWidget {
                 onPress: () {
                   GoogleSignIn().signOut();
                   context.read<LanguageCubit>().stopTimer();
-                  SharedPreferences.getInstance().then((value) {
-                    value.setBool("isLogin", false);
-                    value.setString("storeID", "");
-                    value.setBool("isBringBack", false);
-                  });
+                  SharedPreferences.getInstance()
+                      .then((value) => value.setBool("isLogin", false));
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(
                       screen: const LoginPage(),

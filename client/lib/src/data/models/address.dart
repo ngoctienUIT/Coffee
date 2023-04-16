@@ -34,17 +34,15 @@ class AddressAPI {
   });
 
   factory AddressAPI.fromAddress(Address address) {
+    dvhcvn.Level1? province = dvhcvn.findLevel1ByName(address.province);
+    dvhcvn.Level2? district = province!.findLevel2ByName(address.district);
+    dvhcvn.Level3? ward = district!.findLevel3ByName(address.ward);
     return AddressAPI(
       address: address.address,
-      province: dvhcvn.findLevel1ByName(address.province),
-      district: dvhcvn
-          .findLevel1ByName(address.province)!
-          .findLevel2ByName(address.district),
-      ward: dvhcvn
-          .findLevel1ByName(address.province)!
-          .findLevel2ByName(address.district)!
-          .findLevel3ByName(address.ward),
       country: address.country,
+      province: province,
+      district: district,
+      ward: ward,
     );
   }
 

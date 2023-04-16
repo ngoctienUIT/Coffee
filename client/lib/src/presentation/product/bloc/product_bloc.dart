@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -71,20 +72,24 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String? storeID = prefs.getString("storeID");
+      String address = prefs.getString("address") ?? "";
       bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      if (storeID == null || storeID.isEmpty) {
+        prefs.setString("storeID", "6425d2c7cf1d264dca4bcc82");
+        storeID = "6425d2c7cf1d264dca4bcc82";
+      }
       print(storeID);
-
-      await apiService.createNewOrder(
-        "Bearer $token",
-        Order(
-          userId: userID,
-          storeId: (storeID != null && storeID.isNotEmpty)
-              ? storeID
-              : "6425d2c7cf1d264dca4bcc82",
-          selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
-          orderItems: [product.toItemOrder()],
-        ).toJson(),
+      Order order = Order(
+        userId: userID,
+        storeId: storeID,
+        selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
+        orderItems: [product.toItemOrder()],
       );
+
+      if (isBringBack && address.isNotEmpty) {
+        order.addAddress(address.toAddressAPI().toAddress());
+      }
+      await apiService.createNewOrder("Bearer $token", order.toJson());
       Fluttertoast.showToast(
           msg: "Thêm sản phẩm vào giỏ hàng thành công");
       emit(AddProductToOrderSuccessState());

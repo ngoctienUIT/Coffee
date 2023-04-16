@@ -47,23 +47,27 @@ class BodyOrder extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final user = snapshot.requireData;
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(createRoute(
-                            screen: ViewOrderPage(
-                              user: user,
-                              order: listOrder[index],
-                              onPress: () {
-                                context
-                                    .read<OrderBloc>()
-                                    .add(RefreshData(indexState));
-                              },
-                            ),
-                            begin: const Offset(1, 0),
-                          ));
-                        },
-                        child: itemOrder(context, listOrder[index], user),
-                      );
+                      print(user);
+                      if (user != null) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(createRoute(
+                              screen: ViewOrderPage(
+                                user: user,
+                                order: listOrder[index],
+                                onPress: () {
+                                  context
+                                      .read<OrderBloc>()
+                                      .add(RefreshData(indexState));
+                                },
+                              ),
+                              begin: const Offset(1, 0),
+                            ));
+                          },
+                          child: itemOrder(context, listOrder[index], user),
+                        );
+                      }
+                      return const SizedBox.shrink();
                     }
                     return itemOrderLoading();
                   },
@@ -105,10 +109,20 @@ class BodyOrder extends StatelessWidget {
     );
   }
 
-  Future<UserResponse> getUserInfo(String id) async {
-    ApiService apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
-    return (await apiService.getUserByID(id)).data;
+  Future<UserResponse?> getUserInfo(String id) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      return (await apiService.getUserByID(id)).data;
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      print(error);
+      return null;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   Widget bodyItem(

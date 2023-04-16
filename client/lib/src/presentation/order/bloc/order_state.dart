@@ -17,15 +17,16 @@ class OrderLoaded extends OrderState {
   final OrderResponse? order;
   final StoreResponse? store;
   final bool isBringBack;
+  final String address;
 
-  OrderLoaded({
-    required this.index,
-    required this.listProduct,
-    required this.listProductCatalogues,
-    this.order,
-    this.store,
-    required this.isBringBack,
-  });
+  OrderLoaded(
+      {required this.index,
+      required this.listProduct,
+      required this.listProductCatalogues,
+      this.order,
+      this.store,
+      required this.isBringBack,
+      required this.address});
 }
 
 class OrderError extends OrderState {
@@ -51,8 +52,10 @@ class AddProductToCartLoaded extends OrderState {
   final OrderResponse? order;
   final StoreResponse? store;
   final bool isBringBack;
+  final String address;
 
-  AddProductToCartLoaded(this.order, this.store, this.isBringBack);
+  AddProductToCartLoaded(
+      this.order, this.store, this.isBringBack, this.address);
 }
 
 class AddProductToCartError extends OrderState {

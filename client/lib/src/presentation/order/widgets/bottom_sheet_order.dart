@@ -2,6 +2,7 @@ import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
+import 'package:coffee/src/presentation/add_address/screen/add_address_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
@@ -37,6 +38,9 @@ class BottomSheetOrder extends StatelessWidget {
           bool isBringBack = state is OrderLoaded
               ? state.isBringBack
               : (state as AddProductToCartLoaded).isBringBack;
+          String address = state is OrderLoaded
+              ? state.address
+              : (state as AddProductToCartLoaded).address;
           return Container(
             width: double.infinity,
             height: 56,
@@ -51,28 +55,58 @@ class BottomSheetOrder extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: InkWell(
-                    onTap: () => showMyBottomSheet(context, (isBring) {
-                      SharedPreferences.getInstance().then((value) {
-                        value.setBool("isBringBack", isBring);
-                        context.read<OrderBloc>().add(AddProductToCart());
-                        Navigator.pop(context);
-                      });
-                    }, (isBring) {
-                      Navigator.of(context).push(createRoute(
-                        screen: StorePage(
-                          isPick: true,
-                          onPress: (store) {
-                            SharedPreferences.getInstance().then((value) {
-                              value.setString("storeID", store.storeId);
-                              value.setBool("isBringBack", isBring);
-                              context.read<OrderBloc>().add(AddProductToCart());
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                        begin: const Offset(1, 0),
-                      ));
-                    }, store, isBringBack),
+                    onTap: () => showMyBottomSheet(
+                      context: context,
+                      onPress: (isBring) {
+                        SharedPreferences.getInstance().then((value) {
+                          value.setBool("isBringBack", isBring);
+                          context.read<OrderBloc>().add(AddProductToCart(true));
+                          Navigator.pop(context);
+                        });
+                      },
+                      onEditAtTable: () {
+                        Navigator.of(context).push(createRoute(
+                          screen: StorePage(
+                            isPick: true,
+                            onPress: (store) {
+                              SharedPreferences.getInstance().then((value) {
+                                value.setString("storeID", store.storeId);
+                                value.setBool("isBringBack", false);
+                                context
+                                    .read<OrderBloc>()
+                                    .add(AddProductToCart(true));
+                                Navigator.pop(context);
+                              });
+                            },
+                          ),
+                          begin: const Offset(1, 0),
+                        ));
+                      },
+                      onEditBringBack: () {
+                        Navigator.of(context).push(createRoute(
+                          screen: AddAddressPage(
+                            onSave: (address) {
+                              SharedPreferences.getInstance().then((value) {
+                                value.setBool("isBringBack", true);
+                                value.setString(
+                                    "address", address.getAddress());
+                                context
+                                    .read<OrderBloc>()
+                                    .add(AddProductToCart(true));
+                                Navigator.pop(context);
+                              });
+                            },
+                            address: address.isNotEmpty
+                                ? address.toAddressAPI().toAddress()
+                                : null,
+                          ),
+                          begin: const Offset(1, 0),
+                        ));
+                      },
+                      store: store,
+                      address: address,
+                      isBringBack: isBringBack,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,18 +119,21 @@ class BottomSheetOrder extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            if (store != null)
-                              Flexible(
-                                child: Text(
-                                  store.storeName.toString(),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            Flexible(
+                              child: Text(
+                                isBringBack
+                                    ? address
+                                    : store == null
+                                        ? ""
+                                        : store.storeName.toString(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                            ),
                             const Icon(
                               Icons.keyboard_arrow_down_outlined,
                               color: Colors.white,
@@ -111,9 +148,8 @@ class BottomSheetOrder extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(createRoute(
                       screen: CartPage(
-                        onChange: () {
-                          context.read<OrderBloc>().add(AddProductToCart());
-                        },
+                        onChange: () =>
+                            context.read<OrderBloc>().add(AddProductToCart()),
                       ),
                       begin: const Offset(1, 0),
                     ));
@@ -171,13 +207,15 @@ class BottomSheetOrder extends StatelessWidget {
     );
   }
 
-  void showMyBottomSheet(
-    BuildContext context,
-    Function(bool isBring) onPress,
-    Function(bool isBring) onEdit,
+  void showMyBottomSheet({
+    required BuildContext context,
+    required Function(bool isBring) onPress,
+    required VoidCallback onEditBringBack,
+    required VoidCallback onEditAtTable,
     StoreResponse? store,
-    bool isBringBack,
-  ) {
+    required String address,
+    required bool isBringBack,
+  }) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -209,23 +247,22 @@ ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                       ? AppColors.borderColor
                       : AppColors.statusBarColor,
                   onPress: () => onPress(false),
-                  onEdit: () => onEdit(false),
+                  onEdit: onEditAtTable,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 child: itemBottomSheet(
                   title: "bring_back".translate(context),
-                  content: store == null
+                  content: address.isEmpty
                       ? "please_select_store".translate(context)
-                      : '''${store.storeName}
-${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
+                      : address,
                   image: AppImages.imgLogo,
                   borderColor: isBringBack
                       ? AppColors.statusBarColor
                       : AppColors.borderColor,
                   onPress: () => onPress(true),
-                  onEdit: () => onEdit(true),
+                  onEdit: onEditBringBack,
                 ),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/order.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_state.dart';
@@ -19,11 +20,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<DeleteProductEvent>((event, emit) => deleteProduct(event.id, emit));
 
     on<ChangeMethod>((event, emit) => changeMethod(
-          isBringBack: event.isBringBack,
-          emit: emit,
-          storeID: event.storeID,
-          address: event.address,
-        ));
+        isBringBack: event.isBringBack,
+        emit: emit,
+        storeID: event.storeID,
+        address: event.address));
 
     on<AttachCouponToOrder>(
         (event, emit) => attachCouponToOrder(event.id, emit));
@@ -108,8 +108,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
       prefs.setBool("isBringBack", isBringBack);
       print(order.selectedPickupOption);
-      if (isBringBack && address != null) {
-        order.addAddress(address);
+      if (isBringBack) {
+        String myAddress = prefs.getString("address") ?? "";
+        if (address != null) {
+          order.addAddress(address);
+        } else if (myAddress.isNotEmpty) {
+          order.addAddress(myAddress.toAddressAPI().toAddress());
+        }
         // order.storeId = null;
         // print(order.storeId);
       } else {

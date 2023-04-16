@@ -123,12 +123,11 @@ class _StoreViewState extends State<StoreView> {
                       SharedPreferences.getInstance().then((value) {
                         value.setString(
                             "storeID", state.listStore[index].storeId);
-                        context.read<StoreBloc>().add(
-                            SearchStore(storeName: searchStoreController.text));
+                        // context.read<StoreBloc>().add(
+                        //     SearchStore(storeName: searchStoreController.text));
+                        context.read<StoreBloc>().add(UpdateStoreOrder());
                         Navigator.pop(context);
-                        if (widget.onChange != null) {
-                          widget.onChange!();
-                        }
+                        if (widget.onChange != null) widget.onChange!();
                       });
                     }
                   },

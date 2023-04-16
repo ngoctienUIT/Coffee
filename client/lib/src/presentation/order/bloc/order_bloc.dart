@@ -1,3 +1,5 @@
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/order.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
@@ -16,7 +19,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
     on<RefreshData>((event, emit) => refreshData(event.index, emit));
 
-    on<AddProductToCart>((event, emit) => getOrderSpending(emit));
+    on<AddProductToCart>(
+        (event, emit) => getOrderSpending(event.isChange, emit));
   }
 
   Future fetchData(Emitter emit) async {
@@ -34,7 +38,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
       String storeID = prefs.getString("storeID") ?? "";
-      bool isBringBack = prefs.getBool("isBringBack") ?? true;
+      String address = prefs.getString("address") ?? "";
+      bool isBringBack = prefs.getBool("isBringBack") ?? false;
       final orderResponse =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       final store =
@@ -47,6 +52,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         order: orderResponse.data.isEmpty ? null : orderResponse.data[0],
         store: storeID.isEmpty ? null : store!.data,
         isBringBack: isBringBack,
+        address: address,
       ));
     } on DioError catch (e) {
       String error =
@@ -84,7 +90,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
-  Future getOrderSpending(Emitter emit) async {
+  Future getOrderSpending(bool isChange, Emitter emit) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
@@ -92,18 +98,41 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       String token = prefs.getString("token") ?? "";
       String email = prefs.getString("username") ?? "";
       String storeID = prefs.getString("storeID") ?? "";
-      bool isBringBack = prefs.getBool("isBringBack") ?? true;
+      String address = prefs.getString("address") ?? "";
+      bool isBringBack = prefs.getBool("isBringBack") ?? false;
 
       final response =
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
+
+      if (isChange && myOrder != null) {
+        Order order = Order.fromOrderResponse(myOrder);
+        order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
+        if (isBringBack) {
+          if (address.isNotEmpty) {
+            order.addAddress(address.toAddressAPI().toAddress());
+          } else {
+            order.removeAddress();
+          }
+          // order.storeId = null;
+          // print(order.storeId);
+        } else {
+          order.removeAddress();
+          if (storeID.isEmpty) {
+            storeID = "6425d2c7cf1d264dca4bcc82";
+            prefs.setString("storeID", "6425d2c7cf1d264dca4bcc82");
+          }
+          order.storeId = storeID;
+        }
+        final orderResponse = await apiService.updatePendingOrder(
+            "Bearer $token", order.toJson(), order.orderId!);
+        myOrder = orderResponse.data;
+      }
       final store =
           storeID.isEmpty ? null : await apiService.getStoreByID(storeID);
 
       emit(AddProductToCartLoaded(
-        response.data.isEmpty ? null : response.data[0],
-        storeID.isEmpty ? null : store!.data,
-        isBringBack,
-      ));
+          myOrder, storeID.isEmpty ? null : store!.data, isBringBack, address));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

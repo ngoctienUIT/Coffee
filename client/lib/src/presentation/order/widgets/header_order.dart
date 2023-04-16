@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
+import 'package:coffee/src/presentation/order/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,6 @@ import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../search/screen/search_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
-import '../../store/widgets/item_loading.dart';
 import '../bloc/order_event.dart';
 
 class HeaderOrderPage extends StatefulWidget {
@@ -99,7 +99,7 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
                           height: 70,
                           width: 70,
                           imageUrl: state.listProductCatalogues[index].image,
-                          placeholder: (context, url) => itemLoading(70, 70, 0),
+                          placeholder: (context, url) => itemProductLoading(70),
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.error),
                         ),
@@ -134,14 +134,7 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-                Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Image.asset(
-                    "assets/traditional_coffee.png",
-                    height: 70,
-                  ),
-                ),
+                itemProductLoading(70),
                 const SizedBox(height: 5),
                 Shimmer.fromColors(
                   baseColor: Colors.grey[300]!,

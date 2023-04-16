@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,7 +9,6 @@ import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
-import '../../order/widgets/item_loading.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
@@ -81,7 +81,7 @@ class ListItemProduct extends StatelessWidget {
                     height: 100,
                     width: 100,
                     imageUrl: listProduct[index].image!,
-                    placeholder: (context, url) => itemLoading(100, 100, 0),
+                    placeholder: (context, url) => productItemLoading(100),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ),

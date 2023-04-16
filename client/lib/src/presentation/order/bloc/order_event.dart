@@ -8,4 +8,8 @@ class RefreshData extends OrderEvent {
   RefreshData(this.index);
 }
 
-class AddProductToCart extends OrderEvent {}
+class AddProductToCart extends OrderEvent {
+  bool isChange;
+
+  AddProductToCart([this.isChange = false]);
+}
