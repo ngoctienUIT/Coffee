@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
@@ -56,16 +57,23 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.statusBarColor,
-      child: Column(
-        children: [
-          const SizedBox(height: 10),
-          header(),
-          const SizedBox(height: 10),
-          body(),
-          const SizedBox(height: 30),
-        ],
+    return BlocListener<OtherBloc, OtherState>(
+      listener: (context, state) {
+        if (state is OtherError) {
+          customToast(context, state.message.toString());
+        }
+      },
+      child: Container(
+        color: AppColors.statusBarColor,
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            header(),
+            const SizedBox(height: 10),
+            body(),
+            const SizedBox(height: 30),
+          ],
+        ),
       ),
     );
   }

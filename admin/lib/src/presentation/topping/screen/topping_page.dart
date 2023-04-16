@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -72,7 +73,12 @@ class _ToppingViewState extends State<ToppingView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ToppingBloc, ToppingState>(
+    return BlocConsumer<ToppingBloc, ToppingState>(
+      listener: (context, state) {
+        if (state is ToppingError) {
+          customToast(context, state.message.toString());
+        }
+      },
       buildWhen: (previous, current) => current is! PickState,
       builder: (context, state) {
         if (state is ToppingLoaded) {

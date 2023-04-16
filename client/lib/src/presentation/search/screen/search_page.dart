@@ -6,6 +6,7 @@ import 'package:coffee/src/presentation/search/widgets/app_bar_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../order/widgets/grid_item_order.dart';
 import '../../order/widgets/list_item_order.dart';
@@ -77,7 +78,12 @@ class _SearchViewState extends State<SearchView> {
   }
 
   Widget body() {
-    return BlocBuilder<SearchBloc, SearchState>(
+    return BlocConsumer<SearchBloc, SearchState>(
+      listener: (context, state) {
+        if (state is SearchError) {
+          customToast(context, state.message.toString());
+        }
+      },
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);
@@ -95,6 +101,4 @@ class _SearchViewState extends State<SearchView> {
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

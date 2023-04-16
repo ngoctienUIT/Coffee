@@ -8,9 +8,9 @@ import 'package:coffee/src/presentation/profile/widgets/custom_picker_widget.dar
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../domain/entities/user/user_response.dart';
@@ -61,19 +61,24 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           current is UnlinkAccountWithGoogleSuccessState,
       listener: (context, state) {
         if (state is SaveProfileLoaded) {
+          Navigator.pop(context);
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-          Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+          customToast(context, "Lưu thay đổi thành công");
           widget.onChange();
         }
         if (state is LinkAccountWithGoogleSuccessState) {
-          Fluttertoast.showToast(
-              msg: "Liên kết tài khoản Google thành công");
+          customToast(context, "Liên kết tài khoản Google thành công");
           widget.onChange();
         }
         if (state is UnlinkAccountWithGoogleSuccessState) {
-          Fluttertoast.showToast(
-              msg: "Hủy liên kết tài khoản Google thành công");
+          customToast(context, "Hủy liên kết tài khoản Google thành công");
           widget.onChange();
+        }
+        if (state is LinkAccountWithGoogleErrorState) {
+          customToast(context, state.message.toString());
+        }
+        if (state is UnlinkAccountWithGoogleErrorState) {
+          customToast(context, state.message.toString());
         }
       },
       child: Container(
@@ -150,8 +155,8 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                           .add(UnlinkAccountWithGoogleEvent());
                     }
                   } else {
-                    Fluttertoast.showToast(
-                        msg: "Bạn không thể hủy liên kết google");
+                    customToast(
+                        context, "Bạn không thể hủy liên kết google");
                   }
                 },
               ),

@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/tag.dart';
@@ -66,7 +67,12 @@ class _TagViewState extends State<TagView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TagBloc, TagState>(
+    return BlocConsumer<TagBloc, TagState>(
+      listener: (context, state) {
+        if (state is TagError) {
+          customToast(context, state.message.toString());
+        }
+      },
       buildWhen: (previous, current) => current is! PickState,
       builder: (context, state) {
         if (state is TagLoaded) {

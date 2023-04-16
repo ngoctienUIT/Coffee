@@ -4,12 +4,12 @@ import 'dart:io' show Platform;
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../presentation/login/screen/login_page.dart';
+import '../../function/custom_toast.dart';
 import '../../function/route_function.dart';
 import 'language_state.dart';
 
@@ -56,6 +56,7 @@ class LanguageCubit extends Cubit<LanguageState> {
     print(duration);
     _timer = Timer.periodic(duration, (_) {
       _timedOut();
+      customToast(context, "Hết hạn đăng nhập vui lòng đăng nhập lại");
       Navigator.of(context).pushAndRemoveUntil(
         createRoute(
           screen: const LoginPage(),
@@ -74,7 +75,6 @@ class LanguageCubit extends Cubit<LanguageState> {
 
   Future<void> _timedOut() async {
     stopTimer();
-    Fluttertoast.showToast(msg: "Hết hạn đăng nhập");
     GoogleSignIn().signOut();
     SharedPreferences.getInstance()
         .then((value) => value.setBool("isLogin", false));

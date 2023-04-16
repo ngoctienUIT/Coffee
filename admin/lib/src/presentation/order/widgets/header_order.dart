@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/constants/app_colors.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,9 +38,9 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
           isScrollable: true,
           labelColor: Colors.black87,
           labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+          unselectedLabelColor: AppColors.statusBarColor,
           unselectedLabelStyle: const TextStyle(fontSize: 16),
-          indicatorColor: Colors.green,
+          indicatorColor: AppColors.statusBarColor,
           tabs: [
             Tab(text: "all".translate(context)),
             Tab(text: "placed".translate(context)),

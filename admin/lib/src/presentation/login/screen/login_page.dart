@@ -1,10 +1,11 @@
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../main.dart';
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -34,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.bgCreamColor,
       body: WillPopScope(
         onWillPop: () => onWillPop(
+          context: context,
           action: (now) => currentBackPressTime = now,
           currentBackPressTime: currentBackPressTime,
         ),
@@ -104,7 +106,7 @@ class _LoginViewState extends State<LoginView> {
 
   void loginSuccess() {
     isLogin = true;
-    Fluttertoast.showToast(msg: "Đăng nhập thành công");
+    customToast(context, "Đăng nhập thành công");
     saveLogin();
     Navigator.of(context).pushReplacement(createRoute(
       screen: const MainPage(),
@@ -116,7 +118,12 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (_, state) {
+        if (state is LoginLoadingState) loadingAnimation(context);
         if (state is LoginSuccessState) loginSuccess();
+        if (state is LoginErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
+        }
       },
       child: Container(
         height: MediaQuery.of(context).size.height - 35,

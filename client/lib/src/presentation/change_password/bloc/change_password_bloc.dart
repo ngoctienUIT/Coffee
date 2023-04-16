@@ -1,7 +1,6 @@
 import 'package:coffee/src/data/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -37,11 +36,9 @@ class ChangePasswordBloc
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(ChangePasswordErrorState(status: error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(ChangePasswordErrorState(status: e.toString()));
       print(e);
     }

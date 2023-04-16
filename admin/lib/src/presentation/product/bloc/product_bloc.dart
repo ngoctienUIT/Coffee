@@ -2,7 +2,6 @@ import 'package:coffee_admin/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -34,11 +33,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(ProductError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(ProductError(e.toString()));
       print(e);
     }
@@ -57,11 +54,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(RefreshError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(RefreshError(e.toString()));
       print(e);
     }
@@ -87,11 +82,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(RefreshError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(RefreshError(e.toString()));
       print(e);
     }

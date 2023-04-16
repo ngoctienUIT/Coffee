@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -91,6 +92,10 @@ class _NewPasswordViewState extends State<NewPasswordView> {
         }
         if (state is ChangePasswordLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is ChangePasswordErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
         }
       },
       child: Scaffold(

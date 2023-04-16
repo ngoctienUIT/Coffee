@@ -13,8 +13,8 @@ import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.da
 import 'package:coffee_admin/src/presentation/forgot_password/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
@@ -118,12 +118,16 @@ class _AddStoreViewState extends State<AddStoreView> {
       listener: (context, state) {
         if (state is AddStoreSuccessState) {
           widget.onChange();
-          Fluttertoast.showToast(msg: "Thêm cửa hàng thành công");
+          customToast(context, "Thêm cửa hàng thành công");
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddStoreLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddStoreErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
         }
       },
       child: SingleChildScrollView(

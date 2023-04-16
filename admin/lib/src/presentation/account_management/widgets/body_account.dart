@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,12 @@ class BodyAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountBloc, AccountState>(
+    return BlocConsumer<AccountBloc, AccountState>(
+      listener: (context, state) {
+        if (state is AccountError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
         if (state is AccountLoaded) {
           List<UserResponse> listAccount = state.listAccount;

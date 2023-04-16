@@ -3,9 +3,9 @@ import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/app_bar_add_address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/edit_address.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
 
@@ -64,8 +64,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
               if (addressAPI
                   .copyWith(address: addressController.text)
                   .checkNull()) {
-                Fluttertoast.showToast(
-                    msg: "Vui lòng nhập đầy đủ địa chỉ");
+                customToast(context, "Vui lòng nhập đầy đủ địa chỉ");
               } else {
                 final myAddress = addressAPI
                     .copyWith(address: addressController.text)

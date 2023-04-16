@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/coupon.dart';
@@ -47,11 +46,9 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddCouponErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddCouponErrorState(e.toString()));
       print(e);
     }
@@ -73,11 +70,9 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddCouponErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddCouponErrorState(e.toString()));
       print(e);
     }

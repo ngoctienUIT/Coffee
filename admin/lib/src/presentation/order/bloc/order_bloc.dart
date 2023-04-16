@@ -2,7 +2,6 @@ import 'package:coffee_admin/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -30,11 +29,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(OrderError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(OrderError(e.toString()));
       print(e);
     }
@@ -42,7 +39,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   Future getDataOrder(int index, Emitter emit) async {
     try {
-      emit(RefreshLoading());
+      emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
@@ -58,16 +55,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
               .where((element) => element.orderStatus != "PENDING")
               .toList();
 
-      emit(RefreshLoaded(index, listOrder));
+      emit(OrderLoaded(index, listOrder));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
-      emit(RefreshError(error));
+      emit(OrderError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      emit(RefreshError(e.toString()));
+      emit(OrderError(e.toString()));
       print(e);
     }
   }

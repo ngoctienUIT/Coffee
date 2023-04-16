@@ -9,7 +9,9 @@ import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.d
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/api_service.dart';
@@ -22,15 +24,16 @@ class BodyOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrderBloc, OrderState>(
+    return BlocConsumer<OrderBloc, OrderState>(
+      listener: (context, state) {
+        if (state is OrderError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
-        if (state is OrderLoaded || state is RefreshLoaded) {
-          List<OrderResponse> listOrder = state is OrderLoaded
-              ? state.listOrder
-              : (state as RefreshLoaded).listOrder;
-          int indexState = state is OrderLoaded
-              ? state.index
-              : (state as RefreshLoaded).index;
+        if (state is OrderLoaded) {
+          List<OrderResponse> listOrder = state.listOrder;
+          int indexState = state.index;
           return RefreshIndicator(
             onRefresh: () async {
               context.read<OrderBloc>().add(RefreshData(indexState));
@@ -47,7 +50,6 @@ class BodyOrder extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final user = snapshot.requireData;
-                      print(user);
                       if (user != null) {
                         return InkWell(
                           onTap: () {
@@ -67,9 +69,11 @@ class BodyOrder extends StatelessWidget {
                           child: itemOrder(context, listOrder[index], user),
                         );
                       }
-                      return const SizedBox.shrink();
                     }
-                    return itemOrderLoading();
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return itemOrderLoading();
+                    }
+                    return const SizedBox.shrink();
                   },
                 );
               },
@@ -99,10 +103,7 @@ class BodyOrder extends StatelessWidget {
             order.selectedPickupStore!.storeName.toString(),
             // overflow: TextOverflow.ellipsis,
             maxLines: 2,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),
       ],
@@ -113,16 +114,18 @@ class BodyOrder extends StatelessWidget {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      return (await apiService.getUserByID(id)).data;
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      final response = await apiService.getUserByID('Bearer $token', id);
+      return response.data;
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       print(error);
-      return null;
     } catch (e) {
       print(e);
-      return null;
     }
+    return null;
   }
 
   Widget bodyItem(

@@ -10,6 +10,7 @@ import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class CouponPage extends StatelessWidget {
@@ -46,7 +47,12 @@ class CouponView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CouponBloc, CouponState>(
+    return BlocConsumer<CouponBloc, CouponState>(
+      listener: (context, state) {
+        if (state is CouponError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
         if (state is CouponLoaded) {
           return RefreshIndicator(

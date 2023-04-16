@@ -7,8 +7,8 @@ import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -96,13 +96,17 @@ class _AddToppingViewState extends State<AddToppingView> {
     return BlocListener<AddToppingBloc, AddToppingState>(
       listener: (context, state) {
         if (state is AddToppingSuccessState) {
-          Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
+          customToast(context, "Thêm sản phẩm thành công");
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddToppingLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddToppingErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
         }
       },
       child: SingleChildScrollView(

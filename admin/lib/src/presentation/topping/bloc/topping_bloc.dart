@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -24,14 +23,10 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
       final response = await apiService.getAllToppings();
       emit(ToppingLoaded(response.data));
     } on DioError catch (e) {
-      if (e.response != null) {
-        String error = e.response!.data.toString();
-        Fluttertoast.showToast(msg: error);
-        emit(ToppingError(error));
-        print(error);
-      }
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(ToppingError(error));
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(ToppingError(e.toString()));
       print(e);
     }
@@ -48,14 +43,11 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
       final response = await apiService.getAllToppings();
       emit(ToppingLoaded(response.data));
     } on DioError catch (e) {
-      if (e.response != null) {
-        String error = e.response!.data.toString();
-        Fluttertoast.showToast(msg: error);
-        emit(ToppingError(error));
-        print(error);
-      }
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(ToppingError(error));
+      print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(ToppingError(e.toString()));
       print(e);
     }

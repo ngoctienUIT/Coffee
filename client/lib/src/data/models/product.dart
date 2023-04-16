@@ -5,7 +5,7 @@ import 'item_order.dart';
 import 'tag.dart';
 
 class Product {
-  final String id;
+  final String? id;
   String name;
   final String currency;
   String? image;
@@ -21,9 +21,9 @@ class Product {
   int number;
 
   Product({
-    required this.id,
+    this.id,
     required this.name,
-    required this.currency,
+    this.currency = "đ",
     this.image,
     this.description,
     this.toppingOptions,
@@ -89,8 +89,12 @@ class Product {
 
   int getTotal() {
     int toppingPrice = 0;
-    for (int i = 0; i < chooseTopping!.length; i++) {
-      if (chooseTopping![i]) toppingPrice += toppingOptions![i].pricePerService;
+    if (chooseTopping != null) {
+      for (int i = 0; i < chooseTopping!.length; i++) {
+        if (chooseTopping![i]) {
+          toppingPrice += toppingOptions![i].pricePerService;
+        }
+      }
     }
     return (getPrice() + toppingPrice) * number;
   }
@@ -110,7 +114,7 @@ class Product {
         .map((e) => e.toppingId)
         .toList();
     return ItemOrder(
-      productId: id,
+      productId: id!,
       quantity: number,
       toppingIds: toppingOptions == null ? [] : list,
       selectedSize: sizeIndex,

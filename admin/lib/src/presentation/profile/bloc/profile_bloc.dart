@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/user.dart';
@@ -46,11 +45,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(SaveProfileError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(SaveProfileError(e.toString()));
       print(e);
     }
@@ -71,12 +68,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
-      emit(DeleteAvatarState());
+      emit(DeleteErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      emit(DeleteAvatarState());
+      emit(DeleteErrorState(e.toString()));
       print(e);
     }
   }

@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/data/models/product.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee/src/presentation/product/bloc/product_state.dart';
@@ -6,6 +7,7 @@ import 'package:coffee/src/presentation/product/widgets/product_description.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/utils/constants/constants.dart';
 import 'choose_size.dart';
@@ -25,6 +27,9 @@ class BodyProduct extends StatelessWidget {
         if (state is AddProductToOrderSuccessState ||
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
+          if (state is AddProductToOrderSuccessState) {
+            customToast(context, "Thêm sản phẩm vào giỏ hàng thành công");
+          }
           if (onPress != null) onPress!();
           Navigator.pop(context);
           Navigator.pop(context);
@@ -33,6 +38,15 @@ class BodyProduct extends StatelessWidget {
             state is UpdateLoadingState ||
             state is AddProductToOrderLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddProductToOrderErrorState) {
+          customToast(context, state.error);
+        }
+        if (state is UpdateErrorState) {
+          customToast(context, state.error);
+        }
+        if (state is DeleteErrorState) {
+          customToast(context, state.error);
         }
       },
       child: view(context),
@@ -68,8 +82,9 @@ class BodyProduct extends StatelessWidget {
     return BlocBuilder<ProductBloc, ProductState>(
       buildWhen: (previous, current) => current is DataTransmissionState,
       builder: (context, state) {
-        if (state is DataTransmissionState &&
-            state.product.toppingOptions!.isNotEmpty) {
+        Product product = context.read<ProductBloc>().product.copyWith();
+        if (product.toppingOptions != null &&
+            product.toppingOptions!.isNotEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -84,21 +99,22 @@ class BodyProduct extends StatelessWidget {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: state.product.toppingOptions!.length,
+                itemCount: product.toppingOptions!.length,
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
                       Checkbox(
-                        value: state.product.chooseTopping![index],
+                        value: product.chooseTopping![index],
                         onChanged: (value) {
-                          state.product.chooseTopping![index] = value!;
-                          context.read<ProductBloc>().add(
-                              DataTransmissionEvent(product: state.product));
+                          product.chooseTopping![index] = value!;
+                          context
+                              .read<ProductBloc>()
+                              .add(DataTransmissionEvent(product: product));
                         },
                       ),
-                      Text(state.product.toppingOptions![index].toppingName),
+                      Text(product.toppingOptions![index].toppingName),
                       const Spacer(),
-                      Text(state.product.toppingOptions![index].pricePerService
+                      Text(product.toppingOptions![index].pricePerService
                           .toCurrency()),
                       const SizedBox(width: 10),
                     ],
@@ -108,7 +124,7 @@ class BodyProduct extends StatelessWidget {
             ],
           );
         }
-        return Container();
+        return const SizedBox.shrink();
       },
     );
   }
@@ -117,39 +133,37 @@ class BodyProduct extends StatelessWidget {
     return BlocBuilder<ProductBloc, ProductState>(
       buildWhen: (previous, current) => current is DataTransmissionState,
       builder: (context, state) {
-        if (state is DataTransmissionState) {
-          return Row(
-            children: [
-              chooseSize(
-                text: "S",
-                check: state.product.sizeIndex == 0,
-                onPress: () {
-                  context.read<ProductBloc>().add(DataTransmissionEvent(
-                      product: state.product.copyWith(sizeIndex: 0)));
-                },
-              ),
-              const SizedBox(width: 10),
-              chooseSize(
-                text: "M",
-                check: state.product.sizeIndex == 1,
-                onPress: () {
-                  context.read<ProductBloc>().add(DataTransmissionEvent(
-                      product: state.product.copyWith(sizeIndex: 1)));
-                },
-              ),
-              const SizedBox(width: 10),
-              chooseSize(
-                text: "L",
-                check: state.product.sizeIndex == 2,
-                onPress: () {
-                  context.read<ProductBloc>().add(DataTransmissionEvent(
-                      product: state.product.copyWith(sizeIndex: 2)));
-                },
-              ),
-            ],
-          );
-        }
-        return Container();
+        Product product = context.read<ProductBloc>().product.copyWith();
+        return Row(
+          children: [
+            chooseSize(
+              text: "S",
+              check: product.sizeIndex == 0,
+              onPress: () {
+                context.read<ProductBloc>().add(DataTransmissionEvent(
+                    product: product.copyWith(sizeIndex: 0)));
+              },
+            ),
+            const SizedBox(width: 10),
+            chooseSize(
+              text: "M",
+              check: product.sizeIndex == 1,
+              onPress: () {
+                context.read<ProductBloc>().add(DataTransmissionEvent(
+                    product: product.copyWith(sizeIndex: 1)));
+              },
+            ),
+            const SizedBox(width: 10),
+            chooseSize(
+              text: "L",
+              check: product.sizeIndex == 2,
+              onPress: () {
+                context.read<ProductBloc>().add(DataTransmissionEvent(
+                    product: product.copyWith(sizeIndex: 2)));
+              },
+            ),
+          ],
+        );
       },
     );
   }

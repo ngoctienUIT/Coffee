@@ -2,7 +2,8 @@ import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_payment.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import '../../../core/function/custom_toast.dart';
 
 class PaymentMethods extends StatelessWidget {
   const PaymentMethods({Key? key}) : super(key: key);
@@ -23,8 +24,8 @@ class PaymentMethods extends StatelessWidget {
           const Divider(),
           itemPayment(
             onChange: (value) {},
-            onPress: () => Fluttertoast.showToast(
-                msg: "Tính năng thanh toán Momo chưa ra mắt"),
+            onPress: () => customToast(
+                context, "Tính năng thanh toán Momo chưa ra mắt"),
             value: 0,
             groupValue: 1,
             image: AppImages.imgMomo,

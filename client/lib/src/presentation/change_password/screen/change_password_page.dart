@@ -4,8 +4,8 @@ import 'package:coffee/src/presentation/change_password/bloc/change_password_blo
 import 'package:coffee/src/presentation/change_password/bloc/change_password_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -92,6 +92,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         if (state is ChangePasswordSuccessState) {
           Navigator.pop(context);
         }
+        if (state is ChangePasswordErrorState) {
+          customToast(context, state.status);
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,15 +169,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           text: "change_password".translate(context),
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
-            print(newPasswordController.text);
-            print(confirmPasswordController.text);
             if (_formKey.currentState!.validate()) {
               if (oldPasswordController.text == widget.user.hashedPassword) {
                 context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
                     User.fromUserResponse(widget.user)
                         .copyWith(password: newPasswordController.text)));
               } else {
-                Fluttertoast.showToast(msg: "Mật khẩu chưa chính xác");
+                customToast(context, "Mật khẩu cũ chưa chính xác");
               }
             }
           },

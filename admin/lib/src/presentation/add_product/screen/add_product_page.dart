@@ -15,8 +15,8 @@ import 'package:coffee_admin/src/presentation/tag/screen/tag_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/tag.dart';
@@ -147,12 +147,16 @@ class _AddProductViewState extends State<AddProductView> {
       listener: (context, state) {
         if (state is AddProductSuccessState) {
           widget.onChange();
-          Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
+          customToast(context, "Thêm sản phẩm thành công");
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddProductLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddProductErrorState) {
+          Navigator.pop(context);
+          customToast(context, state.status);
         }
       },
       child: SingleChildScrollView(

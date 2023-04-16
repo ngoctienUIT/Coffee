@@ -4,7 +4,6 @@ import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/order.dart';
@@ -57,11 +56,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(OrderError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(OrderError(e.toString()));
       print(e);
     }
@@ -80,11 +77,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(RefreshOrderError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(RefreshOrderError(e.toString()));
       print(e);
     }
@@ -136,11 +131,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddProductToCartError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddProductToCartError(e.toString()));
       print(e);
     }

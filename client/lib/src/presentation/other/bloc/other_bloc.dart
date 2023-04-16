@@ -2,7 +2,6 @@ import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -28,11 +27,9 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(OtherError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(OtherError(e.toString()));
       print(e);
     }

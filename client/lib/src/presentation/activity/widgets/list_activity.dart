@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../store/widgets/item_loading.dart';
@@ -19,40 +20,48 @@ class ListActivity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ActivityBloc, ActivityState>(
+    return BlocConsumer<ActivityBloc, ActivityState>(
+      listener: (context, state) {
+        if (state is ActivityError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
         if (state is ActivityLoaded) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<ActivityBloc>().add(FetchData(state.index));
-            },
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10),
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              itemCount: state.listOrder.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(
-                      screen: ViewOrderPage(
-                        index: state.index,
-                        order: state.listOrder[index],
-                        onPress: () {
-                          context
-                              .read<ActivityBloc>()
-                              .add(FetchData(state.index));
-                        },
-                      ),
-                      begin: const Offset(0, 1),
-                    ));
-                  },
-                  child: itemActivity(state.listOrder[index]),
-                );
+          if (state.listOrder.isNotEmpty) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<ActivityBloc>().add(FetchData(state.index));
               },
-            ),
-          );
+              child: ListView.builder(
+                padding: const EdgeInsets.all(10),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
+                itemCount: state.listOrder.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(createRoute(
+                        screen: ViewOrderPage(
+                          index: state.index,
+                          order: state.listOrder[index],
+                          onPress: () {
+                            context
+                                .read<ActivityBloc>()
+                                .add(FetchData(state.index));
+                          },
+                        ),
+                        begin: const Offset(0, 1),
+                      ));
+                    },
+                    child: itemActivity(state.listOrder[index]),
+                  );
+                },
+              ),
+            );
+          }
+          return const Center(child: Text("Không có dữ liệu"));
         }
         return _buildLoading();
       },

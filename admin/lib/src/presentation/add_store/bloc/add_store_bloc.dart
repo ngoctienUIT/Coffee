@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/store.dart';
@@ -49,11 +48,9 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddStoreErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddStoreErrorState(e.toString()));
       print(e);
     }
@@ -75,11 +72,9 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddStoreErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddStoreErrorState(e.toString()));
       print(e);
     }

@@ -2,9 +2,9 @@ import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
@@ -57,12 +57,16 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       listener: (context, state) {
         if (state is SaveProfileLoaded) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-          Fluttertoast.showToast(msg: "Lưu thay đổi thành công");
+          customToast(context, "Lưu thay đổi thành công");
           widget.onChange();
           Navigator.pop(context);
         }
         if (state is SaveProfileLoading) {
           loadingAnimation(context);
+        }
+        if (state is SaveProfileError) {
+          customToast(context, state.message.toString());
+          Navigator.pop(context);
         }
       },
       child: Container(

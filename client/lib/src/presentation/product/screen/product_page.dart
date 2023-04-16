@@ -27,10 +27,11 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (context) =>
-            ProductBloc()..add(DataTransmissionEvent(product: product)),
-        child: ProductView(
-            product: product, isEdit: isEdit, onPress: onPress, index: index));
+      create: (context) =>
+          ProductBloc()..add(DataTransmissionEvent(product: product)),
+      child: ProductView(
+          product: product, isEdit: isEdit, onPress: onPress, index: index),
+    );
   }
 }
 

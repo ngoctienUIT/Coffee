@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
@@ -69,7 +70,7 @@ class SettingPage extends StatelessWidget {
             TextButton(
               child: Text('ok'.translate(context)),
               onPressed: () async {
-                bool check = await deleteAccount();
+                bool check = await deleteAccount(context);
                 if (check && context.mounted) {
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(
@@ -87,7 +88,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  Future<bool> deleteAccount() async {
+  Future<bool> deleteAccount(BuildContext context) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
@@ -97,8 +98,15 @@ class SettingPage extends StatelessWidget {
       await apiService.removeUserByID("Bearer $token", id);
       prefs.setBool("isLogin", false);
       return true;
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      print(error);
+      customToast(context, error);
+      return false;
     } catch (e) {
       print(e);
+      customToast(context, e.toString());
       return false;
     }
   }

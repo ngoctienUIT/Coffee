@@ -6,8 +6,8 @@ import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_state.dart';
 import 'package:coffee_admin/src/presentation/forgot_password/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -85,12 +85,16 @@ class _AddTagViewState extends State<AddTagView> {
       listener: (context, state) {
         if (state is AddTagSuccessState) {
           widget.onChange();
-          Fluttertoast.showToast(msg: "Thêm tag thành công");
+          customToast(context, "Thêm tag thành công");
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddTagLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddTagErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
         }
       },
       child: SingleChildScrollView(

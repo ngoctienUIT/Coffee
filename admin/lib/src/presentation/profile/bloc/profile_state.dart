@@ -14,11 +14,18 @@ class SaveProfileLoaded extends ProfileState {}
 
 class SaveProfileError extends ProfileState {
   final String? message;
+
   SaveProfileError(this.message);
 }
 
 class ChangeAvatarState extends ProfileState {}
 
 class DeleteAvatarState extends ProfileState {}
+
+class DeleteErrorState extends ProfileState {
+  final String? message;
+
+  DeleteErrorState(this.message);
+}
 
 class ChangeBirthDayState extends ProfileState {}

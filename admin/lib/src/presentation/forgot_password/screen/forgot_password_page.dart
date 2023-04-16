@@ -1,8 +1,8 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -88,10 +88,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
+      customToast(context, error);
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      customToast(context, e.toString());
       print(e);
     }
     return null;

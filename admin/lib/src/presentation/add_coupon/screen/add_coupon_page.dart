@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/coupon.dart';
@@ -9,7 +10,6 @@ import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_event.d
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -131,12 +131,16 @@ class _AddCouponViewState extends State<AddCouponView> {
       listener: (context, state) {
         if (state is AddCouponSuccessState) {
           widget.onChange();
-          Fluttertoast.showToast(msg: "Thêm coupon thành công");
+          customToast(context, "Thêm coupon thành công");
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddCouponLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddCouponErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
         }
       },
       child: SingleChildScrollView(

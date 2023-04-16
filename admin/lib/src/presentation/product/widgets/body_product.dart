@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
 import '../bloc/product_state.dart';
@@ -21,8 +22,18 @@ class _BodyProductPageState extends State<BodyProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [header(), const SizedBox(height: 10), body()],
+    return BlocListener<ProductBloc, ProductState>(
+      listener: (context, state) {
+        if (state is ProductError) {
+          customToast(context, state.message.toString());
+        }
+        if (state is RefreshError) {
+          customToast(context, state.message.toString());
+        }
+      },
+      child: Column(
+        children: [header(), const SizedBox(height: 10), body()],
+      ),
     );
   }
 

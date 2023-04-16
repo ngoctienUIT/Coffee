@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/topping.dart';
@@ -38,19 +37,14 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
       if (image.isNotEmpty) {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewTopping(
-        'Bearer $token',
-        topping.toJson(),
-      );
+      await apiService.createNewTopping('Bearer $token', topping.toJson());
       emit(AddToppingSuccessState());
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddToppingErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddToppingErrorState(e.toString()));
       print(e);
     }
@@ -67,19 +61,14 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
       await apiService.updateExistingTopping(
-        topping.toppingId!,
-        'Bearer $token',
-        topping.toJson(),
-      );
+          topping.toppingId!, 'Bearer $token', topping.toJson());
       emit(AddToppingSuccessState());
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddToppingErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddToppingErrorState(e.toString()));
       print(e);
     }

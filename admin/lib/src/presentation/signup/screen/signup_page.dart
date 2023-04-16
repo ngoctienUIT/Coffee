@@ -1,9 +1,11 @@
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
@@ -111,7 +113,13 @@ class _SignUpViewState extends State<SignUpView> {
   Widget build(BuildContext context) {
     return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
+        if (state is SignUpLoadingState) loadingAnimation(context);
         if (state is SignUpSuccessState) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is SignUpErrorState) {
+          customToast(context, state.status);
           Navigator.pop(context);
         }
       },

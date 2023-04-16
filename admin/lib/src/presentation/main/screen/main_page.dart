@@ -51,6 +51,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: WillPopScope(
         onWillPop: () => onWillPop(
+          context: context,
           action: (now) => currentBackPressTime = now,
           currentBackPressTime: currentBackPressTime,
         ),

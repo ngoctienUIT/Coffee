@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
@@ -62,7 +63,12 @@ class CouponView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CouponBloc, CouponState>(
+    return BlocConsumer<CouponBloc, CouponState>(
+      listener: (context, state) {
+        if (state is CouponError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
         if (state is CouponLoaded) {
           return RefreshIndicator(

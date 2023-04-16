@@ -45,9 +45,9 @@ class _HeaderAccountPageState extends State<HeaderAccountPage>
               isScrollable: true,
               labelColor: Colors.black87,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              unselectedLabelColor: const Color.fromRGBO(45, 216, 198, 1),
+              unselectedLabelColor: AppColors.statusBarColor,
               unselectedLabelStyle: const TextStyle(fontSize: 16),
-              indicatorColor: Colors.green,
+              indicatorColor: AppColors.statusBarColor,
               tabs: [
                 Tab(text: "all".translate(context)),
                 Tab(text: "admin".translate(context)),

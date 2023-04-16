@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../bloc/store_event.dart';
@@ -58,21 +59,28 @@ class _StoreViewState extends State<StoreView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bgColor,
-      appBar: CustomAppBar(
-        elevation: 0,
-        isPick: widget.isPick,
-        title: "Cửa hàng",
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            headerStore(),
-            const SizedBox(height: 10),
-            Expanded(child: bodyStore()),
-          ],
+    return BlocListener<StoreBloc, StoreState>(
+      listener: (context, state) {
+        if (state is StoreError) {
+          customToast(context, state.message.toString());
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.bgColor,
+        appBar: CustomAppBar(
+          elevation: 0,
+          isPick: widget.isPick,
+          title: "Cửa hàng",
+        ),
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              headerStore(),
+              const SizedBox(height: 10),
+              Expanded(child: bodyStore()),
+            ],
+          ),
         ),
       ),
     );

@@ -61,8 +61,10 @@ class _ActivityViewState extends State<ActivityView>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
+        const SizedBox(height: 8),
+        Container(
           height: 50,
+          color: Colors.white,
           child: TabBar(
             controller: _activityController,
             isScrollable: false,

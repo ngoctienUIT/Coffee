@@ -45,6 +45,7 @@ Widget listProductLoading() {
                 ),
                 const SizedBox(width: 10),
                 itemLoading(30, 100, 10),
+                const SizedBox(width: 10),
               ],
             ),
           ),

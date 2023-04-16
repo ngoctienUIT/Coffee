@@ -15,19 +15,6 @@ class OrderLoaded extends OrderState {
 
 class OrderError extends OrderState {
   final String? message;
+
   OrderError(this.message);
-}
-
-class RefreshLoading extends OrderState {}
-
-class RefreshLoaded extends OrderState {
-  final int index;
-  final List<OrderResponse> listOrder;
-
-  RefreshLoaded(this.index, this.listOrder);
-}
-
-class RefreshError extends OrderState {
-  final String? message;
-  RefreshError(this.message);
 }

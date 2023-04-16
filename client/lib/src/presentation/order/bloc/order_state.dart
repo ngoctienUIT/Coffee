@@ -19,14 +19,15 @@ class OrderLoaded extends OrderState {
   final bool isBringBack;
   final String address;
 
-  OrderLoaded(
-      {required this.index,
-      required this.listProduct,
-      required this.listProductCatalogues,
-      this.order,
-      this.store,
-      required this.isBringBack,
-      required this.address});
+  OrderLoaded({
+    required this.index,
+    required this.listProduct,
+    required this.listProductCatalogues,
+    this.order,
+    this.store,
+    required this.isBringBack,
+    required this.address,
+  });
 }
 
 class OrderError extends OrderState {

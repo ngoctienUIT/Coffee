@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -20,19 +19,18 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
       emit(OtherLoading());
       var prefs = await SharedPreferences.getInstance();
       String id = prefs.getString("userID") ?? "";
+      String token = prefs.getString("token") ?? "";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getUserByID(id);
+      final response = await apiService.getUserByID('Bearer $token', id);
 
       emit(OtherLoaded(response.data));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(OtherError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(OtherError(e.toString()));
       print(e);
     }

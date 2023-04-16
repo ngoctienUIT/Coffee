@@ -67,7 +67,8 @@ abstract class ApiService {
 
   // Remove user by ID
   @GET("/user/{id}")
-  Future<HttpResponse<UserResponse>> getUserByID(@Path("id") String id);
+  Future<HttpResponse<UserResponse>> getUserByID(
+      @Header('Authorization') String token, @Path("id") String id);
 
   @GET("/user")
   Future<HttpResponse<List<UserResponse>>> getAllUsers(

@@ -5,8 +5,8 @@ import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../login/widgets/custom_button.dart';
 
 class BottomCartPage extends StatelessWidget {
@@ -47,12 +47,11 @@ class BottomCartPage extends StatelessWidget {
             onPress: () {
               if (order.selectedPickupOption == "DELIVERY" &&
                   order.address1 == null) {
-                Fluttertoast.showToast(
-                    msg: "Vui lòng nhập vào địa chỉ giao hàng");
-              }
-              if (order.selectedPickupOption == "AT_STORE" &&
+                customToast(
+                    context, "Vui lòng nhập vào địa chỉ giao hàng");
+              } else if (order.selectedPickupOption == "AT_STORE" &&
                   order.selectedPickupStore == null) {
-                Fluttertoast.showToast(msg: "Vui lòng chọn cửa hàng");
+                customToast(context, "Vui lòng chọn cửa hàng");
               } else {
                 context.read<CartBloc>().add(PlaceOrder());
               }

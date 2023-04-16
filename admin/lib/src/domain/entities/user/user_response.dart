@@ -16,11 +16,11 @@ class UserResponse {
   @JsonKey(name: "isMale")
   final bool isMale;
 
-  @JsonKey(name: "email")
-  final String email;
-
   @JsonKey(name: "birthOfDate")
   final String? birthOfDate;
+
+  @JsonKey(name: "email")
+  final String email;
 
   @JsonKey(name: "phoneNumber")
   final String phoneNumber;
@@ -34,12 +34,6 @@ class UserResponse {
   @JsonKey(name: "userRole")
   final String userRole;
 
-  @JsonKey(name: "accountProvider")
-  final String? accountProvider;
-
-  @JsonKey(name: "accountProviderReferenceUid")
-  final String? accountProviderReferenceUid;
-
   UserResponse({
     required this.id,
     required this.username,
@@ -48,11 +42,9 @@ class UserResponse {
     required this.email,
     required this.phoneNumber,
     required this.hashedPassword,
-    this.birthOfDate,
     this.imageUrl,
+    this.birthOfDate,
     required this.userRole,
-    required this.accountProvider,
-    this.accountProviderReferenceUid,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) =>

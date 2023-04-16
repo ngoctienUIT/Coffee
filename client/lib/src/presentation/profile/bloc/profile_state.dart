@@ -21,6 +21,12 @@ class ChangeAvatarState extends ProfileState {}
 
 class DeleteAvatarState extends ProfileState {}
 
+class DeleteAvatarErrorState extends ProfileState {
+  String error;
+
+  DeleteAvatarErrorState(this.error);
+}
+
 class ChangeBirthdayState extends ProfileState {}
 
 class LinkAccountWithGoogleSuccessState extends ProfileState {}

@@ -70,8 +70,8 @@ class _InfoCartState extends State<InfoCart> {
                 Text("${"method".translate(context)}:"),
                 const Spacer(),
                 SizedBox(
-                  height: 40,
-                  width: 90,
+                  height: 45,
+                  width: 110,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
@@ -95,8 +95,8 @@ class _InfoCartState extends State<InfoCart> {
                 ),
                 const SizedBox(width: 10),
                 SizedBox(
-                  height: 40,
-                  width: 90,
+                  height: 45,
+                  width: 110,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(

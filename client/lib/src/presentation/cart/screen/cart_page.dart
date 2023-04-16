@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/address.dart';
@@ -46,14 +47,21 @@ class CartView extends StatelessWidget {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, state) {
         if (state is GetOrderSuccessState) {
+          if (state.status != null) {
+            customToast(context, state.status.toString());
+          }
           onChange();
           Navigator.pop(context);
         }
         if (state is GetOrderErrorState) {
+          customToast(context, state.error);
           Navigator.pop(context);
         }
         if (state is GetOrderLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddNoteError) {
+          customToast(context, state.error);
         }
       },
       buildWhen: (previous, current) => current is GetOrderSuccessState,

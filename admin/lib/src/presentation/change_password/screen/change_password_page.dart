@@ -1,8 +1,9 @@
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -89,7 +90,15 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     return BlocListener<ChangePasswordBloc, ChangePasswordState>(
       listener: (context, state) {
         if (state is ChangePasswordSuccessState) {
+          customToast(context, "Đổi mật khẩu thành công");
           Navigator.pop(context);
+          Navigator.pop(context);
+        }
+        if (state is ChangePasswordLoadingState) {
+          loadingAnimation(context);
+        }
+        if (state is ChangePasswordErrorState) {
+          customToast(context, state.status);
         }
       },
       child: Column(
@@ -171,7 +180,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     .read<ChangePasswordBloc>()
                     .add(ClickChangePasswordEvent(newPasswordController.text));
               } else {
-                Fluttertoast.showToast(msg: "Mật khẩu chưa chính xác");
+                customToast(context, "Mật khẩu chưa chính xác");
               }
             }
           },

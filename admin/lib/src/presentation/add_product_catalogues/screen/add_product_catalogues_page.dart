@@ -4,8 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/utils/constants/app_images.dart';
 import '../../../data/models/product_catalogues.dart';
@@ -97,13 +97,17 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
     return BlocListener<AddProductCataloguesBloc, AddProductCataloguesState>(
       listener: (context, state) {
         if (state is AddProductCataloguesSuccessState) {
-          Fluttertoast.showToast(msg: "Thêm sản phẩm thành công");
+          customToast(context, "Thêm loại sản phẩm thành công");
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is AddProductCataloguesLoadingState) {
           loadingAnimation(context);
+        }
+        if (state is AddProductCataloguesErrorState) {
+          Navigator.pop(context);
+          customToast(context, state.status);
         }
       },
       child: SingleChildScrollView(

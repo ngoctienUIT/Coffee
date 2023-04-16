@@ -3,8 +3,8 @@ import 'package:coffee/src/presentation/new_password/screen/new_password_page.da
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -96,10 +96,10 @@ class _InputPinState extends State<InputPin> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
+      customToast(context, error);
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+      customToast(context, e.toString());
       print(e);
     }
     return false;

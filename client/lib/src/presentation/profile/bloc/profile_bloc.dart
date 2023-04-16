@@ -6,7 +6,6 @@ import 'package:coffee/src/presentation/profile/bloc/profile_state.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,18 +58,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         });
         emit(LinkAccountWithGoogleSuccessState());
       } else {
-        Fluttertoast.showToast(msg: "Hủy bỏ liên kết");
         emit(LinkAccountWithGoogleErrorState("Hủy bỏ liên kết"));
       }
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
       emit(LinkAccountWithGoogleErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
       emit(LinkAccountWithGoogleErrorState(e.toString()));
       print(e);
@@ -93,12 +89,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleErrorState(e.toString()));
       print(e);
@@ -123,11 +117,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(SaveProfileError(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(SaveProfileError(e.toString()));
       print(e);
     }
@@ -148,12 +140,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
-      emit(DeleteAvatarState());
+      emit(DeleteAvatarErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-      emit(DeleteAvatarState());
+      emit(DeleteAvatarErrorState(e.toString()));
       print(e);
     }
   }

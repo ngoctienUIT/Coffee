@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/presentation/product/widgets/list_product_loadi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../product/widgets/list_item_product.dart';
 import '../bloc/search_bloc.dart';
@@ -45,7 +46,12 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchBloc, SearchState>(
+    return BlocConsumer<SearchBloc, SearchState>(
+      listener: (context, state) {
+        if (state is SearchError) {
+          customToast(context, state.message.toString());
+        }
+      },
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);

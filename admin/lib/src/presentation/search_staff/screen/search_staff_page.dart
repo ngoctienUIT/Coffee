@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../account_management/widgets/item_account.dart';
@@ -49,7 +50,12 @@ class _SearchStaffViewState extends State<SearchStaffView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchStaffBloc, SearchStaffState>(
+    return BlocConsumer<SearchStaffBloc, SearchStaffState>(
+      listener: (context, state) {
+        if (state is SearchError) {
+          customToast(context, state.message.toString());
+        }
+      },
       buildWhen: (previous, current) => previous != current,
       builder: (context, state) {
         print(state);

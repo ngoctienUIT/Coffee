@@ -6,7 +6,6 @@ import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -60,11 +59,9 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddProductErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddProductErrorState(e.toString()));
       print(e);
     }
@@ -86,11 +83,9 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(AddProductErrorState(error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(AddProductErrorState(e.toString()));
       print(e);
     }

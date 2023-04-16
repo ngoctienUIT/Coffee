@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../domain/api_service.dart';
 import 'new_password_event.dart';
@@ -29,11 +28,9 @@ class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(ChangePasswordErrorState(status: error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(ChangePasswordErrorState(status: e.toString()));
       print(e);
     }

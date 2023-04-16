@@ -81,7 +81,7 @@ class ListProduct extends StatelessWidget {
                         onPressed: (context) {
                           context
                               .read<CartBloc>()
-                              .add(DeleteProductEvent(product.id));
+                              .add(DeleteProductEvent(product.id!));
                         },
                         // backgroundColor: const Color.fromRGBO(231, 231, 231, 1),
                         foregroundColor: AppColors.statusBarColor,

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
@@ -24,14 +23,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future loginWithEmailPassword(
       LoginWithEmailPasswordEvent event, Emitter emit) async {
     try {
+      emit(LoginLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.login(
           {"loginIdentity": event.email, "hashedPassword": event.password});
       final user = response.data;
       if (user.userResponse.userRole == "CUSTOMER") {
-        Fluttertoast.showToast(msg: "Không có quyền");
-        emit(LoginErrorState(status: "Không có quyền"));
+        emit(LoginErrorState(status: "Không có quyền truy cập ứng dụng"));
       } else {
         SharedPreferences.getInstance().then((value) {
           value.setString("userID", user.userResponse.id);
@@ -43,11 +42,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(LoginErrorState(status: error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(LoginErrorState(status: e.toString()));
       print(e);
     }

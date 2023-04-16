@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -36,6 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: AppColors.bgCreamColor,
       body: WillPopScope(
         onWillPop: () => onWillPop(
+          context: context,
           action: (now) => currentBackPressTime = now,
           currentBackPressTime: currentBackPressTime,
         ),
@@ -126,6 +128,12 @@ class _SignUpViewState extends State<SignUpView> {
             screen: InputInfoPage(account: state.account),
             begin: const Offset(0, 1),
           ));
+        }
+        if (state is SignUpErrorState) {
+          customToast(context, state.status);
+        }
+        if (state is SignUpGoogleErrorState) {
+          customToast(context, state.status);
         }
       },
       child: Padding(

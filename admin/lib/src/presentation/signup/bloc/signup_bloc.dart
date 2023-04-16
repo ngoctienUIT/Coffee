@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
@@ -32,11 +31,9 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       emit(SignUpErrorState(status: error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       emit(SignUpErrorState(status: e.toString()));
       print(e);
     }

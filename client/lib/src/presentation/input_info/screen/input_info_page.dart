@@ -3,10 +3,10 @@ import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/input_info/bloc/input_info_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
@@ -101,12 +101,13 @@ class _InputInfoViewState extends State<InputInfoView> {
     return BlocListener<InputInfoBloc, InputInfoState>(
       listener: (context, state) {
         if (state is SubmitSuccessState) {
-          Fluttertoast.showToast(msg: "Đăng ký thành công");
+          customToast(context, "Đăng ký thành công");
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
             begin: const Offset(0, 1),
           ));
         }
+        if (state is SubmitErrorState) customToast(context, state.status);
       },
       child: Padding(
         padding: const EdgeInsets.all(20),

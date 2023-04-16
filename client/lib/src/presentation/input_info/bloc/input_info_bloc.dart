@@ -2,7 +2,6 @@ import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/domain/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'input_info_event.dart';
@@ -44,12 +43,10 @@ class InputInfoBloc extends Bloc<InputInfoEvent, InputInfoState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      Fluttertoast.showToast(msg: error);
       GoogleSignIn().signOut();
       emit(SubmitErrorState(status: error));
       print(error);
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
       GoogleSignIn().signOut();
       emit(SubmitErrorState(status: e.toString()));
       print(e);

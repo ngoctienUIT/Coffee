@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -67,7 +68,12 @@ class ProductCataloguesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductCataloguesBloc, ProductCataloguesState>(
+    return BlocConsumer<ProductCataloguesBloc, ProductCataloguesState>(
+      listener: (context, state) {
+        if (state is ProductCataloguesError) {
+          customToast(context, state.message.toString());
+        }
+      },
       builder: (context, state) {
         if (state is ProductCataloguesLoaded) {
           final listProductCatalogues = state.listProductCatalogues;
