@@ -28,6 +28,7 @@ class BottomWidget extends StatelessWidget {
         Product product = context.read<ProductBloc>().product.copyWith();
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
+          color: Colors.white,
           height: 75,
           child: Row(
             children: [

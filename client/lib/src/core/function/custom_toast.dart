@@ -33,7 +33,7 @@ void customToast(BuildContext context, String text) {
   fToast.showToast(
     child: toast(text),
     toastDuration: const Duration(seconds: 3),
-    gravity: ToastGravity.BOTTOM,
+    gravity: ToastGravity.TOP,
     fadeDuration: const Duration(seconds: 1),
   );
 }

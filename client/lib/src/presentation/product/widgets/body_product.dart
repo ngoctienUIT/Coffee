@@ -85,6 +85,8 @@ class BodyProduct extends StatelessWidget {
         Product product = context.read<ProductBloc>().product.copyWith();
         if (product.toppingOptions != null &&
             product.toppingOptions!.isNotEmpty) {
+          print(product.chooseTopping);
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -107,9 +109,9 @@ class BodyProduct extends StatelessWidget {
                         value: product.chooseTopping![index],
                         onChanged: (value) {
                           product.chooseTopping![index] = value!;
-                          context
-                              .read<ProductBloc>()
-                              .add(DataTransmissionEvent(product: product));
+                          print(product.chooseTopping);
+                          context.read<ProductBloc>().add(DataTransmissionEvent(
+                              product: product.copyWith()));
                         },
                       ),
                       Text(product.toppingOptions![index].toppingName),

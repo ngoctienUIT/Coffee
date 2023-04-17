@@ -62,7 +62,7 @@ class CustomPasswordInput extends StatelessWidget {
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),
-          borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
+          borderSide: BorderSide(color: AppColors.statusBarColor, width: 1),
         ),
         disabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(0)),

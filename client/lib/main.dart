@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Coffee',
             theme: ThemeData(
+              fontFamily: "Roboto",
               dialogTheme: DialogTheme(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

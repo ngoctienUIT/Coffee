@@ -36,7 +36,7 @@ class Product {
     this.number = 1,
     this.chooseTopping,
   }) {
-    if (toppingOptions != null) {
+    if (toppingOptions != null && chooseTopping == null) {
       chooseTopping = List.filled(toppingOptions!.length, false);
     }
   }
