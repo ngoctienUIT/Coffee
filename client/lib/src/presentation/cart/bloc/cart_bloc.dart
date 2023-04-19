@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/address.dart';
 import '../../../domain/api_service.dart';
+import '../../../domain/firebase/firebase_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
@@ -73,6 +74,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       List<OrderResponse> orderSpending = response.data;
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
       emit(GetOrderSuccessState(null, "Đặt hàng thành công"));
+      sendPushMessageTopic(
+        orderID: orderSpending[0].orderId!,
+        body:
+            "Đơn hàng ${orderSpending[0].orderId!} đã được đặt thành công",
+        title: "Đơn hàng mới",
+      );
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

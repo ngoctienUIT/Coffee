@@ -3,6 +3,7 @@ import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/domain/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
@@ -114,6 +115,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void loginSuccess() {
+    saveNewTokenFCM();
     isLogin = true;
     customToast(context, "Đăng nhập thành công");
     context

@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -68,8 +69,9 @@ class SettingPage extends StatelessWidget {
             TextButton(
               child: Text('ok'.translate(context)),
               onPressed: () async {
-                bool check = await deleteAccount();
+                bool check = await deleteAccount(context);
                 if (check && context.mounted) {
+                  customToast(context, "Xóa tài khoảng thành công");
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(
                       screen: const LoginPage(),
@@ -86,7 +88,7 @@ class SettingPage extends StatelessWidget {
     );
   }
 
-  Future<bool> deleteAccount() async {
+  Future<bool> deleteAccount(BuildContext context) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
@@ -96,9 +98,15 @@ class SettingPage extends StatelessWidget {
       await apiService.removeUserByID("Bearer $token", id);
       prefs.setBool("isLogin", false);
       return true;
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      customToast(context, error);
+      print(error);
     } catch (e) {
+      customToast(context, e.toString());
       print(e);
-      return false;
     }
+    return false;
   }
 }

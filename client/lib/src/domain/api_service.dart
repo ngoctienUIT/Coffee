@@ -75,16 +75,19 @@ abstract class ApiService {
     @Body() Map<String, dynamic> body,
   );
 
-  // Get user by ID
+  // remove user by ID
   @DELETE("/user/{id}")
   Future<HttpResponse> removeUserByID(
     @Header('Authorization') String token,
     @Path("id") String id,
   );
 
-  // Remove user by ID
+  // Get user by ID
   @GET("/user/{id}")
-  Future<HttpResponse<UserResponse>> getUserByID(@Path("id") String id);
+  Future<HttpResponse<UserResponse>> getUserByID(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
 
   //product
   @GET('/product')

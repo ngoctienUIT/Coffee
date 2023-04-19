@@ -15,6 +15,7 @@ class CustomTextInput extends StatelessWidget {
     this.isBorder = true,
     required this.hint,
     this.checkEdit = true,
+    this.maxLength,
     this.onPress,
     this.typeInput,
     this.keyboardType,
@@ -35,6 +36,7 @@ class CustomTextInput extends StatelessWidget {
   final TextStyle? textStyle;
   final bool isBorder;
   final String hint;
+  final int? maxLength;
   final bool checkEdit;
   final VoidCallback? onPress;
   final List<TypeInput>? typeInput;
@@ -63,6 +65,7 @@ class CustomTextInput extends StatelessWidget {
       textCapitalization: textCapitalization,
       readOnly: onPress == null ? false : true,
       onFieldSubmitted: onFieldSubmitted,
+      maxLength: maxLength,
       decoration: InputDecoration(
         filled: true,
         hintText: hint,

@@ -1,27 +1,54 @@
-import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/presentation/input_pin/screen/input_pin.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
+import '../../input_pin/screen/input_pin.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../signup/widgets/custom_text_input.dart';
+import '../bloc/forgot_password_bloc.dart';
+import '../bloc/forgot_password_event.dart';
+import '../bloc/forgot_password_state.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends StatelessWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ForgotPasswordBloc(),
+      child: const ForgotPasswordView(),
+    );
+  }
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class ForgotPasswordView extends StatefulWidget {
+  const ForgotPasswordView({Key? key}) : super(key: key);
+
+  @override
+  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+}
+
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   TextEditingController controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    controller.addListener(() {
+      if (controller.text.isEmpty) {
+        context.read<ForgotPasswordBloc>().add(ShowButtonEvent(false));
+      } else {
+        context.read<ForgotPasswordBloc>().add(ShowButtonEvent(true));
+      }
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -31,45 +58,51 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarGeneral(elevation: 0),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(AppImages.imgLogo, height: 200),
-                ),
-                Text("forgot_your_password".translate(context)),
-                const SizedBox(height: 20),
-                CustomTextInput(
-                  controller: controller,
-                  hint: "Email",
-                  typeInput: const [TypeInput.email],
-                ),
-                const SizedBox(height: 20),
-                Text("enter_email_phone_reset_password".translate(context)),
-                const SizedBox(height: 50),
-                customButton(
-                  text: "continue".translate(context),
-                  onPress: () {
-                    if (_formKey.currentState!.validate()) {
-                      sendApi().then((value) {
-                        Navigator.of(context).push(createRoute(
-                          screen: InputPin(resetCredential: value!),
-                          begin: const Offset(1, 0),
-                        ));
-                      });
-                    }
-                  },
-                  isOnPress: true,
-                ),
-              ],
+    return BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
+      listener: (context, state) {
+        if (state is LoadingState) loadingAnimation(context);
+        if (state is SuccessState) {
+          Navigator.pop(context);
+          Navigator.of(context).push(createRoute(
+            screen: InputPinPage(resetCredential: state.resetCredential),
+            begin: const Offset(1, 0),
+          ));
+        }
+        if (state is ErrorState) {
+          customToast(context, state.status);
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
+        appBar: const AppBarGeneral(elevation: 0),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Image.asset(
+                      AppImages.imgLogo,
+                      height: 200,
+                    ),
+                  ),
+                  Text("forgot_your_password".translate(context)),
+                  const SizedBox(height: 20),
+                  CustomTextInput(
+                    controller: controller,
+                    hint: "Email",
+                    typeInput: const [TypeInput.email],
+                  ),
+                  const SizedBox(height: 20),
+                  Text("enter_email_phone_reset_password".translate(context)),
+                  const SizedBox(height: 50),
+                  continueButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -77,20 +110,22 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  Future<String?> sendApi() async {
-    try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      return (await apiService.resetPasswordIssue(controller.text)).data;
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      customToast(context, error);
-      print(error);
-    } catch (e) {
-      customToast(context, e.toString());
-      print(e);
-    }
-    return null;
+  Widget continueButton() {
+    return BlocBuilder<ForgotPasswordBloc, ForgotPasswordState>(
+      buildWhen: (previous, current) => current is ContinueState,
+      builder: (context, state) {
+        return customButton(
+          text: "continue".translate(context),
+          onPress: () {
+            if (_formKey.currentState!.validate()) {
+              context
+                  .read<ForgotPasswordBloc>()
+                  .add(SendForgotPasswordEvent(controller.text));
+            }
+          },
+          isOnPress: state is ContinueState ? state.isContinue : false,
+        );
+      },
+    );
   }
 }

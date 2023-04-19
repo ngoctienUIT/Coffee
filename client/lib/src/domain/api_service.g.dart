@@ -319,10 +319,14 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<UserResponse>> getUserByID(id) async {
+  Future<HttpResponse<UserResponse>> getUserByID(
+    token,
+    id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<HttpResponse<UserResponse>>(Options(

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
+import '../../../domain/firebase/firebase_service.dart';
 import '../../login/widgets/custom_button.dart';
 
 class BottomCartPage extends StatelessWidget {
@@ -46,7 +48,7 @@ class BottomCartPage extends StatelessWidget {
           ),
           customButton(
             text: "cancel_order".translate(context),
-            onPress: () => cancelOrder().then((value) {
+            onPress: () => cancelOrder(context).then((value) {
               onPress();
               Navigator.pop(context);
             }),
@@ -57,14 +59,25 @@ class BottomCartPage extends StatelessWidget {
     );
   }
 
-  Future cancelOrder() async {
+  Future cancelOrder(BuildContext context) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      await apiService.cancelOrder("Bearer $token", id);
+      final response = await apiService.cancelOrder("Bearer $token", id);
+      sendPushMessageTopic(
+        orderID: response.data.orderId!,
+        body: "Đơn hàng ${response.data.orderId} đã được hủy thành công",
+        title: "Hủy đơn hàng",
+      );
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      customToast(context, error);
+      print(error);
     } catch (e) {
+      customToast(context, e.toString());
       print(e);
     }
   }

@@ -19,9 +19,10 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
       emit(OtherLoading());
       var prefs = await SharedPreferences.getInstance();
       String id = prefs.getString("userID") ?? "";
+      String token = prefs.getString("token") ?? "";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getUserByID(id);
+      final response = await apiService.getUserByID("Bearer $token", id);
 
       emit(OtherLoaded(response.data));
     } on DioError catch (e) {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/constants.dart';
 import 'custom_button_quantity.dart';
 
 Widget chooseQuantity(int number, Function(int value) onChange) {
   return Container(
-    color: AppColors.bgColor,
+    color: Colors.transparent,
     child: Row(
       children: [
         customButtonQuantity(() {

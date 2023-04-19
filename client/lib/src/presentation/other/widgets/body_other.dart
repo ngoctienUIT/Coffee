@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../domain/firebase/firebase_service.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../info/screen/info_page.dart';
 import '../../login/screen/login_page.dart';
@@ -104,6 +105,7 @@ class BodyOtherPage extends StatelessWidget {
                   context.read<LanguageCubit>().stopTimer();
                   SharedPreferences.getInstance()
                       .then((value) => value.setBool("isLogin", false));
+                  deleteTokenFCM();
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(
                       screen: const LoginPage(),

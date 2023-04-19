@@ -261,7 +261,6 @@ class _ApiService implements ApiService {
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
-    // print(_data);
     return httpResponse;
   }
 

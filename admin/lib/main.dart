@@ -1,11 +1,14 @@
 import 'package:coffee_admin/src/core/utils/constants/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
+import 'src/core/function/notification_services.dart';
 import 'src/core/language/bloc/language_cubit.dart';
 import 'src/core/language/bloc/language_state.dart';
 import 'src/core/language/localization/app_localizations_setup.dart';
@@ -13,15 +16,30 @@ import 'src/presentation/login/screen/login_page.dart';
 
 int? language;
 bool isLogin = false;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = await SharedPreferences.getInstance();
   language = prefs.getInt('language');
   isLogin = prefs.getBool('isLogin') ?? false;
+  // NotificationSettings settings =
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  FirebaseMessaging.instance.getToken().then((value) {
+    print(value);
+  });
+  await FirebaseMessaging.instance.subscribeToTopic("orderCoffee");
+  await NotificationServices.initialize(flutterLocalNotificationsPlugin);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

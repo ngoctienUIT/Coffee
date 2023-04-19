@@ -18,7 +18,7 @@ class InfoCart extends StatelessWidget {
 
   final bool isBringBack;
   final OrderResponse order;
-  final UserResponse user;
+  final UserResponse? user;
   final Color selectedColor = AppColors.statusBarColor;
   final Color unselectedColor = AppColors.unselectedColor;
 
@@ -72,8 +72,10 @@ class InfoCart extends StatelessWidget {
   Widget userInfo() {
     return Column(
       children: [
-        itemInfo(Icons.person, user.displayName),
-        itemInfo(Icons.phone, user.phoneNumber),
+        itemInfo(Icons.person,
+            user != null ? user!.displayName : "Người dùng Coffee"),
+        const Divider(),
+        itemInfo(Icons.phone, user != null ? user!.phoneNumber : ""),
       ],
     );
   }
@@ -117,15 +119,9 @@ class InfoCart extends StatelessWidget {
   }
 
   Widget bringBack() {
-    return Column(
-      children: [
-        itemInfo(Icons.phone, order.address1 == null ? "" : ""),
-        const Divider(),
-        itemInfo(
-          Icons.location_on,
-          "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
-        ),
-      ],
+    return itemInfo(
+      Icons.location_on,
+      "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
     );
   }
 }

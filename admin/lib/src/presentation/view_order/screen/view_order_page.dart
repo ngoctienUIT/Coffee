@@ -1,5 +1,7 @@
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
+import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/product.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
@@ -21,45 +23,52 @@ class ViewOrderPage extends StatelessWidget {
   }) : super(key: key);
 
   final OrderResponse order;
-  final UserResponse user;
+  final UserResponse? user;
   final VoidCallback onPress;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarGeneral(title: user.displayName, elevation: 0),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              InfoCart(
-                isBringBack: order.address1 != null,
-                order: order,
-                user: user,
-              ),
-              const SizedBox(height: 10),
-              ListProduct(orderItems: order.orderItems!),
-              const SizedBox(height: 10),
-              if (order.appliedCoupons != null)
-                AddCoupons(listCoupon: order.appliedCoupons!),
-              if (order.appliedCoupons != null) const SizedBox(height: 10),
-              TotalPayment(order: order),
-              const SizedBox(height: 10),
-              const PaymentMethods(value: 1),
-              const SizedBox(height: 170),
-            ],
+    return BlocProvider(
+      create: (context) => ViewOrderBloc(),
+      child: Scaffold(
+        appBar: AppBarGeneral(
+          title: user != null ? user!.displayName : "Người dùng Coffee",
+          elevation: 0,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                InfoCart(
+                  isBringBack: order.address1 != null,
+                  order: order,
+                  user: user,
+                ),
+                const SizedBox(height: 10),
+                ListProduct(orderItems: order.orderItems!),
+                const SizedBox(height: 10),
+                if (order.appliedCoupons != null)
+                  AddCoupons(listCoupon: order.appliedCoupons!),
+                if (order.appliedCoupons != null) const SizedBox(height: 10),
+                TotalPayment(order: order),
+                const SizedBox(height: 10),
+                const PaymentMethods(value: 1),
+                const SizedBox(height: 170),
+              ],
+            ),
           ),
         ),
+        bottomSheet: user != null && order.orderStatus == "PLACED"
+            ? BottomCartPage(
+                userID: user != null ? user!.id : "",
+                total: order.orderAmount!,
+                id: order.orderId!,
+                onPress: onPress,
+              )
+            : null,
       ),
-      bottomSheet: order.orderStatus == "PLACED"
-          ? BottomCartPage(
-              total: order.orderAmount!,
-              id: order.orderId!,
-              onPress: onPress,
-            )
-          : null,
     );
   }
 

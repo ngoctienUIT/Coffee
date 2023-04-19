@@ -72,6 +72,7 @@ class SettingPage extends StatelessWidget {
               onPressed: () async {
                 bool check = await deleteAccount(context);
                 if (check && context.mounted) {
+                  customToast(context, "Xóa tài khoảng thành công");
                   Navigator.of(context).pushAndRemoveUntil(
                     createRoute(
                       screen: const LoginPage(),

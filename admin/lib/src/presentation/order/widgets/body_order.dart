@@ -49,31 +49,45 @@ class BodyOrder extends StatelessWidget {
                   future: getUserInfo(listOrder[index].userId!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      final user = snapshot.requireData;
-                      if (user != null) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(createRoute(
-                              screen: ViewOrderPage(
-                                user: user,
-                                order: listOrder[index],
-                                onPress: () {
-                                  context
-                                      .read<OrderBloc>()
-                                      .add(RefreshData(indexState));
-                                },
-                              ),
-                              begin: const Offset(1, 0),
-                            ));
-                          },
-                          child: itemOrder(context, listOrder[index], user),
-                        );
-                      }
+                      UserResponse? user = snapshot.requireData;
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(createRoute(
+                            screen: ViewOrderPage(
+                              user: user,
+                              order: listOrder[index],
+                              onPress: () {
+                                context
+                                    .read<OrderBloc>()
+                                    .add(RefreshData(indexState));
+                              },
+                            ),
+                            begin: const Offset(1, 0),
+                          ));
+                        },
+                        child: itemOrder(context, listOrder[index], user),
+                      );
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return itemOrderLoading();
                     }
-                    return const SizedBox.shrink();
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(createRoute(
+                          screen: ViewOrderPage(
+                            user: null,
+                            order: listOrder[index],
+                            onPress: () {
+                              context
+                                  .read<OrderBloc>()
+                                  .add(RefreshData(indexState));
+                            },
+                          ),
+                          begin: const Offset(1, 0),
+                        ));
+                      },
+                      child: itemOrder(context, listOrder[index], null),
+                    );
                   },
                 );
               },
@@ -100,7 +114,9 @@ class BodyOrder extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            order.selectedPickupStore!.storeName.toString(),
+            order.selectedPickupStore != null
+                ? order.selectedPickupStore!.storeName.toString()
+                : "",
             // overflow: TextOverflow.ellipsis,
             maxLines: 2,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -129,11 +145,11 @@ class BodyOrder extends StatelessWidget {
   }
 
   Widget bodyItem(
-      BuildContext context, OrderResponse order, UserResponse user) {
+      BuildContext context, OrderResponse order, UserResponse? user) {
     return Row(
       children: [
         ClipOval(
-          child: user.imageUrl == null
+          child: user == null || user.imageUrl == null
               ? Image.asset(AppImages.imgNonAvatar, height: 100)
               : CachedNetworkImage(
                   height: 100,
@@ -149,7 +165,7 @@ class BodyOrder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user.displayName,
+                user != null ? user.displayName : "Người dùng Coffee",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -180,7 +196,7 @@ class BodyOrder extends StatelessWidget {
   }
 
   Widget itemOrder(
-      BuildContext context, OrderResponse order, UserResponse user) {
+      BuildContext context, OrderResponse order, UserResponse? user) {
     int number = 0;
     for (var item in order.orderItems!) {
       number += item.quantity;
