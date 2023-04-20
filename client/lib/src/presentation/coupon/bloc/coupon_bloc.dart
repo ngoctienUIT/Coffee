@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,11 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllCoupons();
       final coupons = response.data;
-      emit(CouponLoaded(coupons));
+      emit(CouponLoaded(coupons
+          .where((element) =>
+              element.dueDate.toDate().difference(DateTime.now()).inSeconds >=
+              0)
+          .toList()));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

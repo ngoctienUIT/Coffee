@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
 import 'package:dio/dio.dart';
@@ -26,10 +27,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final listOrder = response.data
           .where((element) => element.orderStatus != "PENDING")
           .toList();
-      // listOrder.sort((a, b) => a.createdDate!
-      //     .toDateTime()
-      //     .difference(b.createdDate!.toDateTime())
-      //     .inSeconds);
+      listOrder.sort((a, b) => b.createdDate!
+          .toDateTime2()
+          .difference(a.createdDate!.toDateTime2())
+          .inSeconds);
 
       emit(OrderLoaded(0, listOrder));
     } on DioError catch (e) {
@@ -60,10 +61,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           : response.data
               .where((element) => element.orderStatus != "PENDING")
               .toList();
-      // listOrder.sort((a, b) => a.createdDate!
-      //     .toDateTime()
-      //     .difference(b.createdDate!.toDateTime())
-      //     .inSeconds);
+      listOrder.sort((a, b) => b.createdDate!
+          .toDateTime2()
+          .difference(a.createdDate!.toDateTime2())
+          .inSeconds);
 
       emit(OrderLoaded(index, listOrder));
     } on DioError catch (e) {
@@ -93,10 +94,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           : response.data
               .where((element) => element.orderStatus != "PENDING")
               .toList();
-      // listOrder.sort((a, b) => a.createdDate!
-      //     .toDateTime()
-      //     .difference(b.createdDate!.toDateTime())
-      //     .inSeconds);
+      listOrder.sort((a, b) => b.createdDate!
+          .toDateTime2()
+          .difference(a.createdDate!.toDateTime2())
+          .inSeconds);
 
       emit(OrderLoaded(index, listOrder));
     } on DioError catch (e) {

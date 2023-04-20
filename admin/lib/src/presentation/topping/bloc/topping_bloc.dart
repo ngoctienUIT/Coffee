@@ -10,9 +10,27 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
   ToppingBloc() : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
+    on<UpdateData>((event, emit) => updateData(emit));
+
     on<PickEvent>((event, emit) => emit(PickState()));
 
     on<DeleteEvent>((event, emit) => deleteTopping(event.id, emit));
+  }
+
+  Future updateData(Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final response = await apiService.getAllToppings();
+      emit(ToppingLoaded(response.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(ToppingError(error));
+    } catch (e) {
+      emit(ToppingError(e.toString()));
+      print(e);
+    }
   }
 
   Future getData(Emitter emit) async {
@@ -34,7 +52,6 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
 
   Future deleteTopping(String id, Emitter emit) async {
     try {
-      emit(ToppingLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();

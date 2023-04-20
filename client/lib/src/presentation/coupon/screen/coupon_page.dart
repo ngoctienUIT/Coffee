@@ -56,9 +56,13 @@ class CouponView extends StatelessWidget {
       builder: (context, state) {
         if (state is CouponLoaded) {
           return RefreshIndicator(
-            onRefresh: () async {},
+            onRefresh: () async {
+              context.read<CouponBloc>().add(FetchData());
+            },
             child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               padding: const EdgeInsets.all(10),
               itemCount: state.listCoupon.length,
               itemBuilder: (context, index) {

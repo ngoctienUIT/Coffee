@@ -41,7 +41,7 @@ class ToppingPage extends StatelessWidget {
                 Navigator.of(context).push(createRoute(
                   screen: AddToppingPage(
                     onChange: () {
-                      context.read<ToppingBloc>().add(FetchData());
+                      context.read<ToppingBloc>().add(UpdateData());
                     },
                   ),
                   begin: const Offset(0, 1),
@@ -178,7 +178,7 @@ class _ToppingViewState extends State<ToppingView> {
                             screen: AddToppingPage(
                               topping: listTopping[index],
                               onChange: () {
-                                myContext.read<ToppingBloc>().add(FetchData());
+                                myContext.read<ToppingBloc>().add(UpdateData());
                               },
                             ),
                             begin: const Offset(0, 1),
@@ -191,7 +191,7 @@ class _ToppingViewState extends State<ToppingView> {
                       ),
                       SlidableAction(
                         onPressed: (context) {
-                          context
+                          myContext
                               .read<ToppingBloc>()
                               .add(DeleteEvent(listTopping[index].toppingId!));
                         },

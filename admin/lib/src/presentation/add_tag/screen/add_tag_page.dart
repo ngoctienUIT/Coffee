@@ -146,6 +146,7 @@ class _AddTagViewState extends State<AddTagView> {
             text: "Lưu",
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
+              // loadingAnimation(context);
               if (_formKey.currentState!.validate()) {
                 if (widget.tag == null) {
                   context.read<AddTagBloc>().add(CreateTagEvent(Tag(

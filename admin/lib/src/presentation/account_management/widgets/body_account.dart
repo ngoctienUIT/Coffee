@@ -49,7 +49,7 @@ class BodyAccount extends StatelessWidget {
                         onChange: () {
                           context
                               .read<AccountBloc>()
-                              .add(RefreshData(indexState));
+                              .add(UpdateData(indexState));
                         },
                       ),
                       begin: const Offset(1, 0),

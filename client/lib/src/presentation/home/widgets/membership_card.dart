@@ -35,23 +35,18 @@ class MembershipCard extends StatelessWidget {
               const Text(
                 "Trần Ngọc Tiến",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
+              const SizedBox(height: 5),
               Text(
                 "member".translate(context),
                 style: const TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
-              ),
-              const Spacer(),
-              const Text(
-                "DRIPS: 0",
-                style: TextStyle(color: Colors.white),
               ),
             ],
           ),

@@ -279,6 +279,7 @@ class _AddCouponViewState extends State<AddCouponView> {
     return BlocBuilder<AddCouponBloc, AddCouponState>(
       buildWhen: (previous, current) => current is ChangeDateState,
       builder: (context, state) {
+        checkEmpty();
         return CustomPickerWidget(
           text: DateFormat("dd/MM/yyyy").format(selectedDate),
           onPress: () => selectDate(),
@@ -291,6 +292,7 @@ class _AddCouponViewState extends State<AddCouponView> {
     return BlocBuilder<AddCouponBloc, AddCouponState>(
       buildWhen: (previous, current) => current is ChangeImageState,
       builder: (context, state) {
+        checkEmpty();
         return InkWell(
           onTap: () => showMyBottomSheet(context, (image) {
             this.image = image;
@@ -323,7 +325,12 @@ class _AddCouponViewState extends State<AddCouponView> {
             text: "Lưu",
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
+              double rate = double.parse(rateController.text);
               if (_formKey.currentState!.validate()) {
+                if ((rate > 1 || rate == 0) && isRate) {
+                  customToast(context, "Tỷ lệ không hợp lệ");
+                  return;
+                }
                 if (widget.coupon == null) {
                   context.read<AddCouponBloc>().add(CreateCouponEvent(Coupon(
                         couponName: titleController.text,

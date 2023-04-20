@@ -37,7 +37,7 @@ class TagPage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(createRoute(
                   screen: AddTagPage(
-                    onChange: () => context.read<TagBloc>().add(FetchData()),
+                    onChange: () => context.read<TagBloc>().add(UpdateData()),
                   ),
                   begin: const Offset(0, 1),
                 ));
@@ -170,7 +170,7 @@ class _TagViewState extends State<TagView> {
                             screen: AddTagPage(
                               tag: listTag[index],
                               onChange: () {
-                                myContext.read<TagBloc>().add(FetchData());
+                                myContext.read<TagBloc>().add(UpdateData());
                               },
                             ),
                             begin: const Offset(0, 1),
@@ -183,7 +183,7 @@ class _TagViewState extends State<TagView> {
                       ),
                       SlidableAction(
                         onPressed: (context) {
-                          context
+                          myContext
                               .read<TagBloc>()
                               .add(DeleteEvent(listTag[index].tagId!));
                         },

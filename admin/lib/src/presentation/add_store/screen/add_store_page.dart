@@ -11,6 +11,7 @@ import 'package:coffee_admin/src/presentation/add_store/widgets/district_dropdow
 import 'package:coffee_admin/src/presentation/add_store/widgets/province_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.dart';
 import 'package:coffee_admin/src/presentation/forgot_password/widgets/app_bar_general.dart';
+import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -73,14 +74,18 @@ class _AddStoreViewState extends State<AddStoreView> {
       nameController.text = widget.store!.storeName!;
       phoneController.text = widget.store!.hotlineNumber!;
       addressController.text = widget.store!.address1!;
-      // addressAPI.province = dvhcvn.findLevel1ByName(widget.store!.address4!);
-      // addressAPI.district = dvhcvn
-      //     .findLevel1ByName(widget.store!.address4!)!
-      //     .findLevel2ByName(widget.store!.address3!);
-      // addressAPI.ward = dvhcvn
-      //     .findLevel1ByName(widget.store!.address4!)!
-      //     .findLevel2ByName(widget.store!.address3!)!
-      //     .findLevel3ByName(widget.store!.address2!);
+      try {
+        addressAPI.province = dvhcvn.findLevel1ByName(widget.store!.address4!);
+        addressAPI.district = dvhcvn
+            .findLevel1ByName(widget.store!.address4!)!
+            .findLevel2ByName(widget.store!.address3!);
+        addressAPI.ward = dvhcvn
+            .findLevel1ByName(widget.store!.address4!)!
+            .findLevel2ByName(widget.store!.address3!)!
+            .findLevel3ByName(widget.store!.address2!);
+      } catch (e) {
+        print(e);
+      }
       open = widget.store!.openingHour.toTime();
       close = widget.store!.closingHour.toTime();
     }
