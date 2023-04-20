@@ -1,13 +1,16 @@
+import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
-import 'package:dio/dio.dart';
+import 'package:coffee/src/presentation/setting/bloc/setting_bloc.dart';
+import 'package:coffee/src/presentation/setting/bloc/setting_event.dart';
+import 'package:coffee/src/presentation/setting/bloc/setting_state.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../domain/api_service.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
 import '../../other/widgets/group_item_other.dart';
@@ -20,95 +23,89 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarGeneral(title: "setting".translate(context), elevation: 0),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            groupItemOther("account_settings".translate(context), [
-              itemOther(
-                "delete_account".translate(context),
-                Icons.delete_forever,
-                () => _showAlertDialog(context),
-              ),
-            ]),
-            if (user.hashedPassword.isNotEmpty)
-              groupItemOther("security".translate(context), [
+    return BlocProvider(
+      create: (context) => SettingBloc(),
+      child: SettingView(user: user),
+    );
+  }
+}
+
+class SettingView extends StatelessWidget {
+  const SettingView({Key? key, required this.user}) : super(key: key);
+
+  final UserResponse user;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<SettingBloc, SettingState>(
+      listener: (context, state) {
+        if (state is DeleteErrorState) {
+          Navigator.pop(context);
+          customToast(context, state.error);
+        }
+        if (state is DeleteLoadingState) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccessState) {
+          customToast(context, "Xóa tài khoản thành công");
+          Navigator.of(context).pushAndRemoveUntil(
+            createRoute(
+              screen: const LoginPage(),
+              begin: const Offset(0, 1),
+            ),
+            (route) => false,
+          );
+        }
+      },
+      child: Scaffold(
+        appBar:
+            AppBarGeneral(title: "setting".translate(context), elevation: 0),
+        body: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              groupItemOther("account_settings".translate(context), [
                 itemOther(
-                  "change_password".translate(context),
-                  Icons.lock,
-                  () {
-                    Navigator.of(context).push(createRoute(
-                      screen: ChangePasswordPage(user: user),
-                      begin: const Offset(1, 0),
-                    ));
-                  },
+                  "delete_account".translate(context),
+                  Icons.delete_forever,
+                  () => _showAlertDialog(context, () {
+                    Navigator.pop(context);
+                    context.read<SettingBloc>().add(DeleteAccountEvent());
+                  }),
                 ),
               ]),
-          ],
+              if (user.hashedPassword.isNotEmpty)
+                groupItemOther("security".translate(context), [
+                  itemOther(
+                    "change_password".translate(context),
+                    Icons.lock,
+                    () {
+                      Navigator.of(context).push(createRoute(
+                        screen: ChangePasswordPage(user: user),
+                        begin: const Offset(1, 0),
+                      ));
+                    },
+                  ),
+                ]),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Future _showAlertDialog(BuildContext context) async {
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
     return showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('delete_account'.translate(context)),
-          content: Text('you_want_delete_your_account'.translate(context)),
-          actions: [
-            TextButton(
-              child: Text('cancel'.translate(context)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('ok'.translate(context)),
-              onPressed: () async {
-                bool check = await deleteAccount(context);
-                if (check && context.mounted) {
-                  customToast(context, "Xóa tài khoảng thành công");
-                  Navigator.of(context).pushAndRemoveUntil(
-                    createRoute(
-                      screen: const LoginPage(),
-                      begin: const Offset(0, 1),
-                    ),
-                    (route) => false,
-                  );
-                }
-              },
-            ),
-          ],
+        return customAlertDialog(
+          context: context,
+          title: 'delete_account'.translate(context),
+          content: 'you_want_delete_your_account'.translate(context),
+          onOK: onOK,
         );
       },
     );
-  }
-
-  Future<bool> deleteAccount(BuildContext context) async {
-    try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("userID") ?? "";
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeUserByID("Bearer $token", id);
-      prefs.setBool("isLogin", false);
-      return true;
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      print(error);
-      customToast(context, error);
-      return false;
-    } catch (e) {
-      print(e);
-      customToast(context, e.toString());
-      return false;
-    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
@@ -240,25 +241,15 @@ class _InfoCartState extends State<InfoCart> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Xác nhận"),
-          content: Text(
-              "Bạn muốn thay đổi phương thức từ ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}"),
-          actions: [
-            TextButton(
-              child: Text('cancel'.translate(context)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                okPress();
-                Navigator.pop(context);
-              },
-              child: Text('ok'.translate(context)),
-            ),
-          ],
+        return customAlertDialog(
+          context: context,
+          title: "Xác nhận",
+          content:
+              "Bạn muốn thay đổi phương thức từ ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}",
+          onOK: () {
+            okPress();
+            Navigator.pop(context);
+          },
         );
       },
     );

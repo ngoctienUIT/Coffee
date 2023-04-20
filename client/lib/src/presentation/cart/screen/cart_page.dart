@@ -1,6 +1,6 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
@@ -154,30 +154,20 @@ class CartView extends StatelessWidget {
     );
   }
 
-  Future _showAlertDialog(BuildContext context, VoidCallback okPress) async {
+  Future _showAlertDialog(BuildContext context, VoidCallback onPress) async {
     return showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Xác nhận"),
-          content: const Text(
-              "Bạn có muốn xóa tất cả các mục trong giỏ hàng của bạn?"),
-          actions: [
-            TextButton(
-              child: Text('cancel'.translate(context)),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              onPressed: () {
-                okPress();
-                Navigator.pop(context);
-              },
-              child: Text('ok'.translate(context)),
-            ),
-          ],
+        return customAlertDialog(
+          context: context,
+          title: "Xác nhận",
+          content:
+              "Bạn có muốn xóa tất cả các mục trong giỏ hàng của bạn?",
+          onOK: () {
+            onPress();
+            Navigator.pop(context);
+          },
         );
       },
     );
