@@ -41,7 +41,7 @@ class ProductPage extends StatelessWidget {
                       } else {
                         index = 0;
                       }
-                      context.read<ProductBloc>().add(RefreshData(index));
+                      context.read<ProductBloc>().add(UpdateData(index));
                     },
                   ),
                   begin: const Offset(0, 1),

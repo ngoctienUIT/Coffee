@@ -11,6 +11,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     on<FetchData>((event, emit) => getData(emit));
 
     on<RefreshData>((event, emit) => getDataOrder(event.index, emit));
+
+    on<UpdateData>((event, emit) => getDataOrder(event.index, emit));
   }
 
   Future getData(Emitter emit) async {
@@ -24,6 +26,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final listOrder = response.data
           .where((element) => element.orderStatus != "PENDING")
           .toList();
+      // listOrder.sort((a, b) => a.createdDate!
+      //     .toDateTime()
+      //     .difference(b.createdDate!.toDateTime())
+      //     .inSeconds);
 
       emit(OrderLoaded(0, listOrder));
     } on DioError catch (e) {
@@ -54,6 +60,43 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           : response.data
               .where((element) => element.orderStatus != "PENDING")
               .toList();
+      // listOrder.sort((a, b) => a.createdDate!
+      //     .toDateTime()
+      //     .difference(b.createdDate!.toDateTime())
+      //     .inSeconds);
+
+      emit(OrderLoaded(index, listOrder));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(OrderError(error));
+      print(error);
+    } catch (e) {
+      emit(OrderError(e.toString()));
+      print(e);
+    }
+  }
+
+  Future updateDataOrder(int index, Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String status = index == 0
+          ? ""
+          : (index == 1 ? "PLACED" : (index == 2 ? "COMPLETED" : "CANCELLED"));
+      final response =
+          await apiService.getAllOrders('Bearer $token', "", status);
+      final listOrder = index != 0
+          ? response.data
+          : response.data
+              .where((element) => element.orderStatus != "PENDING")
+              .toList();
+      // listOrder.sort((a, b) => a.createdDate!
+      //     .toDateTime()
+      //     .difference(b.createdDate!.toDateTime())
+      //     .inSeconds);
 
       emit(OrderLoaded(index, listOrder));
     } on DioError catch (e) {

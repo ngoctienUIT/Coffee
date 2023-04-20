@@ -29,6 +29,7 @@ class CouponPage extends StatelessWidget {
           backgroundColor: AppColors.bgColor,
           elevation: 0,
           centerTitle: true,
+          leading: const SizedBox(),
           title: Text(
             "all_vouchers".translate(context),
             style: const TextStyle(color: Colors.black),

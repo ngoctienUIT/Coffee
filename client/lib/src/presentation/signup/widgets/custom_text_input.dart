@@ -82,8 +82,11 @@ class CustomTextInput extends StatelessWidget {
             ? InputBorder.none
             : OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(radius ?? 0)),
-                borderSide:
-                    const BorderSide(color: AppColors.statusBarColor, width: 1),
+                borderSide: BorderSide(
+                    color: onPress != null
+                        ? colorBorder
+                        : AppColors.statusBarColor,
+                    width: 1),
               ),
         disabledBorder: !isBorder
             ? InputBorder.none

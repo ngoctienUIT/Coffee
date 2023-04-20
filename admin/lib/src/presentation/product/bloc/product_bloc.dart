@@ -15,6 +15,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
     on<RefreshData>((event, emit) => getDataProduct(event.index, emit));
 
+    on<UpdateData>((event, emit) => updateDataProduct(event.index, emit));
+
     on<DeleteEvent>(
         (event, emit) => deleteProduct(event.id, event.index, emit));
   }
@@ -44,6 +46,26 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future getDataProduct(int index, Emitter emit) async {
     try {
       emit(RefreshLoading());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final response = await apiService.getAllProductsFromProductCatalogueID(
+          listProductCatalogues[index].id);
+      final listProduct = response.data;
+
+      emit(RefreshLoaded(index, listProduct));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(RefreshError(error));
+      print(error);
+    } catch (e) {
+      emit(RefreshError(e.toString()));
+      print(e);
+    }
+  }
+
+  Future updateDataProduct(int index, Emitter emit) async {
+    try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllProductsFromProductCatalogueID(

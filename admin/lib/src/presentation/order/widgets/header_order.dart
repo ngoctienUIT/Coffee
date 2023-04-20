@@ -1,5 +1,6 @@
 import 'package:coffee_admin/src/core/utils/constants/app_colors.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,11 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
 
   @override
   void initState() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      context.read<OrderBloc>().add(UpdateData(_orderController.index));
+    });
     _orderController = TabController(length: 4, vsync: this);
     _orderController.addListener(() {
       context.read<OrderBloc>().add(RefreshData(_orderController.index));
