@@ -5,3 +5,9 @@ class FetchData extends ActivityEvent {
 
   FetchData(this.index);
 }
+
+class UpdateData extends ActivityEvent {
+  int index;
+
+  UpdateData(this.index);
+}

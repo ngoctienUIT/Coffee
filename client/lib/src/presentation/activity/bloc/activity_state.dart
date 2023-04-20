@@ -23,3 +23,10 @@ class ActivityError extends ActivityState {
 
   ActivityError({this.message, required this.index});
 }
+
+class UpdateSuccess extends ActivityState {
+  final List<OrderResponse> listOrder;
+  final int index;
+
+  UpdateSuccess(this.listOrder, this.index);
+}

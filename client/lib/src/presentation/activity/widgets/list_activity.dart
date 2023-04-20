@@ -27,35 +27,41 @@ class ListActivity extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state is ActivityLoaded) {
-          if (state.listOrder.isNotEmpty) {
+        if (state is ActivityLoaded || state is UpdateSuccess) {
+          final listOrder = state is ActivityLoaded
+              ? state.listOrder
+              : (state as UpdateSuccess).listOrder;
+          int indexState = state is ActivityLoaded
+              ? state.index
+              : (state as UpdateSuccess).index;
+          if (listOrder.isNotEmpty) {
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<ActivityBloc>().add(FetchData(state.index));
+                context.read<ActivityBloc>().add(FetchData(indexState));
               },
               child: ListView.builder(
                 padding: const EdgeInsets.all(10),
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
-                itemCount: state.listOrder.length,
+                itemCount: listOrder.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
                       Navigator.of(context).push(createRoute(
                         screen: ViewOrderPage(
-                          index: state.index,
-                          order: state.listOrder[index],
+                          index: indexState,
+                          order: listOrder[indexState],
                           onPress: () {
                             context
                                 .read<ActivityBloc>()
-                                .add(FetchData(state.index));
+                                .add(UpdateData(indexState));
                           },
                         ),
                         begin: const Offset(0, 1),
                       ));
                     },
-                    child: itemActivity(state.listOrder[index]),
+                    child: itemActivity(listOrder[index]),
                   );
                 },
               ),

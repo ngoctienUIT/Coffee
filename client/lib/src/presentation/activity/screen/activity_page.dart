@@ -1,9 +1,9 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
-import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
 import 'package:coffee/src/presentation/activity/widgets/custom_app_bar.dart';
 import 'package:coffee/src/presentation/activity/widgets/list_activity.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,11 +25,7 @@ class ActivityPage extends StatelessWidget {
           isPick: isAppBar,
           title: "Hoạt động",
         ),
-        body: SafeArea(
-          child: BlocBuilder<ActivityBloc, ActivityState>(
-            builder: (context, state) => const ActivityView(),
-          ),
-        ),
+        body: const SafeArea(child: ActivityView()),
       ),
     );
   }
@@ -48,6 +44,12 @@ class _ActivityViewState extends State<ActivityView>
 
   @override
   void initState() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+      Map<String, dynamic> data = message.data;
+      context.read<ActivityBloc>().add(UpdateData(_activityController.index));
+    });
     _activityController = TabController(length: 2, vsync: this);
     _activityController.addListener(() => setState(() {
           context
