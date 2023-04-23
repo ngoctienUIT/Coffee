@@ -61,6 +61,9 @@ dependencies:
   firebase_messaging: ^14.4.1
   cloud_firestore: ^4.5.2
   flutter_local_notifications: ^13.0.0
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  crypto: ^3.0.2
 
 dev_dependencies:
   flutter_test:
@@ -104,7 +107,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/
+     - assets/fonts/
      - assets/images/
      - assets/lang/
   #   - images/a_dot_ham.jpeg

@@ -54,7 +54,7 @@ class GridItemOrder extends StatelessWidget {
               child: CachedNetworkImage(
                 height: 80,
                 width: 80,
-                imageUrl: listProduct[index].image!,
+                imageUrl: listProduct[index].image ?? "",
                 placeholder: (context, url) => itemProductLoading(80),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

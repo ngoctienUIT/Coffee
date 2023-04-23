@@ -50,7 +50,7 @@ class ListItemOrder extends StatelessWidget {
             CachedNetworkImage(
               height: 100,
               width: 100,
-              imageUrl: listProduct[index].image!,
+              imageUrl: listProduct[index].image ?? "",
               placeholder: (context, url) => itemProductLoading(100),
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),

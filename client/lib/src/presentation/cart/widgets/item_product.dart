@@ -35,16 +35,13 @@ class _ItemProductState extends State<ItemProduct> {
           if (widget.index != 0) const Divider(indent: 10, endIndent: 10),
           Row(
             children: [
-              widget.product.image == null
-                  ? Image.asset("assets/tea.png", height: 50, width: 50)
-                  : CachedNetworkImage(
-                      height: 50,
-                      width: 50,
-                      imageUrl: widget.product.image!,
-                      placeholder: (context, url) => itemLoading(50, 50, 0),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
+              CachedNetworkImage(
+                height: 50,
+                width: 50,
+                imageUrl: widget.product.image ?? "",
+                placeholder: (context, url) => itemLoading(50, 50, 0),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/change_password/bloc/change_password_bloc.dart';
 import 'package:coffee/src/presentation/change_password/bloc/change_password_state.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -170,7 +173,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              if (oldPasswordController.text == widget.user.hashedPassword) {
+              var bytes = utf8.encode(oldPasswordController.text);
+              var digest = sha256.convert(bytes);
+              if (digest.toString() == widget.user.hashedPassword) {
                 context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
                     User.fromUserResponse(widget.user)
                         .copyWith(password: newPasswordController.text)));

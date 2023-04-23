@@ -80,7 +80,7 @@ class _ProductViewState extends State<ProductView> {
               child: CachedNetworkImage(
                 height: 300,
                 width: 300,
-                imageUrl: widget.product.image!,
+                imageUrl: widget.product.image ?? "",
                 placeholder: (context, url) => itemLoading(300, 300, 0),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

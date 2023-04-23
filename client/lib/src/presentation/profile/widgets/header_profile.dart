@@ -84,7 +84,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                     : CachedNetworkImage(
                         height: 80,
                         width: 80,
-                        imageUrl: widget.user.imageUrl!,
+                        imageUrl: widget.user.imageUrl ?? "",
                         placeholder: (context, url) => itemLoading(80, 80, 90),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),

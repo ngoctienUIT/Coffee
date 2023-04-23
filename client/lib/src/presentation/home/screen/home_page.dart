@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
 import 'package:flutter/material.dart';
@@ -33,67 +34,41 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        context.read<HomeBloc>().add(FetchData());
+    return BlocListener<HomeBloc, HomeState>(
+      listener: (context, state) {
+        if (state is HomeError) {
+          customToast(context, state.message.toString());
+        }
       },
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            const MembershipCard(),
-            const SizedBox(height: 30),
-            descriptionLine(
-              text: "promotion".translate(context),
-              color: AppColors.textColor,
-            ),
-            buildListSpecialOffer(),
-            const SizedBox(height: 20),
-            descriptionLine(
-              text: "selling_products".translate(context),
-              color: AppColors.textColor,
-            ),
-            buildListSellingProducts(),
-            const SizedBox(height: 100),
-          ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          context.read<HomeBloc>().add(FetchData());
+        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const MembershipCard(),
+              const SizedBox(height: 30),
+              descriptionLine(
+                text: "promotion".translate(context),
+                color: AppColors.textColor,
+              ),
+              const SizedBox(height: 10),
+              const BuildListSpecialOffer(),
+              const SizedBox(height: 20),
+              descriptionLine(
+                text: "Sản phẩm gợi ý",
+                color: AppColors.textColor,
+              ),
+              const SizedBox(height: 10),
+              const BuildListSellingProducts(),
+              const SizedBox(height: 10),
+              // const SizedBox(height: 100),
+            ],
+          ),
         ),
       ),
     );
   }
-
-  Widget buildListSpecialOffer() {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state is InitState || state is HomeLoading) {
-          return _buildLoading();
-        }
-        if (state is HomeError) {
-          return Center(child: Text(state.message!));
-        }
-        if (state is HomeLoaded) {
-          return BuildListSpecialOffer(listCoupon: state.listCoupon);
-        }
-        return Container();
-      },
-    );
-  }
-
-  Widget buildListSellingProducts() {
-    return BlocBuilder<HomeBloc, HomeState>(
-      builder: (context, state) {
-        if (state is InitState || state is HomeLoading) {
-          return _buildLoading();
-        }
-        if (state is HomeError) {
-          return Center(child: Text(state.message!));
-        }
-        if (state is HomeLoaded) {
-          return BuildListSellingProducts(listProduct: state.listProduct);
-        }
-        return Container();
-      },
-    );
-  }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

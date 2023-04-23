@@ -1,3 +1,4 @@
+import 'package:coffee/src/domain/repositories/weather/weather_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -121,6 +122,10 @@ abstract class ApiService {
   @GET('/coupon')
   Future<HttpResponse<List<CouponResponse>>> getAllCoupons();
 
+  @GET('/coupon/available/{userId}')
+  Future<HttpResponse<List<CouponResponse>>> getAvailableCoupons(
+      @Path('userId') id);
+
   @GET('/coupon/{id}')
   Future<HttpResponse<CouponResponse>> getCouponByID(@Path("id") String id);
 
@@ -204,5 +209,17 @@ abstract class ApiService {
   Future<HttpResponse<List<OrderResponse>>> removePendingOrder(
     @Header('Authorization') String token,
     @Path("email") String email,
+  );
+
+  @GET("/recommendation/weather?lon={lon}&lat={lat}")
+  Future<HttpResponse<WeatherResponse>> weatherRecommendations(
+    @Path('lon') double long,
+    @Path('lat') double lat,
+  );
+
+  @GET("/recommendation?lon={lon}&lat={lat}")
+  Future<HttpResponse<List<ProductResponse>>> recommendation(
+    @Path('lon') double long,
+    @Path('lat') double lat,
   );
 }

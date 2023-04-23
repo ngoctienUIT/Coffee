@@ -26,7 +26,7 @@ class ItemProduct extends StatelessWidget {
               CachedNetworkImage(
                 height: 50,
                 width: 50,
-                imageUrl: product.image!,
+                imageUrl: product.image ?? "",
                 placeholder: (context, url) => itemLoading(50, 50, 0),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),

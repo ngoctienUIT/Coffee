@@ -11,4 +11,10 @@ class AppImages {
   static const String imgNonAvatar = 'assets/images/img_non_avatar.jpg';
   static const String imgGoogle = 'assets/images/google.png';
   static const String imgBuyMeCoffee = "assets/images/buy-me-a-coffee.png";
+  static const String imgCard = "assets/images/bg_card.png";
+  static const String imgClouds = "assets/images/cloudy.png";
+  static const String imgClear = "assets/images/sun.png";
+  static const String imgSnow = "assets/images/snow.png";
+  static const String imgRain = "assets/images/raining.png";
+  static const String imgProductLoading = "assets/images/coffee_cup.png";
 }

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,8 +34,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(LoginLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
+      var bytes = utf8.encode(event.password);
+      var digest = sha256.convert(bytes);
+      print("Digest as hex string: $digest");
       final response = await apiService.login(
-          {"loginIdentity": event.email, "hashedPassword": event.password});
+          {"loginIdentity": event.email, "hashedPassword": digest.toString()});
       final user = response.data;
       SharedPreferences.getInstance().then((value) {
         value.setString("userID", user.userResponse.id);

@@ -1,9 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class ViewSpecialOfferPage extends StatelessWidget {
-  const ViewSpecialOfferPage({Key? key, required this.index}) : super(key: key);
+import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../store/widgets/item_loading.dart';
 
-  final int index;
+class ViewSpecialOfferPage extends StatelessWidget {
+  const ViewSpecialOfferPage({Key? key, required this.coupon})
+      : super(key: key);
+
+  final CouponResponse coupon;
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +18,14 @@ class ViewSpecialOfferPage extends StatelessWidget {
           children: [
             Stack(
               children: [
-                Image.asset(
-                  "assets/banner.jpg",
+                CachedNetworkImage(
+                  height: 150,
                   width: MediaQuery.of(context).size.width,
-                  height: 120,
+                  imageUrl: coupon.imageUrl ?? "",
                   fit: BoxFit.fitWidth,
+                  placeholder: (context, url) =>
+                      itemLoading(150, MediaQuery.of(context).size.width, 0),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
                 Positioned(
                   top: 10,
@@ -47,13 +55,36 @@ class ViewSpecialOfferPage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Mô tả"),
-                    Text("Nội dung"),
-                    SizedBox(height: 50),
-                    Divider(),
-                    Text("Điều khoản và điều kiện"),
-                    Text("Các điểu khoản"),
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      coupon.couponName,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    const Text("Mô tả"),
+                    const SizedBox(height: 10),
+                    Text(
+                      coupon.content,
+                      maxLines: 2,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 10),
+                    const Divider(),
+                    const Text("Thời gian"),
+                    const SizedBox(height: 10),
+                    Text(
+                      coupon.dueDate,
+                      maxLines: 2,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
                 ),
               ),

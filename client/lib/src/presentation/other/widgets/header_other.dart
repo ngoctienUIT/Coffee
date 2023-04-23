@@ -132,7 +132,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                     : CachedNetworkImage(
                         height: 80,
                         width: 80,
-                        imageUrl: state.user.imageUrl!,
+                        imageUrl: state.user.imageUrl ?? "",
                         placeholder: (context, url) => itemLoading(80, 80, 90),
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
