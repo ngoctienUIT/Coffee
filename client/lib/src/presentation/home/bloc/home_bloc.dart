@@ -14,12 +14,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<bool> _handleLocationPermission(Emitter emit) async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      emit(HomeError(
-          'Location services are disabled. Please enable the services'));
-      return false;
-    }
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -32,6 +26,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeError(
           'Location permissions are permanently denied, we cannot request permissions.'));
       return false;
+    }
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      bool check = await Geolocator.openLocationSettings();
+      if (!check) {
+        emit(HomeError(
+            'Location services are disabled. Please enable the services'));
+        return false;
+      }
     }
     return true;
   }

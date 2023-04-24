@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:crypto/crypto.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -312,6 +315,9 @@ class _SignUpViewState extends State<SignUpView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
+              var bytes = utf8.encode(passwordController.text);
+              var digest = sha256.convert(bytes);
+              print("Digest as hex string: $digest");
               context.read<SignUpBloc>().add(SignUpWithEmailPasswordEvent(
                       user: User(
                     username: emailController.text,
@@ -319,7 +325,7 @@ class _SignUpViewState extends State<SignUpView> {
                     isMale: isMale,
                     email: emailController.text,
                     phoneNumber: phoneController.text,
-                    password: passwordController.text,
+                    password: digest.toString(),
                     userRole: selectedRole,
                     birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
                   )));

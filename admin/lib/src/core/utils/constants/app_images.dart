@@ -12,4 +12,9 @@ class AppImages {
   static const String imgGoogle = 'assets/images/google.png';
   static const String imgAddImage = 'assets/images/add-image.png';
   static const String imgBuyMeCoffee = "assets/images/buy-me-a-coffee.png";
+  static const String imgClouds = "assets/images/cloudy.png";
+  static const String imgClear = "assets/images/sun.png";
+  static const String imgSnow = "assets/images/snow.png";
+  static const String imgRain = "assets/images/raining.png";
+  static const String imgProductLoading = "assets/images/coffee_cup.png";
 }

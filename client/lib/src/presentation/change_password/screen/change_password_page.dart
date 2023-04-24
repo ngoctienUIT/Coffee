@@ -176,9 +176,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               var bytes = utf8.encode(oldPasswordController.text);
               var digest = sha256.convert(bytes);
               if (digest.toString() == widget.user.hashedPassword) {
+                bytes = utf8.encode(newPasswordController.text);
+                digest = sha256.convert(bytes);
                 context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
                     User.fromUserResponse(widget.user)
-                        .copyWith(password: newPasswordController.text)));
+                        .copyWith(password: digest.toString())));
               } else {
                 customToast(context, "Mật khẩu cũ chưa chính xác");
               }

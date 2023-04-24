@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -136,8 +139,10 @@ class _NewPasswordViewState extends State<NewPasswordView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
+              var bytes = utf8.encode(newPasswordController.text);
+              var digest = sha256.convert(bytes);
               context.read<NewPasswordBloc>().add(ChangePasswordEvent(
-                  widget.resetCredential, newPasswordController.text));
+                  widget.resetCredential, digest.toString()));
             }
           },
         );

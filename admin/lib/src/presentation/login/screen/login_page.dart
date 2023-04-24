@@ -1,11 +1,13 @@
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../main.dart';
 import '../../../core/function/custom_toast.dart';
+import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -61,6 +63,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -69,6 +72,19 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void initState() {
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      print('source $source');
+      switch (source) {
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.wifi:
+          customToast(context, "Đã có kết nối internet");
+          break;
+        case ConnectivityResult.none:
+        default:
+          customToast(context, "Không có kết nối Internet");
+      }
+    });
     SharedPreferences.getInstance().then((value) {
       isRemember = value.getBool("isRemember") ?? false;
       phoneController.text = isRemember ? value.getString("username")! : "";
@@ -93,6 +109,7 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     phoneController.dispose();
     passwordController.dispose();
+    _networkConnectivity.disposeStream();
     super.dispose();
   }
 

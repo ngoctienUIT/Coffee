@@ -50,12 +50,15 @@ class MembershipCard extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          getIconWeather(state.weather!.main),
+                          getIconWeather(
+                              state.weather == null ? "" : state.weather!.main),
                           width: 30,
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          "${state.weather!.temperature.toStringAsFixed(1).split(".0").first}°C - ${state.weather!.main}",
+                          state.weather == null
+                              ? ""
+                              : "${state.weather!.temperature.toStringAsFixed(1).split(".0").first}°C - ${state.weather!.main}",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -66,7 +69,8 @@ class MembershipCard extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      state.address.toString(),
+                      state.address ??
+                          "Vui lòng bật vị trí để có đề xuất sản phẩm chính xác cho bạn",
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,

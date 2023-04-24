@@ -394,13 +394,24 @@ class _AddProductViewState extends State<AddProductView> {
                     itemCount: listTag.length,
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     itemBuilder: (context, index) {
+                      String color =
+                          "FF${listTag[index].tagColorCode!.split("#").last}";
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          listTag[index].tagName!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: AppColors.statusBarColor,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color(int.parse(color, radix: 16)),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Text(
+                            "${listTag[index].tagName!} - ${listTag[index].tagColorCode!}",
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       );

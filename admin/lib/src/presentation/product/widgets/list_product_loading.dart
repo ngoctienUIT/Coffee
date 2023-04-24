@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -9,10 +10,7 @@ Widget productItemLoading(double height) {
   return Shimmer.fromColors(
     baseColor: Colors.grey[300]!,
     highlightColor: Colors.grey[100]!,
-    child: Image.asset(
-      "assets/traditional_coffee.png",
-      height: height,
-    ),
+    child: Image.asset(AppImages.imgProductLoading, height: height),
   );
 }
 

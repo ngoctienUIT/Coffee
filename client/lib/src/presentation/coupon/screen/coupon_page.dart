@@ -11,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../view_special_offer/screen/view_special_offer_page.dart';
 
 class CouponPage extends StatelessWidget {
   const CouponPage({Key? key, this.onPress, this.id, this.onDelete})
@@ -71,7 +73,15 @@ class CouponView extends StatelessWidget {
                   child: Stack(
                     children: [
                       TicketWidget(
-                        onPress: () => onPress!(state.listCoupon[index].id),
+                        onPress: onPress != null
+                            ? () => onPress!(state.listCoupon[index].id)
+                            : () {
+                                Navigator.of(context).push(createRoute(
+                                  screen: ViewSpecialOfferPage(
+                                      coupon: state.listCoupon[index]),
+                                  begin: const Offset(0, 1),
+                                ));
+                              },
                         title: state.listCoupon[index].couponName,
                         image: state.listCoupon[index].imageUrl.toString(),
                         content: state.listCoupon[index].content,

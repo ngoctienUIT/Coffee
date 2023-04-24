@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,7 +26,10 @@ class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
       emit(ChangePasswordLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.issueNewPasswordUser(resetCredential, password);
+      var bytes = utf8.encode(password);
+      var digest = sha256.convert(bytes);
+      print("Digest as hex string: $digest");
+      await apiService.issueNewPasswordUser(resetCredential, digest.toString());
       emit(ChangePasswordSuccessState());
     } on DioError catch (e) {
       String error =

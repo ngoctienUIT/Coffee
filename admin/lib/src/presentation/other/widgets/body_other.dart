@@ -3,6 +3,7 @@ import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee_admin/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/screen/product_catalogues_page.dart';
+import 'package:coffee_admin/src/presentation/recommend/screen/recommend_page.dart';
 import 'package:coffee_admin/src/presentation/signup/screen/signup_page.dart';
 import 'package:coffee_admin/src/presentation/store/screen/store_page.dart';
 import 'package:coffee_admin/src/presentation/tag/screen/tag_page.dart';
@@ -73,6 +74,13 @@ class BodyOtherPage extends StatelessWidget {
                     begin: const Offset(1, 0),
                   ));
                 }
+              }),
+              const Divider(),
+              itemOther("Recommendation", Icons.cloud, () {
+                Navigator.of(context).push(createRoute(
+                  screen: const RecommendPage(),
+                  begin: const Offset(1, 0),
+                ));
               }),
               const Divider(),
               itemOther("store".translate(context), Icons.store, () {

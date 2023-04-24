@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -342,5 +343,29 @@ abstract class ApiService {
   Future<HttpResponse<OrderResponse>> cancelOrder(
     @Header('Authorization') String token,
     @Path("id") String id,
+  );
+
+  //recommendation
+  @POST("/recommendation")
+  Future<HttpResponse> createNewProductRecommendation(
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @GET("/recommendation/list")
+  Future<HttpResponse<List<RecommendResponse>>> getListRecommendation(
+      @Header('Authorization') String token);
+
+  @DELETE("/recommendation/{id}")
+  Future<HttpResponse> deleteRecommendation(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+  );
+
+  @PUT("/recommendation/{id}")
+  Future<HttpResponse> updateExistingRecommendation(
+    @Header('Authorization') String token,
+    @Path("id") String id,
+    @Body() Map<String, dynamic> body,
   );
 }

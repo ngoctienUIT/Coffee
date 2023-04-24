@@ -30,29 +30,7 @@ class ToppingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ToppingBloc()..add(FetchData()),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
-        body: ToppingView(onPick: onPick, listTopping: listTopping),
-        floatingActionButton: BlocBuilder<ToppingBloc, ToppingState>(
-          builder: (context, state) {
-            return FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddToppingPage(
-                    onChange: () {
-                      context.read<ToppingBloc>().add(UpdateData());
-                    },
-                  ),
-                  begin: const Offset(0, 1),
-                ));
-              },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
-      ),
+      child: ToppingView(onPick: onPick, listTopping: listTopping),
     );
   }
 }
@@ -73,6 +51,28 @@ class _ToppingViewState extends State<ToppingView> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
+      body: bodyTopping(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(createRoute(
+            screen: AddToppingPage(
+              onChange: () {
+                context.read<ToppingBloc>().add(UpdateData());
+              },
+            ),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget bodyTopping() {
     return BlocConsumer<ToppingBloc, ToppingState>(
       listener: (context, state) {
         if (state is ToppingError) {

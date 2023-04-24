@@ -17,41 +17,47 @@ class ProductPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProductBloc()..add(FetchData()),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        body: SafeArea(
-          child: Column(
-            children: const [
-              HeaderProductPage(),
-              SizedBox(height: 20),
-              Expanded(child: BodyProductPage()),
-            ],
-          ),
+      child: const ProductView(),
+    );
+  }
+}
+
+class ProductView extends StatelessWidget {
+  const ProductView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      body: SafeArea(
+        child: Column(
+          children: const [
+            HeaderProductPage(),
+            SizedBox(height: 20),
+            Expanded(child: BodyProductPage()),
+          ],
         ),
-        floatingActionButton: BlocBuilder<ProductBloc, ProductState>(
-          builder: (context, state) {
-            return FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddProductPage(
-                    onChange: () {
-                      int index = 0;
-                      if (state is RefreshLoaded) {
-                        index = state.index;
-                      } else {
-                        index = 0;
-                      }
-                      context.read<ProductBloc>().add(UpdateData(index));
-                    },
-                  ),
-                  begin: const Offset(0, 1),
-                ));
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final state = context.read<ProductBloc>().state;
+          Navigator.of(context).push(createRoute(
+            screen: AddProductPage(
+              onChange: () {
+                int index = 0;
+                if (state is RefreshLoaded) {
+                  index = state.index;
+                } else {
+                  index = 0;
+                }
+                context.read<ProductBloc>().add(UpdateData(index));
               },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
+            ),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
       ),
     );
   }
