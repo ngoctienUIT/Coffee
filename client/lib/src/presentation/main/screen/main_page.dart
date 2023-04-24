@@ -29,6 +29,23 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    listenNotification();
+    screens = [
+      const HomePage(key: PageStorageKey<String>('HomePage')),
+      const OrderPage(key: PageStorageKey<String>('OrderPage')),
+      const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
+      StorePage(
+        key: const PageStorageKey<String>('StorePage'),
+        isPick: false,
+        onChange: () => toPage(1),
+      ),
+      const OtherPage(key: PageStorageKey<String>('OtherPage')),
+    ];
+    context.read<LanguageCubit>().checkLogin(context);
+    super.initState();
+  }
+
+  void listenNotification() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
@@ -45,19 +62,6 @@ class _MainPageState extends State<MainPage> {
         );
       }
     });
-    screens = [
-      const HomePage(key: PageStorageKey<String>('HomePage')),
-      const OrderPage(key: PageStorageKey<String>('OrderPage')),
-      const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
-      StorePage(
-        key: const PageStorageKey<String>('StorePage'),
-        isPick: false,
-        onChange: () => toPage(1),
-      ),
-      const OtherPage(key: PageStorageKey<String>('OtherPage')),
-    ];
-    context.read<LanguageCubit>().checkLogin(context);
-    super.initState();
   }
 
   @override

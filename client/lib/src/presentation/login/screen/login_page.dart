@@ -1,4 +1,3 @@
-import 'package:coffee/main.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/language/bloc/language_cubit.dart';
@@ -116,7 +115,6 @@ class _LoginViewState extends State<LoginView> {
 
   void loginSuccess() {
     saveNewTokenFCM();
-    isLogin = true;
     customToast(context, "Đăng nhập thành công");
     context
         .read<LanguageCubit>()

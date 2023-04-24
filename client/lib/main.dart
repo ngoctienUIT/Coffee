@@ -1,7 +1,9 @@
+import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
+import 'src/core/function/network_connectivity.dart';
 import 'src/core/function/notification_services.dart';
 import 'src/core/language/bloc/language_cubit.dart';
 import 'src/core/language/bloc/language_state.dart';
@@ -108,10 +111,50 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: isLogin ? const MainPage() : const LoginPage(),
+            home: const NavigatePage(),
           );
         },
       ),
     );
+  }
+}
+
+class NavigatePage extends StatefulWidget {
+  const NavigatePage({Key? key}) : super(key: key);
+
+  @override
+  State<NavigatePage> createState() => _NavigatePageState();
+}
+
+class _NavigatePageState extends State<NavigatePage> {
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      print('source $source');
+      switch (source) {
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.wifi:
+          customToast(context, "Đã có kết nối internet");
+          break;
+        case ConnectivityResult.none:
+        default:
+          customToast(context, "Không có kết nối Internet");
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isLogin ? const MainPage() : const LoginPage();
+  }
+
+  @override
+  void dispose() {
+    _networkConnectivity.disposeStream();
+    super.dispose();
   }
 }
