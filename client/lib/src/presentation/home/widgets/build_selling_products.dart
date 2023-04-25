@@ -20,6 +20,8 @@ class BuildListSellingProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) =>
+          current is! ChangeBannerState && current is! CouponLoaded,
       builder: (context, state) {
         if (state is HomeLoaded) {
           return SizedBox(
@@ -27,7 +29,7 @@ class BuildListSellingProducts extends StatelessWidget {
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              itemCount: state.listProduct.length,
+              itemCount: state.address != null ? state.listProduct.length : 15,
               itemBuilder: (context, index) {
                 return Container(
                   margin: const EdgeInsets.all(5),

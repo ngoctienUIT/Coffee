@@ -17,3 +17,5 @@ class AddTagErrorState extends AddTagState {
 
   AddTagErrorState(this.status);
 }
+
+class ChangeColorState extends AddTagState {}

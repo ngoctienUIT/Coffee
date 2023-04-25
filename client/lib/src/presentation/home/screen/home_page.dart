@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
@@ -29,8 +32,56 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late StreamSubscription<ServiceStatus> serviceStatusStream;
+  late PageController pageController = PageController(viewportFraction: 0.9);
+  int _currentPage = 0;
+  late Timer _timer;
+  List<String> listBanner = [
+    "assets/banner/banner1.png",
+    "assets/banner/banner2.jpg",
+    "assets/banner/banner3.png",
+    "assets/banner/banner4.jpg",
+    "assets/banner/banner5.png",
+  ];
+
+  @override
+  void initState() {
+    serviceStatusStream =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      if (status == ServiceStatus.enabled) {
+        context.read<HomeBloc>().add(FetchData(check: false));
+      }
+    });
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (_currentPage < 4) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+
+      pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeIn,
+      );
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    serviceStatusStream.cancel();
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +108,8 @@ class HomeView extends StatelessWidget {
               const SizedBox(height: 10),
               const BuildListSpecialOffer(),
               const SizedBox(height: 20),
+              buildBanner(),
+              const SizedBox(height: 20),
               descriptionLine(
                 text: "Sản phẩm gợi ý",
                 color: AppColors.textColor,
@@ -69,6 +122,37 @@ class HomeView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildBanner() {
+    return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) => current is ChangeBannerState,
+      builder: (context, state) {
+        return SizedBox(
+          height: 150,
+          child: PageView.builder(
+            physics: const BouncingScrollPhysics(),
+            controller: pageController,
+            itemCount: listBanner.length,
+            onPageChanged: (value) {
+              _currentPage = value;
+              context.read<HomeBloc>().add(ChangeBannerEvent());
+            },
+            itemBuilder: (context, index) {
+              double scale = _currentPage == index ? 1 : 0.9;
+              return TweenAnimationBuilder(
+                tween: Tween(begin: scale, end: scale),
+                builder: (context, value, child) {
+                  return Transform.scale(scale: value, child: child);
+                },
+                duration: const Duration(milliseconds: 350),
+                child: Image.asset(listBanner[index]),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

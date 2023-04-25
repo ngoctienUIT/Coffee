@@ -347,7 +347,7 @@ abstract class ApiService {
 
   //recommendation
   @POST("/recommendation")
-  Future<HttpResponse> createNewProductRecommendation(
+  Future<HttpResponse> createNewRecommendation(
     @Header('Authorization') String token,
     @Body() Map<String, dynamic> body,
   );

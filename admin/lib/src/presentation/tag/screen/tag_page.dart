@@ -27,27 +27,7 @@ class TagPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => TagBloc()..add(FetchData()),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: const AppBarGeneral(title: "Tags", elevation: 0),
-        body: TagView(onPick: onPick, listTag: listTag),
-        floatingActionButton: BlocBuilder<TagBloc, TagState>(
-          builder: (context, state) {
-            return FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddTagPage(
-                    onChange: () => context.read<TagBloc>().add(UpdateData()),
-                  ),
-                  begin: const Offset(0, 1),
-                ));
-              },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
-      ),
+      child: TagView(onPick: onPick, listTag: listTag),
     );
   }
 }
@@ -67,6 +47,26 @@ class _TagViewState extends State<TagView> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: const AppBarGeneral(title: "Tags", elevation: 0),
+      body: buildBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(createRoute(
+            screen: AddTagPage(
+              onChange: () => context.read<TagBloc>().add(UpdateData()),
+            ),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget buildBody() {
     return BlocConsumer<TagBloc, TagState>(
       listener: (context, state) {
         if (state is TagError) {

@@ -17,10 +17,7 @@ class BuildListSpecialOffer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      buildWhen: (previous, current) =>
-          current is CouponLoaded ||
-          current is HomeLoading ||
-          current is InitState,
+      buildWhen: (previous, current) => checkLoad(current),
       builder: (context, state) {
         if (state is CouponLoaded) {
           return SizedBox(
@@ -48,6 +45,13 @@ class BuildListSpecialOffer extends StatelessWidget {
         return _buildLoading();
       },
     );
+  }
+
+  bool checkLoad(HomeState state) {
+    if (state is HomeLoaded) return false;
+    if (state is ChangeBannerState) return false;
+    if (state is HomeLoading && !state.check) return false;
+    return true;
   }
 
   Widget _buildLoading() {

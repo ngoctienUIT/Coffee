@@ -64,7 +64,9 @@ class RecommendView extends StatelessWidget {
       builder: (context, state) {
         if (state is RecommendLoaded) {
           return RefreshIndicator(
-            onRefresh: () async {},
+            onRefresh: () async {
+              context.read<RecommendBloc>().add(FetchData());
+            },
             child: ListView.builder(
               physics: const BouncingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
@@ -256,7 +258,19 @@ class RecommendView extends StatelessWidget {
             if (checkMin) const SizedBox(height: 10),
             if (checkMin) itemLoading(15, rng.nextDouble() * 50 + 150, 10),
             if (checkMax) const SizedBox(height: 10),
-            if (checkMax) itemLoading(15, rng.nextDouble() * 50 + 150, 10)
+            if (checkMax) itemLoading(15, rng.nextDouble() * 50 + 150, 10),
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(top: 5),
+              shrinkWrap: true,
+              itemCount: rng.nextInt(4) + 2,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: itemLoading(25, double.infinity, 20),
+                );
+              },
+            )
           ],
         ),
       ),

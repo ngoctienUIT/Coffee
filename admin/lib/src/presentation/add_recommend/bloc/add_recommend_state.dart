@@ -6,10 +6,6 @@ class AddRecommendLoading extends AddRecommendState {}
 
 class AddRecommendSuccess extends AddRecommendState {}
 
-class ChangeTagState extends AddRecommendState {}
-
-class ChangeWeatherState extends AddRecommendState {}
-
 class AddRecommendError extends AddRecommendState {
   String status;
 
@@ -21,3 +17,7 @@ class SaveButtonState extends AddRecommendState {
 
   SaveButtonState(this.isContinue);
 }
+
+class ChangeTagState extends AddRecommendState {}
+
+class ChangeWeatherState extends AddRecommendState {}

@@ -23,38 +23,7 @@ class CouponPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CouponBloc()..add(FetchData()),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: AppBar(
-          backgroundColor: AppColors.bgColor,
-          elevation: 0,
-          centerTitle: true,
-          leading: const SizedBox(),
-          title: Text(
-            "all_vouchers".translate(context),
-            style: const TextStyle(color: Colors.black),
-          ),
-        ),
-        body: const CouponView(),
-        floatingActionButton: BlocBuilder<CouponBloc, CouponState>(
-          builder: (context, state) {
-            return FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddCouponPage(
-                    onChange: () {
-                      context.read<CouponBloc>().add(FetchData());
-                    },
-                  ),
-                  begin: const Offset(0, 1),
-                ));
-              },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
-      ),
+      child: const CouponView(),
     );
   }
 }
@@ -64,6 +33,37 @@ class CouponView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.bgColor,
+        elevation: 0,
+        centerTitle: true,
+        leading: const SizedBox(),
+        title: Text(
+          "all_vouchers".translate(context),
+          style: const TextStyle(color: Colors.black),
+        ),
+      ),
+      body: buildBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(createRoute(
+            screen: AddCouponPage(
+              onChange: () {
+                context.read<CouponBloc>().add(FetchData());
+              },
+            ),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget buildBody() {
     return BlocConsumer<CouponBloc, CouponState>(
       listener: (context, state) {
         if (state is CouponError) {

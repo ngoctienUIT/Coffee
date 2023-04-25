@@ -15,6 +15,8 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
     on<CreateTagEvent>((event, emit) => createTag(event.tag, emit));
 
     on<UpdateTagEvent>((event, emit) => updateTag(event.tag, emit));
+
+    on<ChangeColorEvent>((event, emit) => emit(ChangeColorState()));
   }
 
   Future createTag(Tag tag, Emitter emit) async {

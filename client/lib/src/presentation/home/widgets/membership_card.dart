@@ -16,6 +16,8 @@ class MembershipCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) =>
+          current is! ChangeBannerState && current is! CouponLoaded,
       builder: (context, state) {
         if (state is HomeLoaded) {
           return Container(
@@ -57,7 +59,7 @@ class MembershipCard extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           state.weather == null
-                              ? ""
+                              ? "_ _ _ _ _ _"
                               : "${state.weather!.temperature.toStringAsFixed(1).split(".0").first}°C - ${state.weather!.main}",
                           style: const TextStyle(
                             fontSize: 16,

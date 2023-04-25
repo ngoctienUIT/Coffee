@@ -334,7 +334,13 @@ class _AddProductViewState extends State<AddProductView> {
           buildWhen: (previous, current) => current is ChangeToppingState,
           builder: (context, state) {
             return listTopping.isEmpty
-                ? const Text("Không có topping!")
+                ? const Text(
+                    "Không có topping!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.statusBarColor,
+                    ),
+                  )
                 : ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -343,12 +349,38 @@ class _AddProductViewState extends State<AddProductView> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: Text(
-                          listTopping[index].toppingName,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: AppColors.statusBarColor,
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              listTopping[index].toppingName,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.statusBarColor,
+                              ),
+                            ),
+                            const Spacer(),
+                            InkWell(
+                              onTap: () {
+                                listTopping.removeAt(index);
+                                context
+                                    .read<AddProductBloc>()
+                                    .add(ChangeToppingEvent());
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(90),
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.grey,
+                                  size: 15,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       );
                     },
@@ -387,7 +419,13 @@ class _AddProductViewState extends State<AddProductView> {
           buildWhen: (previous, current) => current is ChangeTagState,
           builder: (context, state) {
             return listTag.isEmpty
-                ? const Text("Không có tag!")
+                ? const Text(
+                    "Không có tag!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.statusBarColor,
+                    ),
+                  )
                 : ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -405,13 +443,38 @@ class _AddProductViewState extends State<AddProductView> {
                           ),
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
-                          child: Text(
-                            "${listTag[index].tagName!} - ${listTag[index].tagColorCode!}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "${listTag[index].tagName!} - ${listTag[index].tagColorCode!}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  listTag.removeAt(index);
+                                  context
+                                      .read<AddProductBloc>()
+                                      .add(ChangeTagEvent());
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(90),
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.grey,
+                                    size: 15,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       );

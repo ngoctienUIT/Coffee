@@ -31,30 +31,7 @@ class ProductCataloguesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ProductCataloguesBloc()..add(FetchData()),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
-        body: ProductCataloguesView(onPick: onPick, id: id),
-        floatingActionButton:
-            BlocBuilder<ProductCataloguesBloc, ProductCataloguesState>(
-          builder: (context, state) {
-            return FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddProductCataloguesPage(
-                    onChange: () {
-                      context.read<ProductCataloguesBloc>().add(FetchData());
-                    },
-                  ),
-                  begin: const Offset(0, 1),
-                ));
-              },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
-      ),
+      child: ProductCataloguesView(id: id, onPick: onPick),
     );
   }
 }
@@ -68,6 +45,28 @@ class ProductCataloguesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
+      body: buildBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(createRoute(
+            screen: AddProductCataloguesPage(
+              onChange: () {
+                context.read<ProductCataloguesBloc>().add(FetchData());
+              },
+            ),
+            begin: const Offset(0, 1),
+          ));
+        },
+        backgroundColor: AppColors.statusBarColor,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget buildBody() {
     return BlocConsumer<ProductCataloguesBloc, ProductCataloguesState>(
       listener: (context, state) {
         if (state is ProductCataloguesError) {

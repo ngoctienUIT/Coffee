@@ -14,6 +14,8 @@ class SaveButtonEvent extends AddTagEvent {
   SaveButtonEvent(this.isContinue);
 }
 
+class ChangeColorEvent extends AddTagEvent {}
+
 class UpdateTagEvent extends AddTagEvent {
   Tag tag;
 

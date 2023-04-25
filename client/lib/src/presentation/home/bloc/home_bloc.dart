@@ -10,7 +10,9 @@ import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(event.check, emit));
+
+    on<ChangeBannerEvent>((event, emit) => emit(ChangeBannerState()));
   }
 
   Future<bool> _handleLocationPermission(Emitter emit) async {
@@ -68,12 +70,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     return address;
   }
 
-  Future getData(Emitter emit) async {
+  Future getData(bool check, Emitter emit) async {
     try {
-      emit(HomeLoading());
+      emit(HomeLoading(check));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      getCoupon(emit, apiService);
+      if (check) getCoupon(emit, apiService);
       Position? position = await _getCurrentPosition(emit);
       var prefs = await SharedPreferences.getInstance();
       String id = prefs.getString("userID") ?? "";
@@ -93,7 +95,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           address: await _getAddressFromLatLng(position),
         ));
       } else {
-        emit(HomeLoaded(user: (await response).data));
+        final listProduct = apiService.getAllProducts();
+        emit(HomeLoaded(
+          user: (await response).data,
+          listProduct: (await listProduct).data,
+        ));
       }
     } on DioError catch (e) {
       String error =

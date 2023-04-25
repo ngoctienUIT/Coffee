@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/models/recommend.dart';
 import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_state.dart';
@@ -142,7 +143,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                 title: "M",
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
                 ],
               ),
               const SizedBox(height: 10),
@@ -154,7 +155,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                 title: "L",
                 keyboardType: TextInputType.number,
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
                 ],
               ),
               const SizedBox(height: 10),
@@ -240,7 +241,13 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           buildWhen: (previous, current) => current is ChangeTagState,
           builder: (context, state) {
             return listTag.isEmpty
-                ? const Text("Không có tag!")
+                ? const Text(
+                    "Không có tag!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.statusBarColor,
+                    ),
+                  )
                 : ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
@@ -258,13 +265,38 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                           ),
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
-                          child: Text(
-                            "${listTag[index].tagName!} - ${listTag[index].tagColorCode!}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                          child: Row(
+                            children: [
+                              Text(
+                                "${listTag[index].tagName!} - ${listTag[index].tagColorCode!}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  listTag.removeAt(index);
+                                  context
+                                      .read<AddRecommendBloc>()
+                                      .add(ChangeTagEvent());
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(90),
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.grey,
+                                    size: 15,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       );
@@ -286,13 +318,31 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           onPress: () {
             if (_formKey.currentState!.validate()) {
               if (widget.recommend == null) {
-                // context
-                //     .read<AddRecommendBloc>()
-                //     .add(CreateProductEvent(Product()));
+                context
+                    .read<AddRecommendBloc>()
+                    .add(CreateRecommendEvent(Recommend(
+                      weather: weather,
+                      tags: listTag,
+                      minTemp: minTempController.text.isEmpty
+                          ? null
+                          : double.parse(minTempController.text),
+                      maxTemp: maxTempController.text.isEmpty
+                          ? null
+                          : double.parse(maxTempController.text),
+                    )));
               } else {
-                // context
-                //     .read<AddRecommendBloc>()
-                //     .add(UpdateProductEvent(Product()));
+                context
+                    .read<AddRecommendBloc>()
+                    .add(UpdateRecommendEvent(Recommend(
+                      weather: weather,
+                      tags: listTag,
+                      minTemp: minTempController.text.isEmpty
+                          ? null
+                          : double.parse(minTempController.text),
+                      maxTemp: maxTempController.text.isEmpty
+                          ? null
+                          : double.parse(maxTempController.text),
+                    )));
               }
             }
           },

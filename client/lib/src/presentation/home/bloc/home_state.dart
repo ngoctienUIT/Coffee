@@ -8,7 +8,13 @@ abstract class HomeState {}
 
 class InitState extends HomeState {}
 
-class HomeLoading extends HomeState {}
+class ChangeBannerState extends HomeState {}
+
+class HomeLoading extends HomeState {
+  bool check;
+
+  HomeLoading(this.check);
+}
 
 class HomeLoaded extends HomeState {
   final List<ProductResponse> listProduct;

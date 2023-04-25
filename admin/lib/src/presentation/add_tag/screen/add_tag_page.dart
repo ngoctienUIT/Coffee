@@ -6,10 +6,12 @@ import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_state.dart';
 import 'package:coffee_admin/src/presentation/forgot_password/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
+import '../../profile/widgets/custom_picker_widget.dart';
 import '../../signup/widgets/custom_text_input.dart';
 
 class AddTagPage extends StatelessWidget {
@@ -45,26 +47,25 @@ class AddTagView extends StatefulWidget {
 class _AddTagViewState extends State<AddTagView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController colorController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  String textColor = "";
 
   @override
   void initState() {
     if (widget.tag != null) {
       nameController.text = widget.tag!.tagName!;
       descriptionController.text = widget.tag!.tagDescription ?? "";
-      colorController.text = widget.tag!.tagColorCode!;
+      textColor = widget.tag!.tagColorCode!;
     }
     nameController.addListener(() => checkEmpty());
     descriptionController.addListener(() => checkEmpty());
-    colorController.addListener(() => checkEmpty());
     super.initState();
   }
 
   void checkEmpty() {
     if (nameController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
-        colorController.text.isNotEmpty) {
+        textColor.isNotEmpty) {
       context.read<AddTagBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddTagBloc>().add(SaveButtonEvent(false));
@@ -75,7 +76,6 @@ class _AddTagViewState extends State<AddTagView> {
   void dispose() {
     nameController.dispose();
     descriptionController.dispose();
-    colorController.dispose();
     super.dispose();
   }
 
@@ -123,11 +123,7 @@ class _AddTagViewState extends State<AddTagView> {
               const SizedBox(height: 10),
               descriptionLine(text: "Màu sắc"),
               const SizedBox(height: 10),
-              CustomTextInput(
-                controller: colorController,
-                hint: "Màu sắc",
-                title: "Màu sắc",
-              ),
+              pickColor(),
               const SizedBox(height: 10),
               saveButton(),
               const SizedBox(height: 50),
@@ -135,6 +131,55 @@ class _AddTagViewState extends State<AddTagView> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget pickColor() {
+    return BlocBuilder<AddTagBloc, AddTagState>(
+      buildWhen: (previous, current) => current is ChangeColorState,
+      builder: (context, state) {
+        checkEmpty();
+        return CustomPickerWidget(
+          checkEdit: true,
+          text: textColor.isEmpty ? "#FF0000" : textColor,
+          onPress: () => showPickColor(),
+        );
+      },
+    );
+  }
+
+  Color pickerColor = const Color(0xff443a49);
+
+  void showPickColor() {
+    BuildContext myContext = context;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Pick a color!'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: pickerColor,
+              onColorChanged: (value) {
+                pickerColor = value;
+                print(pickerColor.toString());
+                print(pickerColor.toString().substring(10, 16));
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Got it'),
+              onPressed: () {
+                textColor =
+                    "#${pickerColor.toString().substring(10, 16).toUpperCase()}";
+                myContext.read<AddTagBloc>().add(ChangeColorEvent());
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -152,14 +197,14 @@ class _AddTagViewState extends State<AddTagView> {
                   context.read<AddTagBloc>().add(CreateTagEvent(Tag(
                         tagName: nameController.text,
                         tagDescription: descriptionController.text,
-                        tagColorCode: colorController.text,
+                        tagColorCode: textColor,
                       )));
                 } else {
                   context.read<AddTagBloc>().add(UpdateTagEvent(Tag(
                         tagId: widget.tag!.tagId,
                         tagName: nameController.text,
                         tagDescription: descriptionController.text,
-                        tagColorCode: colorController.text,
+                        tagColorCode: textColor,
                       )));
                 }
               }

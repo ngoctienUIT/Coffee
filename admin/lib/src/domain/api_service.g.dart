@@ -1649,7 +1649,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<dynamic>> createNewProductRecommendation(
+  Future<HttpResponse<dynamic>> createNewRecommendation(
     token,
     body,
   ) async {
