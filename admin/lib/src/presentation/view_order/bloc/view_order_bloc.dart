@@ -14,6 +14,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
 
     on<OrderCompletedEvent>(
         (event, emit) => orderCompleted(event.id, event.userID, emit));
+
+    on<GetOrderEvent>((event, emit) => getOrder(event.id, emit));
   }
 
   Future cancelOrder(String id, String userID, Emitter emit) async {
@@ -57,6 +59,28 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
         body: "Đơn hàng $id đã được xác nhận thành công",
         title: "Đơn hàng đã xác nhận",
       );
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      ErrorState(error);
+      print(error);
+    } catch (e) {
+      ErrorState(e.toString());
+      print(e);
+    }
+  }
+
+  Future getOrder(String id, Emitter emit) async {
+    try {
+      emit(LoadingState());
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      final orderResponse = await apiService.getOrderByID("Bearer $token", id);
+      final userResponse = await apiService.getUserByID(
+          "Bearer $token", orderResponse.data.userId!);
+      emit(GetOrderSuccessState(userResponse.data, orderResponse.data));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

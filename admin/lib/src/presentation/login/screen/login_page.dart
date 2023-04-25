@@ -22,7 +22,8 @@ import '../widgets/custom_button.dart';
 import '../widgets/custom_password_input.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key, this.id}) : super(key: key);
+  final String? id;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
             physics: const BouncingScrollPhysics(),
             child: BlocProvider<LoginBloc>(
               create: (_) => LoginBloc(),
-              child: const LoginView(),
+              child: LoginView(id: widget.id),
             ),
           ),
         ),
@@ -56,13 +57,15 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({Key? key, this.id}) : super(key: key);
+
+  final String? id;
 
   @override
   State<LoginView> createState() => _LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -71,7 +74,18 @@ class _LoginViewState extends State<LoginView> {
   bool hide = true;
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive) {
+      SharedPreferences.getInstance().then((value) {
+        value.setBool("isOpen", false);
+      });
+    }
+    print("is open: $state");
+  }
+
+  @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     _networkConnectivity.initialise();
     _networkConnectivity.myStream.listen((source) {
       print('source $source');
@@ -107,6 +121,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     phoneController.dispose();
     passwordController.dispose();
     _networkConnectivity.disposeStream();
@@ -126,7 +141,7 @@ class _LoginViewState extends State<LoginView> {
     customToast(context, "Đăng nhập thành công");
     saveLogin();
     Navigator.of(context).pushReplacement(createRoute(
-      screen: const MainPage(),
+      screen: MainPage(id: widget.id),
       begin: const Offset(0, 1),
     ));
   }

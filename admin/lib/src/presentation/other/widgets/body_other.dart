@@ -11,6 +11,7 @@ import 'package:coffee_admin/src/presentation/topping/screen/topping_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/language/bloc/language_cubit.dart';
@@ -129,6 +130,8 @@ class BodyOtherPage extends StatelessWidget {
                 isOnPress: true,
                 onPress: () {
                   context.read<LanguageCubit>().stopTimer();
+                  SharedPreferences.getInstance()
+                      .then((value) => value.setBool("isLogin", false));
                   Navigator.of(context).pushReplacement(createRoute(
                     screen: const LoginPage(),
                     begin: const Offset(0, 1),

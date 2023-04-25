@@ -3,25 +3,26 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../main.dart';
 import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../other/screen/other_page.dart';
+import '../../view_order/screen/view_order_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key, this.id}) : super(key: key);
+  final String? id;
 
   @override
   State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
+  NotificationServices notificationServices = NotificationServices();
   final PageStorageBucket bucket = PageStorageBucket();
   final PageController _pageController = PageController();
   DateTime? currentBackPressTime;
@@ -30,22 +31,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-      Map<String, dynamic> data = message.data;
-
-      if (message.notification != null) {
-        RemoteNotification notification = message.notification!;
-        print('Message also contained a notification: ${message.notification}');
-        NotificationServices.showNotification(
-          id: data["id"].hashCode,
-          title: notification.title!,
-          body: notification.body!,
-          fln: flutterLocalNotificationsPlugin,
-        );
-      }
-    });
+    notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
     screens = [
       const OrderPage(key: PageStorageKey<String>('HomePage')),
       const ProductPage(key: PageStorageKey<String>('OrderPage')),
@@ -57,6 +45,14 @@ class _MainPageState extends State<MainPage> {
         .read<LanguageCubit>()
         .startNewTimer(context, const Duration(hours: 1));
     super.initState();
+    if (widget.id != null) {
+      if (mounted) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewOrderPage(id: widget.id)));
+      }
+    }
   }
 
   @override

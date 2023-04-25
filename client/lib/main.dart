@@ -15,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'src/core/function/network_connectivity.dart';
-import 'src/core/function/notification_services.dart';
 import 'src/core/language/bloc/language_cubit.dart';
 import 'src/core/language/bloc/language_state.dart';
 import 'src/core/language/localization/app_localizations_setup.dart';
@@ -45,20 +44,9 @@ void main() async {
       value.setBool("isBringBack", false);
     });
   }
-  // NotificationSettings settings =
-  await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
   FirebaseMessaging.instance.getToken().then((value) {
     print(value);
   });
-  await NotificationServices.initialize(flutterLocalNotificationsPlugin);
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

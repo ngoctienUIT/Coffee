@@ -7,6 +7,12 @@ class CancelOrderEvent extends ViewOrderEvent {
   CancelOrderEvent(this.id, this.userID);
 }
 
+class GetOrderEvent extends ViewOrderEvent {
+  String id;
+
+  GetOrderEvent(this.id);
+}
+
 class OrderCompletedEvent extends ViewOrderEvent {
   String id;
   String userID;

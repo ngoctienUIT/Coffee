@@ -1,10 +1,7 @@
-import 'package:coffee_admin/src/core/function/custom_toast.dart';
-import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_event.dart';
-import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,72 +19,50 @@ class BottomCartPage extends StatelessWidget {
   final int total;
   final String id;
   final String userID;
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ViewOrderBloc, ViewOrderState>(
-      listener: (context, state) {
-        if (state is LoadingState) loadingAnimation(context);
-        if (state is CancelSuccessState) {
-          onPress.call();
-          customToast(context, "Đã hủy đơn hàng");
-          Navigator.pop(context);
-          Navigator.pop(context);
-        }
-        if (state is CompletedSuccessState) {
-          onPress.call();
-          customToast(context, "Hoàn thành đơn hàng");
-          Navigator.pop(context);
-          Navigator.pop(context);
-        }
-        if (state is ErrorState) {
-          customToast(context, state.error);
-          Navigator.pop(context);
-        }
-      },
-      child: Container(
-        height: 200,
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              children: [
-                Text(
-                  "total".translate(context),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+    return Container(
+      height: 200,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Row(
+            children: [
+              Text(
+                "total".translate(context),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
-                const Spacer(),
-                Text(
-                  total.toCurrency(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                )
-              ],
-            ),
-            customButton(
-              text: "order_completed".translate(context),
-              onPress: () => context
-                  .read<ViewOrderBloc>()
-                  .add(OrderCompletedEvent(id, userID)),
-              isOnPress: true,
-            ),
-            customButton(
-              text: "cancel_order".translate(context),
-              onPress: () => context
-                  .read<ViewOrderBloc>()
-                  .add(CancelOrderEvent(id, userID)),
-              isOnPress: true,
-            ),
-          ],
-        ),
+              ),
+              const Spacer(),
+              Text(
+                total.toCurrency(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              )
+            ],
+          ),
+          customButton(
+            text: "order_completed".translate(context),
+            onPress: () => context
+                .read<ViewOrderBloc>()
+                .add(OrderCompletedEvent(id, userID)),
+            isOnPress: true,
+          ),
+          customButton(
+            text: "cancel_order".translate(context),
+            onPress: () =>
+                context.read<ViewOrderBloc>().add(CancelOrderEvent(id, userID)),
+            isOnPress: true,
+          ),
+        ],
       ),
     );
   }

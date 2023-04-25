@@ -1,36 +1,153 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../presentation/login/screen/login_page.dart';
+import '../../presentation/view_order/screen/view_order_page.dart';
 
 class NotificationServices {
-  static Future initialize(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    var androidInitialize =
-        const AndroidInitializationSettings("@mipmap/ic_launcher");
-    var iOSInitialize = const DarwinInitializationSettings();
-    var initializationsSettings =
-        InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
-    await flutterLocalNotificationsPlugin.initialize(initializationsSettings);
-  }
+  //initialising firebase message plugin
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  static Future showNotification({
-    int id = 0,
-    required String title,
-    required String body,
-    var payload,
-    required FlutterLocalNotificationsPlugin fln,
-  }) async {
-    AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      id.toString(),
-      'order_coffee',
-      playSound: true,
-      // sound: RawResourceAndroidNotificationSound('notification'),
-      importance: Importance.max,
-      priority: Priority.high,
+  //initialising firebase message plugin
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  // function to request notifications permissions
+  void requestNotificationPermission() async {
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
     );
 
-    var not = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: const DarwinNotificationDetails());
-    fln.show(id, title, body, not, payload: "payload");
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('user granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('user granted provisional permission');
+    } else {
+      // AppSettings.openNotificationSettings();
+      print('user denied permission');
+    }
+  }
+
+  //function to initialise flutter local notification plugin to show notifications for android when app is active
+  void initLocalNotifications(
+      BuildContext context, RemoteMessage message) async {
+    var androidInitializationSettings =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var iosInitializationSettings = const DarwinInitializationSettings();
+
+    var initializationSetting = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
+
+    await _flutterLocalNotificationsPlugin.initialize(initializationSetting,
+        onDidReceiveNotificationResponse: (payload) {
+      // handle interaction when app is active for android
+      handleMessage(context, message);
+    });
+  }
+
+  void firebaseInit(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (Platform.isAndroid) {
+        initLocalNotifications(context, message);
+        showNotification(message);
+      } else {
+        showNotification(message);
+      }
+    });
+  }
+
+  // function to show visible notification when app is active
+  Future<void> showNotification(RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      data['id'],
+      'order_coffee',
+      channelDescription: 'your channel description',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+      icon: '@mipmap/ic_launcher',
+      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+      playSound: true,
+    );
+
+    DarwinNotificationDetails darwinNotificationDetails =
+        const DarwinNotificationDetails(
+            presentAlert: true, presentBadge: true, presentSound: true);
+
+    NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: darwinNotificationDetails);
+
+    _flutterLocalNotificationsPlugin.show(
+      data['id'].hashCode,
+      message.notification!.title.toString(),
+      message.notification!.body.toString(),
+      notificationDetails,
+    );
+  }
+
+  //function to get device token on which we will send the notifications
+  Future<String> getDeviceToken() async {
+    String? token = await messaging.getToken();
+    return token!;
+  }
+
+  void isTokenRefresh() async {
+    messaging.onTokenRefresh.listen((event) {
+      event.toString();
+      if (kDebugMode) {
+        print('refresh');
+      }
+    });
+  }
+
+  //handle tap on notification when app is in background or terminated
+  Future<void> setupInteractMessage(BuildContext context) async {
+    // when app is terminated
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      if (context.mounted) handleMessage(context, initialMessage);
+    }
+
+    //when app ins background
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      handleMessage(context, event);
+    });
+  }
+
+  void handleMessage(BuildContext context, RemoteMessage message) async {
+    Map<String, dynamic> data = message.data;
+    SharedPreferences.getInstance().then((value) {
+      bool isOpen = value.getBool("isOpen") ?? false;
+      bool isLogin = value.getBool("isLogin") ?? false;
+      if (isOpen && isLogin) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ViewOrderPage(id: data['id'])));
+      } else {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => LoginPage(id: data['id'])));
+      }
+    });
   }
 }

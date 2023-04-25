@@ -1,5 +1,10 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/function/custom_toast.dart';
+import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
+import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
+import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/product.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
@@ -13,22 +18,72 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage({
-    Key? key,
-    required this.order,
-    required this.onPress,
-    required this.index,
-  }) : super(key: key);
+  const ViewOrderPage(
+      {Key? key, this.order, this.onPress, required this.index, this.id})
+      : super(key: key);
 
-  final OrderResponse order;
-  final VoidCallback onPress;
+  final OrderResponse? order;
+  final VoidCallback? onPress;
   final int index;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: order == null
+          ? (context) => ViewOrderBloc()..add(GetOrderEvent(id!))
+          : (context) => ViewOrderBloc(),
+      child:
+          ViewOrderView(index: index, id: id, onPress: onPress, order: order),
+    );
+  }
+}
+
+class ViewOrderView extends StatelessWidget {
+  const ViewOrderView(
+      {Key? key, this.order, this.onPress, required this.index, this.id})
+      : super(key: key);
+  final OrderResponse? order;
+  final VoidCallback? onPress;
+  final int index;
+  final String? id;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<ViewOrderBloc, ViewOrderState>(
+      listener: (context, state) {
+        if (state is ViewOrderLoading) {
+          loadingAnimation(context);
+        }
+        if (state is ViewOrderSuccess) {
+          Navigator.pop(context);
+        }
+        if (state is ViewOrderError) {
+          customToast(context, state.error);
+        }
+        if (state is CancelOrderSuccess) {
+          onPress!();
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }
+      },
+      child: order == null
+          ? BlocBuilder<ViewOrderBloc, ViewOrderState>(
+              builder: (context, state) {
+                if (state is ViewOrderSuccess) {
+                  return buildOrder(state.order);
+                }
+                return Scaffold(body: Container());
+              },
+            )
+          : buildOrder(order!),
+    );
+  }
+
+  Widget buildOrder(OrderResponse order) {
     return Scaffold(
-      appBar: AppBarGeneral(
-        title: "customer_name".translate(context),
+      appBar: const AppBarGeneral(
+        title: "Đơn hàng",
         elevation: 0,
       ),
       body: Padding(
@@ -53,11 +108,7 @@ class ViewOrderPage extends StatelessWidget {
         ),
       ),
       bottomSheet: index == 0
-          ? BottomCartPage(
-              total: order.orderAmount!,
-              id: order.orderId!,
-              onPress: onPress,
-            )
+          ? BottomCartPage(total: order.orderAmount!, id: order.orderId!)
           : null,
     );
   }
