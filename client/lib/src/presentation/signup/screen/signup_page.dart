@@ -348,7 +348,7 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "Sign up with Google",
+          text: "sign_up_with_google".translate(context),
           onPress: () {
             context.read<SignUpBloc>().add(SignUpWithGoogleEvent());
           },

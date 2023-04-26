@@ -12,9 +12,11 @@ class TicketWidget extends StatelessWidget {
   final int numberOfSmallClips;
   final String image;
   final String title;
-  final String content;
+  final String? content;
   final String date;
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
+  final double? height;
+  final double? width;
 
   const TicketWidget({
     Key? key,
@@ -23,18 +25,20 @@ class TicketWidget extends StatelessWidget {
     this.clipRadius = 7,
     this.smallClipRadius = 2,
     this.numberOfSmallClips = 8,
+    this.width,
+    this.height,
+    this.content,
     required this.image,
     required this.title,
     required this.date,
-    required this.content,
-    required this.onPress,
+    this.onPress,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final ticketWidth = screenSize.width;
-    double ticketHeight = 130;
+    final ticketWidth = width ?? screenSize.width;
+    double ticketHeight = height ?? 130;
 
     return InkWell(
       onTap: onPress,
@@ -59,11 +63,12 @@ class TicketWidget extends StatelessWidget {
                 clipRadius: clipRadius,
                 smallClipRadius: smallClipRadius,
                 numberOfSmallClips: numberOfSmallClips,
+                ticketHeight: ticketHeight,
               ),
               child: Container(color: Colors.white),
             ),
             SizedBox(
-              height: 130,
+              height: ticketHeight,
               child: Row(
                 children: [
                   Padding(
@@ -90,12 +95,19 @@ class TicketWidget extends StatelessWidget {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                           const Spacer(),
-                          Text(content),
+                          if (content != null)
+                            Text(
+                              content!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           const Spacer(),
                           Text(
                             "${"expired".translate(context)} $date",
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -118,12 +130,14 @@ class TicketClipper extends CustomClipper<Path> {
   final double clipRadius;
   final double smallClipRadius;
   final int numberOfSmallClips;
+  final double ticketHeight;
 
   const TicketClipper({
     required this.borderRadius,
     required this.clipRadius,
     required this.smallClipRadius,
     required this.numberOfSmallClips,
+    required this.ticketHeight,
   });
 
   @override
@@ -137,7 +151,7 @@ class TicketClipper extends CustomClipper<Path> {
     ));
 
     final clipPath = Path();
-    double centerX = 130;
+    double centerX = ticketHeight;
 
     // circle on the left
     clipPath.addOval(Rect.fromCircle(

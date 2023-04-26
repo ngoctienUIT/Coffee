@@ -104,7 +104,7 @@ class ViewOrderView extends StatelessWidget {
               ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
               if (order.appliedCoupons != null)
-                AddCoupons(listCoupon: order.appliedCoupons!),
+                AddCoupons(coupon: order.appliedCoupons!),
               if (order.appliedCoupons != null) const SizedBox(height: 10),
               TotalPayment(order: order),
               const SizedBox(height: 10),

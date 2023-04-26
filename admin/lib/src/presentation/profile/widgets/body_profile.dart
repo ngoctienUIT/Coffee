@@ -177,7 +177,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;

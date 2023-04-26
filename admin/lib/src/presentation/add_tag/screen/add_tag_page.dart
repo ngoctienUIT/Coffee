@@ -48,7 +48,7 @@ class _AddTagViewState extends State<AddTagView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String textColor = "";
+  String? textColor;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _AddTagViewState extends State<AddTagView> {
   void checkEmpty() {
     if (nameController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty &&
-        textColor.isNotEmpty) {
+        textColor != null) {
       context.read<AddTagBloc>().add(SaveButtonEvent(true));
     } else {
       context.read<AddTagBloc>().add(SaveButtonEvent(false));
@@ -141,7 +141,7 @@ class _AddTagViewState extends State<AddTagView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: textColor.isEmpty ? "#FF0000" : textColor,
+          text: textColor == null ? "" : textColor!,
           onPress: () => showPickColor(),
         );
       },
@@ -160,11 +160,7 @@ class _AddTagViewState extends State<AddTagView> {
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
-              onColorChanged: (value) {
-                pickerColor = value;
-                print(pickerColor.toString());
-                print(pickerColor.toString().substring(10, 16));
-              },
+              onColorChanged: (value) => pickerColor = value,
             ),
           ),
           actions: <Widget>[
@@ -188,27 +184,27 @@ class _AddTagViewState extends State<AddTagView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-            text: "Lưu",
-            isOnPress: state is SaveButtonState ? state.isContinue : false,
-            onPress: () {
-              // loadingAnimation(context);
-              if (_formKey.currentState!.validate()) {
-                if (widget.tag == null) {
-                  context.read<AddTagBloc>().add(CreateTagEvent(Tag(
-                        tagName: nameController.text,
-                        tagDescription: descriptionController.text,
-                        tagColorCode: textColor,
-                      )));
-                } else {
-                  context.read<AddTagBloc>().add(UpdateTagEvent(Tag(
-                        tagId: widget.tag!.tagId,
-                        tagName: nameController.text,
-                        tagDescription: descriptionController.text,
-                        tagColorCode: textColor,
-                      )));
-                }
+          text: "Lưu",
+          isOnPress: state is SaveButtonState ? state.isContinue : false,
+          onPress: () {
+            if (_formKey.currentState!.validate()) {
+              if (widget.tag == null) {
+                context.read<AddTagBloc>().add(CreateTagEvent(Tag(
+                      tagName: nameController.text,
+                      tagDescription: descriptionController.text,
+                      tagColorCode: textColor,
+                    )));
+              } else {
+                context.read<AddTagBloc>().add(UpdateTagEvent(Tag(
+                      tagId: widget.tag!.tagId,
+                      tagName: nameController.text,
+                      tagDescription: descriptionController.text,
+                      tagColorCode: textColor,
+                    )));
               }
-            });
+            }
+          },
+        );
       },
     );
   }

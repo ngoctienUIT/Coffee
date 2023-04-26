@@ -57,9 +57,7 @@ class _StoreViewState extends State<StoreView> {
         onPressed: () {
           Navigator.of(context).push(createRoute(
             screen: AddStorePage(
-              onChange: () {
-                context.read<StoreBloc>().add(UpdateData());
-              },
+              onChange: () => context.read<StoreBloc>().add(UpdateData()),
             ),
             begin: const Offset(0, 1),
           ));

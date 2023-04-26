@@ -71,8 +71,8 @@ class BottomWidget extends StatelessWidget {
                     child: Text(
                       isEdit
                           ? (product.number == 0
-                              ? "Xóa"
-                              : "Cập nhật ${product.getTotal().toCurrency()}")
+                              ? "delete".translate(context)
+                              : "${"update".translate(context)} ${product.getTotal().toCurrency()}")
                           : "${"add".translate(context)} ${product.getTotal().toCurrency()}",
                     ),
                   ),

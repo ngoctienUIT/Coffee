@@ -5,6 +5,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -256,6 +257,9 @@ class _SignUpViewState extends State<SignUpView> {
           hint: "phone_number".translate(context),
           typeInput: const [TypeInput.phone],
           keyboardType: TextInputType.phone,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
+          ],
         ),
         const SizedBox(height: 10),
         CustomTextInput(
@@ -341,7 +345,7 @@ class _SignUpViewState extends State<SignUpView> {
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
       firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;

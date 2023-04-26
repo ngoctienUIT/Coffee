@@ -13,10 +13,12 @@ import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.da
 import 'package:coffee_admin/src/presentation/forgot_password/widgets/app_bar_general.dart';
 import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/enum/enums.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -158,6 +160,11 @@ class _AddStoreViewState extends State<AddStoreView> {
                 controller: phoneController,
                 hint: "Số điện thoại",
                 title: "Số điện thoại",
+                typeInput: const [TypeInput.phone],
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
+                ],
               ),
               const SizedBox(height: 10),
               descriptionLine(text: "Giờ mở cửa"),

@@ -9,6 +9,7 @@ import 'package:coffee_admin/src/domain/repositories/coupon/coupon_response.dart
 import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_event.dart';
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -174,6 +175,9 @@ class _AddCouponViewState extends State<AddCouponView> {
                 controller: minApplyController,
                 hint: "100.000đ",
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+                ],
                 title: "promotion".translate(context).toLowerCase(),
               ),
               const SizedBox(height: 10),
@@ -246,6 +250,9 @@ class _AddCouponViewState extends State<AddCouponView> {
           hint: "10%",
           keyboardType: TextInputType.number,
           title: "promotion".translate(context).toLowerCase(),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.]")),
+          ],
         ),
         const SizedBox(height: 10),
         descriptionLine(text: "Tối đa"),
@@ -255,6 +262,9 @@ class _AddCouponViewState extends State<AddCouponView> {
           hint: "100.000đ",
           keyboardType: TextInputType.number,
           title: "promotion".translate(context).toLowerCase(),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+          ],
         ),
       ],
     );
@@ -270,6 +280,9 @@ class _AddCouponViewState extends State<AddCouponView> {
           hint: "100.000đ",
           keyboardType: TextInputType.number,
           title: "promotion".translate(context).toLowerCase(),
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
+          ],
         ),
       ],
     );

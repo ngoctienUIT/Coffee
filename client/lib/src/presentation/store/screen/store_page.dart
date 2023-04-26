@@ -72,7 +72,7 @@ class _StoreViewState extends State<StoreView>
         appBar: CustomAppBar(
           elevation: 0,
           isPick: widget.isPick,
-          title: "Cửa hàng",
+          title: "store".translate(context),
         ),
         body: SafeArea(
           child: Column(

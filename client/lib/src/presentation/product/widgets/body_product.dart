@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
@@ -28,7 +29,8 @@ class BodyProduct extends StatelessWidget {
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
           if (state is AddProductToOrderSuccessState) {
-            customToast(context, "Thêm sản phẩm vào giỏ hàng thành công");
+            customToast(
+                context, "product_added_cart_successfully".translate(context));
           }
           if (onPress != null) onPress!();
           Navigator.pop(context);
@@ -85,15 +87,13 @@ class BodyProduct extends StatelessWidget {
         Product product = context.read<ProductBloc>().product.copyWith();
         if (product.toppingOptions != null &&
             product.toppingOptions!.isNotEmpty) {
-          print(product.chooseTopping);
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Divider(),
-              const Text(
-                "Thêm",
-                style: TextStyle(
+              Text(
+                "add".translate(context),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

@@ -48,7 +48,7 @@ class OrderResponse {
   int? orderAmount;
 
   @JsonKey(name: "appliedCoupons")
-  List<CouponResponse>? appliedCoupons;
+  CouponResponse? appliedCoupons;
 
   @JsonKey(name: "orderStatus")
   String? orderStatus;

@@ -52,7 +52,7 @@ class ListActivity extends StatelessWidget {
                       Navigator.of(context).push(createRoute(
                         screen: ViewOrderPage(
                           index: indexState,
-                          order: listOrder[indexState],
+                          order: listOrder[index],
                           onPress: () {
                             context
                                 .read<ActivityBloc>()

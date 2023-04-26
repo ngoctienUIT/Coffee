@@ -63,15 +63,17 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         if (state is SaveProfileLoaded) {
           Navigator.pop(context);
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-          customToast(context, "Lưu thay đổi thành công");
+          customToast(context, "save_changes_successfully".translate(context));
           widget.onChange();
         }
         if (state is LinkAccountWithGoogleSuccessState) {
-          customToast(context, "Liên kết tài khoản Google thành công");
+          customToast(
+              context, "google_account_link_successful".translate(context));
           widget.onChange();
         }
         if (state is UnlinkAccountWithGoogleSuccessState) {
-          customToast(context, "Hủy liên kết tài khoản Google thành công");
+          customToast(context,
+              "unlinked_google_account_successfully".translate(context));
           widget.onChange();
         }
         if (state is LinkAccountWithGoogleErrorState) {
@@ -156,7 +158,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                     }
                   } else {
                     customToast(
-                        context, "Bạn không thể hủy liên kết google");
+                        context, "you_cannot_unlink_google".translate(context));
                   }
                 },
               ),

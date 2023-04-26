@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
@@ -71,21 +72,18 @@ class ViewOrderView extends StatelessWidget {
           ? BlocBuilder<ViewOrderBloc, ViewOrderState>(
               builder: (context, state) {
                 if (state is ViewOrderSuccess) {
-                  return buildOrder(state.order);
+                  return buildOrder(context, state.order);
                 }
                 return Scaffold(body: Container());
               },
             )
-          : buildOrder(order!),
+          : buildOrder(context, order!),
     );
   }
 
-  Widget buildOrder(OrderResponse order) {
+  Widget buildOrder(BuildContext context, OrderResponse order) {
     return Scaffold(
-      appBar: const AppBarGeneral(
-        title: "Đơn hàng",
-        elevation: 0,
-      ),
+      appBar: AppBarGeneral(title: "order2".translate(context), elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -97,7 +95,7 @@ class ViewOrderView extends StatelessWidget {
               ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
               if (order.appliedCoupon != null)
-                AddCoupons(listCoupon: order.appliedCoupon!),
+                AddCoupons(coupon: order.appliedCoupon!),
               if (order.appliedCoupon != null) const SizedBox(height: 10),
               TotalPayment(order: order),
               const SizedBox(height: 10),

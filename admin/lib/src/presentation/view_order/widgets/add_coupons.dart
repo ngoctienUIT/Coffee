@@ -1,12 +1,12 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/constants/constants.dart';
 import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../coupon/widgets/ticket_widget.dart';
 
 class AddCoupons extends StatelessWidget {
-  const AddCoupons({Key? key, this.listCoupon}) : super(key: key);
-  final List<CouponResponse>? listCoupon;
+  const AddCoupons({Key? key, required this.coupon}) : super(key: key);
+  final CouponResponse coupon;
 
   @override
   Widget build(BuildContext context) {
@@ -25,28 +25,14 @@ class AddCoupons extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(20, 5, 20, 15),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: AppColors.bgColor,
-              border: Border.all(color: AppColors.statusBarColor),
-            ),
-            child: Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Miễn phí vận chuyển"),
-                    SizedBox(height: 5),
-                    Text("Hết hạn sau 10 giờ"),
-                  ],
-                ),
-                const Spacer(),
-                Text("already_applied".translate(context))
-              ],
-            ),
-          )
+          TicketWidget(
+            height: 100,
+            width: MediaQuery.of(context).size.width - 50,
+            onPress: null,
+            title: coupon.couponName,
+            image: coupon.imageUrl.toString(),
+            date: coupon.dueDate,
+          ),
         ],
       ),
     );

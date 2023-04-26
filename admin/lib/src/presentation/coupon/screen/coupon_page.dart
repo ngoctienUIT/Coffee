@@ -130,7 +130,7 @@ class _CouponViewState extends State<CouponView>
                       ],
                     ),
                     child: TicketWidget(
-                      onPress: () {},
+                      onPress: null,
                       title: state.listCoupon[index].couponName,
                       content: state.listCoupon[index].content,
                       image: state.listCoupon[index].imageUrl ?? "",
@@ -184,6 +184,7 @@ class _CouponViewState extends State<CouponView>
               clipRadius: 7,
               smallClipRadius: 2,
               numberOfSmallClips: 8,
+              ticketHeight: 130,
             ),
             child: Container(color: Colors.white),
           ),
