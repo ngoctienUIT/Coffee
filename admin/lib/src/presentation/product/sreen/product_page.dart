@@ -22,11 +22,18 @@ class ProductPage extends StatelessWidget {
   }
 }
 
-class ProductView extends StatelessWidget {
+class ProductView extends StatefulWidget {
   const ProductView({Key? key}) : super(key: key);
 
   @override
+  State<ProductView> createState() => _ProductViewState();
+}
+
+class _ProductViewState extends State<ProductView>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: SafeArea(
@@ -61,4 +68,7 @@ class ProductView extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

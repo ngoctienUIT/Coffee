@@ -28,11 +28,18 @@ class CouponPage extends StatelessWidget {
   }
 }
 
-class CouponView extends StatelessWidget {
+class CouponView extends StatefulWidget {
   const CouponView({Key? key}) : super(key: key);
 
   @override
+  State<CouponView> createState() => _CouponViewState();
+}
+
+class _CouponViewState extends State<CouponView>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -212,4 +219,7 @@ class CouponView extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

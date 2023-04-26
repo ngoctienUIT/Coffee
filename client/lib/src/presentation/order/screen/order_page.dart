@@ -10,11 +10,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 
-class OrderPage extends StatelessWidget {
+class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
 
   @override
+  State<OrderPage> createState() => _OrderPageState();
+}
+
+class _OrderPageState extends State<OrderPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProvider<OrderBloc>(
       create: (_) => OrderBloc()..add(FetchData()),
       child: BlocListener<OrderBloc, OrderState>(
@@ -46,4 +53,7 @@ class OrderPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

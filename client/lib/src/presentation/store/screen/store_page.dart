@@ -47,7 +47,8 @@ class StoreView extends StatefulWidget {
   State<StoreView> createState() => _StoreViewState();
 }
 
-class _StoreViewState extends State<StoreView> {
+class _StoreViewState extends State<StoreView>
+    with AutomaticKeepAliveClientMixin {
   TextEditingController searchStoreController = TextEditingController();
   String? storeID;
 
@@ -59,6 +60,7 @@ class _StoreViewState extends State<StoreView> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
@@ -290,4 +292,7 @@ class _StoreViewState extends State<StoreView> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -28,7 +28,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // listenNotification();
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
@@ -46,25 +45,6 @@ class _MainPageState extends State<MainPage> {
     context.read<LanguageCubit>().checkLogin(context);
     super.initState();
   }
-
-  // void listenNotification() {
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     print('Got a message whilst in the foreground!');
-  //     print('Message data: ${message.data}');
-  //     Map<String, dynamic> data = message.data;
-  //
-  //     if (message.notification != null) {
-  //       RemoteNotification notification = message.notification!;
-  //       print('Message also contained a notification: ${message.notification}');
-  //       NotificationServices.showNotification(
-  //         id: data["id"].hashCode,
-  //         title: notification.title!,
-  //         body: notification.body!,
-  //         fln: flutterLocalNotificationsPlugin,
-  //       );
-  //     }
-  //   });
-  // }
 
   @override
   void dispose() {

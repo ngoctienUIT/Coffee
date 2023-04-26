@@ -7,11 +7,18 @@ import '../bloc/account_event.dart';
 import '../widgets/body_account.dart';
 import '../widgets/header_account.dart';
 
-class AccountManagementPage extends StatelessWidget {
+class AccountManagementPage extends StatefulWidget {
   const AccountManagementPage({Key? key}) : super(key: key);
 
   @override
+  State<AccountManagementPage> createState() => _AccountManagementPageState();
+}
+
+class _AccountManagementPageState extends State<AccountManagementPage>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProvider(
       create: (context) => AccountBloc()..add(FetchData()),
       child: Scaffold(
@@ -28,4 +35,7 @@ class AccountManagementPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

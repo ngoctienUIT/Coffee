@@ -39,7 +39,7 @@ class ActivityView extends StatefulWidget {
 }
 
 class _ActivityViewState extends State<ActivityView>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   late TabController _activityController;
 
   @override
@@ -47,7 +47,6 @@ class _ActivityViewState extends State<ActivityView>
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
-      Map<String, dynamic> data = message.data;
       context.read<ActivityBloc>().add(UpdateData(_activityController.index));
     });
     _activityController = TabController(length: 2, vsync: this);
@@ -61,6 +60,7 @@ class _ActivityViewState extends State<ActivityView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -86,4 +86,7 @@ class _ActivityViewState extends State<ActivityView>
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
