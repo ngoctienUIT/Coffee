@@ -4,6 +4,7 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/add_address/screen/add_address_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
+import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../cart/screen/cart_page.dart';
+import '../../main/bloc/main_state.dart';
 import '../../store/screen/store_page.dart';
 import '../bloc/order_bloc.dart';
 import '../bloc/order_event.dart';
@@ -154,10 +156,17 @@ class BottomSheetOrder extends StatelessWidget {
                       begin: const Offset(1, 0),
                     ));
                   },
-                  child: SizedBox(
-                    height: double.infinity,
-                    child: cartNumber(
-                        order == null ? 0 : order.orderItems!.length),
+                  child: BlocListener<MainBloc, MainState>(
+                    listener: (context, state) {
+                      if (state is ChangeCartOrderState) {
+                        context.read<OrderBloc>().add(AddProductToCart());
+                      }
+                    },
+                    child: SizedBox(
+                      height: double.infinity,
+                      child: cartNumber(
+                          order == null ? 0 : order.orderItems!.length),
+                    ),
                   ),
                 ),
               ],

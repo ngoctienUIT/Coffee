@@ -17,7 +17,9 @@ class MembershipCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (previous, current) =>
-          current is! ChangeBannerState && current is! CouponLoaded,
+          current is! ChangeBannerState &&
+          current is! CouponLoaded &&
+          current is! AddProductToCartLoaded,
       builder: (context, state) {
         if (state is HomeLoaded) {
           return Container(

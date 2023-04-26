@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
+import 'package:coffee/src/presentation/main/bloc/main_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -11,6 +12,8 @@ import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../../cart/screen/cart_page.dart';
+import '../../main/bloc/main_bloc.dart';
+import '../../main/bloc/main_event.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import '../widgets/build_selling_products.dart';
@@ -94,6 +97,9 @@ class _HomeViewState extends State<HomeView>
           if (state is HomeError) {
             customToast(context, state.message.toString());
           }
+          if (state is AddProductToCartLoaded) {
+            context.read<MainBloc>().add(ChangeCartOrderEvent());
+          }
         },
         child: RefreshIndicator(
           onRefresh: () async {
@@ -120,8 +126,7 @@ class _HomeViewState extends State<HomeView>
                 ),
                 const SizedBox(height: 10),
                 const BuildListSellingProducts(),
-                const SizedBox(height: 10),
-                // const SizedBox(height: 100),
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -132,13 +137,30 @@ class _HomeViewState extends State<HomeView>
         onPressed: () {
           Navigator.of(context).push(createRoute(
             screen: CartPage(
-              onChange: () {},
-              // onChange: () => context.read<OrderBloc>().add(AddProductToCart()),
+              onChange: () {
+                context.read<HomeBloc>().add(AddProductToCart());
+              },
             ),
             begin: const Offset(1, 0),
           ));
         },
-        child: cartNumber(0),
+        child: BlocListener<MainBloc, MainState>(
+          listener: (context, state) {
+            if (state is ChangeCartHomeState) {
+              context.read<HomeBloc>().add(AddProductToCart());
+            }
+          },
+          child: BlocBuilder<HomeBloc, HomeState>(
+            buildWhen: (previous, current) => current is AddProductToCartLoaded,
+            builder: (context, state) {
+              if (state is AddProductToCartLoaded) {
+                return cartNumber(
+                    state.order == null ? 0 : state.order!.orderItems!.length);
+              }
+              return cartNumber(0);
+            },
+          ),
+        ),
       ),
     );
   }

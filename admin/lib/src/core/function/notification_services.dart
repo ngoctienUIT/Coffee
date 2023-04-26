@@ -44,7 +44,7 @@ class NotificationServices {
   void initLocalNotifications(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('@drawable/ic_launcher');
     var iosInitializationSettings = const DarwinInitializationSettings();
 
     var initializationSetting = InitializationSettings(
@@ -83,8 +83,8 @@ class NotificationServices {
       importance: Importance.high,
       priority: Priority.high,
       ticker: 'ticker',
-      icon: '@mipmap/ic_launcher',
-      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/ic_launcher'),
+      icon: '@drawable/ic_launcher',
+      largeIcon: const DrawableResourceAndroidBitmap('@drawable/ic_launcher'),
       playSound: true,
     );
 

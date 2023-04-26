@@ -7,3 +7,5 @@ class FetchData extends HomeEvent {
 }
 
 class ChangeBannerEvent extends HomeEvent {}
+
+class AddProductToCart extends HomeEvent {}

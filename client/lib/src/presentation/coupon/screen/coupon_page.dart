@@ -7,6 +7,7 @@ import 'package:coffee/src/presentation/coupon/bloc/coupon_state.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/coupon/widgets/ticket_widget.dart';
 import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,6 +50,9 @@ class CouponView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      context.read<CouponBloc>().add(FetchData());
+    });
     return BlocConsumer<CouponBloc, CouponState>(
       listener: (context, state) {
         if (state is CouponError) {

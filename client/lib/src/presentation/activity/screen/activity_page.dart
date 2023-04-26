@@ -45,8 +45,6 @@ class _ActivityViewState extends State<ActivityView>
   @override
   void initState() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
       context.read<ActivityBloc>().add(UpdateData(_activityController.index));
     });
     _activityController = TabController(length: 2, vsync: this);

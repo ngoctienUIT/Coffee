@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/language/bloc/language_cubit.dart';
+import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
 import 'package:coffee/src/presentation/other/screen/other_page.dart';
@@ -11,14 +12,26 @@ import '../../../core/function/on_will_pop.dart';
 import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => MainBloc(),
+      child: const MainView(),
+    );
+  }
 }
 
-class _MainPageState extends State<MainPage> {
+class MainView extends StatefulWidget {
+  const MainView({Key? key}) : super(key: key);
+
+  @override
+  State<MainView> createState() => _MainViewState();
+}
+
+class _MainViewState extends State<MainView> {
   int currentTab = 0;
   DateTime? currentBackPressTime;
   final PageStorageBucket bucket = PageStorageBucket();

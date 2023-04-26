@@ -5,12 +5,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
+import '../../../domain/repositories/order/order_response.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(InitState()) {
     on<FetchData>((event, emit) => getData(event.check, emit));
+
+    on<AddProductToCart>((event, emit) => getOrderSpending(emit));
 
     on<ChangeBannerEvent>((event, emit) => emit(ChangeBannerState()));
   }
@@ -75,7 +78,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeLoading(check));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      if (check) getCoupon(emit, apiService);
+      if (check) {
+        getOrderSpending(emit);
+        getCoupon(emit, apiService);
+      }
       Position? position = await _getCurrentPosition(emit);
       var prefs = await SharedPreferences.getInstance();
       String id = prefs.getString("userID") ?? "";
@@ -101,6 +107,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listProduct: (await listProduct).data,
         ));
       }
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(HomeError(error));
+      print(error);
+    } catch (e) {
+      emit(HomeError(e.toString()));
+      print(e);
+    }
+  }
+
+  Future getOrderSpending(Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String token = prefs.getString("token") ?? "";
+      String email = prefs.getString("username") ?? "";
+
+      final response =
+          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
+      emit(AddProductToCartLoaded(myOrder));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

@@ -1,3 +1,5 @@
+import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
+import 'package:coffee/src/presentation/main/bloc/main_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
@@ -34,6 +36,9 @@ class _OrderPageState extends State<OrderPage>
           }
           if (state is RefreshOrderError) {
             customToast(context, state.message.toString());
+          }
+          if (state is AddProductToCartLoaded) {
+            context.read<MainBloc>().add(ChangeCartHomeEvent());
           }
         },
         child: Scaffold(

@@ -12,6 +12,7 @@ import '../../../core/function/route_function.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
 
 class BuildListSellingProducts extends StatelessWidget {
@@ -21,7 +22,9 @@ class BuildListSellingProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (previous, current) =>
-          current is! ChangeBannerState && current is! CouponLoaded,
+          current is! ChangeBannerState &&
+          current is! CouponLoaded &&
+          current is! AddProductToCartLoaded,
       builder: (context, state) {
         if (state is HomeLoaded) {
           return SizedBox(
@@ -37,6 +40,9 @@ class BuildListSellingProducts extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).push(createRoute(
                         screen: ProductPage(
+                          onPress: () {
+                            context.read<HomeBloc>().add(AddProductToCart());
+                          },
                           isEdit: false,
                           product: Product.fromProductResponse(
                               state.listProduct[index]),

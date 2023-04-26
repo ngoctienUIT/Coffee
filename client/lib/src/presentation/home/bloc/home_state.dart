@@ -2,6 +2,7 @@ import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
+import '../../../domain/repositories/order/order_response.dart';
 import '../../../domain/repositories/weather/weather_response.dart';
 
 abstract class HomeState {}
@@ -47,4 +48,10 @@ class WeatherLoaded extends HomeState {
 class HomeError extends HomeState {
   final String? message;
   HomeError(this.message);
+}
+
+class AddProductToCartLoaded extends HomeState {
+  final OrderResponse? order;
+
+  AddProductToCartLoaded(this.order);
 }
