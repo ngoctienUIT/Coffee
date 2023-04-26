@@ -115,7 +115,7 @@ class _LoginViewState extends State<LoginView> {
 
   void loginSuccess() {
     saveNewTokenFCM();
-    customToast(context, "Đăng nhập thành công");
+    customToast(context, "logged_in_successfully".translate(context));
     context
         .read<LanguageCubit>()
         .startNewTimer(context, const Duration(hours: 1));
@@ -285,7 +285,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "Login with Google",
+          text: "login_with_google".translate(context),
           onPress: () {
             context.read<LoginBloc>().add(LoginWithGoogleEvent());
           },

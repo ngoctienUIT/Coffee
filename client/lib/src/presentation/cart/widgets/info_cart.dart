@@ -243,9 +243,9 @@ class _InfoCartState extends State<InfoCart> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "Xác nhận",
+          title: "confirm".translate(context),
           content:
-              "Bạn muốn thay đổi phương thức từ ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}",
+              "${"you_want_change_method_from".translate(context)} ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}",
           onOK: () {
             okPress();
             Navigator.pop(context);

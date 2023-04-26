@@ -64,7 +64,8 @@ class _AddAddressPageState extends State<AddAddressPage> {
               if (addressAPI
                   .copyWith(address: addressController.text)
                   .checkNull()) {
-                customToast(context, "Vui lòng nhập đầy đủ địa chỉ");
+                customToast(
+                    context, "please_enter_full_address".translate(context));
               } else {
                 final myAddress = addressAPI
                     .copyWith(address: addressController.text)

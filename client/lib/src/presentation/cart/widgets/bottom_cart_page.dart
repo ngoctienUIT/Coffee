@@ -47,11 +47,11 @@ class BottomCartPage extends StatelessWidget {
             onPress: () {
               if (order.selectedPickupOption == "DELIVERY" &&
                   order.address1 == null) {
-                customToast(
-                    context, "Vui lòng nhập vào địa chỉ giao hàng");
+                customToast(context,
+                    "please_enter_your_shipping_address".translate(context));
               } else if (order.selectedPickupOption == "AT_STORE" &&
                   order.selectedPickupStore == null) {
-                customToast(context, "Vui lòng chọn cửa hàng");
+                customToast(context, "please_select_store".translate(context));
               } else {
                 context.read<CartBloc>().add(PlaceOrder());
               }

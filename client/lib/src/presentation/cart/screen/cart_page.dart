@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
@@ -137,16 +138,16 @@ class CartView extends StatelessWidget {
 
   Widget emptyCart(BuildContext context) {
     return Scaffold(
-      body: const Center(
+      body: Center(
         child: Text(
-          "Giỏ hàng của bạn đang trống",
-          style: TextStyle(fontSize: 16),
+          "your_shopping_cart_is_empty".translate(context),
+          style: const TextStyle(fontSize: 16),
         ),
       ),
       bottomSheet: Container(
         padding: const EdgeInsets.all(10),
         child: customButton(
-          text: "ĐẶT HÀNG NGAY",
+          text: "ORDER_NOW".translate(context),
           isOnPress: true,
           onPress: () => Navigator.pop(context),
         ),
@@ -161,9 +162,8 @@ class CartView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "Xác nhận",
-          content:
-              "Bạn có muốn xóa tất cả các mục trong giỏ hàng của bạn?",
+          title: "confirm".translate(context),
+          content: "do_you_want_delete_all_items_your_cart".translate(context),
           onOK: () {
             onPress();
             Navigator.pop(context);

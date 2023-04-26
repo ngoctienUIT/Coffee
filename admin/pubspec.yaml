@@ -63,6 +63,7 @@ dependencies:
   crypto: ^3.0.2
   connectivity_plus: ^3.0.4
   flutter_colorpicker: ^1.0.3
+  flutter_inappwebview: ^5.7.2+3
 
 dev_dependencies:
   flutter_test:

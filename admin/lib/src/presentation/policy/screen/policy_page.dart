@@ -1,6 +1,7 @@
-import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+import '../../forgot_password/widgets/app_bar_general.dart';
 
 class PolicyPage extends StatelessWidget {
   const PolicyPage({Key? key}) : super(key: key);

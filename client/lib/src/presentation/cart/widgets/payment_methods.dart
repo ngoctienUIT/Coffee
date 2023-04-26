@@ -24,8 +24,8 @@ class PaymentMethods extends StatelessWidget {
           const Divider(),
           itemPayment(
             onChange: (value) {},
-            onPress: () => customToast(
-                context, "Tính năng thanh toán Momo chưa ra mắt"),
+            onPress: () => customToast(context,
+                "momo_payment_feature_not_yet_launched".translate(context)),
             value: 0,
             groupValue: 1,
             image: AppImages.imgMomo,

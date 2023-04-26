@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
@@ -61,13 +62,13 @@ class ListActivity extends StatelessWidget {
                         begin: const Offset(0, 1),
                       ));
                     },
-                    child: itemActivity(listOrder[index]),
+                    child: itemActivity(listOrder[index], context),
                   );
                 },
               ),
             );
           }
-          return const Center(child: Text("Không có dữ liệu"));
+          return Center(child: Text("no_data".translate(context)));
         }
         return _buildLoading();
       },
@@ -117,7 +118,7 @@ class ListActivity extends StatelessWidget {
     );
   }
 
-  Widget itemActivity(OrderResponse order) {
+  Widget itemActivity(OrderResponse order, BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -142,12 +143,13 @@ class ListActivity extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text("Ngày tạo: ${order.createdDate}"),
+                  Text(
+                      "${"date_created".translate(context)}: ${order.createdDate}"),
                   const SizedBox(height: 10),
-                  Text("Trạng thái: ${order.orderStatus}"),
+                  Text("${"status".translate(context)}: ${order.orderStatus}"),
                   const SizedBox(height: 10),
                   Text(
-                    "Tổng đơn: ${order.orderAmount!.toCurrency()}",
+                    "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

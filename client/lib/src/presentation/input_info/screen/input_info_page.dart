@@ -101,7 +101,7 @@ class _InputInfoViewState extends State<InputInfoView> {
     return BlocListener<InputInfoBloc, InputInfoState>(
       listener: (context, state) {
         if (state is SubmitSuccessState) {
-          customToast(context, "Đăng ký thành công");
+          customToast(context, "sign_up_success".translate(context));
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
             begin: const Offset(0, 1),

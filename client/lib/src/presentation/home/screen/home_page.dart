@@ -121,7 +121,7 @@ class _HomeViewState extends State<HomeView>
                 buildBanner(),
                 const SizedBox(height: 20),
                 descriptionLine(
-                  text: "Sản phẩm gợi ý",
+                  text: "recommended_products".translate(context),
                   color: AppColors.textColor,
                 ),
                 const SizedBox(height: 10),

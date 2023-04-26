@@ -20,10 +20,7 @@ Widget cartNumber(int number) {
           borderRadius: BorderRadius.circular(10),
           elevation: 5,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 6,
-              vertical: 3,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             child: Text(
               "$number",
               style: const TextStyle(

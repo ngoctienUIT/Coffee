@@ -35,7 +35,7 @@ class CustomPasswordInput extends StatelessWidget {
           return "confirmation_password_not_match".translate(context);
         }
         if (!value!.isSpecialCharacters()) {
-          return "Cần phải có ký tự đặc biệt";
+          return "requires_special_characters".translate(context);
         }
         if (value.isEmpty) {
           return "please_enter_password".translate(context);

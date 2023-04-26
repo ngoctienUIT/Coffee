@@ -182,7 +182,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     User.fromUserResponse(widget.user)
                         .copyWith(password: digest.toString())));
               } else {
-                customToast(context, "Mật khẩu cũ chưa chính xác");
+                customToast(
+                    context, "old_password_is_not_correct".translate(context));
               }
             }
           },

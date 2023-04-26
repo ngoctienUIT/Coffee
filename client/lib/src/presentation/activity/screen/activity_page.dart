@@ -23,7 +23,7 @@ class ActivityPage extends StatelessWidget {
         appBar: CustomAppBar(
           elevation: 0,
           isPick: isAppBar,
-          title: "Hoạt động",
+          title: "activity".translate(context),
         ),
         body: const SafeArea(child: ActivityView()),
       ),

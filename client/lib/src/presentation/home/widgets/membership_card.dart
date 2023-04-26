@@ -74,7 +74,8 @@ class MembershipCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       state.address ??
-                          "Vui lòng bật vị trí để có đề xuất sản phẩm chính xác cho bạn",
+                          "please_enable_location_accurate_product_recommendations_for_you"
+                              .translate(context),
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,

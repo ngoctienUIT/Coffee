@@ -34,7 +34,7 @@ class CouponPage extends StatelessWidget {
           title: "your_offer".translate(context),
           elevation: 0,
           onAction: onDelete,
-          action: id == null ? null : "Loại bỏ coupon",
+          action: id == null ? null : "remove_coupon".translate(context),
         ),
         body: CouponView(onPress: onPress, id: id),
       ),
