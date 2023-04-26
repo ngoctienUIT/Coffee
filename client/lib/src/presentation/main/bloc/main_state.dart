@@ -5,3 +5,5 @@ class InitState extends MainState {}
 class ChangeCartHomeState extends MainState {}
 
 class ChangeCartOrderState extends MainState {}
+
+class UpdateActivityState extends MainState {}

@@ -128,6 +128,8 @@
   "expired": "Expired",
   "ORDER_NOW": "ORDER NOW",
   "no_data": "No data",
+  "order_success": "Order success",
+  "cart_cleared_successfully": "Cart cleared successfully",
   "date_created": "Date created",
   "enter_the_PIN_code": "Enter the PIN code",
   "total_order": "Total order",

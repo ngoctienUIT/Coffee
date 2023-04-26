@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
+import 'package:coffee/src/core/utils/enum/enums.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/add_address/screen/add_address_page.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../cart/screen/cart_page.dart';
+import '../../main/bloc/main_event.dart';
 import '../../main/bloc/main_state.dart';
 import '../../store/screen/store_page.dart';
 import '../bloc/order_bloc.dart';
@@ -149,10 +151,12 @@ class BottomSheetOrder extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(createRoute(
-                      screen: CartPage(
-                        onChange: () =>
-                            context.read<OrderBloc>().add(AddProductToCart()),
-                      ),
+                      screen: CartPage(onChange: (status) {
+                        context.read<OrderBloc>().add(AddProductToCart());
+                        if (status == OrderStatus.placed) {
+                          context.read<MainBloc>().add(UpdateActivityEvent());
+                        }
+                      }),
                       begin: const Offset(1, 0),
                     ));
                   },

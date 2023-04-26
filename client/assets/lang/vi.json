@@ -128,6 +128,8 @@
   "remove_coupon": "Loại bỏ phiếu giảm giá",
   "expired": "Hết hạn",
   "ORDER_NOW": "ĐẶT HÀNG NGAY",
+  "order_success": "Đặt hàng thành công",
+  "cart_cleared_successfully": "Xóa giỏ hàng thành công",
   "no_data": "Không có dữ liệu",
   "date_created": "Ngày tạo",
   "enter_the_PIN_code": "Nhập vào mã PIN",

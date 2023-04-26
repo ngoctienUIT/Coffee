@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/enum/enums.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/order.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
@@ -73,7 +74,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       List<OrderResponse> orderSpending = response.data;
       await apiService.placeOrder("Bearer $token", orderSpending[0].orderId!);
-      emit(GetOrderSuccessState(null, "Đặt hàng thành công"));
+      emit(GetOrderSuccessState(null, OrderStatus.placed));
       sendPushMessageTopic(
         orderID: orderSpending[0].orderId!,
         body:
@@ -178,7 +179,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       String email = prefs.getString("username") ?? "";
 
       await apiService.removePendingOrder("Bearer $token", email);
-      emit(GetOrderSuccessState(null, "Xóa giỏ hàng thành công"));
+      emit(GetOrderSuccessState(null, OrderStatus.delete));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

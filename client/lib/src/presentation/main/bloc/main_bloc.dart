@@ -7,5 +7,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     on<ChangeCartHomeEvent>((event, emit) => emit(ChangeCartHomeState()));
 
     on<ChangeCartOrderEvent>((event, emit) => emit(ChangeCartOrderState()));
+
+    on<UpdateActivityEvent>((event, emit) => emit(UpdateActivityState()));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/utils/enum/enums.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
@@ -22,7 +23,7 @@ import '../../../core/utils/constants/constants.dart';
 class CartPage extends StatefulWidget {
   const CartPage({Key? key, required this.onChange}) : super(key: key);
 
-  final VoidCallback onChange;
+  final Function(OrderStatus? status) onChange;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -41,7 +42,7 @@ class _CartPageState extends State<CartPage> {
 class CartView extends StatelessWidget {
   const CartView({Key? key, required this.onChange}) : super(key: key);
 
-  final VoidCallback onChange;
+  final Function(OrderStatus? status) onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +50,14 @@ class CartView extends StatelessWidget {
       listener: (context, state) {
         if (state is GetOrderSuccessState) {
           if (state.status != null) {
-            customToast(context, state.status.toString());
+            if (state.status == OrderStatus.placed) {
+              customToast(context, "order_success".translate(context));
+            } else {
+              customToast(
+                  context, "cart_cleared_successfully".translate(context));
+            }
           }
-          onChange();
+          onChange(state.status);
           Navigator.pop(context);
         }
         if (state is GetOrderErrorState) {

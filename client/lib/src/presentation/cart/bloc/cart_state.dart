@@ -1,3 +1,5 @@
+import 'package:coffee/src/core/utils/enum/enums.dart';
+
 import '../../../domain/repositories/order/order_response.dart';
 
 abstract class CartState {}
@@ -12,7 +14,7 @@ class AddNoteError extends CartState {
 
 class GetOrderSuccessState extends CartState {
   OrderResponse? order;
-  String? status;
+  OrderStatus? status;
 
   GetOrderSuccessState(this.order, [this.status]);
 }
