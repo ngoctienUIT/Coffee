@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/presentation/add_topping/screen/add_topping_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
@@ -53,7 +54,7 @@ class _ToppingViewState extends State<ToppingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Toppings", elevation: 0),
+      appBar: const AppBarGeneral(title: "Topping", elevation: 0),
       body: bodyTopping(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -122,7 +123,7 @@ class _ToppingViewState extends State<ToppingView> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: customButton(
-            text: "Lưu",
+            text: "save".translate(context),
             isOnPress: true,
             onPress: () {
               widget.onPick!(

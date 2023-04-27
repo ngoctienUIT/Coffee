@@ -21,8 +21,6 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
   @override
   void initState() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
       context.read<OrderBloc>().add(UpdateData(_orderController.index));
     });
     _orderController = TabController(length: 4, vsync: this);

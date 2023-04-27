@@ -311,7 +311,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "Thêm Topping"),
+            descriptionLine(text: "add_topping".translate(context)),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -326,7 +326,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: const Text("Thêm"),
+              child: Text("add".translate(context)),
             )
           ],
         ),
@@ -334,9 +334,9 @@ class _AddProductViewState extends State<AddProductView> {
           buildWhen: (previous, current) => current is ChangeToppingState,
           builder: (context, state) {
             return listTopping.isEmpty
-                ? const Text(
-                    "Không có topping!",
-                    style: TextStyle(
+                ? Text(
+                    "no_toppings".translate(context),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
                     ),
@@ -396,7 +396,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "Thêm Tag"),
+            descriptionLine(text: "add_tags".translate(context)),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -411,7 +411,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: const Text("Thêm"),
+              child: Text("add".translate(context)),
             )
           ],
         ),
@@ -419,9 +419,9 @@ class _AddProductViewState extends State<AddProductView> {
           buildWhen: (previous, current) => current is ChangeTagState,
           builder: (context, state) {
             return listTag.isEmpty
-                ? const Text(
-                    "Không có tag!",
-                    style: TextStyle(
+                ? Text(
+                    "no_tags".translate(context),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
                     ),

@@ -47,7 +47,8 @@ class ProductCataloguesView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Loại sản phẩm", elevation: 0),
+      appBar: AppBarGeneral(
+          title: "product_catalogues".translate(context), elevation: 0),
       body: buildBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

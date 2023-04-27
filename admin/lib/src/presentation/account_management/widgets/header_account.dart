@@ -66,7 +66,7 @@ class _HeaderAccountPageState extends State<HeaderAccountPage>
       child: SizedBox(
         height: 40,
         child: CustomTextInput(
-          hint: "Tìm kiếm nhân viên",
+          hint: "looking_for_employees".translate(context),
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textStyle: const TextStyle(fontSize: 13),

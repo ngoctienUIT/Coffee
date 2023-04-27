@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/function/loading_animation.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -93,10 +94,17 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     return BlocListener<ChangePasswordBloc, ChangePasswordState>(
       listener: (context, state) {
         if (state is ChangePasswordSuccessState) {
+          customToast(
+              context, "change_password_successfully".translate(context));
+          Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is ChangePasswordErrorState) {
           customToast(context, state.status);
+          Navigator.pop(context);
+        }
+        if (state is ChangePasswordLoadingState) {
+          loadingAnimation(context);
         }
       },
       child: Column(

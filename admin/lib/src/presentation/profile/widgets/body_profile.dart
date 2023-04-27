@@ -57,7 +57,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       listener: (context, state) {
         if (state is SaveProfileLoaded) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-          customToast(context, "Lưu thay đổi thành công");
+          customToast(context, "save_changes_successfully".translate(context));
           widget.onChange();
           Navigator.pop(context);
         }

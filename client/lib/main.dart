@@ -126,11 +126,12 @@ class _NavigatePageState extends State<NavigatePage> {
       switch (source) {
         case ConnectivityResult.mobile:
         case ConnectivityResult.wifi:
-          customToast(context, "Đã có kết nối internet");
+          customToast(
+              context, "internet_connection_is_available".translate(context));
           break;
         case ConnectivityResult.none:
         default:
-          customToast(context, "Không có kết nối Internet");
+          customToast(context, "no_internet_connection".translate(context));
       }
     });
   }

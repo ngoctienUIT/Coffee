@@ -79,7 +79,7 @@ class _InputPinViewState extends State<InputPinView> {
               begin: const Offset(1, 0),
             ));
           } else {
-            customToast(context, "Mã PIN chưa chính xác");
+            customToast(context, "PIN_code_is_not_correct".translate(context));
           }
         }
       },
@@ -100,7 +100,7 @@ class _InputPinViewState extends State<InputPinView> {
                       height: 200,
                     ),
                   ),
-                  const Text("Nhập vào mã PIN"),
+                  Text("enter_the_PIN_code".translate(context)),
                   const SizedBox(height: 20),
                   CustomTextInput(
                     controller: controller,
@@ -109,8 +109,7 @@ class _InputPinViewState extends State<InputPinView> {
                     typeInput: const [TypeInput.text],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                      "Nhập vào mã PIN đã được gửi vào email của bạn"),
+                  Text("enter_PIN_that_sent_your_email".translate(context)),
                   const SizedBox(height: 50),
                   continueButton(),
                 ],

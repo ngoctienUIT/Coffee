@@ -165,7 +165,9 @@ class BodyOrder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user != null ? user.displayName : "Người dùng Coffee",
+                user != null
+                    ? user.displayName
+                    : "coffee_users".translate(context),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -174,12 +176,14 @@ class BodyOrder extends StatelessWidget {
               const SizedBox(height: 20),
               Align(
                 alignment: Alignment.centerRight,
-                child: Text("Ngày tạo: ${order.createdDate}"),
+                child: Text(
+                    "${"date_created".translate(context)}: ${order.createdDate}"),
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
-                child: Text("Ngày giao: ${order.lastUpdated}"),
+                child: Text(
+                    "${"delivery_date".translate(context)}: ${order.lastUpdated}"),
               ),
               const SizedBox(height: 10),
               Align(
@@ -241,7 +245,6 @@ class BodyOrder extends StatelessWidget {
                 Text("delivery_status".translate(context)),
                 const Spacer(),
                 Text(
-                  // "delivered".translate(context).toUpperCase(),
                   order.orderStatus.toString(),
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),

@@ -35,9 +35,9 @@ class AddRecommendPage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          title: const Text(
-            "Add Recommend",
-            style: TextStyle(color: Colors.black),
+          title: Text(
+            "add_recommend".translate(context),
+            style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
           leading: IconButton(
@@ -111,7 +111,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
       listener: (context, state) {
         if (state is AddRecommendSuccess) {
           widget.onChange();
-          customToast(context, "Thêm gợi ý thành công");
+          customToast(context, "add_successful_recommend".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -131,28 +131,28 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              descriptionLine(text: "Thời tiết"),
+              descriptionLine(text: "weather".translate(context)),
               const SizedBox(height: 10),
               pickWeather(),
               const SizedBox(height: 10),
-              descriptionLine(text: "Nhiệt độ thấp nhất"),
+              descriptionLine(text: "lowest_temperature".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: minTempController,
                 hint: "20°C",
-                title: "M",
+                title: "lowest_temperature".translate(context),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Nhiệt độ cao nhất"),
+              descriptionLine(text: "maximum_temperature".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: maxTempController,
                 hint: "30°C",
-                title: "L",
+                title: "maximum_temperature".translate(context),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
@@ -181,9 +181,9 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
-              hint: const Text(
-                'Weather',
-                style: TextStyle(fontSize: 16),
+              hint: Text(
+                'weather'.translate(context),
+                style: const TextStyle(fontSize: 16),
               ),
               items: listWeather
                   .map((item) => DropdownMenuItem<String>(
@@ -218,7 +218,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "Thêm Tag"),
+            descriptionLine(text: "add_tags".translate(context)),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -233,7 +233,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: const Text("Thêm"),
+              child: Text("add".translate(context)),
             )
           ],
         ),
@@ -241,9 +241,9 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           buildWhen: (previous, current) => current is ChangeTagState,
           builder: (context, state) {
             return listTag.isEmpty
-                ? const Text(
-                    "Không có tag!",
-                    style: TextStyle(
+                ? Text(
+                    "no_tags".translate(context),
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
                     ),

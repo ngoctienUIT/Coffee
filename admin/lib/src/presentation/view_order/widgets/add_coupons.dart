@@ -33,6 +33,7 @@ class AddCoupons extends StatelessWidget {
             image: coupon.imageUrl.toString(),
             date: coupon.dueDate,
           ),
+          const SizedBox(height: 10)
         ],
       ),
     );

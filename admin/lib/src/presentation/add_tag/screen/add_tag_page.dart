@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/tag.dart';
 import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_event.dart';
@@ -26,7 +27,8 @@ class AddTagPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddTagBloc(),
       child: Scaffold(
-        appBar: const AppBarGeneral(elevation: 0, title: "Thêm tag"),
+        appBar:
+            AppBarGeneral(elevation: 0, title: "add_tags".translate(context)),
         body: AddTagView(onChange: onChange, tag: tag),
       ),
     );
@@ -85,7 +87,7 @@ class _AddTagViewState extends State<AddTagView> {
       listener: (context, state) {
         if (state is AddTagSuccessState) {
           widget.onChange();
-          customToast(context, "Thêm tag thành công");
+          customToast(context, "add_successful_tag".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -105,23 +107,23 @@ class _AddTagViewState extends State<AddTagView> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              descriptionLine(text: "Tên"),
+              descriptionLine(text: "name".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "Tên",
-                title: "Tên",
+                hint: "name".translate(context),
+                title: "name".translate(context),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Mô tả"),
+              descriptionLine(text: "description".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "Mô tả",
-                title: "Mô tả",
+                hint: "description".translate(context),
+                title: "description".translate(context),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Màu sắc"),
+              descriptionLine(text: "color".translate(context)),
               const SizedBox(height: 10),
               pickColor(),
               const SizedBox(height: 10),
@@ -156,7 +158,7 @@ class _AddTagViewState extends State<AddTagView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Pick a color!'),
+          title: Text('pick_a_color'.translate(context)),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
@@ -165,7 +167,7 @@ class _AddTagViewState extends State<AddTagView> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Got it'),
+              child: Text('ok'.translate(context)),
               onPressed: () {
                 textColor =
                     "#${pickerColor.toString().substring(10, 16).toUpperCase()}";
@@ -184,7 +186,7 @@ class _AddTagViewState extends State<AddTagView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "Lưu",
+          text: "save".translate(context),
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

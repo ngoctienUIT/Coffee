@@ -42,7 +42,8 @@ class AddStorePage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddStoreBloc(),
       child: Scaffold(
-        appBar: const AppBarGeneral(elevation: 0, title: "Thêm cửa hàng"),
+        appBar:
+            AppBarGeneral(elevation: 0, title: "add_stores".translate(context)),
         body: AddStoreView(store: store, onChange: onChange),
       ),
     );
@@ -125,7 +126,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       listener: (context, state) {
         if (state is AddStoreSuccessState) {
           widget.onChange();
-          customToast(context, "Thêm cửa hàng thành công");
+          customToast(context, "successfully_added_store".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -146,20 +147,20 @@ class _AddStoreViewState extends State<AddStoreView> {
             children: [
               storeImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "Tên cửa hàng"),
+              descriptionLine(text: "name_the_store".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "Tên cửa hàng",
-                title: "Tên cửa hàng",
+                hint: "name_the_store".translate(context),
+                title: "name_the_store".translate(context),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Số điện thoại"),
+              descriptionLine(text: "phone_number".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: phoneController,
-                hint: "Số điện thoại",
-                title: "Số điện thoại",
+                hint: "phone_number".translate(context),
+                title: "phone_number".translate(context),
                 typeInput: const [TypeInput.phone],
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
@@ -167,22 +168,22 @@ class _AddStoreViewState extends State<AddStoreView> {
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Giờ mở cửa"),
+              descriptionLine(text: "opening_hours".translate(context)),
               const SizedBox(height: 10),
               openStore(),
               const SizedBox(height: 10),
-              descriptionLine(text: "Giờ đóng cửa"),
+              descriptionLine(text: "closing_time".translate(context)),
               const SizedBox(height: 10),
               closeStore(),
               const SizedBox(height: 10),
               pickAddress(),
               const SizedBox(height: 10),
-              descriptionLine(text: "Địa chỉ"),
+              descriptionLine(text: "address".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: addressController,
-                hint: "Địa chỉ",
-                title: "Địa chỉ",
+                hint: "address".translate(context),
+                title: "address".translate(context),
               ),
               const SizedBox(height: 10),
               saveButton(),
@@ -199,11 +200,11 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return Column(
           children: [
-            descriptionLine(text: "Quốc gia"),
+            descriptionLine(text: "country".translate(context)),
             const SizedBox(height: 10),
             const CountryDropdown(),
             const SizedBox(height: 10),
-            descriptionLine(text: "Tỉnh/Thành phố"),
+            descriptionLine(text: "province_city".translate(context)),
             const SizedBox(height: 10),
             ProvinceDropdown(
               selectedValue: addressAPI.province != null
@@ -216,7 +217,7 @@ class _AddStoreViewState extends State<AddStoreView> {
               },
             ),
             const SizedBox(height: 10),
-            descriptionLine(text: "Quận/Huyện"),
+            descriptionLine(text: "district".translate(context)),
             const SizedBox(height: 10),
             DistrictDropdown(
               provinceID:
@@ -231,7 +232,7 @@ class _AddStoreViewState extends State<AddStoreView> {
               },
             ),
             const SizedBox(height: 10),
-            descriptionLine(text: "Xã/Phường"),
+            descriptionLine(text: "ward".translate(context)),
             const SizedBox(height: 10),
             WardDropdown(
               provinceID:
@@ -261,7 +262,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: open == null ? "Mở cửa" : open!.toTimeString(),
+          text: open == null ? "open".translate(context) : open!.toTimeString(),
           onPress: () async {
             open = await selectedTime(open);
             if (mounted) context.read<AddStoreBloc>().add(ChangeOpenEvent());
@@ -277,7 +278,9 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: close == null ? "Đóng cửa" : close!.toTimeString(),
+          text: close == null
+              ? "close".translate(context)
+              : close!.toTimeString(),
           onPress: () async {
             close = await selectedTime(close);
             if (mounted) context.read<AddStoreBloc>().add(ChangeCloseEvent());

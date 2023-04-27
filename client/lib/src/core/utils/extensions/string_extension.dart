@@ -47,6 +47,17 @@ extension EmailValidator on String {
     return firstStr.toDate().add(lastStr.toDuration());
   }
 
+  DateTime toDate2() {
+    final list = split("-");
+    return DateTime(int.parse(list[2]), int.parse(list[1]), int.parse(list[0]));
+  }
+
+  DateTime toDateTime2() {
+    String firstStr = split(" ").first;
+    String lastStr = split(" ").last;
+    return firstStr.toDate2().add(lastStr.toDuration());
+  }
+
   String translate(BuildContext context) {
     return AppLocalizations.of(context).translate(this);
   }

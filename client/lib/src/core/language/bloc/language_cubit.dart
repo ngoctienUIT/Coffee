@@ -56,7 +56,8 @@ class LanguageCubit extends Cubit<LanguageState> {
     print(duration);
     _timer = Timer.periodic(duration, (_) {
       _timedOut();
-      customToast(context, "Hết hạn đăng nhập vui lòng đăng nhập lại");
+      customToast(
+          context, "login_expired_please_login_again".translate(context));
       Navigator.of(context).pushAndRemoveUntil(
         createRoute(
           screen: const LoginPage(),

@@ -47,7 +47,8 @@ class SettingView extends StatelessWidget {
           loadingAnimation(context);
         }
         if (state is DeleteSuccessState) {
-          customToast(context, "Xóa tài khoản thành công");
+          customToast(
+              context, "account_deleted_successfully".translate(context));
           Navigator.of(context).pushAndRemoveUntil(
             createRoute(
               screen: const LoginPage(),

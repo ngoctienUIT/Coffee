@@ -79,39 +79,3 @@ Future<String> getTokenFCM(String userID) async {
   if (data != null) return data["token"];
   return "";
 }
-
-/*Future sendPushMessage({
-  required String token,
-  required String id,
-  required String body,
-  required String title,
-  String status = 'message',
-  String myToken = "",
-  String screen = 'chat',
-}) async {
-  try {
-    Map<String, String> headerFCM = {
-      "Content-Type": "application/json",
-      "Authorization": serverKey,
-    };
-
-    Map<String, dynamic> bodyFCM = {
-      'notification': <String, dynamic>{'body': body, 'title': title},
-      'priority': 'high',
-      'data': <String, dynamic>{
-        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-        'id': id,
-        'status': status,
-        'token': myToken,
-        'screen': screen,
-      },
-      "to": token,
-    };
-
-    http.post(
-      Uri.parse(baseURL),
-      headers: headerFCM,
-      body: jsonEncode(bodyFCM),
-    );
-  } catch (_) {}
-}*/

@@ -2,6 +2,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee_admin/src/presentation/other/bloc/other_event.dart';
+import 'package:coffee_admin/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/screen/product_catalogues_page.dart';
 import 'package:coffee_admin/src/presentation/recommend/screen/recommend_page.dart';
 import 'package:coffee_admin/src/presentation/signup/screen/signup_page.dart';
@@ -77,7 +78,7 @@ class BodyOtherPage extends StatelessWidget {
                 }
               }),
               const Divider(),
-              itemOther("Recommendation", Icons.cloud, () {
+              itemOther("recommend".translate(context), Icons.cloud, () {
                 Navigator.of(context).push(createRoute(
                   screen: const RecommendPage(),
                   begin: const Offset(1, 0),
@@ -91,21 +92,22 @@ class BodyOtherPage extends StatelessWidget {
                 ));
               }),
               const Divider(),
-              itemOther("product catalogues", FontAwesomeIcons.mugSaucer, () {
+              itemOther("product_catalogues".translate(context),
+                  FontAwesomeIcons.mugSaucer, () {
                 Navigator.of(context).push(createRoute(
                   screen: const ProductCataloguesPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("tag", FontAwesomeIcons.tags, () {
+              itemOther("Tag", FontAwesomeIcons.tags, () {
                 Navigator.of(context).push(createRoute(
                   screen: const TagPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("topping", FontAwesomeIcons.apple, () {
+              itemOther("Topping", FontAwesomeIcons.apple, () {
                 Navigator.of(context).push(createRoute(
                   screen: const ToppingPage(),
                   begin: const Offset(1, 0),
@@ -113,7 +115,12 @@ class BodyOtherPage extends StatelessWidget {
               }),
             ]),
             groupItemOther("general_info".translate(context), [
-              itemOther("policy".translate(context), Icons.file_copy, () {}),
+              itemOther("policy".translate(context), Icons.file_copy, () {
+                Navigator.of(context).push(createRoute(
+                  screen: const PolicyPage(),
+                  begin: const Offset(1, 0),
+                ));
+              }),
               const Divider(),
               itemOther("app_info".translate(context), Icons.info, () {
                 Navigator.of(context).push(createRoute(

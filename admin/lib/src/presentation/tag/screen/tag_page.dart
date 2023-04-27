@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class _TagViewState extends State<TagView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Tags", elevation: 0),
+      appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -114,7 +115,7 @@ class _TagViewState extends State<TagView> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: customButton(
-            text: "Lưu",
+            text: "save".translate(context),
             isOnPress: true,
             onPress: () {
               widget.onPick!(

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/screen/add_recommend_page.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_bloc.dart';
@@ -36,7 +37,8 @@ class RecommendView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const AppBarGeneral(title: "Recommend", elevation: 0),
+      appBar:
+          AppBarGeneral(title: "recommend".translate(context), elevation: 0),
       body: SafeArea(child: bodyRecommend()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -112,7 +114,7 @@ class RecommendView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: itemRecommend(state.listRecommend[index]),
+                  child: itemRecommend(context, state.listRecommend[index]),
                 );
               },
             ),
@@ -123,7 +125,7 @@ class RecommendView extends StatelessWidget {
     );
   }
 
-  Widget itemRecommend(RecommendResponse recommend) {
+  Widget itemRecommend(BuildContext context, RecommendResponse recommend) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(10),
@@ -150,13 +152,13 @@ class RecommendView extends StatelessWidget {
             if (recommend.minTemp != null) const SizedBox(height: 10),
             if (recommend.minTemp != null)
               Text(
-                "Nhiệt độ nhỏ nhất: ${recommend.minTemp.toString().split(".0").first}°C",
+                "${"lowest_temperature".translate(context)}: ${recommend.minTemp.toString().split(".0").first}°C",
                 style: const TextStyle(fontSize: 16),
               ),
             if (recommend.maxTemp != null) const SizedBox(height: 10),
             if (recommend.maxTemp != null)
               Text(
-                "Nhiệt độ lớn nhất: ${recommend.maxTemp.toString().split(".0").first}°C",
+                "${"maximum_temperature".translate(context)}: ${recommend.maxTemp.toString().split(".0").first}°C",
                 style: const TextStyle(fontSize: 16),
               ),
             if (recommend.tags != null && recommend.tags!.isNotEmpty)

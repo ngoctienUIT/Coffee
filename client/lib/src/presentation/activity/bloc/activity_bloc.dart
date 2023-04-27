@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
 import 'package:dio/dio.dart';
@@ -23,18 +24,22 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
 
-      List<OrderResponse> listOder;
+      List<OrderResponse> listOrder;
       final response = index == 0
           ? await apiService.getAllOrders("Bearer $token", email, "PLACED")
           : await apiService.getAllOrders("Bearer $token", email, "");
-      listOder = index == 0
+      listOrder = index == 0
           ? response.data
           : response.data
               .where((element) =>
                   element.orderStatus == "COMPLETED" ||
                   element.orderStatus == "CANCELLED")
               .toList();
-      emit(ActivityLoaded(listOrder: listOder, index: index));
+      listOrder.sort((a, b) => b.createdDate!
+          .toDateTime2()
+          .difference(a.createdDate!.toDateTime2())
+          .inSeconds);
+      emit(ActivityLoaded(listOrder: listOrder, index: index));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -54,18 +59,22 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
 
-      List<OrderResponse> listOder;
+      List<OrderResponse> listOrder;
       final response = index == 0
           ? await apiService.getAllOrders("Bearer $token", email, "PLACED")
           : await apiService.getAllOrders("Bearer $token", email, "");
-      listOder = index == 0
+      listOrder = index == 0
           ? response.data
           : response.data
               .where((element) =>
                   element.orderStatus == "COMPLETED" ||
                   element.orderStatus == "CANCELLED")
               .toList();
-      emit(UpdateSuccess(listOder, index));
+      listOrder.sort((a, b) => b.createdDate!
+          .toDateTime2()
+          .difference(a.createdDate!.toDateTime2())
+          .inSeconds);
+      emit(UpdateSuccess(listOrder, index));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

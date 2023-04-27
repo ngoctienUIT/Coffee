@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
@@ -55,13 +56,13 @@ class ViewOrderView extends StatelessWidget {
         if (state is LoadingState) loadingAnimation(context);
         if (state is CancelSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "Đã hủy đơn hàng");
+          customToast(context, "order_canceled".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is CompletedSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "Hoàn thành đơn hàng");
+          customToast(context, "complete_orders".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -74,19 +75,21 @@ class ViewOrderView extends StatelessWidget {
           ? BlocBuilder<ViewOrderBloc, ViewOrderState>(
               builder: (context, state) {
                 if (state is GetOrderSuccessState) {
-                  return buildOrder(state.order, state.user);
+                  return buildOrder(context, state.order, state.user);
                 }
                 return Scaffold(body: Container());
               },
             )
-          : buildOrder(order!, user),
+          : buildOrder(context, order!, user),
     );
   }
 
-  Widget buildOrder(OrderResponse order, UserResponse? user) {
+  Widget buildOrder(
+      BuildContext context, OrderResponse order, UserResponse? user) {
     return Scaffold(
       appBar: AppBarGeneral(
-        title: user != null ? user.displayName : "Người dùng Coffee",
+        title:
+            user != null ? user.displayName : "coffee_users".translate(context),
         elevation: 0,
       ),
       body: Padding(
@@ -103,13 +106,13 @@ class ViewOrderView extends StatelessWidget {
               const SizedBox(height: 10),
               ListProduct(orderItems: order.orderItems!),
               const SizedBox(height: 10),
-              if (order.appliedCoupons != null)
-                AddCoupons(coupon: order.appliedCoupons!),
-              if (order.appliedCoupons != null) const SizedBox(height: 10),
+              if (order.appliedCoupon != null)
+                AddCoupons(coupon: order.appliedCoupon!),
+              if (order.appliedCoupon != null) const SizedBox(height: 10),
               TotalPayment(order: order),
               const SizedBox(height: 10),
               const PaymentMethods(value: 1),
-              const SizedBox(height: 170),
+              const SizedBox(height: 200),
             ],
           ),
         ),

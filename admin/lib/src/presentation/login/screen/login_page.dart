@@ -92,11 +92,12 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
       switch (source) {
         case ConnectivityResult.mobile:
         case ConnectivityResult.wifi:
-          customToast(context, "Đã có kết nối internet");
+          customToast(
+              context, "internet_connection_is_available".translate(context));
           break;
         case ConnectivityResult.none:
         default:
-          customToast(context, "Không có kết nối Internet");
+          customToast(context, "no_internet_connection".translate(context));
       }
     });
     SharedPreferences.getInstance().then((value) {
@@ -138,7 +139,7 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
 
   void loginSuccess() {
     isLogin = true;
-    customToast(context, "Đăng nhập thành công");
+    customToast(context, "logged_in_successfully".translate(context));
     saveLogin();
     Navigator.of(context).pushReplacement(createRoute(
       screen: MainPage(id: widget.id),

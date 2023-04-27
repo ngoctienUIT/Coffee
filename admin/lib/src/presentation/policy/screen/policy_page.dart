@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -9,7 +10,7 @@ class PolicyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarGeneral(title: "Chính sách"),
+      appBar: AppBarGeneral(title: "policy".translate(context)),
       body: InAppWebView(
         initialUrlRequest: URLRequest(
             url: Uri.parse(

@@ -53,7 +53,7 @@ void showStoreBottomSheet(
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: customButton(
-                text: "Chỉnh sửa",
+                text: "edit".translate(context),
                 isOnPress: true,
                 onPress: () {
                   Navigator.of(context).push(createRoute(

@@ -32,7 +32,8 @@ class AddToppingPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddToppingBloc(),
       child: Scaffold(
-        appBar: const AppBarGeneral(elevation: 0, title: "Thêm Topping"),
+        appBar: AppBarGeneral(
+            elevation: 0, title: "add_topping".translate(context)),
         body: AddToppingView(onChange: onChange, topping: topping),
       ),
     );
@@ -96,7 +97,7 @@ class _AddToppingViewState extends State<AddToppingView> {
     return BlocListener<AddToppingBloc, AddToppingState>(
       listener: (context, state) {
         if (state is AddToppingSuccessState) {
-          customToast(context, "Thêm sản phẩm thành công");
+          customToast(context, "successfully_added_topping".translate(context));
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);
@@ -119,32 +120,32 @@ class _AddToppingViewState extends State<AddToppingView> {
               const SizedBox(height: 10),
               toppingImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "Tên Topping"),
+              descriptionLine(text: "name_topping".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "Tên Topping",
-                title: "Tên Topping",
+                hint: "name_topping".translate(context),
+                title: "name_topping".translate(context),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Giá Topping"),
+              descriptionLine(text: "topping_price".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: "Giá Topping",
+                title: "topping_price".translate(context),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Mô tả"),
+              descriptionLine(text: "description".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "Mô tả",
-                title: "Mô tả",
+                hint: "description".translate(context),
+                title: "description".translate(context),
               ),
               const SizedBox(height: 10),
               saveButton(),

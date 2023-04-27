@@ -67,6 +67,7 @@ class AddCouponView extends StatefulWidget {
 
 class _AddCouponViewState extends State<AddCouponView> {
   TextEditingController titleController = TextEditingController();
+  TextEditingController couponCodeController = TextEditingController();
   TextEditingController amountController = TextEditingController();
   TextEditingController minApplyController = TextEditingController();
   TextEditingController rateController = TextEditingController();
@@ -105,6 +106,7 @@ class _AddCouponViewState extends State<AddCouponView> {
     if (titleController.text.isNotEmpty &&
         contentController.text.isNotEmpty &&
         minApplyController.text.isNotEmpty &&
+        couponCodeController.text.isNotEmpty &&
         (image != null || widget.coupon != null) &&
         (amountController.text.isNotEmpty ||
             (rateController.text.isNotEmpty &&
@@ -132,7 +134,7 @@ class _AddCouponViewState extends State<AddCouponView> {
       listener: (context, state) {
         if (state is AddCouponSuccessState) {
           widget.onChange();
-          customToast(context, "Thêm coupon thành công");
+          customToast(context, "successfully_added_coupon".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -161,6 +163,14 @@ class _AddCouponViewState extends State<AddCouponView> {
                 hint: "voucher_title".translate(context),
                 title: "title".translate(context).toLowerCase(),
               ),
+              const SizedBox(height: 30),
+              descriptionLine(text: "coupon_code".translate(context)),
+              const SizedBox(height: 10),
+              CustomTextInput(
+                controller: couponCodeController,
+                hint: "coupon_code".translate(context),
+                title: "coupon_code".translate(context).toLowerCase(),
+              ),
               const SizedBox(height: 10),
               descriptionLine(text: "expiration_date".translate(context)),
               const SizedBox(height: 10),
@@ -169,7 +179,7 @@ class _AddCouponViewState extends State<AddCouponView> {
               typeCoupon(),
               const SizedBox(height: 10),
               const SizedBox(height: 10),
-              descriptionLine(text: "Tối thiểu"),
+              descriptionLine(text: "minimum".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: minApplyController,
@@ -204,7 +214,7 @@ class _AddCouponViewState extends State<AddCouponView> {
       builder: (context, state) {
         return Column(
           children: [
-            descriptionLine(text: "Loại Coupon"),
+            descriptionLine(text: "coupon_type".translate(context)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -215,7 +225,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                     context.read<AddCouponBloc>().add(ChangeTypeEvent());
                   },
                   child: itemType(
-                    "Tiền mặt",
+                    "cash".translate(context),
                     isRate ? unselectedColor : selectedColor,
                   ),
                 ),
@@ -226,7 +236,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                     context.read<AddCouponBloc>().add(ChangeTypeEvent());
                   },
                   child: itemType(
-                    "Tỷ lệ",
+                    "rate".translate(context),
                     isRate ? selectedColor : unselectedColor,
                   ),
                 ),
@@ -243,7 +253,7 @@ class _AddCouponViewState extends State<AddCouponView> {
   Widget rateType() {
     return Column(
       children: [
-        descriptionLine(text: "Tỷ lệ"),
+        descriptionLine(text: "rate".translate(context)),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: rateController,
@@ -255,7 +265,7 @@ class _AddCouponViewState extends State<AddCouponView> {
           ],
         ),
         const SizedBox(height: 10),
-        descriptionLine(text: "Tối đa"),
+        descriptionLine(text: "maximum".translate(context)),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: capAmountController,
@@ -335,19 +345,19 @@ class _AddCouponViewState extends State<AddCouponView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-            text: "Lưu",
+            text: "save".translate(context),
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
               double rate = double.parse(rateController.text);
               if (_formKey.currentState!.validate()) {
                 if ((rate > 1 || rate == 0) && isRate) {
-                  customToast(context, "Tỷ lệ không hợp lệ");
+                  customToast(context, "invalid_rate".translate(context));
                   return;
                 }
                 if (widget.coupon == null) {
                   context.read<AddCouponBloc>().add(CreateCouponEvent(Coupon(
                         couponName: titleController.text,
-                        couponCode: "couponCode",
+                        couponCode: couponCodeController.text,
                         content: contentController.text,
                         dueDate: DateFormat("dd/MM/yyyy").format(selectedDate),
                         minimumOrderAmountCriterion:
@@ -362,7 +372,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                 } else {
                   context.read<AddCouponBloc>().add(UpdateCouponEvent(Coupon(
                         couponName: titleController.text,
-                        couponCode: "couponCode",
+                        couponCode: couponCodeController.text,
                         content: contentController.text,
                         imageUrl: imageNetWork,
                         dueDate: DateFormat("dd/MM/yyyy").format(selectedDate),

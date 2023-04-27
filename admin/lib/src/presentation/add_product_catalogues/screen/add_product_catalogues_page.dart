@@ -32,8 +32,8 @@ class AddProductCataloguesPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddProductCataloguesBloc(),
       child: Scaffold(
-        appBar:
-            const AppBarGeneral(elevation: 0, title: "Thêm ProductCatalogues"),
+        appBar: AppBarGeneral(
+            elevation: 0, title: "more_product_catalog".translate(context)),
         body: AddProductCataloguesView(
           onChange: onChange,
           productCatalogues: productCatalogues,
@@ -97,7 +97,8 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
     return BlocListener<AddProductCataloguesBloc, AddProductCataloguesState>(
       listener: (context, state) {
         if (state is AddProductCataloguesSuccessState) {
-          customToast(context, "Thêm loại sản phẩm thành công");
+          customToast(
+              context, "add_successful_product_categories".translate(context));
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);
@@ -120,20 +121,20 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
               const SizedBox(height: 10),
               productCataloguesImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "Tên loại sản phẩm"),
+              descriptionLine(text: "product_category_name".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "Tên loại sản phẩm",
-                title: "Tên loại sản phẩm",
+                hint: "product_category_name".translate(context),
+                title: "product_category_name".translate(context),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "Mô tả"),
+              descriptionLine(text: "description".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "Mô tả",
-                title: "Mô tả",
+                hint: "description".translate(context),
+                title: "description".translate(context),
               ),
               const SizedBox(height: 10),
               saveButton(),

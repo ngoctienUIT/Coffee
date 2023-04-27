@@ -47,8 +47,8 @@ class OrderResponse {
   @JsonKey(name: "orderAmount")
   int? orderAmount;
 
-  @JsonKey(name: "appliedCoupons")
-  CouponResponse? appliedCoupons;
+  @JsonKey(name: "appliedCoupon")
+  CouponResponse? appliedCoupon;
 
   @JsonKey(name: "orderStatus")
   String? orderStatus;
@@ -70,7 +70,7 @@ class OrderResponse {
     this.address3,
     this.address4,
     this.orderAmount,
-    this.appliedCoupons,
+    this.appliedCoupon,
     this.orderStatus,
     this.orderCustomerNote,
   });

@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,9 +50,9 @@ class BodyProduct extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Divider(),
-              const Text(
-                "Thêm",
-                style: TextStyle(
+              Text(
+                "add".translate(context),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
