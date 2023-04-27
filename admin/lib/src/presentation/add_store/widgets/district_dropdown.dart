@@ -51,7 +51,7 @@ class DistrictDropdown extends StatelessWidget {
                 .findLevel2ByName(value as String);
             onChange(district);
           },
-          dropdownMaxHeight: 250,
+          dropdownStyleData: const DropdownStyleData(maxHeight: 250),
         ),
       ),
     );

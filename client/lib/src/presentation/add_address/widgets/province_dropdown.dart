@@ -36,7 +36,7 @@ class ProvinceDropdown extends StatelessWidget {
           onChanged: (value) {
             onChange(dvhcvn.findLevel1ByName(value as String));
           },
-          dropdownMaxHeight: 250,
+          dropdownStyleData: const DropdownStyleData(maxHeight: 250),
         ),
       ),
     );

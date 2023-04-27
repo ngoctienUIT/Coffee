@@ -1,5 +1,7 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
+import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
@@ -130,15 +132,19 @@ class _NavigatePageState extends State<NavigatePage> {
               context, "internet_connection_is_available".translate(context));
           break;
         case ConnectivityResult.none:
-        default:
           customToast(context, "no_internet_connection".translate(context));
+          break;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLogin ? const MainPage() : const LoginPage();
+    return AnimatedSplashScreen(
+      nextScreen: isLogin ? const MainPage() : const LoginPage(),
+      splash: AppImages.imgLogo,
+      splashIconSize: 250,
+    );
   }
 
   @override

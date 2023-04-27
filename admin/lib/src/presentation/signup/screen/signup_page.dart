@@ -186,7 +186,7 @@ class _SignUpViewState extends State<SignUpView> {
           borderSide: BorderSide(color: AppColors.borderColor, width: 0.7),
         ),
       ),
-      buttonHeight: 50,
+      buttonStyleData: const ButtonStyleData(height: 50),
       isExpanded: true,
       value: selectedRole,
       items: (widget.role == "ADMIN" ? ["ADMIN", "STAFF"] : ["STAFF"])

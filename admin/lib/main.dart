@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:coffee_admin/src/core/utils/constants/constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -80,7 +81,11 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: const LoginPage(),
+            home: AnimatedSplashScreen(
+              nextScreen: const LoginPage(),
+              splash: AppImages.imgLogo,
+              splashIconSize: 250,
+            ),
           );
         },
       ),

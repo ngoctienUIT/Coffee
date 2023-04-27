@@ -205,7 +205,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                 weather = value!;
                 context.read<AddRecommendBloc>().add(ChangeWeatherEvent());
               },
-              dropdownMaxHeight: 250,
+              dropdownStyleData: const DropdownStyleData(maxHeight: 250),
             ),
           ),
         );

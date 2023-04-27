@@ -96,8 +96,8 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
               context, "internet_connection_is_available".translate(context));
           break;
         case ConnectivityResult.none:
-        default:
           customToast(context, "no_internet_connection".translate(context));
+          break;
       }
     });
     SharedPreferences.getInstance().then((value) {

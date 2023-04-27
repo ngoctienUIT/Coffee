@@ -55,7 +55,7 @@ class WardDropdown extends StatelessWidget {
                 .findLevel3ByName(value as String);
             onChange(ward);
           },
-          dropdownMaxHeight: 250,
+          dropdownStyleData: const DropdownStyleData(maxHeight: 250),
         ),
       ),
     );
