@@ -94,7 +94,9 @@ class _MainPageState extends State<MainPage> {
             label: 'voucher'.translate(context),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(FontAwesomeIcons.user),
+            icon: currentTab == 3
+                ? const Icon(FontAwesomeIcons.userLarge)
+                : const Icon(FontAwesomeIcons.user),
             label: 'staff'.translate(context),
           ),
           BottomNavigationBarItem(

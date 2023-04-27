@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../activity/widgets/custom_app_bar.dart';
+import '../../main/bloc/main_bloc.dart';
+import '../../main/bloc/main_event.dart';
 import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 import '../widgets/item_loading.dart';
@@ -73,6 +75,10 @@ class _StoreViewState extends State<StoreView>
           elevation: 0,
           isPick: widget.isPick,
           title: "store".translate(context),
+          onChange: () {
+            context.read<MainBloc>().add(ChangeCartHomeEvent());
+            context.read<MainBloc>().add(ChangeCartOrderEvent());
+          },
         ),
         body: SafeArea(
           child: Column(

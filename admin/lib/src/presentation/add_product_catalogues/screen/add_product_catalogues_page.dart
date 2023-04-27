@@ -33,7 +33,7 @@ class AddProductCataloguesPage extends StatelessWidget {
       create: (context) => AddProductCataloguesBloc(),
       child: Scaffold(
         appBar: AppBarGeneral(
-            elevation: 0, title: "more_product_catalog".translate(context)),
+            elevation: 0, title: "add_product_catalog".translate(context)),
         body: AddProductCataloguesView(
           onChange: onChange,
           productCatalogues: productCatalogues,

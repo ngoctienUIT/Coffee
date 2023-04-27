@@ -147,7 +147,7 @@ class _AddProductViewState extends State<AddProductView> {
       listener: (context, state) {
         if (state is AddProductSuccessState) {
           widget.onChange();
-          customToast(context, "Thêm sản phẩm thành công");
+          customToast(context, "add_successful_products".translate(context));
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -169,7 +169,7 @@ class _AddProductViewState extends State<AddProductView> {
               const SizedBox(height: 10),
               productImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "Loại sản phẩm"),
+              descriptionLine(text: "product_catalogues".translate(context)),
               const SizedBox(height: 10),
               productCatalogue(),
               const SizedBox(height: 10),
@@ -256,7 +256,9 @@ class _AddProductViewState extends State<AddProductView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: catalogues == null ? 'Loại sản phẩm' : catalogues!.name,
+          text: catalogues == null
+              ? 'product_catalogues'.translate(context)
+              : catalogues!.name,
           onPress: () {
             Navigator.of(context).push(
               createRoute(

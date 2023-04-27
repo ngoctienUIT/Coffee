@@ -10,11 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../main/bloc/main_event.dart';
 
 class ActivityPage extends StatelessWidget {
-  const ActivityPage({Key? key, this.isAppBar = false}) : super(key: key);
+  const ActivityPage({Key? key, this.isAppBar = false, required this.check})
+      : super(key: key);
 
   final bool isAppBar;
+  final bool check;
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +29,23 @@ class ActivityPage extends StatelessWidget {
           elevation: 0,
           isPick: isAppBar,
           title: "activity".translate(context),
+          onChange: () {
+            if (check) {
+              context.read<MainBloc>().add(ChangeCartHomeEvent());
+              context.read<MainBloc>().add(ChangeCartOrderEvent());
+            }
+          },
         ),
-        body: const SafeArea(child: ActivityView()),
+        body: SafeArea(child: ActivityView(check: check)),
       ),
     );
   }
 }
 
 class ActivityView extends StatefulWidget {
-  const ActivityView({Key? key}) : super(key: key);
+  const ActivityView({Key? key, required this.check}) : super(key: key);
+
+  final bool check;
 
   @override
   State<ActivityView> createState() => _ActivityViewState();
@@ -61,38 +72,44 @@ class _ActivityViewState extends State<ActivityView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return BlocListener<MainBloc, MainState>(
-      listener: (context, state) {
-        if (state is UpdateActivityState) {
-          context
-              .read<ActivityBloc>()
-              .add(UpdateData(_activityController.index));
-        }
-      },
-      child: Column(
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            height: 50,
-            color: Colors.white,
-            child: TabBar(
-              controller: _activityController,
-              isScrollable: false,
-              labelColor: Colors.black87,
-              labelStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              unselectedLabelColor: AppColors.statusBarColor,
-              unselectedLabelStyle: const TextStyle(fontSize: 16),
-              indicatorColor: AppColors.statusBarColor,
-              tabs: [
-                Tab(text: "going_on".translate(context)),
-                Tab(text: "order_history".translate(context)),
-              ],
-            ),
+    return widget.check
+        ? BlocListener<MainBloc, MainState>(
+            listener: (context, state) {
+              if (state is UpdateActivityState) {
+                context
+                    .read<ActivityBloc>()
+                    .add(UpdateData(_activityController.index));
+              }
+            },
+            child: buildBody(),
+          )
+        : buildBody();
+  }
+
+  Widget buildBody() {
+    return Column(
+      children: [
+        const SizedBox(height: 8),
+        Container(
+          height: 50,
+          color: Colors.white,
+          child: TabBar(
+            controller: _activityController,
+            isScrollable: false,
+            labelColor: Colors.black87,
+            labelStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            unselectedLabelColor: AppColors.statusBarColor,
+            unselectedLabelStyle: const TextStyle(fontSize: 16),
+            indicatorColor: AppColors.statusBarColor,
+            tabs: [
+              Tab(text: "going_on".translate(context)),
+              Tab(text: "order_history".translate(context)),
+            ],
           ),
-          const Expanded(child: ListActivity()),
-        ],
-      ),
+        ),
+        const Expanded(child: ListActivity()),
+      ],
     );
   }
 

@@ -12,7 +12,9 @@ import '../../order/widgets/grid_item_order.dart';
 import '../../order/widgets/list_item_order.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({Key? key, required this.onChange}) : super(key: key);
+
+  final VoidCallback onChange;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -29,14 +31,16 @@ class _SearchPageState extends State<SearchPage> {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBarSearch(controller: searchFoodController),
-        body: const SearchView(),
+        body: SearchView(onChange: widget.onChange),
       ),
     );
   }
 }
 
 class SearchView extends StatefulWidget {
-  const SearchView({Key? key}) : super(key: key);
+  const SearchView({Key? key, required this.onChange}) : super(key: key);
+
+  final VoidCallback onChange;
 
   @override
   State<SearchView> createState() => _SearchViewState();
@@ -92,8 +96,14 @@ class _SearchViewState extends State<SearchView> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: check
-                  ? ListItemOrder(listProduct: state.listProduct)
-                  : GridItemOrder(listProduct: state.listProduct),
+                  ? ListItemOrder(
+                      listProduct: state.listProduct,
+                      onPress: widget.onChange,
+                    )
+                  : GridItemOrder(
+                      listProduct: state.listProduct,
+                      onPress: widget.onChange,
+                    ),
             ),
           );
         }

@@ -7,13 +7,18 @@ import '../../../core/function/route_function.dart';
 import '../../search/screen/search_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar(
-      {Key? key, this.elevation, required this.isPick, required this.title})
-      : super(key: key);
+  const CustomAppBar({
+    Key? key,
+    this.elevation,
+    required this.isPick,
+    required this.title,
+    required this.onChange,
+  }) : super(key: key);
 
   final double? elevation;
   final bool isPick;
   final String title;
+  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               IconButton(
                 onPressed: () {
                   Navigator.of(context).push(createRoute(
-                    screen: const SearchPage(),
+                    screen: SearchPage(onChange: onChange),
                     begin: const Offset(1, 0),
                   ));
                 },

@@ -47,7 +47,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               imageWidget(),
               const SizedBox(height: 15),
               Text(
-                "member".translate(context).toUpperCase(),
+                widget.user.userRole,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

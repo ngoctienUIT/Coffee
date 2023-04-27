@@ -47,7 +47,10 @@ class _MainViewState extends State<MainView> {
     screens = [
       const HomePage(key: PageStorageKey<String>('HomePage')),
       const OrderPage(key: PageStorageKey<String>('OrderPage')),
-      const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
+      const ActivityPage(
+        key: PageStorageKey<String>('ActivityPage'),
+        check: true,
+      ),
       StorePage(
         key: const PageStorageKey<String>('StorePage'),
         isPick: false,

@@ -92,7 +92,15 @@ class _HomeViewState extends State<HomeView>
     super.build(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: const CustomAppBar(elevation: 0, isPick: false, title: ""),
+      appBar: CustomAppBar(
+        elevation: 0,
+        isPick: false,
+        title: "",
+        onChange: () {
+          context.read<MainBloc>().add(ChangeCartHomeEvent());
+          context.read<MainBloc>().add(ChangeCartOrderEvent());
+        },
+      ),
       body: BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {
           if (state is HomeError) {
