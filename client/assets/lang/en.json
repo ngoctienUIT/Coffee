@@ -138,6 +138,8 @@
   "delete": "Delete",
   "update": "Update",
   "order2": "Order",
+  "do_you_want_to_remove": "Do you want to remove",
+  "from_your_cart": "from your cart?",
   "internet_connection_is_available": "Internet connection is available",
   "no_internet_connection": "No Internet connection",
   "login_expired_please_login_again": "Login expired, please login again",

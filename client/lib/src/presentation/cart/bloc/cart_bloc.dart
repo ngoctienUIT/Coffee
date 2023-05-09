@@ -18,7 +18,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     on<DeleteOrderEvent>((event, emit) => deleteOrderSpending(emit));
 
-    on<DeleteProductEvent>((event, emit) => deleteProduct(event.id, emit));
+    on<DeleteProductEvent>((event, emit) => deleteProduct(event.index, emit));
 
     on<ChangeMethod>((event, emit) => changeMethod(
         isBringBack: event.isBringBack,
@@ -191,7 +191,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future deleteProduct(String id, Emitter emit) async {
+  Future deleteProduct(int index, Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
       ApiService apiService =
@@ -203,8 +203,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await apiService.getAllOrders("Bearer $token", email, "PENDING");
       List<OrderResponse> orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
-      order.orderItems =
-          order.orderItems.where((element) => element.productId != id).toList();
+      // order.orderItems =
+      //     order.orderItems.where((element) => element.productId != id).toList();
+      order.orderItems.removeAt(index);
       if (order.orderItems.isEmpty) {
         await apiService.removePendingOrder("Bearer $token", email);
         emit(GetOrderSuccessState(null));

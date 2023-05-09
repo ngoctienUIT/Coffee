@@ -11,6 +11,7 @@ import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
+import '../bloc/main_event.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -54,7 +55,10 @@ class _MainViewState extends State<MainView> {
       StorePage(
         key: const PageStorageKey<String>('StorePage'),
         isPick: false,
-        onChange: () => toPage(1),
+        onChange: () {
+          context.read<MainBloc>().add(ChangeCartOrderEvent());
+          toPage(1);
+        },
       ),
       const OtherPage(key: PageStorageKey<String>('OtherPage')),
     ];

@@ -139,6 +139,8 @@
   "delete": "Xóa",
   "update": "Cập nhật",
   "order2": "Đơn hàng",
+  "do_you_want_to_remove": "Bạn có muốn xóa",
+  "from_your_cart": "ra khỏi giỏ hàng của bạn?",
   "internet_connection_is_available": "Đã có kết nối internet",
   "no_internet_connection": "Không có kết nối Internet",
   "login_expired_please_login_again": "Hết hạn đăng nhập vui lòng đăng nhập lại",

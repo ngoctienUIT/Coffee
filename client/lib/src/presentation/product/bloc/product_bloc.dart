@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/item_order.dart';
 import '../../../data/models/order.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/api_service.dart';
@@ -112,9 +113,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      int index = order.orderItems.indexWhere((element) =>
-          element.productId == product.id &&
-          element.selectedSize == product.sizeIndex);
+      // int index = order.orderItems.indexWhere((element) =>
+      //     element.productId == product.id &&
+      //     element.selectedSize == product.sizeIndex);
+      int index = order.orderItems
+          .indexWhere((element) => checkProduct(product, element));
       if (index == -1) {
         order.orderItems.add(product.toItemOrder());
       } else {
@@ -134,6 +137,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(AddProductToOrderErrorState(e.toString()));
       print(e);
     }
+  }
+
+  bool checkProduct(Product product1, ItemOrder product2) {
+    if (product1.id != product2.productId) return false;
+    if (product1.sizeIndex != product2.selectedSize) return false;
+    if (product1.chooseTopping != null) {
+      for (int i = 0; i < product1.chooseTopping!.length; i++) {
+        if (product1.chooseTopping![i] &&
+            !product2.toppingIds
+                .contains(product1.toppingOptions![i].toppingId)) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   Future updateProductOrder(int index, Product product, Emitter emit) async {

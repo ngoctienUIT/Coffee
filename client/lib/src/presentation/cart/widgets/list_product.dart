@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
 import 'item_product.dart';
@@ -78,10 +79,14 @@ class ListProduct extends StatelessWidget {
                     extentRatio: 0.15,
                     children: [
                       SlidableAction(
-                        onPressed: (context) {
-                          context
-                              .read<CartBloc>()
-                              .add(DeleteProductEvent(product.id!));
+                        onPressed: (_) {
+                          _showAlertDialog(
+                            context,
+                            product.name,
+                            () => context
+                                .read<CartBloc>()
+                                .add(DeleteProductEvent(index)),
+                          );
                         },
                         // backgroundColor: const Color.fromRGBO(231, 231, 231, 1),
                         foregroundColor: AppColors.statusBarColor,
@@ -101,6 +106,26 @@ class ListProduct extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future _showAlertDialog(
+      BuildContext context, String text, VoidCallback onPress) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: "confirm".translate(context),
+          content:
+              "${"do_you_want_to_remove".translate(context)} $text ${"from_your_cart".translate(context)}",
+          onOK: () {
+            onPress();
+            Navigator.pop(context);
+          },
+        );
+      },
     );
   }
 

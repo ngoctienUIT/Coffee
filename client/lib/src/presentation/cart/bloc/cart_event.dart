@@ -7,9 +7,9 @@ class GetOrderSpending extends CartEvent {}
 class DeleteOrderEvent extends CartEvent {}
 
 class DeleteProductEvent extends CartEvent {
-  String id;
+  int index;
 
-  DeleteProductEvent(this.id);
+  DeleteProductEvent(this.index);
 }
 
 class AttachCouponToOrder extends CartEvent {
