@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/topping_bloc.dart';
 import '../bloc/topping_event.dart';
@@ -147,7 +148,6 @@ class _ToppingViewState extends State<ToppingView> {
       padding: EdgeInsets.fromLTRB(10, 10, 10, widget.onPick == null ? 60 : 10),
       itemCount: listTopping.length,
       itemBuilder: (context, index) {
-        final myContext = context;
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: widget.onPick != null
@@ -174,12 +174,12 @@ class _ToppingViewState extends State<ToppingView> {
                     extentRatio: 0.35,
                     children: [
                       SlidableAction(
-                        onPressed: (context) {
+                        onPressed: (_) {
                           Navigator.of(context).push(createRoute(
                             screen: AddToppingPage(
                               topping: listTopping[index],
                               onChange: () {
-                                myContext.read<ToppingBloc>().add(UpdateData());
+                                context.read<ToppingBloc>().add(UpdateData());
                               },
                             ),
                             begin: const Offset(0, 1),
@@ -191,10 +191,11 @@ class _ToppingViewState extends State<ToppingView> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       SlidableAction(
-                        onPressed: (context) {
-                          myContext
-                              .read<ToppingBloc>()
-                              .add(DeleteEvent(listTopping[index].toppingId!));
+                        onPressed: (_) {
+                          _showAlertDialog(context, () {
+                            context.read<ToppingBloc>().add(
+                                DeleteEvent(listTopping[index].toppingId!));
+                          });
                         },
                         backgroundColor: AppColors.statusBarColor,
                         foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
@@ -307,6 +308,22 @@ class _ToppingViewState extends State<ToppingView> {
           ],
         ),
       ),
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'remove_topping'.translate(context),
+          content:
+              'are_you_sure_you_want_to_remove_this_topping'.translate(context),
+          onOK: onOK,
+        );
+      },
     );
   }
 }

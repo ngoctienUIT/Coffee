@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../profile/screen/profile_page.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
@@ -61,9 +63,11 @@ class BodyAccount extends StatelessWidget {
                         extentRatio: 0.2,
                         children: [
                           SlidableAction(
-                            onPressed: (context) {
-                              context.read<AccountBloc>().add(DeleteEvent(
-                                  listAccount[index].id, indexState));
+                            onPressed: (_) {
+                              _showAlertDialog(context, () {
+                                context.read<AccountBloc>().add(DeleteEvent(
+                                    listAccount[index].id, indexState));
+                              });
                             },
                             backgroundColor: AppColors.statusBarColor,
                             foregroundColor:
@@ -80,6 +84,22 @@ class BodyAccount extends StatelessWidget {
           );
         }
         return listAccountLoading();
+      },
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'delete_account'.translate(context),
+          content:
+              'are_you_sure_you_want_to_delete_this_account'.translate(context),
+          onOK: onOK,
+        );
       },
     );
   }

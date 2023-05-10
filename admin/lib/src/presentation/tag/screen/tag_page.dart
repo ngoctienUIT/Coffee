@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/tag.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -139,7 +140,6 @@ class _TagViewState extends State<TagView> {
       shrinkWrap: widget.onPick == null ? false : true,
       itemCount: listTag.length,
       itemBuilder: (context, index) {
-        final myContext = context;
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
           child: widget.onPick != null
@@ -166,12 +166,12 @@ class _TagViewState extends State<TagView> {
                     extentRatio: 0.3,
                     children: [
                       SlidableAction(
-                        onPressed: (context) {
+                        onPressed: (_) {
                           Navigator.of(context).push(createRoute(
                             screen: AddTagPage(
                               tag: listTag[index],
                               onChange: () {
-                                myContext.read<TagBloc>().add(UpdateData());
+                                context.read<TagBloc>().add(UpdateData());
                               },
                             ),
                             begin: const Offset(0, 1),
@@ -183,10 +183,12 @@ class _TagViewState extends State<TagView> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       SlidableAction(
-                        onPressed: (context) {
-                          myContext
-                              .read<TagBloc>()
-                              .add(DeleteEvent(listTag[index].tagId!));
+                        onPressed: (_) {
+                          _showAlertDialog(context, () {
+                            context
+                                .read<TagBloc>()
+                                .add(DeleteEvent(listTag[index].tagId!));
+                          });
                         },
                         backgroundColor: AppColors.statusBarColor,
                         foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
@@ -289,6 +291,22 @@ class _TagViewState extends State<TagView> {
           ],
         ),
       ),
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'remove_tag'.translate(context),
+          content:
+              'are_you_sure_you_want_to_remove_this_tag'.translate(context),
+          onOK: onOK,
+        );
+      },
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 
@@ -76,21 +77,18 @@ class RecommendView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 70),
               itemCount: state.listRecommend.length,
               itemBuilder: (context, index) {
-                final myContext = context;
                 return Slidable(
                   endActionPane: ActionPane(
                     motion: const ScrollMotion(),
                     extentRatio: 0.35,
                     children: [
                       SlidableAction(
-                        onPressed: (context) {
+                        onPressed: (_) {
                           Navigator.of(context).push(createRoute(
                             screen: AddRecommendPage(
                               recommend: state.listRecommend[index],
                               onChange: () {
-                                myContext
-                                    .read<RecommendBloc>()
-                                    .add(UpdateData());
+                                context.read<RecommendBloc>().add(UpdateData());
                               },
                             ),
                             begin: const Offset(0, 1),
@@ -102,10 +100,11 @@ class RecommendView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                       ),
                       SlidableAction(
-                        onPressed: (context) {
-                          myContext
-                              .read<RecommendBloc>()
-                              .add(DeleteEvent(state.listRecommend[index].id!));
+                        onPressed: (_) {
+                          _showAlertDialog(context, () {
+                            context.read<RecommendBloc>().add(
+                                DeleteEvent(state.listRecommend[index].id!));
+                          });
                         },
                         backgroundColor: AppColors.statusBarColor,
                         foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
@@ -276,6 +275,22 @@ class RecommendView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'remove_recommend'.translate(context),
+          content: 'are_you_sure_you_want_to_delete_this_recommend'
+              .translate(context),
+          onOK: onOK,
+        );
+      },
     );
   }
 }

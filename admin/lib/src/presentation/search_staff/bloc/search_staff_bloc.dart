@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
 import 'search_staff_event.dart';
@@ -15,8 +16,15 @@ class SearchStaffBloc extends Bloc<SearchStaffEvent, SearchStaffState> {
       emit(SearchLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString("username") ?? "admin";
       final response = await apiService.searchUserByName(query);
-      emit(SearchLoaded(response.data));
+      final listAccount = response.data
+          .where((element) =>
+              element.email != email &&
+              (element.userRole == "ADMIN" || element.userRole == "STAFF"))
+          .toList();
+      emit(SearchLoaded(listAccount));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 import '../bloc/product_catalogues_event.dart';
@@ -88,7 +89,6 @@ class ProductCataloguesView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 60),
               itemCount: listProductCatalogues.length,
               itemBuilder: (context, index) {
-                final myContext = context;
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
@@ -106,14 +106,14 @@ class ProductCataloguesView extends StatelessWidget {
                             extentRatio: 0.32,
                             children: [
                               SlidableAction(
-                                onPressed: (context) {
+                                onPressed: (_) {
                                   Navigator.of(context).push(createRoute(
                                     screen: AddProductCataloguesPage(
                                       productCatalogues:
                                           ProductCatalogues.fromResponse(
                                               listProductCatalogues[index]),
                                       onChange: () {
-                                        myContext
+                                        context
                                             .read<ProductCataloguesBloc>()
                                             .add(FetchData());
                                       },
@@ -128,10 +128,12 @@ class ProductCataloguesView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               SlidableAction(
-                                onPressed: (context) {
-                                  context.read<ProductCataloguesBloc>().add(
-                                      DeleteEvent(
-                                          listProductCatalogues[index].id));
+                                onPressed: (_) {
+                                  _showAlertDialog(context, () {
+                                    context.read<ProductCataloguesBloc>().add(
+                                        DeleteEvent(
+                                            listProductCatalogues[index].id));
+                                  });
                                 },
                                 backgroundColor: AppColors.statusBarColor,
                                 foregroundColor:
@@ -241,6 +243,22 @@ class ProductCataloguesView extends StatelessWidget {
               )
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'delete_product_catalogues'.translate(context),
+          content: 'are_you_sure_you_want_to_delete_this_product_category'
+              .translate(context),
+          onOK: onOK,
         );
       },
     );

@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../domain/repositories/store/store_response.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -133,10 +134,12 @@ class _StoreViewState extends State<StoreView> {
                       extentRatio: 0.2,
                       children: [
                         SlidableAction(
-                          onPressed: (context) {
-                            context.read<StoreBloc>().add(DeleteEvent(
-                                state.listStore[index].storeId,
-                                searchAddressController.text));
+                          onPressed: (_) {
+                            _showAlertDialog(context, () {
+                              context.read<StoreBloc>().add(DeleteEvent(
+                                  state.listStore[index].storeId,
+                                  searchAddressController.text));
+                            });
                           },
                           backgroundColor: AppColors.statusBarColor,
                           foregroundColor:
@@ -270,6 +273,22 @@ class _StoreViewState extends State<StoreView> {
         const SizedBox(width: 8),
         Text("${store.openingHour} - ${store.closingHour}"),
       ],
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'delete_store'.translate(context),
+          content:
+              'are_you_sure_you_want_to_delete_this_store'.translate(context),
+          onOK: onOK,
+        );
+      },
     );
   }
 }

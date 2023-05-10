@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
 import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';
@@ -98,7 +99,7 @@ class _CouponViewState extends State<CouponView>
                       extentRatio: 0.35,
                       children: [
                         SlidableAction(
-                          onPressed: (context) {
+                          onPressed: (_) {
                             Navigator.of(context).push(createRoute(
                               screen: AddCouponPage(
                                 onChange: () {
@@ -116,10 +117,12 @@ class _CouponViewState extends State<CouponView>
                           borderRadius: BorderRadius.circular(15),
                         ),
                         SlidableAction(
-                          onPressed: (context) {
-                            context
-                                .read<CouponBloc>()
-                                .add(DeleteEvent(state.listCoupon[index].id));
+                          onPressed: (_) {
+                            _showAlertDialog(context, () {
+                              context
+                                  .read<CouponBloc>()
+                                  .add(DeleteEvent(state.listCoupon[index].id));
+                            });
                           },
                           backgroundColor: AppColors.statusBarColor,
                           foregroundColor:
@@ -218,6 +221,22 @@ class _CouponViewState extends State<CouponView>
           )
         ],
       ),
+    );
+  }
+
+  Future _showAlertDialog(BuildContext context, VoidCallback onOK) async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return customAlertDialog(
+          context: context,
+          title: 'delete_voucher'.translate(context),
+          content:
+              'are_you_sure_you_want_to_delete_this_voucher'.translate(context),
+          onOK: onOK,
+        );
+      },
     );
   }
 

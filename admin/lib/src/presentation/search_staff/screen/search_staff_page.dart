@@ -14,26 +14,14 @@ import '../bloc/search_staff_event.dart';
 import '../bloc/search_staff_state.dart';
 import '../widgets/app_bar_search.dart';
 
-class SearchStaffPage extends StatefulWidget {
+class SearchStaffPage extends StatelessWidget {
   const SearchStaffPage({Key? key}) : super(key: key);
-
-  @override
-  State<SearchStaffPage> createState() => _SearchStaffPageState();
-}
-
-class _SearchStaffPageState extends State<SearchStaffPage> {
-  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          SearchStaffBloc()..add(SearchStaff(searchController.text)),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: AppBarSearch(controller: searchController),
-        body: const SearchStaffView(),
-      ),
+      create: (context) => SearchStaffBloc()..add(SearchStaff("")),
+      child: const SearchStaffView(),
     );
   }
 }
@@ -46,71 +34,76 @@ class SearchStaffView extends StatefulWidget {
 }
 
 class _SearchStaffViewState extends State<SearchStaffView> {
+  TextEditingController searchController = TextEditingController();
   bool check = true;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SearchStaffBloc, SearchStaffState>(
-      listener: (context, state) {
-        if (state is SearchError) {
-          customToast(context, state.message.toString());
-        }
-      },
-      buildWhen: (previous, current) => previous != current,
-      builder: (context, state) {
-        print(state);
-        if (state is SearchLoaded) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              // context
-              //     .read<SearchStaffBloc>()
-              //     .add(SearchStaffEvent(sea));
-            },
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  itemCount: state.listUser.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(createRoute(
-                          screen: ProfilePage(
-                            user: state.listUser[index],
-                            onChange: () {
-                              // context
-                              //     .read<SearchStaffBloc>()
-                              //     .add(SearchStaffEvent(sea));
-                            },
-                          ),
-                          begin: const Offset(1, 0),
-                        ));
-                      },
-                      child: Slidable(
-                          endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            extentRatio: 0.2,
-                            children: [
-                              SlidableAction(
-                                onPressed: (context) {},
-                                backgroundColor: AppColors.statusBarColor,
-                                foregroundColor:
-                                    const Color.fromRGBO(231, 231, 231, 1),
-                                icon: FontAwesomeIcons.trash,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ],
-                          ),
-                          child: ItemAccount(user: state.listUser[index])),
-                    );
-                  },
-                )),
-          );
-        }
-        return listAccountLoading();
-      },
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: AppBarSearch(controller: searchController),
+      body: BlocConsumer<SearchStaffBloc, SearchStaffState>(
+        listener: (context, state) {
+          if (state is SearchError) {
+            customToast(context, state.message.toString());
+          }
+        },
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          print(state);
+          if (state is SearchLoaded) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context
+                    .read<SearchStaffBloc>()
+                    .add(SearchStaff(searchController.text));
+              },
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: ListView.builder(
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    itemCount: state.listUser.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(createRoute(
+                            screen: ProfilePage(
+                              user: state.listUser[index],
+                              onChange: () {
+                                context
+                                    .read<SearchStaffBloc>()
+                                    .add(SearchStaff(searchController.text));
+                              },
+                            ),
+                            begin: const Offset(1, 0),
+                          ));
+                        },
+                        child: Slidable(
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              extentRatio: 0.2,
+                              children: [
+                                SlidableAction(
+                                  onPressed: (_) {},
+                                  backgroundColor: AppColors.statusBarColor,
+                                  foregroundColor:
+                                      const Color.fromRGBO(231, 231, 231, 1),
+                                  icon: FontAwesomeIcons.trash,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ],
+                            ),
+                            child: ItemAccount(user: state.listUser[index])),
+                      );
+                    },
+                  )),
+            );
+          }
+          return listAccountLoading();
+        },
+      ),
     );
   }
 }

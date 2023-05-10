@@ -10,26 +10,14 @@ import '../bloc/search_event.dart';
 import '../bloc/search_state.dart';
 import '../widgets/app_bar_search.dart';
 
-class SearchPage extends StatefulWidget {
+class SearchPage extends StatelessWidget {
   const SearchPage({Key? key}) : super(key: key);
-
-  @override
-  State<SearchPage> createState() => _SearchPageState();
-}
-
-class _SearchPageState extends State<SearchPage> {
-  TextEditingController searchFoodController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          SearchBloc()..add(SearchProduct(query: searchFoodController.text)),
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: AppBarSearch(controller: searchFoodController),
-        body: const SearchView(),
-      ),
+      create: (context) => SearchBloc()..add(SearchProduct(query: "")),
+      child: const SearchView(),
     );
   }
 }
@@ -42,30 +30,42 @@ class SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<SearchView> {
+  TextEditingController searchFoodController = TextEditingController();
   bool check = true;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SearchBloc, SearchState>(
-      listener: (context, state) {
-        if (state is SearchError) {
-          customToast(context, state.message.toString());
-        }
-      },
-      buildWhen: (previous, current) => previous != current,
-      builder: (context, state) {
-        print(state);
-        if (state is SearchLoaded) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ListItemProduct(
-              listProduct: state.listProduct,
-              onDelete: (id) {},
-            ),
-          );
-        }
-        return listProductLoading();
-      },
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: AppBarSearch(controller: searchFoodController),
+      body: BlocConsumer<SearchBloc, SearchState>(
+        listener: (context, state) {
+          if (state is SearchError) {
+            customToast(context, state.message.toString());
+          }
+        },
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          print(state);
+          if (state is SearchLoaded) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  context
+                      .read<SearchBloc>()
+                      .add(SearchProduct(query: searchFoodController.text));
+                },
+                child: ListItemProduct(
+                  listProduct: state.listProduct,
+                  onDelete: (id) {},
+                ),
+              ),
+            );
+          }
+          return listProductLoading();
+        },
+      ),
     );
   }
 }
