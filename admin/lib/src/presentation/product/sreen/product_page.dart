@@ -36,9 +36,9 @@ class _ProductViewState extends State<ProductView>
     super.build(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      body: SafeArea(
+      body: const SafeArea(
         child: Column(
-          children: const [
+          children: [
             HeaderProductPage(),
             SizedBox(height: 20),
             Expanded(child: BodyProductPage()),

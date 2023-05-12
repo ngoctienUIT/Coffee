@@ -31,7 +31,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.signup(user.toJson());
+      await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
     } on DioError catch (e) {
       String error =

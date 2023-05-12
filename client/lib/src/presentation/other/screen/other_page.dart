@@ -21,11 +21,11 @@ class _OtherPageState extends State<OtherPage>
     super.build(context);
     return BlocProvider(
       create: (context) => OtherBloc()..add(FetchData()),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: AppColors.statusBarColor,
         body: SafeArea(
           child: Column(
-            children: const [
+            children: [
               HeaderOtherPage(),
               Expanded(child: BodyOtherPage()),
             ],

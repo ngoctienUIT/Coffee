@@ -21,11 +21,11 @@ class _AccountManagementPageState extends State<AccountManagementPage>
     super.build(context);
     return BlocProvider(
       create: (context) => AccountBloc()..add(FetchData()),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: AppColors.bgColor,
         body: SafeArea(
           child: Column(
-            children: const [
+            children: [
               HeaderAccountPage(),
               SizedBox(height: 10),
               Expanded(child: BodyAccount()),

@@ -14,17 +14,18 @@ class OrderPage extends StatefulWidget {
   State<OrderPage> createState() => _OrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> with AutomaticKeepAliveClientMixin {
+class _OrderPageState extends State<OrderPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return BlocProvider(
       create: (context) => OrderBloc()..add(FetchData()),
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: AppColors.bgColor,
         body: SafeArea(
           child: Column(
-            children: const [
+            children: [
               HeaderOrderPage(),
               SizedBox(height: 10),
               Expanded(child: BodyOrder()),

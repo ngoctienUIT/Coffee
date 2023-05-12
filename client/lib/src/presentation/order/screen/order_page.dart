@@ -41,11 +41,11 @@ class _OrderPageState extends State<OrderPage>
             context.read<MainBloc>().add(ChangeCartHomeEvent());
           }
         },
-        child: Scaffold(
+        child: const Scaffold(
           backgroundColor: AppColors.bgColor,
           body: SafeArea(
             child: Column(
-              children: const [
+              children: [
                 HeaderOrderPage(),
                 SizedBox(height: 20),
                 Expanded(child: BodyOrderPage()),
@@ -53,7 +53,7 @@ class _OrderPageState extends State<OrderPage>
               ],
             ),
           ),
-          bottomSheet: const BottomSheetOrder(),
+          bottomSheet: BottomSheetOrder(),
         ),
       ),
     );
