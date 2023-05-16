@@ -36,7 +36,10 @@ AlertDialog customAlertDialog({
             ),
             const Spacer(),
             TextButton(
-              onPressed: onOK,
+              onPressed: () {
+                onOK.call();
+                Navigator.pop(context);
+              },
               child: Text(
                 'ok'.translate(context),
                 style: const TextStyle(

@@ -28,8 +28,3 @@ class RefreshLoaded extends ProductState {
 
   RefreshLoaded(this.index, this.listProduct);
 }
-
-class RefreshError extends ProductState {
-  final String? message;
-  RefreshError(this.message);
-}

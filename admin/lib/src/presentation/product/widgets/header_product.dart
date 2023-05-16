@@ -75,7 +75,7 @@ class _HeaderProductPageState extends State<HeaderProductPage>
           _productController.addListener(() {
             context
                 .read<ProductBloc>()
-                .add(RefreshData(_productController.index));
+                .add(UpdateData(_productController.index));
           });
           return SizedBox(
             height: 115,

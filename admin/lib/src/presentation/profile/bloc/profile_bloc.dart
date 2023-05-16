@@ -45,10 +45,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(SaveProfileError(error));
+      emit(ProfileError(error));
       print(error);
     } catch (e) {
-      emit(SaveProfileError(e.toString()));
+      emit(ProfileError(e.toString()));
       print(e);
     }
   }
@@ -68,10 +68,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(DeleteErrorState(error));
+      emit(ProfileError(error));
       print(error);
     } catch (e) {
-      emit(DeleteErrorState(e.toString()));
+      emit(ProfileError(e.toString()));
       print(e);
     }
   }

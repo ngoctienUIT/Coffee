@@ -348,11 +348,13 @@ class _AddCouponViewState extends State<AddCouponView> {
             text: "save".translate(context),
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
-              double rate = double.parse(rateController.text);
               if (_formKey.currentState!.validate()) {
-                if ((rate > 1 || rate == 0) && isRate) {
-                  customToast(context, "invalid_rate".translate(context));
-                  return;
+                if (isRate) {
+                  double rate = double.parse(rateController.text);
+                  if (rate > 1 || rate == 0) {
+                    customToast(context, "invalid_rate".translate(context));
+                    return;
+                  }
                 }
                 if (widget.coupon == null) {
                   context.read<AddCouponBloc>().add(CreateCouponEvent(Coupon(

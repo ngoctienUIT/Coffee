@@ -55,9 +55,8 @@ class ProductCataloguesView extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(createRoute(
             screen: AddProductCataloguesPage(
-              onChange: () {
-                context.read<ProductCataloguesBloc>().add(FetchData());
-              },
+              onChange: () =>
+                  context.read<ProductCataloguesBloc>().add(UpdateData()),
             ),
             begin: const Offset(0, 1),
           ));
@@ -115,7 +114,7 @@ class ProductCataloguesView extends StatelessWidget {
                                       onChange: () {
                                         context
                                             .read<ProductCataloguesBloc>()
-                                            .add(FetchData());
+                                            .add(UpdateData());
                                       },
                                     ),
                                     begin: const Offset(0, 1),

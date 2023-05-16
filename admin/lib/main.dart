@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Coffee Admin',
             theme: ThemeData(
+              // useMaterial3: true,
               fontFamily: "Roboto",
               dialogTheme: DialogTheme(
                 shape: RoundedRectangleBorder(

@@ -27,9 +27,6 @@ class _BodyProductPageState extends State<BodyProductPage> {
         if (state is ProductError) {
           customToast(context, state.message.toString());
         }
-        if (state is RefreshError) {
-          customToast(context, state.message.toString());
-        }
       },
       child: Column(
         children: [header(), const SizedBox(height: 10), body()],

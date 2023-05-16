@@ -52,7 +52,7 @@ class _ProductViewState extends State<ProductView>
             screen: AddProductPage(
               onChange: () {
                 int index = 0;
-                if (state is RefreshLoaded) {
+                if (state is ProductLoaded) {
                   index = state.index;
                 } else {
                   index = 0;

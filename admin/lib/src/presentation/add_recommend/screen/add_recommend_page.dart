@@ -334,6 +334,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                 context
                     .read<AddRecommendBloc>()
                     .add(UpdateRecommendEvent(Recommend(
+                      id: widget.recommend!.id,
                       weather: weather,
                       tags: listTag,
                       minTemp: minTempController.text.isEmpty

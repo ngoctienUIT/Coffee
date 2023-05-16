@@ -48,18 +48,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(RefreshLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProductsFromProductCatalogueID(
-          listProductCatalogues[index].id);
-      final listProduct = response.data;
-
-      emit(RefreshLoaded(index, listProduct));
+      final productResponse =
+          await apiService.getAllProductsFromProductCatalogueID(
+              listProductCatalogues[index].id);
+      final listProduct = productResponse.data;
+      final response = await apiService.getAllProductCatalogues();
+      if (response.data.length != listProductCatalogues.length) {
+        listProductCatalogues = response.data;
+      }
+      emit(ProductLoaded(index, listProduct, listProductCatalogues));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(RefreshError(error));
+      emit(ProductError(error));
       print(error);
     } catch (e) {
-      emit(RefreshError(e.toString()));
+      emit(ProductError(e.toString()));
       print(e);
     }
   }
@@ -76,38 +80,37 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(RefreshError(error));
+      emit(ProductError(error));
       print(error);
     } catch (e) {
-      emit(RefreshError(e.toString()));
+      emit(ProductError(e.toString()));
       print(e);
     }
   }
 
   Future deleteProduct(String id, int index, Emitter emit) async {
     try {
-      emit(RefreshLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       String token = prefs.getString("token") ?? "";
-      await apiService.removeProductByID('Bearer $token', id);
       final catalogueResponse = await apiService
           .getProductCatalogueByID(listProductCatalogues[index].id);
       List<String> list = catalogueResponse.data.associatedProductIds!;
       list.remove(id);
       await apiService.updateProductIdsProductCatalogues(
           'Bearer $token', list, listProductCatalogues[index].id);
+      await apiService.removeProductByID('Bearer $token', id);
       final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
       emit(RefreshLoaded(index, response.data));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(RefreshError(error));
+      emit(ProductError(error));
       print(error);
     } catch (e) {
-      emit(RefreshError(e.toString()));
+      emit(ProductError(e.toString()));
       print(e);
     }
   }

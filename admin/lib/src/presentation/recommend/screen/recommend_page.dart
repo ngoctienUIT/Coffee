@@ -45,7 +45,7 @@ class RecommendView extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(createRoute(
             screen: AddRecommendPage(
-              onChange: () {},
+              onChange: () => context.read<RecommendBloc>().add(UpdateData()),
             ),
             begin: const Offset(0, 1),
           ));

@@ -71,6 +71,7 @@ class _TagViewState extends State<TagView> {
   Widget buildBody() {
     return BlocConsumer<TagBloc, TagState>(
       listener: (context, state) {
+        print(state);
         if (state is TagError) {
           customToast(context, state.message.toString());
         }

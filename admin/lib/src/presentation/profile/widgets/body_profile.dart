@@ -64,7 +64,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         if (state is SaveProfileLoading) {
           loadingAnimation(context);
         }
-        if (state is SaveProfileError) {
+        if (state is ProfileError) {
           customToast(context, state.message.toString());
           Navigator.pop(context);
         }

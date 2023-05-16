@@ -34,7 +34,6 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
 
   Future deleteCoupon(String id, Emitter emit) async {
     try {
-      emit(CouponLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
