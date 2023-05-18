@@ -1,10 +1,16 @@
+import 'package:coffee/src/data/models/preferences_model.dart';
+
 abstract class LoginState {}
 
 class InitState extends LoginState {}
 
 class LoginLoadingState extends LoginState {}
 
-class LoginSuccessState extends LoginState {}
+class LoginSuccessState extends LoginState {
+  PreferencesModel preferencesModel;
+
+  LoginSuccessState(this.preferencesModel);
+}
 
 class LoginErrorState extends LoginState {
   String status;
@@ -13,7 +19,11 @@ class LoginErrorState extends LoginState {
 
 class LoginGoogleLoadingState extends LoginState {}
 
-class LoginGoogleSuccessState extends LoginState {}
+class LoginGoogleSuccessState extends LoginState {
+  PreferencesModel preferencesModel;
+
+  LoginGoogleSuccessState(this.preferencesModel);
+}
 
 class LoginGoogleErrorState extends LoginState {
   String status;

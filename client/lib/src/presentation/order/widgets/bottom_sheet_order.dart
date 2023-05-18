@@ -71,8 +71,10 @@ class BottomSheetOrder extends StatelessWidget {
                       onEditAtTable: () {
                         Navigator.of(context).push(createRoute(
                           screen: StorePage(
+                            check: false,
                             isPick: true,
                             onPress: (store) {
+                              context.read<MainBloc>().add(ChangeStoreEvent());
                               SharedPreferences.getInstance().then((value) {
                                 value.setString("storeID", store.storeId);
                                 value.setBool("isBringBack", false);
@@ -151,12 +153,17 @@ class BottomSheetOrder extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(createRoute(
-                      screen: CartPage(onChange: (status) {
-                        context.read<OrderBloc>().add(AddProductToCart());
-                        if (status == OrderStatus.placed) {
-                          context.read<MainBloc>().add(UpdateActivityEvent());
-                        }
-                      }),
+                      screen: CartPage(
+                        onChangeStore: () {
+                          context.read<MainBloc>().add(ChangeStoreEvent());
+                        },
+                        onChange: (status) {
+                          context.read<OrderBloc>().add(AddProductToCart());
+                          if (status == OrderStatus.placed) {
+                            context.read<MainBloc>().add(UpdateActivityEvent());
+                          }
+                        },
+                      ),
                       begin: const Offset(1, 0),
                     ));
                   },
@@ -268,7 +275,7 @@ ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                 child: itemBottomSheet(
                   title: "bring_back".translate(context),
                   content: address.isEmpty
-                      ? "please_select_store".translate(context)
+                      ? "please_select_the_address".translate(context)
                       : address,
                   image: AppImages.imgLogo,
                   borderColor: isBringBack

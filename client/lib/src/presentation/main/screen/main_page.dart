@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/language/bloc/language_cubit.dart';
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
@@ -14,12 +15,14 @@ import '../../home/screen/home_page.dart';
 import '../bloc/main_event.dart';
 
 class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key, required this.preferencesModel}) : super(key: key);
+
+  final PreferencesModel preferencesModel;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MainBloc(),
+      create: (context) => MainBloc(preferencesModel),
       child: const MainView(),
     );
   }
@@ -53,6 +56,7 @@ class _MainViewState extends State<MainView> {
         check: true,
       ),
       StorePage(
+        check: true,
         key: const PageStorageKey<String>('StorePage'),
         isPick: false,
         onChange: () {

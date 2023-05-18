@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
 import 'package:coffee/src/presentation/main/bloc/main_state.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<MainBloc>().preferencesModel;
     return BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc()..add(FetchData()),
+      create: (context) => HomeBloc(preferencesModel)..add(FetchData()),
       child: const HomeView(),
     );
   }
@@ -146,6 +149,9 @@ class _HomeViewState extends State<HomeView>
         onPressed: () {
           Navigator.of(context).push(createRoute(
             screen: CartPage(
+              onChangeStore: () {
+                context.read<MainBloc>().add(ChangeStoreEvent());
+              },
               onChange: (status) {
                 context.read<HomeBloc>().add(AddProductToCart());
                 if (status == OrderStatus.placed) {

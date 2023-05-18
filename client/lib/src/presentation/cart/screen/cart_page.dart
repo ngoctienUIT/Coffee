@@ -21,9 +21,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({Key? key, required this.onChange}) : super(key: key);
+  const CartPage({
+    Key? key,
+    required this.onChange,
+    required this.onChangeStore,
+  }) : super(key: key);
 
   final Function(OrderStatus? status) onChange;
+  final VoidCallback onChangeStore;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -34,15 +39,23 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CartBloc()..add(GetOrderSpending()),
-      child: CartView(onChange: widget.onChange),
+      child: CartView(
+        onChange: widget.onChange,
+        onChangeStore: widget.onChangeStore,
+      ),
     );
   }
 }
 
 class CartView extends StatelessWidget {
-  const CartView({Key? key, required this.onChange}) : super(key: key);
+  const CartView({
+    Key? key,
+    required this.onChange,
+    required this.onChangeStore,
+  }) : super(key: key);
 
   final Function(OrderStatus? status) onChange;
+  final VoidCallback onChangeStore;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +80,8 @@ class CartView extends StatelessWidget {
         if (state is GetOrderLoadingState) {
           loadingAnimation(context);
         }
-        if (state is AddNoteError) {
-          customToast(context, state.error);
+        if (state is ChangeStoreState) {
+          onChangeStore();
         }
       },
       buildWhen: (previous, current) => current is GetOrderSuccessState,

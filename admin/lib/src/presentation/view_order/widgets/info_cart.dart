@@ -2,11 +2,11 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../domain/entities/user/user_response.dart';
 import '../../../domain/repositories/order/order_response.dart';
-import 'item_info.dart';
 
 class InfoCart extends StatelessWidget {
   const InfoCart({
@@ -75,7 +75,14 @@ class InfoCart extends StatelessWidget {
         itemInfo(Icons.person,
             user != null ? user!.displayName : "Người dùng Coffee"),
         const Divider(),
-        itemInfo(Icons.phone, user != null ? user!.phoneNumber : ""),
+        GestureDetector(
+          onTap: () async {
+            if (await canLaunchUrlString('tel:${user!.phoneNumber}')) {
+              await launchUrlString('tel:${user!.phoneNumber}');
+            }
+          },
+          child: itemInfo(Icons.phone, user != null ? user!.phoneNumber : ""),
+        ),
       ],
     );
   }
@@ -112,7 +119,6 @@ class InfoCart extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios_rounded)
         ],
       ),
     );
@@ -122,6 +128,19 @@ class InfoCart extends StatelessWidget {
     return itemInfo(
       Icons.location_on,
       "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
+    );
+  }
+
+  Widget itemInfo(IconData icon, String content) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Icon(icon),
+          const SizedBox(width: 5),
+          Expanded(child: Text(content)),
+        ],
+      ),
     );
   }
 }

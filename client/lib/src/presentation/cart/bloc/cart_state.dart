@@ -6,11 +6,7 @@ abstract class CartState {}
 
 class InitState extends CartState {}
 
-class AddNoteError extends CartState {
-  String error;
-
-  AddNoteError(this.error);
-}
+class ChangeStoreState extends CartState {}
 
 class GetOrderSuccessState extends CartState {
   OrderResponse? order;

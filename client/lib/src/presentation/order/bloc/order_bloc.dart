@@ -7,13 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/order.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   List<ProductCataloguesResponse> listProductCatalogues = [];
+  PreferencesModel preferencesModel;
 
-  OrderBloc() : super(InitState()) {
+  OrderBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => fetchData(emit));
 
     on<RefreshData>((event, emit) => refreshData(event.index, emit));
@@ -33,14 +35,18 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final productResponse = await apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
       final listProduct = productResponse.data;
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
-      String storeID = prefs.getString("storeID") ?? "";
-      String address = prefs.getString("address") ?? "";
-      bool isBringBack = prefs.getBool("isBringBack") ?? false;
-      final orderResponse =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      // final prefs = await SharedPreferences.getInstance();
+      // String token = prefs.getString("token") ?? "";
+      // String email = prefs.getString("username") ?? "";
+      // String storeID = prefs.getString("storeID") ?? "";
+      // String address = prefs.getString("address") ?? "";
+      // bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      String storeID = preferencesModel.storeID ?? "";
+      final orderResponse = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.username ?? "",
+        "PENDING",
+      );
       final store =
           storeID.isEmpty ? null : await apiService.getStoreByID(storeID);
 
@@ -50,8 +56,8 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         listProductCatalogues: listProductCatalogues,
         order: orderResponse.data.isEmpty ? null : orderResponse.data[0],
         store: storeID.isEmpty ? null : store!.data,
-        isBringBack: isBringBack,
-        address: address,
+        isBringBack: preferencesModel.isBringBack,
+        address: preferencesModel.address ?? "",
       ));
     } on DioError catch (e) {
       String error =
@@ -89,15 +95,21 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
-      String storeID = prefs.getString("storeID") ?? "";
-      String address = prefs.getString("address") ?? "";
-      bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      // final prefs = await SharedPreferences.getInstance();
+      // String token = prefs.getString("token") ?? "";
+      // String email = prefs.getString("username") ?? "";
+      // String storeID = prefs.getString("storeID") ?? "";
+      // String address = prefs.getString("address") ?? "";
+      // bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      String storeID = preferencesModel.storeID ?? "";
+      String address = preferencesModel.address ?? "";
+      bool isBringBack = preferencesModel.isBringBack;
 
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.username ?? "",
+        "PENDING",
+      );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
 
       if (isChange && myOrder != null) {
@@ -115,12 +127,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           order.removeAddress();
           if (storeID.isEmpty) {
             storeID = "6425d2c7cf1d264dca4bcc82";
-            prefs.setString("storeID", "6425d2c7cf1d264dca4bcc82");
+            SharedPreferences.getInstance().then((value) {
+              value.setString("storeID", "6425d2c7cf1d264dca4bcc82");
+            });
           }
           order.storeId = storeID;
         }
         final orderResponse = await apiService.updatePendingOrder(
-            "Bearer $token", order.toJson(), order.orderId!);
+            "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
         myOrder = orderResponse.data;
       }
       final store =

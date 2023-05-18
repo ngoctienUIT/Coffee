@@ -1,8 +1,8 @@
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
@@ -10,7 +10,9 @@ import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  HomeBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(event.check, emit));
 
     on<AddProductToCart>((event, emit) => getOrderSpending(emit));
@@ -83,10 +85,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         getCoupon(emit, apiService);
       }
       Position? position = await _getCurrentPosition(emit);
-      var prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("userID") ?? "";
-      String token = prefs.getString("token") ?? "";
-      final response = apiService.getUserByID("Bearer $token", id);
+      // var prefs = await SharedPreferences.getInstance();
+      // String id = prefs.getString("userID") ?? "";
+      // String token = prefs.getString("token") ?? "";
+      final response = apiService.getUserByID(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.userID ?? "",
+      );
       print("position ${position?.toJson()}");
       if (position != null) {
         final weather = apiService.weatherRecommendations(
@@ -122,12 +127,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
+      // final prefs = await SharedPreferences.getInstance();
+      // String token = prefs.getString("token") ?? "";
+      // String email = prefs.getString("username") ?? "";
 
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.username ?? "",
+        "PENDING",
+      );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
       emit(AddProductToCartLoaded(myOrder));
     } on DioError catch (e) {

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -100,14 +101,21 @@ Widget phoneAndHour(BuildContext context, StoreResponse store) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            const Icon(Icons.call),
-            const SizedBox(width: 5),
-            Text(store.hotlineNumber.toString()),
-          ],
+      GestureDetector(
+        onTap: () async {
+          if (await canLaunchUrlString('tel:${store.hotlineNumber}')) {
+          await launchUrlString('tel:${store.hotlineNumber}');
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              const Icon(Icons.call),
+              const SizedBox(width: 5),
+              Text(store.hotlineNumber.toString()),
+            ],
+          ),
         ),
       ),
       const Divider(),

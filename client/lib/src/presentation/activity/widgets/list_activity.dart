@@ -144,7 +144,7 @@ class ListActivity extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                      "${"date_created".translate(context)}: ${order.createdDate}"),
+                      "${"date_created".translate(context)}: ${order.lastUpdated}"),
                   const SizedBox(height: 10),
                   Text("${"status".translate(context)}: ${order.orderStatus}"),
                   const SizedBox(height: 10),

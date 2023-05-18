@@ -3,6 +3,7 @@ import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -119,6 +120,7 @@ class _NavigatePageState extends State<NavigatePage> {
   @override
   void initState() {
     super.initState();
+    if (isLogin) {}
     _networkConnectivity.initialise();
     _networkConnectivity.myStream.listen((source) {
       print('source $source');
@@ -137,8 +139,28 @@ class _NavigatePageState extends State<NavigatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSplashScreen(
-      nextScreen: isLogin ? const MainPage() : const LoginPage(),
+    return AnimatedSplashScreen.withScreenFunction(
+      screenFunction: () async {
+        if (isLogin) {
+          final prefs = await SharedPreferences.getInstance();
+          String? token = prefs.getString("token");
+          String? username = prefs.getString("username");
+          String? userID = prefs.getString("userID");
+          String? storeID = prefs.getString("storeID");
+          String? address = prefs.getString("address");
+          bool isBringBack = prefs.getBool("isBringBack") ?? false;
+          PreferencesModel preferencesModel = PreferencesModel(
+            token: token,
+            userID: userID,
+            isBringBack: isBringBack,
+            address: address,
+            storeID: storeID,
+            username: username,
+          );
+          return MainPage(preferencesModel: preferencesModel);
+        }
+        return const LoginPage();
+      },
       splash: AppImages.imgLogo,
       splashIconSize: 250,
     );

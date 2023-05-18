@@ -240,7 +240,7 @@ class _StoreViewState extends State<StoreView> {
         const SizedBox(height: 5),
         Row(
           children: [
-            const Icon(Icons.phone),
+            const Icon(Icons.phone, color: AppColors.statusBarColor),
             const SizedBox(width: 5),
             Text(store.hotlineNumber.toString()),
           ],

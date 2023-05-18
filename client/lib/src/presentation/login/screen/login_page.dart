@@ -2,6 +2,7 @@ import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/domain/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
@@ -113,14 +114,14 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void loginSuccess() {
+  void loginSuccess(PreferencesModel preferencesModel) {
     saveNewTokenFCM();
     customToast(context, "logged_in_successfully".translate(context));
     context
         .read<LanguageCubit>()
         .startNewTimer(context, const Duration(hours: 1));
     Navigator.of(context).pushReplacement(createRoute(
-      screen: const MainPage(),
+      screen: MainPage(preferencesModel: preferencesModel),
       begin: const Offset(0, 1),
     ));
   }
@@ -131,10 +132,11 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           saveLogin();
-          loginSuccess();
+          loginSuccess(state.preferencesModel);
         }
-        if (state is LoginGoogleSuccessState) loginSuccess();
-
+        if (state is LoginGoogleSuccessState) {
+          loginSuccess(state.preferencesModel);
+        }
         if (state is LoginLoadingState || state is LoginGoogleLoadingState) {
           loadingAnimation(context);
         }

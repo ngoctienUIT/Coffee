@@ -118,7 +118,6 @@ class InfoCart extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios_rounded)
         ],
       ),
     );

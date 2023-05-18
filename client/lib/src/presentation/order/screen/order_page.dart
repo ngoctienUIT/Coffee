@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -24,8 +25,10 @@ class _OrderPageState extends State<OrderPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    PreferencesModel preferencesModel =
+        context.read<MainBloc>().preferencesModel;
     return BlocProvider<OrderBloc>(
-      create: (_) => OrderBloc()..add(FetchData()),
+      create: (_) => OrderBloc(preferencesModel)..add(FetchData()),
       child: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is AddProductToCartError) {

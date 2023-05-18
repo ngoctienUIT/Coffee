@@ -165,13 +165,16 @@ class _InfoCartState extends State<InfoCart> {
       onTap: () {
         Navigator.of(context).push(createRoute(
           screen: StorePage(
-            isPick: true,
-            onPress: (store) => setState(() {
-              this.store = store;
-              context.read<CartBloc>().add(
-                  ChangeMethod(isBringBack: false, storeID: store.storeId));
-            }),
-          ),
+              isPick: true,
+              check: false,
+              onPress: (store) {
+                print("pick store");
+                setState(() {
+                  this.store = store;
+                  context.read<CartBloc>().add(
+                      ChangeMethod(isBringBack: false, storeID: store.storeId));
+                });
+              }),
           begin: const Offset(1, 0),
         ));
       },

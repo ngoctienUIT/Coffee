@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +46,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         value.setString("token", user.accessToken);
       });
       print(user.accessToken);
-      emit(LoginSuccessState());
+      emit(LoginSuccessState(PreferencesModel(
+        userID: user.userResponse.id,
+        token: user.accessToken,
+        username: user.userResponse.username,
+      )));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -81,7 +86,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           value.setString("username", googleUser.email);
           value.setBool("isLogin", true);
         });
-        emit(LoginGoogleSuccessState());
+        emit(LoginGoogleSuccessState(PreferencesModel(
+          userID: response.data.userResponse.id,
+          token: response.data.accessToken,
+          username: googleUser.email,
+        )));
       } else {
         emit(LoginGoogleErrorState(status: ""));
         GoogleSignIn().signOut();

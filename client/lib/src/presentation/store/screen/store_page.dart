@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/domain/repositories/store/store_response.dart';
+import 'package:coffee/src/presentation/main/bloc/main_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:coffee/src/presentation/store/bloc/store_bloc.dart';
 import 'package:coffee/src/presentation/store/bloc/store_state.dart';
@@ -21,29 +22,46 @@ import '../widgets/bottom_sheet.dart';
 import '../widgets/item_loading.dart';
 
 class StorePage extends StatelessWidget {
-  const StorePage({Key? key, this.onPress, required this.isPick, this.onChange})
-      : super(key: key);
+  const StorePage({
+    Key? key,
+    this.onPress,
+    required this.isPick,
+    this.onChange,
+    required this.check,
+  }) : super(key: key);
 
   final Function(StoreResponse store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
+  final bool check;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<StoreBloc>(
       create: (_) => StoreBloc()..add(FetchData()),
-      child: StoreView(onPress: onPress, isPick: isPick, onChange: onChange),
+      child: StoreView(
+        onPress: onPress,
+        isPick: isPick,
+        onChange: onChange,
+        check: check,
+      ),
     );
   }
 }
 
 class StoreView extends StatefulWidget {
-  const StoreView({Key? key, this.onPress, required this.isPick, this.onChange})
-      : super(key: key);
+  const StoreView({
+    Key? key,
+    this.onPress,
+    required this.isPick,
+    this.onChange,
+    required this.check,
+  }) : super(key: key);
 
   final Function(StoreResponse store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
+  final bool check;
 
   @override
   State<StoreView> createState() => _StoreViewState();
@@ -63,6 +81,20 @@ class _StoreViewState extends State<StoreView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    return widget.check
+        ? BlocListener<MainBloc, MainState>(
+            listener: (_, state) {
+              if (state is ChangeStoreState) {
+                print("Change store from store page");
+                context.read<StoreBloc>().add(FetchData());
+              }
+            },
+            child: buildBody(),
+          )
+        : buildBody();
+  }
+
+  Widget buildBody() {
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
@@ -263,7 +295,7 @@ class _StoreViewState extends State<StoreView>
         const SizedBox(height: 5),
         Row(
           children: [
-            const Icon(Icons.phone),
+            const Icon(Icons.phone, color: AppColors.statusBarColor),
             const SizedBox(width: 5),
             Text(store.hotlineNumber.toString()),
           ],
