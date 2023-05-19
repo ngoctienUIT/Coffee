@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/main/bloc/main_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
@@ -26,9 +27,13 @@ class _OrderPageState extends State<OrderPage>
   Widget build(BuildContext context) {
     super.build(context);
     PreferencesModel preferencesModel =
-        context.read<MainBloc>().preferencesModel;
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<OrderBloc>(
-      create: (_) => OrderBloc(preferencesModel)..add(FetchData()),
+      create: (_) => preferencesModel.order == null
+          ? (OrderBloc(preferencesModel)
+            ..add(FetchData())
+            ..add(AddProductToCart()))
+          : (OrderBloc(preferencesModel)..add(FetchData())),
       child: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is AddProductToCartError) {

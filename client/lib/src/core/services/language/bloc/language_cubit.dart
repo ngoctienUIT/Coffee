@@ -8,9 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../presentation/login/screen/login_page.dart';
-import '../../function/custom_toast.dart';
-import '../../function/route_function.dart';
+import '../../../../presentation/login/screen/login_page.dart';
+import '../../../function/custom_toast.dart';
+import '../../../function/route_function.dart';
 import 'language_state.dart';
 
 class LanguageCubit extends Cubit<LanguageState> {

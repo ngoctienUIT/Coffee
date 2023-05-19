@@ -13,14 +13,13 @@ import 'package:intl/intl.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../domain/entities/user/user_response.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
   const BodyProfilePage({Key? key, required this.user, required this.onChange})
       : super(key: key);
 
-  final UserResponse user;
+  final User user;
   final VoidCallback onChange;
 
   @override
@@ -143,7 +142,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
               Switch(
                 value: isLink,
                 onChanged: (value) {
-                  if (widget.user.hashedPassword.isNotEmpty) {
+                  if (widget.user.password.isNotEmpty) {
                     isLink = value;
                     if (isLink &&
                         widget.user.accountProvider != null &&
@@ -172,9 +171,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        context
-            .read<ProfileBloc>()
-            .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
+        context.read<ProfileBloc>().add(SaveProfileEvent(widget.user.copyWith(
               displayName: nameController.text,
               isMale: isMale,
               birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),

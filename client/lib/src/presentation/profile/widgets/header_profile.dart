@@ -12,7 +12,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/entities/user/user_response.dart';
 import '../../store/widgets/item_loading.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
@@ -23,7 +22,7 @@ class HeaderProfilePage extends StatefulWidget {
       {Key? key, required this.user, required this.onChange})
       : super(key: key);
 
-  final UserResponse user;
+  final User user;
   final VoidCallback onChange;
 
   @override
@@ -142,8 +141,9 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               if (isEdit)
                 itemAction("delete_profile_picture".translate(context), () {
                   Navigator.pop(context);
-                  context.read<ProfileBloc>().add(
-                      DeleteAvatarEvent(User.fromUserResponse(widget.user)));
+                  context
+                      .read<ProfileBloc>()
+                      .add(DeleteAvatarEvent(widget.user));
                 }),
               itemAction(
                 "cancel".translate(context),

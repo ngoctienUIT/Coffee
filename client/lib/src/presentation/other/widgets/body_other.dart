@@ -1,9 +1,7 @@
-import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
 import 'package:coffee/src/presentation/other/bloc/other_event.dart';
-import 'package:coffee/src/presentation/other/bloc/other_state.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +10,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/firebase/firebase_service.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../info/screen/info_page.dart';
@@ -39,28 +40,26 @@ class BodyOtherPage extends StatelessWidget {
           children: [
             groupItemOther("account".translate(context), [
               itemOther("profile".translate(context), Icons.person, () {
-                OtherState otherState = context.read<OtherBloc>().state;
-                if (otherState is OtherLoaded) {
-                  Navigator.of(context).push(createRoute(
-                    screen: ProfilePage(
-                      user: otherState.user,
-                      onChange: () {
-                        context.read<OtherBloc>().add(FetchData());
-                      },
-                    ),
-                    begin: const Offset(1, 0),
-                  ));
-                }
+                PreferencesModel preferencesModel =
+                    context.read<ServiceBloc>().preferencesModel;
+                Navigator.of(context).push(createRoute(
+                  screen: ProfilePage(
+                    user: preferencesModel.user!,
+                    onChange: () {
+                      context.read<OtherBloc>().add(FetchData());
+                    },
+                  ),
+                  begin: const Offset(1, 0),
+                ));
               }),
               const Divider(),
               itemOther("setting".translate(context), Icons.settings, () {
-                OtherState otherState = context.read<OtherBloc>().state;
-                if (otherState is OtherLoaded) {
-                  Navigator.of(context).push(createRoute(
-                    screen: SettingPage(user: otherState.user),
-                    begin: const Offset(1, 0),
-                  ));
-                }
+                PreferencesModel preferencesModel =
+                    context.read<ServiceBloc>().preferencesModel;
+                Navigator.of(context).push(createRoute(
+                  screen: SettingPage(user: preferencesModel.user!),
+                  begin: const Offset(1, 0),
+                ));
               })
             ]),
             groupItemOther("interact".translate(context), [

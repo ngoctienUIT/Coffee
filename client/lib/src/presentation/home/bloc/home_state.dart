@@ -1,7 +1,7 @@
-import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
 import 'package:coffee/src/domain/repositories/product/product_response.dart';
 
+import '../../../data/models/user.dart';
 import '../../../domain/repositories/order/order_response.dart';
 import '../../../domain/repositories/weather/weather_response.dart';
 
@@ -21,7 +21,7 @@ class HomeLoaded extends HomeState {
   final List<ProductResponse> listProduct;
   final WeatherResponse? weather;
   final String? address;
-  final UserResponse user;
+  final User user;
 
   HomeLoaded({
     required this.user,
@@ -40,7 +40,7 @@ class CouponLoaded extends HomeState {
 class WeatherLoaded extends HomeState {
   final WeatherResponse? weather;
   final String? address;
-  final UserResponse user;
+  final User user;
 
   WeatherLoaded({this.weather, this.address, required this.user});
 }

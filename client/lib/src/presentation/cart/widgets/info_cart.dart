@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
-import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
 import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/store.dart';
 import '../../add_address/screen/add_address_page.dart';
 import '../bloc/cart_bloc.dart';
 import '../bloc/cart_event.dart';
@@ -25,7 +25,7 @@ class InfoCart extends StatefulWidget {
     required this.selectedPickupOption,
   }) : super(key: key);
 
-  final StoreResponse? store;
+  final Store? store;
   final Address? address;
   final String? note;
   final String selectedPickupOption;
@@ -40,7 +40,7 @@ class _InfoCartState extends State<InfoCart> {
   Color unselectedColor = AppColors.unselectedColor;
   bool isBringBack = false;
   Address? address;
-  StoreResponse? store;
+  Store? store;
 
   @override
   void initState() {

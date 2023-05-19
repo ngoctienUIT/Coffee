@@ -1,10 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../data/models/preferences_model.dart';
+import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
+import '../../store/widgets/item_loading.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -22,6 +28,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return isPick
         ? AppBarGeneral(elevation: 0, title: title)
         : AppBar(
@@ -29,13 +37,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             elevation: elevation,
             leading: InkWell(
               onTap: () {
-                // Navigator.of(context).push(createRoute(
-                //   screen: ProfilePage(),
-                //   begin: const Offset(1, 0),
-                // ));
+                Navigator.of(context).push(createRoute(
+                  screen: ProfilePage(
+                    user: preferencesModel.user!,
+                    onChange: () {},
+                  ),
+                  begin: const Offset(1, 0),
+                ));
               },
               borderRadius: BorderRadius.circular(90),
-              child: ClipOval(child: Image.asset(AppImages.imgNonAvatar)),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ClipOval(
+                  child: preferencesModel.user!.imageUrl == null
+                      ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                      : CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          imageUrl: preferencesModel.user!.imageUrl ?? "",
+                          placeholder: (context, url) =>
+                              itemLoading(80, 80, 90),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                ),
+              ),
             ),
             actions: [
               IconButton(

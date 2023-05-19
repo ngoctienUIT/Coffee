@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/language/bloc/language_cubit.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/title_bottom_sheet.dart';

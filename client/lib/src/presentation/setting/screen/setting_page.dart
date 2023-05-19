@@ -1,7 +1,6 @@
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
-import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/change_password/screen/change_password_page.dart';
 import 'package:coffee/src/presentation/setting/bloc/setting_bloc.dart';
 import 'package:coffee/src/presentation/setting/bloc/setting_event.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../data/models/user.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
 import '../../other/widgets/group_item_other.dart';
@@ -19,7 +19,7 @@ import '../../other/widgets/item_other.dart';
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SettingPage extends StatelessWidget {
 class SettingView extends StatelessWidget {
   const SettingView({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class SettingView extends StatelessWidget {
                   }),
                 ),
               ]),
-              if (user.hashedPassword.isNotEmpty)
+              if (user.password.isNotEmpty)
                 groupItemOther("security".translate(context), [
                   itemOther(
                     "change_password".translate(context),

@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/entities/user/user_response.dart';
+import '../../../data/models/user.dart';
 
 abstract class OtherState {}
 
@@ -7,7 +7,7 @@ class InitState extends OtherState {}
 class OtherLoading extends OtherState {}
 
 class OtherLoaded extends OtherState {
-  final UserResponse user;
+  final User user;
   OtherLoaded(this.user);
 }
 

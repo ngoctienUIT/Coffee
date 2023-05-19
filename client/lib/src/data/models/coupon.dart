@@ -1,11 +1,11 @@
-class SpecialOffer {
+class Coupon {
   String image;
   String title;
   String content;
   DateTime startDay;
   DateTime endDay;
 
-  SpecialOffer({
+  Coupon({
     required this.image,
     required this.title,
     required this.content,

@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
-import '../../../domain/entities/user/user_response.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
@@ -19,7 +18,7 @@ import '../bloc/change_password_event.dart';
 class ChangePasswordPage extends StatelessWidget {
   const ChangePasswordPage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class ChangePasswordPage extends StatelessWidget {
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   State<ChangePasswordView> createState() => _ChangePasswordViewState();
@@ -183,12 +182,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
             if (_formKey.currentState!.validate()) {
               var bytes = utf8.encode(oldPasswordController.text);
               var digest = sha256.convert(bytes);
-              if (digest.toString() == widget.user.hashedPassword) {
+              if (digest.toString() == widget.user.password) {
                 bytes = utf8.encode(newPasswordController.text);
                 digest = sha256.convert(bytes);
                 context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
-                    User.fromUserResponse(widget.user)
-                        .copyWith(password: digest.toString())));
+                    widget.user.copyWith(password: digest.toString())));
               } else {
                 customToast(
                     context, "old_password_is_not_correct".translate(context));

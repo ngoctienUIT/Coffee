@@ -5,12 +5,12 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../domain/repositories/store/store_response.dart';
+import '../../../data/models/store.dart';
 import '../../login/widgets/custom_button.dart';
 import 'item_loading.dart';
 
 void showStoreBottomSheet(
-    BuildContext context, StoreResponse store, VoidCallback onPress) {
+    BuildContext context, Store store, VoidCallback onPress) {
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -60,7 +60,7 @@ void showStoreBottomSheet(
   );
 }
 
-Widget nameAndAddress(StoreResponse store) {
+Widget nameAndAddress(Store store) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -80,7 +80,7 @@ Widget nameAndAddress(StoreResponse store) {
   );
 }
 
-Widget phoneAndHour(BuildContext context, StoreResponse store) {
+Widget phoneAndHour(BuildContext context, Store store) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -115,7 +115,7 @@ Widget phoneAndHour(BuildContext context, StoreResponse store) {
   );
 }
 
-Widget timeline(StoreResponse store) {
+Widget timeline(Store store) {
   return ListView.builder(
     physics: const NeverScrollableScrollPhysics(),
     padding: const EdgeInsets.symmetric(vertical: 20),

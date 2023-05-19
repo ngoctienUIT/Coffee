@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/store.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({
@@ -114,7 +115,8 @@ class CartView extends StatelessWidget {
                   child: Column(
                     children: [
                       InfoCart(
-                        store: state.order!.selectedPickupStore,
+                        store: Store.fromStoreResponse(
+                            state.order!.selectedPickupStore!),
                         address: address,
                         note: state.order!.orderCustomerNote,
                         selectedPickupOption:

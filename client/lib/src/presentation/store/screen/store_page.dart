@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/main/bloc/main_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:coffee/src/presentation/store/bloc/store_bloc.dart';
@@ -13,7 +13,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
+import '../../../data/models/store.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../../main/bloc/main_bloc.dart';
 import '../../main/bloc/main_event.dart';
@@ -30,15 +33,17 @@ class StorePage extends StatelessWidget {
     required this.check,
   }) : super(key: key);
 
-  final Function(StoreResponse store)? onPress;
+  final Function(Store store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
   final bool check;
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc()..add(FetchData()),
+      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
       child: StoreView(
         onPress: onPress,
         isPick: isPick,
@@ -58,7 +63,7 @@ class StoreView extends StatefulWidget {
     required this.check,
   }) : super(key: key);
 
-  final Function(StoreResponse store)? onPress;
+  final Function(Store store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
   final bool check;
@@ -85,7 +90,6 @@ class _StoreViewState extends State<StoreView>
         ? BlocListener<MainBloc, MainState>(
             listener: (_, state) {
               if (state is ChangeStoreState) {
-                print("Change store from store page");
                 context.read<StoreBloc>().add(FetchData());
               }
             },
@@ -153,24 +157,31 @@ class _StoreViewState extends State<StoreView>
       builder: (context, state) {
         print(state);
         if (state is StoreLoaded) {
+          List<Store> listStore = state.listStore;
+          PreferencesModel preferencesModel =
+              context.read<ServiceBloc>().preferencesModel;
+          if (preferencesModel.listStore.length != listStore.length) {
+            context.read<ServiceBloc>().add(
+                SetDataEvent(preferencesModel.copyWith(listStore: listStore)));
+          }
           return ListView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: state.listStore.length,
+            itemCount: listStore.length,
             padding: const EdgeInsets.symmetric(horizontal: 5),
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () => showStoreBottomSheet(
                   context,
-                  state.listStore[index],
+                  listStore[index],
                   () {
                     if (widget.onPress != null) {
-                      widget.onPress!(state.listStore[index]);
+                      widget.onPress!(listStore[index]);
                       Navigator.pop(context);
                       Navigator.pop(context);
                     } else {
                       SharedPreferences.getInstance().then((value) {
                         value.setString(
-                            "storeID", state.listStore[index].storeId);
+                            "storeID", listStore[index].storeId ?? "");
                         // context.read<StoreBloc>().add(
                         //     SearchStore(storeName: searchStoreController.text));
                         context.read<StoreBloc>().add(UpdateStoreOrder());
@@ -180,11 +191,12 @@ class _StoreViewState extends State<StoreView>
                     }
                   },
                 ),
-                child: itemStore(state.listStore[index], state.id),
+                child: itemStore(listStore[index], state.id),
               );
             },
           );
         }
+
         return _buildLoading();
       },
     );
@@ -231,7 +243,7 @@ class _StoreViewState extends State<StoreView>
     );
   }
 
-  Widget itemStore(StoreResponse store, String id) {
+  Widget itemStore(Store store, String id) {
     return Stack(
       children: [
         Card(
@@ -281,7 +293,7 @@ class _StoreViewState extends State<StoreView>
     );
   }
 
-  Widget infoStore(StoreResponse store) {
+  Widget infoStore(Store store) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -306,7 +318,7 @@ class _StoreViewState extends State<StoreView>
     );
   }
 
-  Widget isOpenStore(StoreResponse store) {
+  Widget isOpenStore(Store store) {
     return Row(
       children: [
         Container(

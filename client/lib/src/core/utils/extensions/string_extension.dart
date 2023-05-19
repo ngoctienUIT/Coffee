@@ -2,7 +2,7 @@ import 'package:coffee/src/data/models/address.dart';
 import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
 
-import '../../language/localization/app_localizations.dart';
+import '../../services/language/localization/app_localizations.dart';
 
 extension EmailValidator on String {
   bool isValidEmail() {

@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../main/bloc/main_event.dart';
 
 class ActivityPage extends StatelessWidget {
@@ -21,8 +23,10 @@ class ActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ActivityBloc()..add(FetchData(0)),
+      create: (context) => ActivityBloc(preferencesModel)..add(FetchData(0)),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: CustomAppBar(

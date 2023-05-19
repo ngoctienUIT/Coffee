@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/store/store_response.dart';
+import 'package:coffee/src/data/models/store.dart';
 
 abstract class StoreState {}
 
@@ -7,7 +7,7 @@ class InitState extends StoreState {}
 class StoreLoading extends StoreState {}
 
 class StoreLoaded extends StoreState {
-  final List<StoreResponse> listStore;
+  final List<Store> listStore;
   String id;
 
   StoreLoaded(this.listStore, this.id);

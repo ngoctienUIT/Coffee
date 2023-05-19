@@ -1,6 +1,5 @@
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/entities/user/user_response.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
 import 'package:coffee/src/presentation/profile/widgets/header_profile.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/user.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../bloc/profile_state.dart';
 import '../widgets/body_profile.dart';
@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key, required this.user, required this.onChange})
       : super(key: key);
 
-  final UserResponse user;
+  final User user;
   final VoidCallback onChange;
 
   @override

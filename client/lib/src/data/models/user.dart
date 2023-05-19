@@ -1,6 +1,10 @@
 import 'package:coffee/src/domain/entities/user/user_response.dart';
+import 'package:equatable/equatable.dart';
 
-class User {
+import '../../domain/repositories/provider/provider_response.dart';
+
+class User extends Equatable {
+  final String? id;
   final String username;
   String displayName;
   bool isMale;
@@ -10,8 +14,10 @@ class User {
   String? imageUrl;
   String userRole;
   String? birthOfDate;
+  final ProviderResponse? accountProvider;
 
   User({
+    this.id,
     required this.username,
     required this.displayName,
     required this.isMale,
@@ -21,10 +27,12 @@ class User {
     this.birthOfDate,
     this.imageUrl,
     this.userRole = "CUSTOMER",
+    this.accountProvider,
   });
 
   factory User.fromUserResponse(UserResponse userResponse) {
     return User(
+      id: userResponse.id,
       username: userResponse.username,
       displayName: userResponse.displayName,
       isMale: userResponse.isMale,
@@ -34,6 +42,7 @@ class User {
       userRole: userResponse.userRole,
       imageUrl: userResponse.imageUrl,
       birthOfDate: userResponse.birthOfDate,
+      accountProvider: userResponse.accountProvider,
     );
   }
 
@@ -45,6 +54,7 @@ class User {
     final String? birthOfDate,
   }) {
     return User(
+      id: id,
       username: username,
       displayName: displayName ?? this.displayName,
       isMale: isMale ?? this.isMale,
@@ -54,6 +64,7 @@ class User {
       imageUrl: imageUrl ?? this.imageUrl,
       userRole: userRole,
       birthOfDate: birthOfDate ?? this.birthOfDate,
+      accountProvider: accountProvider,
     );
   }
 
@@ -66,7 +77,10 @@ class User {
       "imageUrl": imageUrl,
       "hashedPassword": password,
       "userRole": userRole,
-      "birthOfDate":birthOfDate,
+      "birthOfDate": birthOfDate,
     };
   }
+
+  @override
+  List<Object?> get props => [displayName, imageUrl, birthOfDate];
 }

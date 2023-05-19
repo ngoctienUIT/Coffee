@@ -1,12 +1,16 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/preferences_model.dart';
+import 'package:coffee/src/domain/repositories/store/store_response.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/main/screen/main_page.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +21,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'src/core/function/network_connectivity.dart';
-import 'src/core/language/bloc/language_cubit.dart';
-import 'src/core/language/bloc/language_state.dart';
-import 'src/core/language/localization/app_localizations_setup.dart';
+import 'src/core/services/language/bloc/language_cubit.dart';
+import 'src/core/services/language/bloc/language_state.dart';
+import 'src/core/services/language/localization/app_localizations_setup.dart';
+import 'src/data/models/store.dart';
+import 'src/data/models/user.dart';
+import 'src/domain/api_service.dart';
+import 'src/domain/entities/user/user_response.dart';
 
 int? language;
 bool isLogin = false;
@@ -64,6 +72,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LanguageCubit>(
           create: (context) => LanguageCubit(language: language),
         ),
+        BlocProvider<ServiceBloc>(create: (context) => ServiceBloc()),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
         buildWhen: (previous, current) => previous != current,
@@ -143,21 +152,30 @@ class _NavigatePageState extends State<NavigatePage> {
       screenFunction: () async {
         if (isLogin) {
           final prefs = await SharedPreferences.getInstance();
-          String? token = prefs.getString("token");
-          String? username = prefs.getString("username");
+          String token = prefs.getString("token") ?? "";
           String? userID = prefs.getString("userID");
           String? storeID = prefs.getString("storeID");
           String? address = prefs.getString("address");
           bool isBringBack = prefs.getBool("isBringBack") ?? false;
+          ApiService apiService =
+              ApiService(Dio(BaseOptions(contentType: "application/json")));
+          final userResponse =
+              apiService.getUserByID("Bearer $token", userID ?? "");
+          final storeResponse = apiService.getAllStores();
+          final list = await Future.wait([userResponse, storeResponse]);
           PreferencesModel preferencesModel = PreferencesModel(
-            token: token,
-            userID: userID,
-            isBringBack: isBringBack,
-            address: address,
-            storeID: storeID,
-            username: username,
-          );
-          return MainPage(preferencesModel: preferencesModel);
+              token: token,
+              isBringBack: isBringBack,
+              address: address,
+              storeID: storeID,
+              user: User.fromUserResponse((list.first.data as UserResponse)),
+              listStore: (list.last.data as List<StoreResponse>)
+                  .map((e) => Store.fromStoreResponse(e))
+                  .toList());
+          if (context.mounted) {
+            context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
+          }
+          return const MainPage();
         }
         return const LoginPage();
       },

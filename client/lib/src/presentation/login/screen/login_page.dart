@@ -1,6 +1,5 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
-import 'package:coffee/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/domain/firebase/firebase_service.dart';
@@ -13,6 +12,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
@@ -116,12 +118,13 @@ class _LoginViewState extends State<LoginView> {
 
   void loginSuccess(PreferencesModel preferencesModel) {
     saveNewTokenFCM();
+    context.read<ServiceBloc>().add(SetDataEvent(preferencesModel.copyWith()));
     customToast(context, "logged_in_successfully".translate(context));
     context
         .read<LanguageCubit>()
         .startNewTimer(context, const Duration(hours: 1));
     Navigator.of(context).pushReplacement(createRoute(
-      screen: MainPage(preferencesModel: preferencesModel),
+      screen: const MainPage(),
       begin: const Offset(0, 1),
     ));
   }

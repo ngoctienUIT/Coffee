@@ -1,5 +1,3 @@
-import 'package:coffee/src/core/language/bloc/language_cubit.dart';
-import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
@@ -10,19 +8,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
 import '../bloc/main_event.dart';
 
 class MainPage extends StatelessWidget {
-  const MainPage({Key? key, required this.preferencesModel}) : super(key: key);
-
-  final PreferencesModel preferencesModel;
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MainBloc(preferencesModel),
+      create: (context) => MainBloc(),
       child: const MainView(),
     );
   }

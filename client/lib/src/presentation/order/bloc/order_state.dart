@@ -14,19 +14,19 @@ class OrderLoaded extends OrderState {
   final int index;
   final List<ProductResponse> listProduct;
   final List<ProductCataloguesResponse> listProductCatalogues;
-  final OrderResponse? order;
-  final StoreResponse? store;
-  final bool isBringBack;
-  final String address;
+  // final OrderResponse? order;
+  // final StoreResponse? store;
+  // final bool isBringBack;
+  // final String address;
 
   OrderLoaded({
     required this.index,
     required this.listProduct,
     required this.listProductCatalogues,
-    this.order,
-    this.store,
-    required this.isBringBack,
-    required this.address,
+    // this.order,
+    // this.store,
+    // required this.isBringBack,
+    // required this.address,
   });
 }
 

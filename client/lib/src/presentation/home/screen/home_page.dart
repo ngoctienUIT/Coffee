@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:coffee/src/core/function/custom_toast.dart';
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/order.dart';
 import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
 import 'package:coffee/src/presentation/main/bloc/main_state.dart';
@@ -30,7 +33,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PreferencesModel preferencesModel =
-        context.read<MainBloc>().preferencesModel;
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<HomeBloc>(
       create: (context) => HomeBloc(preferencesModel)..add(FetchData()),
       child: const HomeView(),
@@ -110,6 +113,15 @@ class _HomeViewState extends State<HomeView>
             customToast(context, state.message.toString());
           }
           if (state is AddProductToCartLoaded) {
+            PreferencesModel preferencesModel =
+                context.read<ServiceBloc>().preferencesModel;
+            context
+                .read<ServiceBloc>()
+                .add(SetDataEvent(preferencesModel.copyWith(
+                  order: state.order != null
+                      ? Order.fromOrderResponse(state.order!)
+                      : null,
+                )));
             context.read<MainBloc>().add(ChangeCartOrderEvent());
           }
         },

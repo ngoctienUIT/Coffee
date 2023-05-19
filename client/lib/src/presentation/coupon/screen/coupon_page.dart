@@ -13,7 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../view_special_offer/screen/view_special_offer_page.dart';
 
 class CouponPage extends StatelessWidget {
@@ -26,8 +28,10 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => CouponBloc()..add(FetchData()),
+      create: (context) => CouponBloc(preferencesModel)..add(FetchData()),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBarGeneral(

@@ -85,13 +85,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         getCoupon(emit, apiService);
       }
       Position? position = await _getCurrentPosition(emit);
-      // var prefs = await SharedPreferences.getInstance();
-      // String id = prefs.getString("userID") ?? "";
-      // String token = prefs.getString("token") ?? "";
-      final response = apiService.getUserByID(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.userID ?? "",
-      );
       print("position ${position?.toJson()}");
       if (position != null) {
         final weather = apiService.weatherRecommendations(
@@ -100,7 +93,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             apiService.recommendation(position.longitude, position.latitude);
 
         emit(HomeLoaded(
-          user: (await response).data,
+          user: preferencesModel.user!,
           listProduct: (await listProduct).data,
           weather: (await weather).data,
           address: await _getAddressFromLatLng(position),
@@ -108,7 +101,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } else {
         final listProduct = apiService.getAllProducts();
         emit(HomeLoaded(
-          user: (await response).data,
+          user: preferencesModel.user!,
           listProduct: (await listProduct).data,
         ));
       }
@@ -127,13 +120,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
-      // String email = prefs.getString("username") ?? "";
-
       final response = await apiService.getAllOrders(
         "Bearer ${preferencesModel.token}",
-        preferencesModel.username ?? "",
+        preferencesModel.user!.username,
         "PENDING",
       );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];

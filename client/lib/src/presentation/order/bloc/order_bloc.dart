@@ -31,33 +31,14 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllProductCatalogues();
       listProductCatalogues = response.data;
-
       final productResponse = await apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
       final listProduct = productResponse.data;
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
-      // String email = prefs.getString("username") ?? "";
-      // String storeID = prefs.getString("storeID") ?? "";
-      // String address = prefs.getString("address") ?? "";
-      // bool isBringBack = prefs.getBool("isBringBack") ?? false;
-      String storeID = preferencesModel.storeID ?? "";
-      final orderResponse = await apiService.getAllOrders(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.username ?? "",
-        "PENDING",
-      );
-      final store =
-          storeID.isEmpty ? null : await apiService.getStoreByID(storeID);
 
       emit(OrderLoaded(
         index: 0,
         listProduct: listProduct,
         listProductCatalogues: listProductCatalogues,
-        order: orderResponse.data.isEmpty ? null : orderResponse.data[0],
-        store: storeID.isEmpty ? null : store!.data,
-        isBringBack: preferencesModel.isBringBack,
-        address: preferencesModel.address ?? "",
       ));
     } on DioError catch (e) {
       String error =
@@ -95,19 +76,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
-      // String email = prefs.getString("username") ?? "";
-      // String storeID = prefs.getString("storeID") ?? "";
-      // String address = prefs.getString("address") ?? "";
-      // bool isBringBack = prefs.getBool("isBringBack") ?? false;
       String storeID = preferencesModel.storeID ?? "";
       String address = preferencesModel.address ?? "";
       bool isBringBack = preferencesModel.isBringBack;
 
       final response = await apiService.getAllOrders(
         "Bearer ${preferencesModel.token}",
-        preferencesModel.username ?? "",
+        preferencesModel.user != null ? preferencesModel.user!.username : "",
         "PENDING",
       );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
