@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
@@ -11,16 +12,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/preferences_model.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
-  const BodyProfilePage({Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const BodyProfilePage({Key? key, required this.user}) : super(key: key);
 
   final User user;
-  final VoidCallback onChange;
 
   @override
   State<BodyProfilePage> createState() => _BodyProfilePageState();
@@ -59,21 +60,25 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           current is LinkAccountWithGoogleSuccessState ||
           current is UnlinkAccountWithGoogleSuccessState,
       listener: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
         if (state is SaveProfileLoaded) {
           Navigator.pop(context);
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(state.user));
           customToast(context, "save_changes_successfully".translate(context));
-          widget.onChange();
         }
         if (state is LinkAccountWithGoogleSuccessState) {
           customToast(
               context, "google_account_link_successful".translate(context));
-          widget.onChange();
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(
+              preferencesModel.user!.copyWith(isAccountProvider: true)));
         }
         if (state is UnlinkAccountWithGoogleSuccessState) {
           customToast(context,
               "unlinked_google_account_successfully".translate(context));
-          widget.onChange();
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(
+              preferencesModel.user!.copyWith(isAccountProvider: false)));
         }
         if (state is LinkAccountWithGoogleErrorState) {
           customToast(context, state.message.toString());
@@ -89,19 +94,22 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         ),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Form(
-            key: _formKey,
-            child: BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state) {
-                if (state is EditProfileSate) isEdit = state.isEdit;
-                return Column(
-                  children: [
-                    Padding(padding: const EdgeInsets.all(10), child: body()),
-                    linkGoogle(),
-                  ],
-                );
-              },
-            ),
+          child: Column(
+            children: [
+              Form(
+                key: _formKey,
+                child: BlocBuilder<ProfileBloc, ProfileState>(
+                  builder: (context, state) {
+                    if (state is EditProfileSate) isEdit = state.isEdit;
+                    return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: body(),
+                    );
+                  },
+                ),
+              ),
+              linkGoogle(),
+            ],
           ),
         ),
       ),
@@ -171,11 +179,19 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        context.read<ProfileBloc>().add(SaveProfileEvent(widget.user.copyWith(
-              displayName: nameController.text,
-              isMale: isMale,
-              birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
-            )));
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        User user = widget.user.copyWith(
+          displayName: nameController.text,
+          isMale: isMale,
+          birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
+        );
+        if (user == preferencesModel.user) {
+          context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+        } else {
+          context.read<ProfileBloc>().add(SaveProfileEvent(user));
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
+        }
       }
     } else {
       context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));

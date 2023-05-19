@@ -47,12 +47,19 @@ class User extends Equatable {
   }
 
   User copyWith({
-    final String? displayName,
-    final bool? isMale,
-    final String? imageUrl,
-    final String? password,
-    final String? birthOfDate,
+    String? displayName,
+    bool? isMale,
+    String? imageUrl,
+    String? password,
+    String? birthOfDate,
+    bool? isAccountProvider,
   }) {
+    if (isAccountProvider != null) {
+      isAccountProvider
+          ? accountProvider!.google = "google"
+          : accountProvider!.google = null;
+    }
+
     return User(
       id: id,
       username: username,
@@ -78,9 +85,10 @@ class User extends Equatable {
       "hashedPassword": password,
       "userRole": userRole,
       "birthOfDate": birthOfDate,
+      "isMale": isMale,
     };
   }
 
   @override
-  List<Object?> get props => [displayName, imageUrl, birthOfDate];
+  List<Object?> get props => [displayName, imageUrl, birthOfDate, isMale];
 }

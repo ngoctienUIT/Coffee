@@ -1,4 +1,5 @@
 import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 
 abstract class ServiceEvent {}
 
@@ -8,8 +9,8 @@ class SetDataEvent extends ServiceEvent {
   SetDataEvent(this.preferencesModel);
 }
 
-class ChangeUserEvent extends ServiceEvent {
-  PreferencesModel preferencesModel;
+class ChangeUserInfoEvent extends ServiceEvent {
+  User user;
 
-  ChangeUserEvent(this.preferencesModel);
+  ChangeUserInfoEvent(this.user);
 }

@@ -1,6 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
-import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +23,7 @@ class _OtherPageState extends State<OtherPage>
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => OtherBloc(preferencesModel)..add(FetchData()),
+      create: (context) => OtherBloc(preferencesModel),
       child: const Scaffold(
         backgroundColor: AppColors.statusBarColor,
         body: SafeArea(

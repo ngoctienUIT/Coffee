@@ -6,23 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../bloc/profile_state.dart';
 import '../widgets/body_profile.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
 
   final User user;
-  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ProfileBloc(),
+      create: (context) => ProfileBloc(preferencesModel),
       child: Scaffold(
         backgroundColor: AppColors.statusBarColor,
         appBar:
@@ -42,8 +44,8 @@ class ProfilePage extends StatelessWidget {
           },
           child: Column(
             children: [
-              HeaderProfilePage(user: user, onChange: onChange),
-              Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
+              HeaderProfilePage(user: user),
+              Expanded(child: BodyProfilePage(user: user)),
             ],
           ),
         ),

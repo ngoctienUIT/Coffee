@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee/src/presentation/other/bloc/other_state.dart';
@@ -9,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/function/custom_toast.dart';
 import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/title_bottom_sheet.dart';
 import '../../store/widgets/item_loading.dart';
@@ -57,23 +59,16 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OtherBloc, OtherState>(
-      listener: (context, state) {
-        if (state is OtherError) {
-          customToast(context, state.message.toString());
-        }
-      },
-      child: Container(
-        color: AppColors.statusBarColor,
-        child: Column(
-          children: [
-            const SizedBox(height: 10),
-            header(),
-            const SizedBox(height: 10),
-            body(),
-            const SizedBox(height: 30),
-          ],
-        ),
+    return Container(
+      color: AppColors.statusBarColor,
+      child: Column(
+        children: [
+          const SizedBox(height: 10),
+          header(),
+          const SizedBox(height: 10),
+          body(),
+          const SizedBox(height: 30),
+        ],
       ),
     );
   }
@@ -118,45 +113,45 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
   }
 
   Widget body() {
-    return BlocBuilder<OtherBloc, OtherState>(
-      buildWhen: (previous, current) => current is! ChangeLanguageState,
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      buildWhen: (previous, current) => current is ChangeUserInfoState,
       builder: (context, state) {
-        if (state is OtherLoaded) {
-          return Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ClipOval(
-                child: state.user.imageUrl == null
-                    ? Image.asset(AppImages.imgNonAvatar, height: 80)
-                    : CachedNetworkImage(
-                        height: 80,
-                        width: 80,
-                        imageUrl: state.user.imageUrl ?? "",
-                        placeholder: (context, url) => itemLoading(80, 80, 90),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        return Column(
+          // mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipOval(
+              child: preferencesModel.user!.imageUrl == null
+                  ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                  : CachedNetworkImage(
+                      height: 80,
+                      width: 80,
+                      imageUrl: preferencesModel.user!.imageUrl ?? "",
+                      placeholder: (context, url) => itemLoading(80, 80, 90),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+            ),
+            const SizedBox(height: 10, width: double.infinity),
+            Text(
+              preferencesModel.user!.displayName,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 10, width: double.infinity),
-              Text(
-                state.user.displayName,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              preferencesModel.user!.userRole,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 10),
-              Text(
-                state.user.userRole,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            ],
-          );
-        }
+            )
+          ],
+        );
         return _buildLoading();
       },
     );

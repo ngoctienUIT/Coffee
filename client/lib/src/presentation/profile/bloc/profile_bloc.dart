@@ -7,14 +7,15 @@ import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   String image = "";
+  PreferencesModel preferencesModel;
 
-  ProfileBloc() : super(InitState()) {
+  ProfileBloc(this.preferencesModel) : super(InitState()) {
     on<EditProfileEvent>(
         (event, emit) => emit(EditProfileSate(isEdit: event.isEdit)));
 
@@ -42,20 +43,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       if (googleUser != null) {
         emit(LinkAccountWithGoogleLoadingState());
-
         ApiService apiService =
             ApiService(Dio(BaseOptions(contentType: "application/json")));
-        final prefs = await SharedPreferences.getInstance();
-        String token = prefs.getString("token") ?? "";
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
 
-        await apiService.linkAccountWithOAuth2Provider("Bearer $token", {
-          "oauth2ProviderUserId": googleUser.id,
-          "oauth2ProviderUserIdentity": googleUser.email,
-          "oauth2ProviderAccessToken": googleAuth.accessToken,
-          "oauth2ProviderProviderName": "GOOGLE"
-        });
+        await apiService.linkAccountWithOAuth2Provider(
+          "Bearer ${preferencesModel.token}",
+          {
+            "oauth2ProviderUserId": googleUser.id,
+            "oauth2ProviderUserIdentity": googleUser.email,
+            "oauth2ProviderAccessToken": googleAuth.accessToken,
+            "oauth2ProviderProviderName": "GOOGLE",
+          },
+        );
         emit(LinkAccountWithGoogleSuccessState());
       } else {
         emit(LinkAccountWithGoogleErrorState("Hủy bỏ liên kết"));
@@ -76,14 +77,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future unlinkAccountWithGoogleEvent(Emitter emit) async {
     try {
       emit(UnlinkAccountWithGoogleLoadingState());
-
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String userID = prefs.getString("userID") ?? "";
 
-      await apiService.unlinkAccountWithOAuth2Provider("Bearer $token", userID);
+      await apiService.unlinkAccountWithOAuth2Provider(
+          "Bearer ${preferencesModel.token}", preferencesModel.user!.id!);
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleSuccessState());
     } on DioError catch (e) {
@@ -104,16 +102,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(SaveProfileLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       if (image.isNotEmpty) {
-        user.imageUrl = await uploadImage(email);
+        user.imageUrl = await uploadImage(preferencesModel.user!.username);
       }
-      await apiService.updateExistingUser(
-          "Bearer $token", email, user.toJson());
+      final response = await apiService.updateExistingUser(
+          "Bearer ${preferencesModel.token}",
+          preferencesModel.user!.username,
+          user.toJson());
 
-      emit(SaveProfileLoaded());
+      emit(SaveProfileLoaded(User.fromUserResponse(response.data)));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -129,14 +126,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       user.imageUrl = null;
-      await apiService.updateExistingUser(
-          "Bearer $token", email, user.toJson());
+      final response = await apiService.updateExistingUser(
+          "Bearer ${preferencesModel.token}",
+          preferencesModel.user!.username,
+          user.toJson());
 
-      emit(DeleteAvatarState());
+      emit(DeleteAvatarState(User.fromUserResponse(response.data)));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

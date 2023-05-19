@@ -10,7 +10,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../store/widgets/item_loading.dart';
 import '../bloc/profile_bloc.dart';
@@ -18,12 +21,9 @@ import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
 
 class HeaderProfilePage extends StatefulWidget {
-  const HeaderProfilePage(
-      {Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const HeaderProfilePage({Key? key, required this.user}) : super(key: key);
 
   final User user;
-  final VoidCallback onChange;
 
   @override
   State<HeaderProfilePage> createState() => _HeaderProfilePageState();
@@ -67,10 +67,13 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           current is ChangeAvatarState ||
           current is DeleteAvatarState,
       builder: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
         if (state is EditProfileSate) isEdit = state.isEdit;
         if (state is DeleteAvatarState) {
           widget.user.imageUrl = null;
-          widget.onChange();
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(
+              preferencesModel.user!.copyWith(imageUrl: null)));
         }
         return InkWell(
           onTap: widget.user.imageUrl != null || isEdit

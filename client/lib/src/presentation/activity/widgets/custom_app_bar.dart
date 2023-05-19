@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
@@ -28,55 +29,58 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return isPick
         ? AppBarGeneral(elevation: 0, title: title)
-        : AppBar(
-            backgroundColor: Colors.white,
-            elevation: elevation,
-            leading: InkWell(
-              onTap: () {
-                Navigator.of(context).push(createRoute(
-                  screen: ProfilePage(
-                    user: preferencesModel.user!,
-                    onChange: () {},
+        : BlocBuilder<ServiceBloc, ServiceState>(
+            buildWhen: (previous, current) =>
+                current is ChangeUserInfoState || current is InitState,
+            builder: (context, state) {
+              PreferencesModel preferencesModel =
+                  context.read<ServiceBloc>().preferencesModel;
+              return AppBar(
+                backgroundColor: Colors.white,
+                elevation: elevation,
+                leading: InkWell(
+                  onTap: () {
+                    Navigator.of(context).push(createRoute(
+                      screen: ProfilePage(user: preferencesModel.user!),
+                      begin: const Offset(1, 0),
+                    ));
+                  },
+                  borderRadius: BorderRadius.circular(90),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ClipOval(
+                      child: preferencesModel.user!.imageUrl == null
+                          ? Image.asset(AppImages.imgNonAvatar, height: 80)
+                          : CachedNetworkImage(
+                              height: 50,
+                              width: 50,
+                              imageUrl: preferencesModel.user!.imageUrl ?? "",
+                              placeholder: (context, url) =>
+                                  itemLoading(80, 80, 90),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                    ),
                   ),
-                  begin: const Offset(1, 0),
-                ));
-              },
-              borderRadius: BorderRadius.circular(90),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: ClipOval(
-                  child: preferencesModel.user!.imageUrl == null
-                      ? Image.asset(AppImages.imgNonAvatar, height: 80)
-                      : CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          imageUrl: preferencesModel.user!.imageUrl ?? "",
-                          placeholder: (context, url) =>
-                              itemLoading(80, 80, 90),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
                 ),
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(createRoute(
-                    screen: SearchPage(onChange: onChange),
-                    begin: const Offset(1, 0),
-                  ));
-                },
-                icon: const Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Colors.grey,
-                ),
-              )
-            ],
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(createRoute(
+                        screen: SearchPage(onChange: onChange),
+                        begin: const Offset(1, 0),
+                      ));
+                    },
+                    icon: const Icon(
+                      FontAwesomeIcons.magnifyingGlass,
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              );
+            },
           );
   }
 

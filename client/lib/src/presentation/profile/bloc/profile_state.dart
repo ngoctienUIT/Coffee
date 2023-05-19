@@ -1,3 +1,5 @@
+import 'package:coffee/src/data/models/user.dart';
+
 abstract class ProfileState {}
 
 class InitState extends ProfileState {}
@@ -10,7 +12,11 @@ class EditProfileSate extends ProfileState {
 
 class SaveProfileLoading extends ProfileState {}
 
-class SaveProfileLoaded extends ProfileState {}
+class SaveProfileLoaded extends ProfileState {
+  User user;
+
+  SaveProfileLoaded(this.user);
+}
 
 class SaveProfileError extends ProfileState {
   final String? message;
@@ -19,7 +25,11 @@ class SaveProfileError extends ProfileState {
 
 class ChangeAvatarState extends ProfileState {}
 
-class DeleteAvatarState extends ProfileState {}
+class DeleteAvatarState extends ProfileState {
+  User user;
+
+  DeleteAvatarState(this.user);
+}
 
 class DeleteAvatarErrorState extends ProfileState {
   String error;

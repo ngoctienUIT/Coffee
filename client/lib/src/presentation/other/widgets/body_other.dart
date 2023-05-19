@@ -1,7 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
-import 'package:coffee/src/presentation/other/bloc/other_bloc.dart';
-import 'package:coffee/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +41,7 @@ class BodyOtherPage extends StatelessWidget {
                 PreferencesModel preferencesModel =
                     context.read<ServiceBloc>().preferencesModel;
                 Navigator.of(context).push(createRoute(
-                  screen: ProfilePage(
-                    user: preferencesModel.user!,
-                    onChange: () {
-                      context.read<OtherBloc>().add(FetchData());
-                    },
-                  ),
+                  screen: ProfilePage(user: preferencesModel.user!),
                   begin: const Offset(1, 0),
                 ));
               }),

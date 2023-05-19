@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
@@ -9,6 +11,8 @@ import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../../data/models/preferences_model.dart';
 
 class MembershipCard extends StatelessWidget {
   const MembershipCard({Key? key}) : super(key: key);
@@ -83,14 +87,25 @@ class MembershipCard extends StatelessWidget {
                       ),
                     ),
                     const Spacer(),
-                    Text(
-                      state.user.displayName,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    BlocBuilder<ServiceBloc, ServiceState>(
+                        buildWhen: (previous, current) =>
+                            current is ChangeUserInfoState,
+                        builder: (context, serviceState) {
+                          String name = state.user.displayName;
+                          if (serviceState is ChangeUserInfoState) {
+                            PreferencesModel preferencesModel =
+                                context.read<ServiceBloc>().preferencesModel;
+                            name = preferencesModel.user!.displayName;
+                          }
+                          return Text(
+                            name,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          );
+                        }),
                     const Spacer(),
                     Text(
                       "member".translate(context),
