@@ -1,18 +1,18 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../data/models/order.dart';
 import '../../login/widgets/custom_button.dart';
 
 class BottomCartPage extends StatelessWidget {
   const BottomCartPage({Key? key, required this.order}) : super(key: key);
 
-  final OrderResponse order;
+  final Order order;
 
   @override
   Widget build(BuildContext context) {

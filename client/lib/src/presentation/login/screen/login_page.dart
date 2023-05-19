@@ -116,9 +116,12 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void loginSuccess(PreferencesModel preferencesModel) {
+  void loginSuccess(PreferencesModel newModel) {
     saveNewTokenFCM();
-    context.read<ServiceBloc>().add(SetDataEvent(preferencesModel.copyWith()));
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
+    context.read<ServiceBloc>().add(SetDataEvent(
+        preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
     customToast(context, "logged_in_successfully".translate(context));
     context
         .read<LanguageCubit>()

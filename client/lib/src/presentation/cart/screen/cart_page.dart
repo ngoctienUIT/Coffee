@@ -18,10 +18,11 @@ import 'package:coffee/src/presentation/login/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/store.dart';
+import '../../../data/models/preferences_model.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({
     Key? key,
     required this.onChange,
@@ -32,18 +33,12 @@ class CartPage extends StatefulWidget {
   final VoidCallback onChangeStore;
 
   @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => CartBloc()..add(GetOrderSpending()),
-      child: CartView(
-        onChange: widget.onChange,
-        onChangeStore: widget.onChangeStore,
-      ),
+      create: (context) => CartBloc(preferencesModel)..add(GetOrderSpending()),
+      child: CartView(onChange: onChange, onChangeStore: onChangeStore),
     );
   }
 }
@@ -72,7 +67,7 @@ class CartView extends StatelessWidget {
             }
           }
           onChange(state.status);
-          Navigator.pop(context);
+          if (state.isLoading) Navigator.pop(context);
         }
         if (state is GetOrderErrorState) {
           customToast(context, state.error);
@@ -115,18 +110,15 @@ class CartView extends StatelessWidget {
                   child: Column(
                     children: [
                       InfoCart(
-                        store: Store.fromStoreResponse(
-                            state.order!.selectedPickupStore!),
+                        store: state.order!.selectedPickupStore!,
                         address: address,
-                        note: state.order!.orderCustomerNote,
+                        note: state.order!.orderNote,
                         selectedPickupOption:
                             state.order!.selectedPickupOption!,
                       ),
                       const SizedBox(height: 10),
                       ListProduct(
-                        orderItems: state.order!.orderItems == null
-                            ? []
-                            : state.order!.orderItems!,
+                        orderItems: state.order!.orderItems,
                         onChange: (total) {},
                       ),
                       const SizedBox(height: 10),

@@ -1,12 +1,13 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
 import 'package:flutter/material.dart';
+
+import '../../../data/models/order.dart';
 
 class TotalPayment extends StatelessWidget {
   const TotalPayment({Key? key, required this.order}) : super(key: key);
 
-  final OrderResponse order;
+  final Order order;
 
   @override
   Widget build(BuildContext context) {

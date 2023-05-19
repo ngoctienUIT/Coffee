@@ -1,15 +1,41 @@
-class Coupon {
-  String image;
-  String title;
-  String content;
-  DateTime startDay;
-  DateTime endDay;
+import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
+import 'package:equatable/equatable.dart';
 
-  Coupon({
-    required this.image,
-    required this.title,
+class Coupon extends Equatable {
+  final String id;
+  final String couponName;
+  final String couponCode;
+  final String content;
+  final String? imageUrl;
+  final String dueDate;
+
+  const Coupon({
+    required this.id,
+    required this.couponName,
+    required this.couponCode,
     required this.content,
-    required this.startDay,
-    required this.endDay,
+    this.imageUrl,
+    required this.dueDate,
   });
+
+  factory Coupon.fromCouponResponse(CouponResponse couponResponse) {
+    return Coupon(
+      id: couponResponse.id,
+      couponName: couponResponse.couponName,
+      couponCode: couponResponse.couponCode,
+      content: couponResponse.content,
+      dueDate: couponResponse.dueDate,
+      imageUrl: couponResponse.imageUrl,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        couponName,
+        couponCode,
+        content,
+        imageUrl,
+        dueDate,
+      ];
 }

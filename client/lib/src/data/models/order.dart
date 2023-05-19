@@ -1,9 +1,12 @@
-import 'package:coffee/src/data/models/address.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:equatable/equatable.dart';
 
+import '../../domain/repositories/order/order_response.dart';
+import 'address.dart';
+import 'coupon.dart';
 import 'item_order.dart';
+import 'store.dart';
 
-class Order {
+class Order extends Equatable {
   String? orderId;
   String userId;
   String? createdDate;
@@ -21,6 +24,8 @@ class Order {
   String? appliedCoupons;
   String? orderStatus;
   String? orderNote;
+  Store? selectedPickupStore;
+  Coupon? appliedCoupon;
 
   Order({
     this.orderId,
@@ -32,6 +37,7 @@ class Order {
     this.orderNote,
     this.selectedPaymentMethod,
     this.selectedPickupOption,
+    this.selectedPickupStore,
     this.storeId,
     this.address1,
     this.address2,
@@ -40,6 +46,7 @@ class Order {
     this.orderAmount,
     this.appliedCoupons,
     this.orderStatus,
+    this.appliedCoupon,
   });
 
   Map<String, dynamic> toJson() {
@@ -90,6 +97,9 @@ class Order {
       appliedCoupons: orderResponse.appliedCoupon == null
           ? null
           : orderResponse.appliedCoupon!.id,
+      appliedCoupon: orderResponse.appliedCoupon == null
+          ? null
+          : Coupon.fromCouponResponse(orderResponse.appliedCoupon!),
       createdDate: orderResponse.createdDate,
       lastUpdated: orderResponse.lastUpdated,
       orderAmount: orderResponse.orderAmount,
@@ -99,7 +109,36 @@ class Order {
       storeId: orderResponse.selectedPickupStore == null
           ? null
           : orderResponse.selectedPickupStore!.storeId,
+      selectedPickupStore: orderResponse.selectedPickupStore == null
+          ? null
+          : Store.fromStoreResponse(orderResponse.selectedPickupStore!),
       orderNote: orderResponse.orderCustomerNote,
     );
   }
+
+  int getTotal() {
+    int total = 0;
+    for (var item in orderItems) {
+      total += item.getTotal();
+    }
+    return total;
+  }
+
+  @override
+  List<Object?> get props => [
+        orderId,
+        orderItems,
+        orderNote,
+        selectedPickupOption,
+        selectedPickupStore,
+        storeId,
+        address1,
+        address2,
+        address3,
+        address4,
+        orderAmount,
+        appliedCoupons,
+        orderStatus,
+        appliedCoupon,
+      ];
 }

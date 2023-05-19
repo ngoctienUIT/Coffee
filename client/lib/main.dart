@@ -150,6 +150,10 @@ class _NavigatePageState extends State<NavigatePage> {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
       screenFunction: () async {
+        ApiService apiService =
+            ApiService(Dio(BaseOptions(contentType: "application/json")));
+        final storeResponse = apiService.getAllStores();
+
         if (isLogin) {
           final prefs = await SharedPreferences.getInstance();
           String token = prefs.getString("token") ?? "";
@@ -157,11 +161,9 @@ class _NavigatePageState extends State<NavigatePage> {
           String? storeID = prefs.getString("storeID");
           String? address = prefs.getString("address");
           bool isBringBack = prefs.getBool("isBringBack") ?? false;
-          ApiService apiService =
-              ApiService(Dio(BaseOptions(contentType: "application/json")));
+
           final userResponse =
               apiService.getUserByID("Bearer $token", userID ?? "");
-          final storeResponse = apiService.getAllStores();
           final list = await Future.wait([userResponse, storeResponse]);
           PreferencesModel preferencesModel = PreferencesModel(
               token: token,
@@ -176,6 +178,15 @@ class _NavigatePageState extends State<NavigatePage> {
             context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
           }
           return const MainPage();
+        }
+        PreferencesModel preferencesModel = PreferencesModel(
+            token: "",
+            listStore: (await storeResponse)
+                .data
+                .map((e) => Store.fromStoreResponse(e))
+                .toList());
+        if (context.mounted) {
+          context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
         }
         return const LoginPage();
       },

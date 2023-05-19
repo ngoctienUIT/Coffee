@@ -1,16 +1,24 @@
-import '../../domain/repositories/item_order/item_order_response.dart';
+import 'package:equatable/equatable.dart';
 
-class ItemOrder {
+import '../../domain/repositories/item_order/item_order_response.dart';
+import 'product.dart';
+import 'topping.dart';
+
+class ItemOrder extends Equatable {
   String productId;
   int quantity;
   List<String> toppingIds;
   int selectedSize;
+  Product? product;
+  List<Topping>? toppings;
 
   ItemOrder({
     required this.productId,
     required this.quantity,
     required this.toppingIds,
     required this.selectedSize,
+    this.product,
+    this.toppings,
   });
 
   Map<String, dynamic> toJson() {
@@ -30,6 +38,29 @@ class ItemOrder {
       selectedSize: itemOrder.selectedSize == "S"
           ? 0
           : (itemOrder.selectedSize == "M" ? 1 : 2),
+      product: Product.fromProductResponse(itemOrder.product),
+      toppings: itemOrder.toppings
+          .map((e) => Topping.fromToppingResponse(e))
+          .toList(),
     );
   }
+
+  int getTotal() {
+    int total = product!.price +
+        (selectedSize == 0
+            ? product!.S
+            : (selectedSize == 1 ? product!.M : product!.L));
+    for (var item in toppings!) {
+      total += item.pricePerService;
+    }
+    return total * quantity;
+  }
+
+  @override
+  List<Object?> get props => [
+        productId,
+        quantity,
+        toppingIds,
+        selectedSize,
+      ];
 }

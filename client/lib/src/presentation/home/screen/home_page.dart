@@ -14,7 +14,6 @@ import 'package:geolocator/geolocator.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../../cart/screen/cart_page.dart';
 import '../../main/bloc/main_bloc.dart';
@@ -162,13 +161,13 @@ class _HomeViewState extends State<HomeView>
           Navigator.of(context).push(createRoute(
             screen: CartPage(
               onChangeStore: () {
-                context.read<MainBloc>().add(ChangeStoreEvent());
+                // context.read<MainBloc>().add(ChangeStoreEvent());
               },
               onChange: (status) {
-                context.read<HomeBloc>().add(AddProductToCart());
-                if (status == OrderStatus.placed) {
-                  context.read<MainBloc>().add(UpdateActivityEvent());
-                }
+                // context.read<HomeBloc>().add(AddProductToCart());
+                // if (status == OrderStatus.placed) {
+                //   context.read<MainBloc>().add(UpdateActivityEvent());
+                // }
               },
             ),
             begin: const Offset(1, 0),

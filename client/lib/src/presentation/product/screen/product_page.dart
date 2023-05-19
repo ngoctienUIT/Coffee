@@ -6,6 +6,8 @@ import 'package:coffee/src/presentation/product/widgets/bottom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../store/widgets/item_loading.dart';
 import '../widgets/app_bar_product.dart';
@@ -26,9 +28,11 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) =>
-          ProductBloc()..add(DataTransmissionEvent(product: product)),
+      create: (context) => ProductBloc(preferencesModel)
+        ..add(DataTransmissionEvent(product: product)),
       child: ProductView(
           product: product, isEdit: isEdit, onPress: onPress, index: index),
     );

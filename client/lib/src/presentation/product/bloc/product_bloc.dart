@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/item_order.dart';
 import '../../../data/models/order.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/api_service.dart';
 import 'product_event.dart';
@@ -12,8 +13,9 @@ import 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Product product = Product(name: "", currency: "", price: 0, M: 0, L: 0);
+  PreferencesModel preferencesModel;
 
-  ProductBloc() : super(InitState()) {
+  ProductBloc(this.preferencesModel) : super(InitState()) {
     on<DataTransmissionEvent>((event, emit) {
       product = event.product.copyWith();
       emit(DataTransmissionState());
@@ -34,19 +36,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(AddProductToOrderLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
-      String userID = prefs.getString("userID") ?? "";
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.user!.username,
+        "PENDING",
+      );
       final orderSpending = response.data;
       if (orderSpending.isEmpty) {
-        await createNewOrder(
-            token: token, userID: userID, product: product, emit: emit);
+        await createNewOrder(product: product, emit: emit);
       } else {
         await updatePendingOrder(
-          token: token,
           order: Order.fromOrderResponse(orderSpending[0]),
           product: product,
           emit: emit,
@@ -64,25 +63,25 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future createNewOrder({
-    required String token,
-    required String userID,
     required Product product,
     required Emitter emit,
   }) async {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String? storeID = prefs.getString("storeID");
-      String address = prefs.getString("address") ?? "";
-      bool isBringBack = prefs.getBool("isBringBack") ?? false;
+      String address = preferencesModel.address ?? "";
+      bool isBringBack = preferencesModel.isBringBack;
+      String? storeID = preferencesModel.storeID;
+
       if (storeID == null || storeID.isEmpty) {
-        prefs.setString("storeID", "6425d2c7cf1d264dca4bcc82");
         storeID = "6425d2c7cf1d264dca4bcc82";
+        SharedPreferences.getInstance().then((value) {
+          value.setString("storeID", storeID!);
+        });
       }
       print(storeID);
       Order order = Order(
-        userId: userID,
+        userId: preferencesModel.user!.id!,
         storeId: storeID,
         selectedPickupOption: isBringBack ? "DELIVERY" : "AT_STORE",
         orderItems: [product.toItemOrder()],
@@ -91,7 +90,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (isBringBack && address.isNotEmpty) {
         order.addAddress(address.toAddressAPI().toAddress());
       }
-      await apiService.createNewOrder("Bearer $token", order.toJson());
+      await apiService.createNewOrder(
+          "Bearer ${preferencesModel.token}", order.toJson());
       emit(AddProductToOrderSuccessState());
     } on DioError catch (e) {
       String error =
@@ -105,7 +105,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future updatePendingOrder({
-    required String token,
     required Order order,
     required Product product,
     required Emitter emit,
@@ -126,7 +125,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       print(order.toJson());
       await apiService.updatePendingOrder(
-          "Bearer $token", order.toJson(), order.orderId!);
+          "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(AddProductToOrderSuccessState());
     } on DioError catch (e) {
       String error =
@@ -159,11 +158,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(UpdateLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.user!.username,
+        "PENDING",
+      );
       final orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
 
@@ -181,7 +180,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       await apiService.updatePendingOrder(
-          "Bearer $token", order.toJson(), order.orderId!);
+          "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(UpdateSuccessState());
     } on DioError catch (e) {
       String error =
@@ -199,20 +198,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(DeleteLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "";
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PENDING");
+      final response = await apiService.getAllOrders(
+        "Bearer ${preferencesModel.token}",
+        preferencesModel.user!.username,
+        "PENDING",
+      );
       final orderSpending = response.data;
       Order order = Order.fromOrderResponse(orderSpending[0]);
       order.orderItems.removeAt(index);
 
       if (order.orderItems.isEmpty) {
-        await apiService.removePendingOrder("Bearer $token", email);
+        await apiService.removePendingOrder("Bearer ${preferencesModel.token}",
+            preferencesModel.user!.username);
       } else {
         await apiService.updatePendingOrder(
-            "Bearer $token", order.toJson(), order.orderId!);
+            "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       }
       emit(DeleteSuccessState());
     } on DioError catch (e) {

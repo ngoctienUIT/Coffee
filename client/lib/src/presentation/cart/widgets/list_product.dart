@@ -10,8 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/item_order.dart';
 import '../../../data/models/product.dart';
-import '../../../domain/repositories/item_order/item_order_response.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {
@@ -19,7 +19,7 @@ class ListProduct extends StatelessWidget {
       {Key? key, required this.onChange, required this.orderItems})
       : super(key: key);
   final Function(int total) onChange;
-  final List<ItemOrderResponse> orderItems;
+  final List<ItemOrder> orderItems;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class ListProduct extends StatelessWidget {
               product.chooseTopping =
                   List.filled(product.toppingOptions!.length, false);
               List<String> idS =
-                  orderItems[index].toppings.map((e) => e.toppingId).toList();
+                  orderItems[index].toppings!.map((e) => e.toppingId).toList();
               for (int i = 0; i < product.toppingOptions!.length; i++) {
                 if (idS.contains(product.toppingOptions![i].toppingId)) {
                   product.chooseTopping![i] = true;
@@ -129,11 +129,9 @@ class ListProduct extends StatelessWidget {
     );
   }
 
-  Product toProduct(ItemOrderResponse item) {
-    Product product = Product.fromProductResponse(item.product);
+  Product toProduct(ItemOrder item) {
+    Product product = item.product!;
     product.number = item.quantity;
-    product.sizeIndex =
-        item.selectedSize == "S" ? 0 : (item.selectedSize == "M" ? 1 : 2);
     return product;
   }
 }

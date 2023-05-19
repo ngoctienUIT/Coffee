@@ -2,7 +2,7 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/models/coupon.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../coupon/widgets/ticket_widget.dart';
 
@@ -11,7 +11,7 @@ class AddCoupons extends StatefulWidget {
       {Key? key, this.coupons, required this.onPress, required this.onDelete})
       : super(key: key);
 
-  final CouponResponse? coupons;
+  final Coupon? coupons;
   final Function(String id) onPress;
   final VoidCallback onDelete;
 
