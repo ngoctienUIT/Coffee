@@ -7,3 +7,5 @@ class ChangeUserInfoState extends ServiceState {}
 class ChangeOrderState extends ServiceState {}
 
 class ChangeStoreState extends ServiceState {}
+
+class PlacedOrderState extends ServiceState {}

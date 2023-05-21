@@ -148,10 +148,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       emit(ProductLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-
+      print("update product");
+      print(product.toItemOrder().toJson());
       Order order = preferencesModel.order!;
       order.orderItems[index].quantity = product.number;
       order.orderItems[index].selectedSize = product.sizeIndex;
+      print(order.orderItems[index].toJson());
 
       if (product.toppingOptions != null) {
         List<String> list = [];
@@ -163,6 +165,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         order.orderItems[index].toppingIds = list;
       }
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
+      print(order.toJson());
+
       final response = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(UpdateSuccessState(Order.fromOrderResponse(response.data)));

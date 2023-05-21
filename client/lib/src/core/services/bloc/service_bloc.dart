@@ -15,6 +15,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<SetDataEvent>(
         (event, emit) => preferencesModel = event.preferencesModel.copyWith());
 
+    on<PlacedOrderEvent>((event, emit) => emit(PlacedOrderState()));
+
     on<ChangeUserInfoEvent>((event, emit) {
       preferencesModel = preferencesModel.copyWith(user: event.user.copyWith());
       emit(ChangeUserInfoState());

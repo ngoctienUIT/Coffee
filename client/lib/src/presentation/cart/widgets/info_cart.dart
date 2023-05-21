@@ -10,7 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../add_address/screen/add_address_page.dart';
 import '../bloc/cart_bloc.dart';
@@ -161,6 +163,13 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget atTable() {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
+    if (!isBringBack && store == null && preferencesModel.storeID != null) {
+      setState(() {
+        store = preferencesModel.getStore();
+      });
+    }
     return InkWell(
       onTap: () {
         Navigator.of(context).push(createRoute(
@@ -198,9 +207,7 @@ class _InfoCartState extends State<InfoCart> {
                   const SizedBox(height: 5),
                   Text(store != null ? store!.hotlineNumber! : ""),
                   const SizedBox(height: 5),
-                  Text(store == null
-                      ? ""
-                      : "${store!.address1}, ${store!.address2}, ${store!.address3}, ${store!.address4},"),
+                  Text(store == null ? "" : store!.getAddress()),
                 ],
               ),
             ),
@@ -212,6 +219,13 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget bringBack() {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
+    if (!isBringBack && address == null && preferencesModel.address != null) {
+      setState(() {
+        address = preferencesModel.address!.toAddressAPI().toAddress();
+      });
+    }
     return InkWell(
       onTap: () {
         Navigator.of(context).push(createRoute(

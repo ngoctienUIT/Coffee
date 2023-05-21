@@ -73,8 +73,17 @@ Widget nameAndAddress(Store store) {
         ),
       ),
       const SizedBox(height: 20),
-      Text(
-          "${store.address1} - ${store.address2} - ${store.address3} - ${store.address4}"),
+      GestureDetector(
+        onTap: () async {
+          String googleUrl =
+              "https://www.google.com/maps/search/?api=1&query=${store.getAddress()}";
+          if (await canLaunchUrlString(googleUrl)) {
+            await launchUrlString(googleUrl);
+          }
+        },
+        child: Text(
+            "${store.address1} - ${store.address2} - ${store.address3} - ${store.address4}"),
+      ),
       const Divider(),
     ],
   );

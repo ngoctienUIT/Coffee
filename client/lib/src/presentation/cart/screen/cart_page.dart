@@ -57,6 +57,7 @@ class CartView extends StatelessWidget {
           if (state is GetOrderSuccessState) {
             if (state.status != null) {
               if (state.status == OrderStatus.placed) {
+                context.read<ServiceBloc>().add(PlacedOrderEvent());
                 customToast(context, "order_success".translate(context));
               } else {
                 customToast(

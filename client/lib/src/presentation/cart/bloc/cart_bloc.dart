@@ -118,8 +118,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         storeID ??= (prefs.getString("storeID") ?? "6425d2c7cf1d264dca4bcc82");
         order.storeId = storeID;
         prefs.setString("storeID", storeID);
-        emit(ChangeStoreCartState());
       }
+      emit(ChangeStoreCartState());
       final orderResponse = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(GetOrderSuccessState(Order.fromOrderResponse(orderResponse.data)));
@@ -235,8 +235,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       );
       emit(GetOrderSuccessState(Order.fromOrderResponse(responseCoupon.data)));
     } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.response != null
+          ? e.response!.data["message"].toString()
+          : e.toString();
       emit(GetOrderErrorState(error));
       print(error);
     } catch (e) {

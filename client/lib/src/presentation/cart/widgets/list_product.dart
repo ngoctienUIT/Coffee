@@ -132,6 +132,7 @@ class ListProduct extends StatelessWidget {
   Product toProduct(ItemOrder item) {
     Product product = item.product!;
     product.number = item.quantity;
+    product.sizeIndex = item.selectedSize;
     return product;
   }
 }

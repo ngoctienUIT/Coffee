@@ -189,10 +189,7 @@ class BottomSheetOrder extends StatelessWidget {
       decoration: const BoxDecoration(color: AppColors.statusBarColor),
       child: Row(
         children: [
-          const Icon(
-            Icons.location_on,
-            color: Colors.white,
-          ),
+          const Icon(Icons.location_on, color: Colors.white),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

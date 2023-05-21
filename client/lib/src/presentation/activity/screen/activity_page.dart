@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
@@ -63,29 +64,38 @@ class _ActivityViewState extends State<ActivityView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(
-      children: [
-        const SizedBox(height: 8),
-        Container(
-          height: 50,
-          color: Colors.white,
-          child: TabBar(
-            controller: _activityController,
-            isScrollable: false,
-            labelColor: Colors.black87,
-            labelStyle:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            unselectedLabelColor: AppColors.statusBarColor,
-            unselectedLabelStyle: const TextStyle(fontSize: 16),
-            indicatorColor: AppColors.statusBarColor,
-            tabs: [
-              Tab(text: "going_on".translate(context)),
-              Tab(text: "order_history".translate(context)),
-            ],
+    return BlocListener<ServiceBloc, ServiceState>(
+      listener: (context, state) {
+        if (state is PlacedOrderState) {
+          context
+              .read<ActivityBloc>()
+              .add(UpdateData(_activityController.index));
+        }
+      },
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            height: 50,
+            color: Colors.white,
+            child: TabBar(
+              controller: _activityController,
+              isScrollable: false,
+              labelColor: Colors.black87,
+              labelStyle:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              unselectedLabelColor: AppColors.statusBarColor,
+              unselectedLabelStyle: const TextStyle(fontSize: 16),
+              indicatorColor: AppColors.statusBarColor,
+              tabs: [
+                Tab(text: "going_on".translate(context)),
+                Tab(text: "order_history".translate(context)),
+              ],
+            ),
           ),
-        ),
-        const Expanded(child: ListActivity()),
-      ],
+          const Expanded(child: ListActivity()),
+        ],
+      ),
     );
   }
 

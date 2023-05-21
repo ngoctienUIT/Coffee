@@ -28,6 +28,7 @@ class BodyProduct extends StatelessWidget {
         if (state is AddProductToOrderSuccessState ||
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
+          print(state.order!.toJson());
           context.read<ServiceBloc>().add(ChangeOrderEvent(
               state.order != null ? state.order!.copyWith() : null));
           if (state is AddProductToOrderSuccessState) {

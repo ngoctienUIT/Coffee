@@ -23,3 +23,5 @@ class ChangeOrderEvent extends ServiceEvent {
 }
 
 class ChangeStoreEvent extends ServiceEvent {}
+
+class PlacedOrderEvent extends ServiceEvent {}

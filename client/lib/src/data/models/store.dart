@@ -58,6 +58,8 @@ class Store {
     );
   }
 
+  String getAddress() => "$address1, $address2, $address3, $address4";
+
   bool checkOpen() =>
       openingHour!.toTime().toInt() <= TimeOfDay.now().toInt() &&
       TimeOfDay.now().toInt() <= closingHour!.toTime().toInt();
