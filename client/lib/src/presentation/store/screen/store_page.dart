@@ -36,21 +36,15 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ServiceBloc, ServiceState>(
-      buildWhen: (previous, current) => current is ChangeStoreState,
-      builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
-
-        return BlocProvider<StoreBloc>(
-          create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
-          child: StoreView(
-            onPress: onPress,
-            isPick: isPick,
-            onChange: onChange,
-          ),
-        );
-      },
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
+    return BlocProvider<StoreBloc>(
+      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
+      child: StoreView(
+        onPress: onPress,
+        isPick: isPick,
+        onChange: onChange,
+      ),
     );
   }
 }
@@ -102,10 +96,6 @@ class _StoreViewState extends State<StoreView>
         elevation: 0,
         isPick: widget.isPick,
         title: "store".translate(context),
-        onChange: () {
-          // context.read<MainBloc>().add(ChangeCartHomeEvent());
-          // context.read<MainBloc>().add(ChangeCartOrderEvent());
-        },
       ),
       body: SafeArea(
         child: Column(
@@ -113,7 +103,14 @@ class _StoreViewState extends State<StoreView>
             const SizedBox(height: 10),
             headerStore(),
             const SizedBox(height: 10),
-            Expanded(child: bodyStore()),
+            Expanded(
+              child: BlocBuilder<ServiceBloc, ServiceState>(
+                buildWhen: (previous, current) => current is ChangeStoreState,
+                builder: (context, state) {
+                  return bodyStore();
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -143,11 +140,13 @@ class _StoreViewState extends State<StoreView>
   }
 
   Widget bodyStore() {
+    print("rebuild list store");
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
         print(state);
         PreferencesModel preferencesModel =
             context.read<ServiceBloc>().preferencesModel;
+        String storeID = preferencesModel.storeID ?? "";
         if (state is StoreLoaded) {
           List<Store> listStore = state.listStore;
           if (preferencesModel.listStore.length != listStore.length) {
@@ -180,7 +179,7 @@ class _StoreViewState extends State<StoreView>
                     }
                   },
                 ),
-                child: itemStore(listStore[index], state.id),
+                child: itemStore(listStore[index], storeID),
               );
             },
           );

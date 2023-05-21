@@ -160,6 +160,8 @@ class Order extends Equatable {
     return total;
   }
 
+  String getAddress() => "$address1, $address2, $address3, $address4";
+
   @override
   List<Object?> get props => [
         orderId,

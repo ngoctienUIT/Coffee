@@ -19,6 +19,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc(this.preferencesModel) : super(InitState()) {
     on<GetOrderSpending>((event, emit) => getOrderSpending(emit));
 
+    on<SetPreferencesModel>((event, emit) {
+      preferencesModel = event.preferencesModel.copyWith();
+    });
+
     on<DeleteOrderEvent>((event, emit) => deleteOrderSpending(emit));
 
     on<DeleteProductEvent>((event, emit) => deleteProduct(event.index, emit));
@@ -114,7 +118,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         storeID ??= (prefs.getString("storeID") ?? "6425d2c7cf1d264dca4bcc82");
         order.storeId = storeID;
         prefs.setString("storeID", storeID);
-        emit(ChangeStoreState());
+        emit(ChangeStoreCartState());
       }
       final orderResponse = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
@@ -132,6 +136,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future getOrderSpending(Emitter emit) async {
     try {
+      print("get order spending in cart");
       emit(GetOrderLoadingState());
       emit(GetOrderSuccessState(preferencesModel.order));
       ApiService apiService =
@@ -148,6 +153,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         print(orderSpending[0].toJson());
         Order order = Order.fromOrderResponse(orderSpending[0]);
         if (order != preferencesModel.order) {
+          // preferencesModel.order = order.copyWith();
           emit(GetOrderSuccessState(order, null, false));
         }
       }

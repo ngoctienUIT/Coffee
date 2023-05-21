@@ -10,11 +10,9 @@ import '../../../core/function/route_function.dart';
 import '../../../domain/repositories/product/product_response.dart';
 
 class ListItemOrder extends StatelessWidget {
-  const ListItemOrder({Key? key, required this.listProduct, this.onPress})
-      : super(key: key);
+  const ListItemOrder({Key? key, required this.listProduct}) : super(key: key);
 
   final List<ProductResponse> listProduct;
-  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,6 @@ class ListItemOrder extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(createRoute(
               screen: ProductPage(
-                // onPress: onPress,
                 isEdit: false,
                 product: Product.fromProductResponse(listProduct[index]),
               ),

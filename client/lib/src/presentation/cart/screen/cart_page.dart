@@ -20,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
+import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
 
@@ -42,100 +43,113 @@ class CartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CartBloc, CartState>(
+    return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
-        if (state is GetOrderSuccessState) {
-          if (state.status != null) {
-            if (state.status == OrderStatus.placed) {
-              customToast(context, "order_success".translate(context));
+        if (state is ChangeOrderState) {
+          PreferencesModel preferencesModel =
+              context.read<ServiceBloc>().preferencesModel;
+          context.read<CartBloc>().add(SetPreferencesModel(preferencesModel));
+          context.read<CartBloc>().add(GetOrderSpending());
+        }
+      },
+      child: BlocConsumer<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is GetOrderSuccessState) {
+            if (state.status != null) {
+              if (state.status == OrderStatus.placed) {
+                customToast(context, "order_success".translate(context));
+              } else {
+                customToast(
+                    context, "cart_cleared_successfully".translate(context));
+              }
+              context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
+            }
+            if (state.isLoading) Navigator.pop(context);
+          }
+          if (state is GetOrderErrorState) {
+            customToast(context, state.error);
+            Navigator.pop(context);
+          }
+          if (state is GetOrderLoadingState) {
+            loadingAnimation(context);
+          }
+          if (state is ChangeStoreCartState) {
+            context.read<ServiceBloc>().add(ChangeStoreEvent());
+          }
+        },
+        buildWhen: (previous, current) => current is GetOrderSuccessState,
+        builder: (context, state) {
+          print("cart page: $state");
+          if (state is GetOrderSuccessState) {
+            if (state.order == null) {
+              return emptyCart(context);
             } else {
-              customToast(
-                  context, "cart_cleared_successfully".translate(context));
+              print(state.order != null ? state.order!.toJson() : null);
+              return buildBody(context, state);
             }
           }
-          context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
-          if (state.isLoading) Navigator.pop(context);
-        }
-        if (state is GetOrderErrorState) {
-          customToast(context, state.error);
-          Navigator.pop(context);
-        }
-        if (state is GetOrderLoadingState) {
-          loadingAnimation(context);
-        }
-        if (state is ChangeStoreState) {
-          context.read<ServiceBloc>().add(ChangeStoreEvent());
-        }
-      },
-      buildWhen: (previous, current) => current is GetOrderSuccessState,
-      builder: (context, state) {
-        print("cart page: $state");
-        if (state is GetOrderSuccessState) {
-          if (state.order == null) {
-            return emptyCart(context);
-          } else {
-            print(state.order != null ? state.order!.toJson() : null);
-            Address? address;
-            if (state.order!.address1 != null) {
-              address = Address(
-                province: state.order!.address4!,
-                district: state.order!.address3!,
-                ward: state.order!.address2!,
-                address: state.order!.address1!,
-              );
-            }
-            return Scaffold(
-              backgroundColor: AppColors.bgColor,
-              appBar: AppBarCart(
-                clearCart: () => _showAlertDialog(context, () {
-                  context.read<CartBloc>().add(DeleteOrderEvent());
-                }),
+          return Scaffold(body: Container());
+        },
+      ),
+    );
+  }
+
+  Widget buildBody(BuildContext context, GetOrderSuccessState state) {
+    Address? address;
+    if (state.order!.address1 != null) {
+      address = Address(
+        province: state.order!.address4!,
+        district: state.order!.address3!,
+        ward: state.order!.address2!,
+        address: state.order!.address1!,
+      );
+    }
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: AppBarCart(
+        clearCart: () => _showAlertDialog(context, () {
+          context.read<CartBloc>().add(DeleteOrderEvent());
+        }),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              InfoCart(
+                store: state.order != null
+                    ? state.order!.selectedPickupStore
+                    : null,
+                address: address,
+                note: state.order!.orderNote,
+                selectedPickupOption: state.order!.selectedPickupOption!,
               ),
-              body: Padding(
-                padding: const EdgeInsets.all(10),
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    children: [
-                      InfoCart(
-                        store: state.order != null
-                            ? state.order!.selectedPickupStore
-                            : null,
-                        address: address,
-                        note: state.order!.orderNote,
-                        selectedPickupOption:
-                            state.order!.selectedPickupOption!,
-                      ),
-                      const SizedBox(height: 10),
-                      ListProduct(
-                        orderItems: state.order!.orderItems,
-                        onChange: (total) {},
-                      ),
-                      const SizedBox(height: 10),
-                      AddCoupons(
-                        coupons: state.order!.appliedCoupon,
-                        onDelete: () {
-                          context.read<CartBloc>().add(DeleteCouponOrder());
-                        },
-                        onPress: (id) {
-                          context.read<CartBloc>().add(AttachCouponToOrder(id));
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TotalPayment(order: state.order!),
-                      const SizedBox(height: 10),
-                      const PaymentMethods(),
-                      const SizedBox(height: 200),
-                    ],
-                  ),
-                ),
+              const SizedBox(height: 10),
+              ListProduct(
+                orderItems: state.order!.orderItems,
+                onChange: (total) {},
               ),
-              bottomSheet: BottomCartPage(order: state.order!),
-            );
-          }
-        }
-        return Scaffold(body: Container());
-      },
+              const SizedBox(height: 10),
+              AddCoupons(
+                coupons: state.order!.appliedCoupon,
+                onDelete: () {
+                  context.read<CartBloc>().add(DeleteCouponOrder());
+                },
+                onPress: (id) {
+                  context.read<CartBloc>().add(AttachCouponToOrder(id));
+                },
+              ),
+              const SizedBox(height: 10),
+              TotalPayment(order: state.order!),
+              const SizedBox(height: 10),
+              const PaymentMethods(),
+              const SizedBox(height: 200),
+            ],
+          ),
+        ),
+      ),
+      bottomSheet: BottomCartPage(order: state.order!),
     );
   }
 

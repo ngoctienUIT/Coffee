@@ -49,12 +49,7 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
           backgroundColor: AppColors.bgColor,
           onPress: () {
             Navigator.of(context).push(createRoute(
-              screen: SearchPage(
-                onChange: () {
-                  context.read<OrderBloc>().add(AddProductToCart());
-                  // context.read<MainBloc>().add(ChangeCartHomeEvent());
-                },
-              ),
+              screen: const SearchPage(),
               begin: const Offset(1, 0),
             ));
           },

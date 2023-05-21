@@ -50,8 +50,8 @@ class HomeError extends HomeState {
   HomeError(this.message);
 }
 
-class AddProductToCartLoaded extends HomeState {
+class CartLoaded extends HomeState {
   final OrderResponse? order;
 
-  AddProductToCartLoaded(this.order);
+  CartLoaded(this.order);
 }

@@ -23,7 +23,8 @@ class BuildListSellingProducts extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is! ChangeBannerState &&
           current is! CouponLoaded &&
-          current is! AddProductToCartLoaded,
+          current is! CartLoaded &&
+          current is! HomeError,
       builder: (context, state) {
         if (state is HomeLoaded) {
           return SizedBox(

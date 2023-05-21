@@ -32,7 +32,10 @@ class HomePage extends StatelessWidget {
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc(preferencesModel)..add(FetchData()),
+      create: (context) => HomeBloc(preferencesModel)
+        ..add(FetchData())
+        ..add(GetOrderSpendingEvent())
+        ..add(GetCouponEvent()),
       child: const HomeView(),
     );
   }
@@ -95,21 +98,13 @@ class _HomeViewState extends State<HomeView>
     super.build(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar: CustomAppBar(
-        elevation: 0,
-        isPick: false,
-        title: "",
-        onChange: () {
-          // context.read<MainBloc>().add(ChangeCartHomeEvent());
-          // context.read<MainBloc>().add(ChangeCartOrderEvent());
-        },
-      ),
+      appBar: const CustomAppBar(elevation: 0, isPick: false, title: ""),
       body: BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {
           if (state is HomeError) {
             customToast(context, state.message.toString());
           }
-          if (state is AddProductToCartLoaded) {
+          if (state is CartLoaded) {
             context.read<ServiceBloc>().add(ChangeOrderEvent(
                   state.order != null
                       ? Order.fromOrderResponse(state.order!)
@@ -175,7 +170,8 @@ class _HomeViewState extends State<HomeView>
 
   Widget buildBanner() {
     return BlocBuilder<HomeBloc, HomeState>(
-      buildWhen: (previous, current) => current is ChangeBannerState,
+      buildWhen: (previous, current) =>
+          current is ChangeBannerState && current is! HomeError,
       builder: (context, state) {
         return SizedBox(
           height: 150,

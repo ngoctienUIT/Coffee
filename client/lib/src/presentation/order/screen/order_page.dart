@@ -27,24 +27,11 @@ class _OrderPageState extends State<OrderPage>
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<OrderBloc>(
-      create: (_) => preferencesModel.order == null
-          ? (OrderBloc(preferencesModel)
-            ..add(FetchData())
-            ..add(AddProductToCart()))
-          : (OrderBloc(preferencesModel)..add(FetchData())),
+      create: (_) => OrderBloc(preferencesModel)..add(FetchData()),
       child: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
-          if (state is AddProductToCartError) {
-            customToast(context, state.message.toString());
-          }
           if (state is OrderError) {
             customToast(context, state.message.toString());
-          }
-          if (state is RefreshOrderError) {
-            customToast(context, state.message.toString());
-          }
-          if (state is AddProductToCartLoaded) {
-            // context.read<MainBloc>().add(ChangeCartHomeEvent());
           }
         },
         child: const Scaffold(

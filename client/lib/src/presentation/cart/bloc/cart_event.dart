@@ -1,8 +1,15 @@
 import '../../../data/models/address.dart';
+import '../../../data/models/preferences_model.dart';
 
 abstract class CartEvent {}
 
 class GetOrderSpending extends CartEvent {}
+
+class SetPreferencesModel extends CartEvent {
+  PreferencesModel preferencesModel;
+
+  SetPreferencesModel(this.preferencesModel);
+}
 
 class DeleteOrderEvent extends CartEvent {}
 

@@ -19,13 +19,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.elevation,
     required this.isPick,
     required this.title,
-    required this.onChange,
   }) : super(key: key);
 
   final double? elevation;
   final bool isPick;
   final String title;
-  final VoidCallback onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +67,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   IconButton(
                     onPressed: () {
                       Navigator.of(context).push(createRoute(
-                        screen: SearchPage(onChange: onChange),
+                        screen: const SearchPage(),
                         begin: const Offset(1, 0),
                       ));
                     },

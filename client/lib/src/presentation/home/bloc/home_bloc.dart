@@ -15,7 +15,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(event.check, emit));
 
-    on<AddProductToCart>((event, emit) => getOrderSpending(emit));
+    on<GetCouponEvent>((event, emit) => getCoupon(emit));
+
+    on<GetOrderSpendingEvent>((event, emit) => getOrderSpending(emit));
 
     on<ChangeBannerEvent>((event, emit) => emit(ChangeBannerState()));
   }
@@ -80,10 +82,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(HomeLoading(check));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      if (check) {
-        getOrderSpending(emit);
-        getCoupon(emit, apiService);
-      }
       Position? position = await _getCurrentPosition(emit);
       print("position ${position?.toJson()}");
       if (position != null) {
@@ -126,7 +124,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         "PENDING",
       );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
-      emit(AddProductToCartLoaded(myOrder));
+      emit(CartLoaded(myOrder));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -138,8 +136,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  Future getCoupon(Emitter emit, ApiService apiService) async {
-    final listCoupon = await apiService.getAllCoupons();
-    emit(CouponLoaded(listCoupon: listCoupon.data));
+  Future getCoupon(Emitter emit) async {
+    try {
+      ApiService apiService =
+          ApiService(Dio(BaseOptions(contentType: "application/json")));
+      final listCoupon = await apiService.getAllCoupons();
+      emit(CouponLoaded(listCoupon: listCoupon.data));
+    } on DioError catch (e) {
+      String error =
+          e.response != null ? e.response!.data.toString() : e.toString();
+      emit(HomeError(error));
+      print(error);
+    } catch (e) {
+      emit(HomeError(e.toString()));
+      print(e);
+    }
   }
 }

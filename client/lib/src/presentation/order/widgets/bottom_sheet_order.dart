@@ -29,7 +29,7 @@ class BottomSheetOrder extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is! RefreshOrderLoading &&
           current is! RefreshOrderLoaded &&
-          current is! RefreshOrderError,
+          current is! OrderError,
       builder: (context, state) {
         // Order? order = preferencesModel.order;
         // if (state is AddProductToCartLoaded) {

@@ -21,6 +21,23 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     });
 
     on<ChangeOrderEvent>((event, emit) {
+      if ((preferencesModel.storeID == null ||
+              preferencesModel.storeID!.isEmpty) &&
+          event.order != null &&
+          event.order!.selectedPickupOption == "AT_STORE") {
+        print("change store in change order event");
+        preferencesModel.storeID = event.order!.storeId;
+        SharedPreferences.getInstance().then(
+            (value) => value.setString("storeID", preferencesModel.storeID!));
+      }
+      if (preferencesModel.address == null &&
+          event.order != null &&
+          event.order!.selectedPickupOption == "DELIVERY") {
+        print("change address in change order event");
+        preferencesModel.address = event.order!.getAddress();
+        SharedPreferences.getInstance().then(
+            (value) => value.setString("address", preferencesModel.address!));
+      }
       preferencesModel = preferencesModel.copyWith(
         order: event.order != null ? event.order!.copyWith() : null,
         isChangeOrder: true,

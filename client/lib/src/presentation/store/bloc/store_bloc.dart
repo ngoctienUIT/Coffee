@@ -2,8 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../data/models/store.dart';
-import '../../../domain/api_service.dart';
 import 'store_event.dart';
 import 'store_state.dart';
 
@@ -48,12 +46,18 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   Future searchStore(Emitter emit, String query) async {
     try {
       emit(StoreLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.searchStoresByName(query);
-
+      // ApiService apiService =
+      //     ApiService(Dio(BaseOptions(contentType: "application/json")));
+      // final response = await apiService.searchStoresByName(query);
+      // emit(StoreLoaded(
+      //   response.data.map((e) => Store.fromStoreResponse(e)).toList(),
+      //   preferencesModel.storeID ?? "",
+      // ));
       emit(StoreLoaded(
-        response.data.map((e) => Store.fromStoreResponse(e)).toList(),
+        preferencesModel.listStore
+            .where(
+                (e) => e.storeName!.toUpperCase().contains(query.toUpperCase()))
+            .toList(),
         preferencesModel.storeID ?? "",
       ));
     } on DioError catch (e) {

@@ -6,7 +6,9 @@ abstract class CartState {}
 
 class InitState extends CartState {}
 
-class ChangeStoreState extends CartState {}
+class ChangeStoreCartState extends CartState {}
+
+class GetOrderLoadingState extends CartState {}
 
 class GetOrderSuccessState extends CartState {
   Order? order;
@@ -21,5 +23,3 @@ class GetOrderErrorState extends CartState {
 
   GetOrderErrorState(this.error);
 }
-
-class GetOrderLoadingState extends CartState {}

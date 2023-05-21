@@ -28,12 +28,6 @@ class ActivityPage extends StatelessWidget {
           elevation: 0,
           isPick: isAppBar,
           title: "activity".translate(context),
-          onChange: () {
-            // if (check) {
-            //   context.read<MainBloc>().add(ChangeCartHomeEvent());
-            //   context.read<MainBloc>().add(ChangeCartOrderEvent());
-            // }
-          },
         ),
         body: const SafeArea(child: ActivityView()),
       ),

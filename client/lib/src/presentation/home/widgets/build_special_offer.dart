@@ -48,9 +48,10 @@ class BuildListSpecialOffer extends StatelessWidget {
   }
 
   bool checkLoad(HomeState state) {
+    if (state is HomeError) return false;
     if (state is HomeLoaded) return false;
     if (state is ChangeBannerState) return false;
-    if (state is AddProductToCartLoaded) return false;
+    if (state is CartLoaded) return false;
     if (state is HomeLoading && !state.check) return false;
     return true;
   }
