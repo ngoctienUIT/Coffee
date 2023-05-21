@@ -19,18 +19,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({
-    Key? key,
-    required this.onChange,
-    required this.onChangeStore,
-  }) : super(key: key);
-
-  final Function(OrderStatus? status) onChange;
-  final VoidCallback onChangeStore;
+  const CartPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +32,13 @@ class CartPage extends StatelessWidget {
         context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
       create: (context) => CartBloc(preferencesModel)..add(GetOrderSpending()),
-      child: CartView(onChange: onChange, onChangeStore: onChangeStore),
+      child: const CartView(),
     );
   }
 }
 
 class CartView extends StatelessWidget {
-  const CartView({
-    Key? key,
-    required this.onChange,
-    required this.onChangeStore,
-  }) : super(key: key);
-
-  final Function(OrderStatus? status) onChange;
-  final VoidCallback onChangeStore;
+  const CartView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +53,7 @@ class CartView extends StatelessWidget {
                   context, "cart_cleared_successfully".translate(context));
             }
           }
-          onChange(state.status);
+          context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
           if (state.isLoading) Navigator.pop(context);
         }
         if (state is GetOrderErrorState) {
@@ -77,7 +64,7 @@ class CartView extends StatelessWidget {
           loadingAnimation(context);
         }
         if (state is ChangeStoreState) {
-          onChangeStore();
+          context.read<ServiceBloc>().add(ChangeStoreEvent());
         }
       },
       buildWhen: (previous, current) => current is GetOrderSuccessState,
@@ -87,6 +74,7 @@ class CartView extends StatelessWidget {
           if (state.order == null) {
             return emptyCart(context);
           } else {
+            print(state.order != null ? state.order!.toJson() : null);
             Address? address;
             if (state.order!.address1 != null) {
               address = Address(
@@ -110,7 +98,9 @@ class CartView extends StatelessWidget {
                   child: Column(
                     children: [
                       InfoCart(
-                        store: state.order!.selectedPickupStore!,
+                        store: state.order != null
+                            ? state.order!.selectedPickupStore
+                            : null,
                         address: address,
                         note: state.order!.orderNote,
                         selectedPickupOption:

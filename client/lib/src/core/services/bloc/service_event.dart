@@ -1,3 +1,4 @@
+import '../../../data/models/order.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 
@@ -14,3 +15,11 @@ class ChangeUserInfoEvent extends ServiceEvent {
 
   ChangeUserInfoEvent(this.user);
 }
+
+class ChangeOrderEvent extends ServiceEvent {
+  Order? order;
+
+  ChangeOrderEvent([this.order]);
+}
+
+class ChangeStoreEvent extends ServiceEvent {}

@@ -66,7 +66,7 @@ class BodyOtherPage extends StatelessWidget {
                   "activity".translate(context), Icons.card_giftcard_rounded,
                   () {
                 Navigator.of(context).push(createRoute(
-                  screen: const ActivityPage(isAppBar: true, check: false),
+                  screen: const ActivityPage(isAppBar: true),
                   begin: const Offset(1, 0),
                 ));
               }),

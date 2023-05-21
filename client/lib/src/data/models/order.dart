@@ -6,6 +6,7 @@ import 'coupon.dart';
 import 'item_order.dart';
 import 'store.dart';
 
+//ignore: must_be_immutable
 class Order extends Equatable {
   String? orderId;
   String userId;
@@ -22,7 +23,6 @@ class Order extends Equatable {
   String? address4;
   int? orderAmount;
   String? appliedCoupons;
-  String? orderStatus;
   String? orderNote;
   Store? selectedPickupStore;
   Coupon? appliedCoupon;
@@ -45,7 +45,6 @@ class Order extends Equatable {
     this.address4,
     this.orderAmount,
     this.appliedCoupons,
-    this.orderStatus,
     this.appliedCoupon,
   });
 
@@ -103,7 +102,6 @@ class Order extends Equatable {
       createdDate: orderResponse.createdDate,
       lastUpdated: orderResponse.lastUpdated,
       orderAmount: orderResponse.orderAmount,
-      orderStatus: orderResponse.orderStatus,
       selectedPaymentMethod: orderResponse.selectedPaymentMethod,
       selectedPickupOption: orderResponse.selectedPickupOption,
       storeId: orderResponse.selectedPickupStore == null
@@ -113,6 +111,44 @@ class Order extends Equatable {
           ? null
           : Store.fromStoreResponse(orderResponse.selectedPickupStore!),
       orderNote: orderResponse.orderCustomerNote,
+    );
+  }
+
+  Order copyWith({
+    List<ItemOrder>? orderItems,
+    String? selectedPaymentMethod,
+    String? selectedPickupOption,
+    String? storeId,
+    String? address1,
+    String? address2,
+    String? address3,
+    String? address4,
+    int? orderAmount,
+    String? appliedCoupons,
+    String? orderNote,
+    Store? selectedPickupStore,
+    Coupon? appliedCoupon,
+  }) {
+    return Order(
+      userId: userId,
+      orderId: orderId,
+      orderItems: orderItems ?? this.orderItems,
+      status: status,
+      address1: address1 ?? this.address1,
+      address2: address2 ?? this.address2,
+      address3: address3 ?? this.address3,
+      address4: address4 ?? this.address4,
+      appliedCoupons: appliedCoupons ?? this.appliedCoupons,
+      appliedCoupon: appliedCoupon ?? this.appliedCoupon,
+      createdDate: createdDate,
+      lastUpdated: lastUpdated,
+      orderAmount: orderAmount ?? this.orderAmount,
+      selectedPaymentMethod:
+          selectedPaymentMethod ?? this.selectedPaymentMethod,
+      selectedPickupOption: selectedPickupOption ?? this.selectedPickupOption,
+      storeId: storeId ?? this.storeId,
+      selectedPickupStore: selectedPickupStore ?? this.selectedPickupStore,
+      orderNote: orderNote ?? this.orderNote,
     );
   }
 
@@ -129,6 +165,7 @@ class Order extends Equatable {
         orderId,
         orderItems,
         orderNote,
+        status,
         selectedPickupOption,
         selectedPickupStore,
         storeId,
@@ -138,7 +175,6 @@ class Order extends Equatable {
         address4,
         orderAmount,
         appliedCoupons,
-        orderStatus,
         appliedCoupon,
       ];
 }

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee/src/presentation/order/widgets/list_product_loading.dart';
@@ -11,7 +10,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../main/bloc/main_event.dart';
 import '../../search/screen/search_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/order_event.dart';
@@ -54,7 +52,7 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
               screen: SearchPage(
                 onChange: () {
                   context.read<OrderBloc>().add(AddProductToCart());
-                  context.read<MainBloc>().add(ChangeCartHomeEvent());
+                  // context.read<MainBloc>().add(ChangeCartHomeEvent());
                 },
               ),
               begin: const Offset(1, 0),

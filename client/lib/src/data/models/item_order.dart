@@ -4,6 +4,7 @@ import '../../domain/repositories/item_order/item_order_response.dart';
 import 'product.dart';
 import 'topping.dart';
 
+//ignore: must_be_immutable
 class ItemOrder extends Equatable {
   String productId;
   int quantity;

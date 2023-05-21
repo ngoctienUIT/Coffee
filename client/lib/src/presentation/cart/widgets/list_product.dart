@@ -66,9 +66,9 @@ class ListProduct extends StatelessWidget {
                       product: product,
                       isEdit: true,
                       index: index,
-                      onPress: () {
-                        context.read<CartBloc>().add(GetOrderSpending());
-                      },
+                      // onPress: () {
+                      // context.read<CartBloc>().add(GetOrderSpending());
+                      // },
                     ),
                     begin: const Offset(0, 1),
                   ));

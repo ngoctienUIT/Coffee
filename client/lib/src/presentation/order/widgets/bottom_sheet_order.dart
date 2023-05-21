@@ -1,10 +1,9 @@
+import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
-import 'package:coffee/src/core/utils/enum/enums.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/add_address/screen/add_address_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
-import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
 import 'package:coffee/src/presentation/order/widgets/title_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/order.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../cart/screen/cart_page.dart';
-import '../../main/bloc/main_event.dart';
-import '../../main/bloc/main_state.dart';
 import '../../store/screen/store_page.dart';
 import '../bloc/order_bloc.dart';
-import '../bloc/order_event.dart';
 import '../bloc/order_state.dart';
 
 class BottomSheetOrder extends StatelessWidget {
@@ -35,17 +31,12 @@ class BottomSheetOrder extends StatelessWidget {
           current is! RefreshOrderLoaded &&
           current is! RefreshOrderError,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
-        Order? order = preferencesModel.order;
-        final store = preferencesModel.getStore();
-        bool isBringBack = preferencesModel.isBringBack;
-        String address = preferencesModel.address ?? "";
-        if (state is AddProductToCartLoaded) {
-          order = state.order != null
-              ? Order.fromOrderResponse(state.order!)
-              : null;
-        }
+        // Order? order = preferencesModel.order;
+        // if (state is AddProductToCartLoaded) {
+        //   order = state.order != null
+        //       ? Order.fromOrderResponse(state.order!)
+        //       : null;
+        // }
         return Container(
           width: double.infinity,
           height: 56,
@@ -58,132 +49,134 @@ class BottomSheetOrder extends StatelessWidget {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              Expanded(
-                child: InkWell(
-                  onTap: () => showMyBottomSheet(
-                    context: context,
-                    onPress: (isBring) {
-                      SharedPreferences.getInstance().then((value) {
-                        value.setBool("isBringBack", isBring);
-                        context.read<OrderBloc>().add(AddProductToCart(true));
-                        Navigator.pop(context);
-                      });
-                    },
-                    onEditAtTable: () {
-                      Navigator.of(context).push(createRoute(
-                        screen: StorePage(
-                          check: false,
-                          isPick: true,
-                          onPress: (store) {
-                            context.read<MainBloc>().add(ChangeStoreEvent());
-                            SharedPreferences.getInstance().then((value) {
-                              value.setString("storeID", store.storeId!);
-                              value.setBool("isBringBack", false);
-                              context
-                                  .read<OrderBloc>()
-                                  .add(AddProductToCart(true));
-                              Navigator.pop(context);
-                            });
-                          },
-                        ),
-                        begin: const Offset(1, 0),
-                      ));
-                    },
-                    onEditBringBack: () {
-                      Navigator.of(context).push(createRoute(
-                        screen: AddAddressPage(
-                          onSave: (address) {
-                            SharedPreferences.getInstance().then((value) {
-                              value.setBool("isBringBack", true);
-                              value.setString("address", address.getAddress());
-                              context
-                                  .read<OrderBloc>()
-                                  .add(AddProductToCart(true));
-                              Navigator.pop(context);
-                            });
-                          },
-                          address: address.isNotEmpty
-                              ? address.toAddressAPI().toAddress()
-                              : null,
-                        ),
-                        begin: const Offset(1, 0),
-                      ));
-                    },
-                    store: store,
-                    address: address,
-                    isBringBack: isBringBack,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        isBringBack
-                            ? "bring_back".translate(context)
-                            : "at_table".translate(context),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              isBringBack
-                                  ? address
-                                  : store == null
-                                      ? ""
-                                      : store.storeName.toString(),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const Icon(
-                            Icons.keyboard_arrow_down_outlined,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(createRoute(
-                    screen: CartPage(
-                      onChangeStore: () {
-                        context.read<MainBloc>().add(ChangeStoreEvent());
-                      },
-                      onChange: (status) {
-                        context.read<OrderBloc>().add(AddProductToCart());
-                        if (status == OrderStatus.placed) {
-                          context.read<MainBloc>().add(UpdateActivityEvent());
-                        }
-                      },
-                    ),
-                    begin: const Offset(1, 0),
-                  ));
-                },
-                child: BlocListener<MainBloc, MainState>(
-                  listener: (context, state) {
-                    if (state is ChangeCartOrderState) {
-                      context.read<OrderBloc>().add(AddProductToCart());
-                    }
-                  },
-                  child: SizedBox(
-                    height: double.infinity,
-                    child:
-                        cartNumber(order == null ? 0 : order.orderItems.length),
-                  ),
-                ),
-              ),
+              Expanded(child: infoStore()),
+              itemCart(),
             ],
           ),
         );
         return _buildLoading(context);
+      },
+    );
+  }
+
+  Widget itemCart() {
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      buildWhen: (previous, current) =>
+          current is ChangeOrderState || current is ChangeStoreState,
+      builder: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        return InkWell(
+          onTap: () {
+            Navigator.of(context).push(createRoute(
+              screen: const CartPage(),
+              begin: const Offset(1, 0),
+            ));
+          },
+          child: SizedBox(
+            height: double.infinity,
+            child: cartNumber(preferencesModel.order == null
+                ? 0
+                : preferencesModel.order!.orderItems.length),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget infoStore() {
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      buildWhen: (previous, current) => current is ChangeStoreState,
+      builder: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        Store? store = preferencesModel.getStore();
+        bool isBringBack = preferencesModel.isBringBack;
+        String address = preferencesModel.address ?? "";
+        return InkWell(
+          onTap: () => showMyBottomSheet(
+            context: context,
+            onPress: (isBring) {
+              SharedPreferences.getInstance().then((value) {
+                value.setBool("isBringBack", isBring);
+                context.read<ServiceBloc>().add(ChangeStoreEvent());
+                Navigator.pop(context);
+              });
+            },
+            onEditAtTable: () {
+              Navigator.of(context).push(createRoute(
+                screen: StorePage(
+                  isPick: true,
+                  onPress: (store) {
+                    SharedPreferences.getInstance().then((value) {
+                      value.setString("storeID", store.storeId!);
+                      value.setBool("isBringBack", false);
+                      context.read<ServiceBloc>().add(ChangeStoreEvent());
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+                begin: const Offset(1, 0),
+              ));
+            },
+            onEditBringBack: () {
+              Navigator.of(context).push(createRoute(
+                screen: AddAddressPage(
+                  onSave: (address) {
+                    SharedPreferences.getInstance().then((value) {
+                      value.setBool("isBringBack", true);
+                      value.setString("address", address.getAddress());
+                      context.read<ServiceBloc>().add(ChangeStoreEvent());
+                      Navigator.pop(context);
+                    });
+                  },
+                  address: address.isNotEmpty
+                      ? address.toAddressAPI().toAddress()
+                      : null,
+                ),
+                begin: const Offset(1, 0),
+              ));
+            },
+            store: store,
+            address: address,
+            isBringBack: isBringBack,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isBringBack
+                    ? "bring_back".translate(context)
+                    : "at_table".translate(context),
+                style: const TextStyle(color: Colors.white),
+              ),
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      isBringBack
+                          ? address
+                          : store == null
+                              ? ""
+                              : store.storeName.toString(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.keyboard_arrow_down_outlined,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }

@@ -1,4 +1,3 @@
-import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
 import 'package:coffee/src/presentation/other/screen/other_page.dart';
@@ -11,28 +10,15 @@ import '../../../core/function/on_will_pop.dart';
 import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../activity/screen/activity_page.dart';
 import '../../home/screen/home_page.dart';
-import '../bloc/main_event.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MainBloc(),
-      child: const MainView(),
-    );
-  }
+  State<MainPage> createState() => _MainPageState();
 }
 
-class MainView extends StatefulWidget {
-  const MainView({Key? key}) : super(key: key);
-
-  @override
-  State<MainView> createState() => _MainViewState();
-}
-
-class _MainViewState extends State<MainView> {
+class _MainPageState extends State<MainPage> {
   int currentTab = 0;
   DateTime? currentBackPressTime;
   final PageStorageBucket bucket = PageStorageBucket();
@@ -48,18 +34,11 @@ class _MainViewState extends State<MainView> {
     screens = [
       const HomePage(key: PageStorageKey<String>('HomePage')),
       const OrderPage(key: PageStorageKey<String>('OrderPage')),
-      const ActivityPage(
-        key: PageStorageKey<String>('ActivityPage'),
-        check: true,
-      ),
+      const ActivityPage(key: PageStorageKey<String>('ActivityPage')),
       StorePage(
-        check: true,
         key: const PageStorageKey<String>('StorePage'),
         isPick: false,
-        onChange: () {
-          context.read<MainBloc>().add(ChangeCartOrderEvent());
-          toPage(1);
-        },
+        onChange: () => toPage(1),
       ),
       const OtherPage(key: PageStorageKey<String>('OtherPage')),
     ];

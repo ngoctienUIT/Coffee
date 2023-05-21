@@ -18,13 +18,11 @@ class ProductPage extends StatelessWidget {
     this.index,
     required this.product,
     required this.isEdit,
-    this.onPress,
   }) : super(key: key);
 
   final Product product;
   final bool isEdit;
   final int? index;
-  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +31,7 @@ class ProductPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ProductBloc(preferencesModel)
         ..add(DataTransmissionEvent(product: product)),
-      child: ProductView(
-          product: product, isEdit: isEdit, onPress: onPress, index: index),
+      child: ProductView(product: product, isEdit: isEdit, index: index),
     );
   }
 }
@@ -45,13 +42,11 @@ class ProductView extends StatefulWidget {
     this.index,
     required this.product,
     required this.isEdit,
-    this.onPress,
   }) : super(key: key);
 
   final Product product;
   final bool isEdit;
   final int? index;
-  final VoidCallback? onPress;
 
   @override
   State<ProductView> createState() => _ProductViewState();
@@ -89,7 +84,7 @@ class _ProductViewState extends State<ProductView> {
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
-            BodyProduct(isTop: isTop, onPress: widget.onPress)
+            BodyProduct(isTop: isTop)
           ],
         ),
       ),

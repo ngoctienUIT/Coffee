@@ -22,8 +22,8 @@ class BottomWidget extends StatelessWidget {
     return BlocBuilder<ProductBloc, ProductState>(
       buildWhen: (previous, current) =>
           current is! AddProductToOrderSuccessState ||
-          current is! AddProductToOrderErrorState ||
-          current is! AddProductToOrderLoadingState,
+          current is! ProductErrorState ||
+          current is! ProductLoadingState,
       builder: (context, state) {
         Product product = context.read<ProductBloc>().product.copyWith();
         return Container(

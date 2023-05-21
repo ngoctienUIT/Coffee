@@ -1,3 +1,5 @@
+import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
@@ -14,11 +16,9 @@ import '../../../core/utils/constants/constants.dart';
 import 'choose_size.dart';
 
 class BodyProduct extends StatelessWidget {
-  const BodyProduct({Key? key, required this.isTop, this.onPress})
-      : super(key: key);
+  const BodyProduct({Key? key, required this.isTop}) : super(key: key);
 
   final bool isTop;
-  final VoidCallback? onPress;
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +28,21 @@ class BodyProduct extends StatelessWidget {
         if (state is AddProductToOrderSuccessState ||
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
+          context.read<ServiceBloc>().add(ChangeOrderEvent(
+              state.order != null ? state.order!.copyWith() : null));
           if (state is AddProductToOrderSuccessState) {
             customToast(
                 context, "product_added_cart_successfully".translate(context));
           }
-          if (onPress != null) onPress!();
           Navigator.pop(context);
           Navigator.pop(context);
         }
-        if (state is DeleteLoadingState ||
-            state is UpdateLoadingState ||
-            state is AddProductToOrderLoadingState) {
+
+        if (state is ProductLoadingState) {
           loadingAnimation(context);
         }
-        if (state is AddProductToOrderErrorState) {
-          customToast(context, state.error);
-        }
-        if (state is UpdateErrorState) {
-          customToast(context, state.error);
-        }
-        if (state is DeleteErrorState) {
+
+        if (state is ProductErrorState) {
           customToast(context, state.error);
         }
       },

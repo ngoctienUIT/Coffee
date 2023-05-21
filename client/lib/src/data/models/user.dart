@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../domain/repositories/provider/provider_response.dart';
 
+//ignore: must_be_immutable
 class User extends Equatable {
   final String? id;
   final String username;

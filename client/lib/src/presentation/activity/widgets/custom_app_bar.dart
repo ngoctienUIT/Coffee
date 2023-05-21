@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ? AppBarGeneral(elevation: 0, title: title)
         : BlocBuilder<ServiceBloc, ServiceState>(
             buildWhen: (previous, current) =>
-                current is ChangeUserInfoState || current is InitState,
+                current is ChangeUserInfoState || current is InitServiceState,
             builder: (context, state) {
               PreferencesModel preferencesModel =
                   context.read<ServiceBloc>().preferencesModel;

@@ -28,7 +28,7 @@ class ListItemOrder extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(createRoute(
               screen: ProductPage(
-                onPress: onPress,
+                // onPress: onPress,
                 isEdit: false,
                 product: Product.fromProductResponse(listProduct[index]),
               ),

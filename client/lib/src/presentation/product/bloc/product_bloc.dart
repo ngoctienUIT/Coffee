@@ -33,31 +33,20 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future addProductToOrder(Product product, Emitter emit) async {
     try {
-      emit(AddProductToOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.user!.username,
-        "PENDING",
-      );
-      final orderSpending = response.data;
-      if (orderSpending.isEmpty) {
+      emit(ProductLoadingState());
+      if (preferencesModel.order == null) {
         await createNewOrder(product: product, emit: emit);
       } else {
         await updatePendingOrder(
-          order: Order.fromOrderResponse(orderSpending[0]),
-          product: product,
-          emit: emit,
-        );
+            order: preferencesModel.order!, product: product, emit: emit);
       }
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddProductToOrderErrorState(error));
+      emit(ProductErrorState(error));
       print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(e.toString()));
+      emit(ProductErrorState(e.toString()));
       print(e);
     }
   }
@@ -75,9 +64,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       if (storeID == null || storeID.isEmpty) {
         storeID = "6425d2c7cf1d264dca4bcc82";
-        SharedPreferences.getInstance().then((value) {
-          value.setString("storeID", storeID!);
-        });
+        SharedPreferences.getInstance()
+            .then((value) => value.setString("storeID", storeID!));
       }
       print(storeID);
       Order order = Order(
@@ -90,16 +78,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (isBringBack && address.isNotEmpty) {
         order.addAddress(address.toAddressAPI().toAddress());
       }
-      await apiService.createNewOrder(
+      final response = await apiService.createNewOrder(
           "Bearer ${preferencesModel.token}", order.toJson());
-      emit(AddProductToOrderSuccessState());
+      emit(AddProductToOrderSuccessState(
+          Order.fromOrderResponse(response.data)));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddProductToOrderErrorState(error));
+      emit(ProductErrorState(error));
       print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(e.toString()));
+      emit(ProductErrorState(e.toString()));
       print(e);
     }
   }
@@ -124,16 +113,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       print(order.toJson());
-      await apiService.updatePendingOrder(
+      final response = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
-      emit(AddProductToOrderSuccessState());
+      emit(AddProductToOrderSuccessState(
+          Order.fromOrderResponse(response.data)));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddProductToOrderErrorState(error));
+      emit(ProductErrorState(error));
       print(error);
     } catch (e) {
-      emit(AddProductToOrderErrorState(e.toString()));
+      emit(ProductErrorState(e.toString()));
       print(e);
     }
   }
@@ -155,17 +145,11 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future updateProductOrder(int index, Product product, Emitter emit) async {
     try {
-      emit(UpdateLoadingState());
+      emit(ProductLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.user!.username,
-        "PENDING",
-      );
-      final orderSpending = response.data;
-      Order order = Order.fromOrderResponse(orderSpending[0]);
 
+      Order order = preferencesModel.order!;
       order.orderItems[index].quantity = product.number;
       order.orderItems[index].selectedSize = product.sizeIndex;
 
@@ -179,49 +163,44 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         order.orderItems[index].toppingIds = list;
       }
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
-      await apiService.updatePendingOrder(
+      final response = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
-      emit(UpdateSuccessState());
+      emit(UpdateSuccessState(Order.fromOrderResponse(response.data)));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(UpdateErrorState(error));
+      emit(ProductErrorState(error));
       print(error);
     } catch (e) {
-      emit(UpdateErrorState(e.toString()));
+      emit(ProductErrorState(e.toString()));
       print(e);
     }
   }
 
   Future deleteProductOrder(int index, Emitter emit) async {
     try {
-      emit(DeleteLoadingState());
+      emit(ProductLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.user!.username,
-        "PENDING",
-      );
-      final orderSpending = response.data;
-      Order order = Order.fromOrderResponse(orderSpending[0]);
+      Order? order = preferencesModel.order!;
       order.orderItems.removeAt(index);
-
       if (order.orderItems.isEmpty) {
         await apiService.removePendingOrder("Bearer ${preferencesModel.token}",
             preferencesModel.user!.username);
+        order = null;
       } else {
-        await apiService.updatePendingOrder(
+        final response = await apiService.updatePendingOrder(
             "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
+        order = Order.fromOrderResponse(response.data);
       }
-      emit(DeleteSuccessState());
+      emit(DeleteSuccessState(order));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
-      emit(DeleteErrorState(error));
+      emit(ProductErrorState(error));
       print(error);
     } catch (e) {
-      emit(DeleteErrorState(e.toString()));
+      emit(ProductErrorState(e.toString()));
       print(e);
     }
   }

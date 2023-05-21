@@ -166,7 +166,6 @@ class _InfoCartState extends State<InfoCart> {
         Navigator.of(context).push(createRoute(
           screen: StorePage(
               isPick: true,
-              check: false,
               onPress: (store) {
                 print("pick store");
                 setState(() {

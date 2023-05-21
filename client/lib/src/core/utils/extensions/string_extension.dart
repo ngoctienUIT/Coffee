@@ -70,4 +70,8 @@ extension EmailValidator on String {
     return AddressAPI(
         province: province, district: district, ward: ward, address: list[0]);
   }
+
+  List<String> toListAddress() {
+    return split(", ");
+  }
 }

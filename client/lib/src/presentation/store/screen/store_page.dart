@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/presentation/main/bloc/main_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:coffee/src/presentation/store/bloc/store_bloc.dart';
 import 'package:coffee/src/presentation/store/bloc/store_state.dart';
@@ -14,12 +13,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../activity/widgets/custom_app_bar.dart';
-import '../../main/bloc/main_bloc.dart';
-import '../../main/bloc/main_event.dart';
 import '../bloc/store_event.dart';
 import '../widgets/bottom_sheet.dart';
 import '../widgets/item_loading.dart';
@@ -30,26 +28,29 @@ class StorePage extends StatelessWidget {
     this.onPress,
     required this.isPick,
     this.onChange,
-    required this.check,
   }) : super(key: key);
 
   final Function(Store store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
-  final bool check;
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
-      child: StoreView(
-        onPress: onPress,
-        isPick: isPick,
-        onChange: onChange,
-        check: check,
-      ),
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      buildWhen: (previous, current) => current is ChangeStoreState,
+      builder: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+
+        return BlocProvider<StoreBloc>(
+          create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
+          child: StoreView(
+            onPress: onPress,
+            isPick: isPick,
+            onChange: onChange,
+          ),
+        );
+      },
     );
   }
 }
@@ -60,13 +61,11 @@ class StoreView extends StatefulWidget {
     this.onPress,
     required this.isPick,
     this.onChange,
-    required this.check,
   }) : super(key: key);
 
   final Function(Store store)? onPress;
   final VoidCallback? onChange;
   final bool isPick;
-  final bool check;
 
   @override
   State<StoreView> createState() => _StoreViewState();
@@ -86,45 +85,36 @@ class _StoreViewState extends State<StoreView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return widget.check
-        ? BlocListener<MainBloc, MainState>(
-            listener: (_, state) {
-              if (state is ChangeStoreState) {
-                context.read<StoreBloc>().add(FetchData());
-              }
-            },
-            child: buildBody(),
-          )
-        : buildBody();
-  }
-
-  Widget buildBody() {
     return BlocListener<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
           customToast(context, state.message.toString());
         }
       },
-      child: Scaffold(
-        backgroundColor: AppColors.bgColor,
-        appBar: CustomAppBar(
-          elevation: 0,
-          isPick: widget.isPick,
-          title: "store".translate(context),
-          onChange: () {
-            context.read<MainBloc>().add(ChangeCartHomeEvent());
-            context.read<MainBloc>().add(ChangeCartOrderEvent());
-          },
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              headerStore(),
-              const SizedBox(height: 10),
-              Expanded(child: bodyStore()),
-            ],
-          ),
+      child: buildBody(),
+    );
+  }
+
+  Widget buildBody() {
+    return Scaffold(
+      backgroundColor: AppColors.bgColor,
+      appBar: CustomAppBar(
+        elevation: 0,
+        isPick: widget.isPick,
+        title: "store".translate(context),
+        onChange: () {
+          // context.read<MainBloc>().add(ChangeCartHomeEvent());
+          // context.read<MainBloc>().add(ChangeCartOrderEvent());
+        },
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            headerStore(),
+            const SizedBox(height: 10),
+            Expanded(child: bodyStore()),
+          ],
         ),
       ),
     );
@@ -156,10 +146,10 @@ class _StoreViewState extends State<StoreView>
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
         print(state);
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
         if (state is StoreLoaded) {
           List<Store> listStore = state.listStore;
-          PreferencesModel preferencesModel =
-              context.read<ServiceBloc>().preferencesModel;
           if (preferencesModel.listStore.length != listStore.length) {
             context.read<ServiceBloc>().add(
                 SetDataEvent(preferencesModel.copyWith(listStore: listStore)));
@@ -182,9 +172,8 @@ class _StoreViewState extends State<StoreView>
                       SharedPreferences.getInstance().then((value) {
                         value.setString(
                             "storeID", listStore[index].storeId ?? "");
-                        // context.read<StoreBloc>().add(
-                        //     SearchStore(storeName: searchStoreController.text));
-                        context.read<StoreBloc>().add(UpdateStoreOrder());
+                        value.setBool("isBringBack", false);
+                        context.read<ServiceBloc>().add(ChangeStoreEvent());
                         Navigator.pop(context);
                         if (widget.onChange != null) widget.onChange!();
                       });
@@ -198,47 +187,6 @@ class _StoreViewState extends State<StoreView>
         }
 
         return _buildLoading();
-      },
-    );
-  }
-
-  Widget _buildLoading() {
-    var rng = Random();
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      itemCount: 10,
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      itemBuilder: (context, index) {
-        return Card(
-          child: Row(
-            children: [
-              const SizedBox(width: 10),
-              itemLoading(100, 100, 0),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 5),
-                    itemLoading(20, double.infinity, 10),
-                    const SizedBox(height: 5),
-                    itemLoading(20, rng.nextDouble() * 150 + 100, 10),
-                    const SizedBox(height: 5),
-                    itemLoading(15, double.infinity, 10),
-                    const SizedBox(height: 5),
-                    itemLoading(15, rng.nextDouble() * 150 + 100, 10),
-                    const SizedBox(height: 5),
-                    itemLoading(15, 200, 10),
-                    const SizedBox(height: 5),
-                    itemLoading(15, 200, 10),
-                    const SizedBox(height: 5),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
-          ),
-        );
       },
     );
   }
@@ -340,6 +288,47 @@ class _StoreViewState extends State<StoreView>
         const SizedBox(width: 8),
         Text("${store.openingHour} - ${store.closingHour}"),
       ],
+    );
+  }
+
+  Widget _buildLoading() {
+    var rng = Random();
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      itemCount: 10,
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      itemBuilder: (context, index) {
+        return Card(
+          child: Row(
+            children: [
+              const SizedBox(width: 10),
+              itemLoading(100, 100, 0),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    itemLoading(20, double.infinity, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(20, rng.nextDouble() * 150 + 100, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, double.infinity, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, rng.nextDouble() * 150 + 100, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, 200, 10),
+                    const SizedBox(height: 5),
+                    itemLoading(15, 200, 10),
+                    const SizedBox(height: 5),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+        );
+      },
     );
   }
 

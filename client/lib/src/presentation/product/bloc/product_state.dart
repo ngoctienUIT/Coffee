@@ -1,35 +1,31 @@
-abstract class ProductState {}
+import '../../../data/models/order.dart';
+
+abstract class ProductState {
+  Order? order;
+
+  ProductState([this.order]);
+}
 
 class InitState extends ProductState {}
 
 class DataTransmissionState extends ProductState {}
 
-class AddProductToOrderSuccessState extends ProductState {}
+class ProductLoadingState extends ProductState {}
 
-class AddProductToOrderErrorState extends ProductState {
-  String error;
-
-  AddProductToOrderErrorState(this.error);
+class AddProductToOrderSuccessState extends ProductState {
+  AddProductToOrderSuccessState([super.order]);
 }
 
-class AddProductToOrderLoadingState extends ProductState {}
-
-class UpdateLoadingState extends ProductState {}
-
-class UpdateSuccessState extends ProductState {}
-
-class UpdateErrorState extends ProductState {
-  String error;
-
-  UpdateErrorState(this.error);
+class UpdateSuccessState extends ProductState {
+  UpdateSuccessState([super.order]);
 }
 
-class DeleteLoadingState extends ProductState {}
+class DeleteSuccessState extends ProductState {
+  DeleteSuccessState([super.order]);
+}
 
-class DeleteSuccessState extends ProductState {}
-
-class DeleteErrorState extends ProductState {
+class ProductErrorState extends ProductState {
   String error;
 
-  DeleteErrorState(this.error);
+  ProductErrorState(this.error);
 }

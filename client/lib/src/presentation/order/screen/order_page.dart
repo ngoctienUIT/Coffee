@@ -1,6 +1,4 @@
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
-import 'package:coffee/src/presentation/main/bloc/main_bloc.dart';
-import 'package:coffee/src/presentation/main/bloc/main_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
@@ -46,7 +44,7 @@ class _OrderPageState extends State<OrderPage>
             customToast(context, state.message.toString());
           }
           if (state is AddProductToCartLoaded) {
-            context.read<MainBloc>().add(ChangeCartHomeEvent());
+            // context.read<MainBloc>().add(ChangeCartHomeEvent());
           }
         },
         child: const Scaffold(
