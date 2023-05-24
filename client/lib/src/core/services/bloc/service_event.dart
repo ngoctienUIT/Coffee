@@ -25,3 +25,13 @@ class ChangeOrderEvent extends ServiceEvent {
 class ChangeStoreEvent extends ServiceEvent {}
 
 class PlacedOrderEvent extends ServiceEvent {}
+
+class CheckLoginEvent extends ServiceEvent {}
+
+class StopTimeEvent extends ServiceEvent {}
+
+class SaveTimeEvent extends ServiceEvent {
+  Duration duration;
+
+  SaveTimeEvent(this.duration);
+}

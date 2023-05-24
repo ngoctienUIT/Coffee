@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
@@ -9,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../domain/firebase/firebase_service.dart';
@@ -94,7 +94,7 @@ class BodyOtherPage extends StatelessWidget {
                 isOnPress: true,
                 onPress: () {
                   GoogleSignIn().signOut();
-                  context.read<LanguageCubit>().stopTimer();
+                  context.read<ServiceBloc>().add(StopTimeEvent());
                   SharedPreferences.getInstance()
                       .then((value) => value.setBool("isLogin", false));
                   deleteTokenFCM();

@@ -14,7 +14,6 @@ import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
-import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
@@ -123,9 +122,7 @@ class _LoginViewState extends State<LoginView> {
     context.read<ServiceBloc>().add(SetDataEvent(
         preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
     customToast(context, "logged_in_successfully".translate(context));
-    context
-        .read<LanguageCubit>()
-        .startNewTimer(context, const Duration(hours: 1));
+    context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(
       screen: const MainPage(),
       begin: const Offset(0, 1),
