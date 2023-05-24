@@ -30,8 +30,7 @@ void showStoreBottomSheet(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CachedNetworkImage(
-                      imageUrl:
-                          "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                      imageUrl: linkStore,
                       placeholder: (context, url) =>
                           itemLoading(double.infinity, double.infinity, 0),
                       errorWidget: (context, url, error) =>
@@ -78,7 +77,8 @@ Widget nameAndAddress(Store store) {
           String googleUrl =
               "https://www.google.com/maps/search/?api=1&query=${store.getAddress()}";
           if (await canLaunchUrlString(googleUrl)) {
-            await launchUrlString(googleUrl);
+            await launchUrlString(googleUrl,
+                mode: LaunchMode.externalApplication);
           }
         },
         child: Text(

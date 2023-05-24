@@ -114,7 +114,7 @@ class _HomeViewState extends State<HomeView>
         },
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<HomeBloc>().add(FetchData());
+            context.read<HomeBloc>().add(FetchData(check: false));
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

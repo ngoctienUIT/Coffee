@@ -203,8 +203,7 @@ class _StoreViewState extends State<StoreView>
                   height: 100,
                   width: 100,
                   fit: BoxFit.fitHeight,
-                  imageUrl:
-                      "https://www.highlandscoffee.com.vn/vnt_upload/news/02_2020/83739091_2845644318849727_1748210367038750720_o_1.png",
+                  imageUrl: linkStore,
                   placeholder: (context, url) => itemLoading(100, 100, 0),
                   errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),

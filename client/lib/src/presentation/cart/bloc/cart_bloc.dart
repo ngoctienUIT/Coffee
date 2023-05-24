@@ -11,7 +11,6 @@ import '../../../data/models/address.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
-import '../../../domain/repositories/order/order_response.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   PreferencesModel preferencesModel;
@@ -136,27 +135,26 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future getOrderSpending(Emitter emit) async {
     try {
-      print("get order spending in cart");
       emit(GetOrderLoadingState());
       emit(GetOrderSuccessState(preferencesModel.order));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
-        "Bearer ${preferencesModel.token}",
-        preferencesModel.user!.username,
-        "PENDING",
-      );
-      List<OrderResponse> orderSpending = response.data;
-      if (orderSpending.isEmpty) {
-        emit(GetOrderSuccessState(null));
-      } else {
-        print(orderSpending[0].toJson());
-        Order order = Order.fromOrderResponse(orderSpending[0]);
-        if (order != preferencesModel.order) {
-          // preferencesModel.order = order.copyWith();
-          emit(GetOrderSuccessState(order, null, false));
-        }
-      }
+      // ApiService apiService =
+      //     ApiService(Dio(BaseOptions(contentType: "application/json")));
+      // final response = await apiService.getAllOrders(
+      //   "Bearer ${preferencesModel.token}",
+      //   preferencesModel.user!.username,
+      //   "PENDING",
+      // );
+      // List<OrderResponse> orderSpending = response.data;
+      // if (orderSpending.isEmpty) {
+      //   emit(GetOrderSuccessState(null));
+      // } else {
+      //   print(orderSpending[0].toJson());
+      //   Order order = Order.fromOrderResponse(orderSpending[0]);
+      //   if (order != preferencesModel.order) {
+      //     // preferencesModel.order = order.copyWith();
+      //     emit(GetOrderSuccessState(order, null, false));
+      //   }
+      // }
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -198,11 +196,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       //     order.orderItems.where((element) => element.productId != id).toList();
       order.orderItems.removeAt(index);
       if (order.orderItems.isEmpty) {
-        await apiService.removePendingOrder(
-          "Bearer ${preferencesModel.token}",
-          preferencesModel.user!.username,
-        );
-        emit(GetOrderSuccessState(null));
+        await apiService.removePendingOrder("Bearer ${preferencesModel.token}",
+            preferencesModel.user!.username);
+        emit(GetOrderSuccessState(null, OrderStatus.delete));
       } else {
         emit(GetOrderSuccessState(Order.fromOrderResponse(
             (await apiService.updatePendingOrder(
