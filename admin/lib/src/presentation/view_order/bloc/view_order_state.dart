@@ -1,4 +1,4 @@
-import '../../../domain/entities/user/user_response.dart';
+import '../../../data/models/user.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
 abstract class ViewOrderState {}
@@ -12,7 +12,7 @@ class CancelSuccessState extends ViewOrderState {}
 class CompletedSuccessState extends ViewOrderState {}
 
 class GetOrderSuccessState extends ViewOrderState {
-  UserResponse user;
+  User user;
   OrderResponse order;
 
   GetOrderSuccessState(this.user, this.order);

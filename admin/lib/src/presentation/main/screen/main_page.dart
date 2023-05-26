@@ -1,14 +1,17 @@
-import 'package:coffee_admin/src/core/language/bloc/language_cubit.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
 import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
+import 'package:coffee_admin/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../other/screen/other_page.dart';
 import '../../view_order/screen/view_order_page.dart';
@@ -34,11 +37,16 @@ class _MainPageState extends State<MainPage> {
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     screens = [
       const OrderPage(key: PageStorageKey<String>('HomePage')),
       const ProductPage(key: PageStorageKey<String>('OrderPage')),
       const CouponPage(key: PageStorageKey<String>('ActivityPage')),
-      const AccountManagementPage(key: PageStorageKey<String>('AccountManage')),
+      preferencesModel.user!.userRole == "ADMIN"
+          ? const AccountManagementPage(
+              key: PageStorageKey<String>('AccountManage'))
+          : const StorePage(key: PageStorageKey<String>('StorePage')),
       const OtherPage(key: PageStorageKey<String>('OtherPage')),
     ];
     context
@@ -63,6 +71,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       body: WillPopScope(
         onWillPop: () => onWillPop(
@@ -93,12 +103,17 @@ class _MainPageState extends State<MainPage> {
             icon: const Icon(FontAwesomeIcons.gift),
             label: 'voucher'.translate(context),
           ),
-          BottomNavigationBarItem(
-            icon: currentTab == 3
-                ? const Icon(FontAwesomeIcons.userLarge)
-                : const Icon(FontAwesomeIcons.user),
-            label: 'staff'.translate(context),
-          ),
+          preferencesModel.user!.userRole == "ADMIN"
+              ? BottomNavigationBarItem(
+                  icon: currentTab == 3
+                      ? const Icon(FontAwesomeIcons.userLarge)
+                      : const Icon(FontAwesomeIcons.user),
+                  label: 'staff'.translate(context),
+                )
+              : BottomNavigationBarItem(
+                  icon: const Icon(FontAwesomeIcons.store),
+                  label: 'store'.translate(context),
+                ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.bars),
             label: 'other'.translate(context),

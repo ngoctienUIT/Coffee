@@ -10,8 +10,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -49,22 +51,26 @@ class _TagViewState extends State<TagView> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddTagPage(
-              onChange: () => context.read<TagBloc>().add(UpdateData()),
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddTagPage(
+                    onChange: () => context.read<TagBloc>().add(UpdateData()),
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -131,6 +137,8 @@ class _TagViewState extends State<TagView> {
   }
 
   Widget listTagWidget(List<Tag> listTag) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return ListView.builder(
       physics: widget.onPick == null
           ? const BouncingScrollPhysics(
@@ -143,63 +151,68 @@ class _TagViewState extends State<TagView> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: widget.onPick != null
-              ? Row(
-                  children: [
-                    BlocBuilder<TagBloc, TagState>(
-                      buildWhen: (previous, current) => current is PickState,
-                      builder: (context, state) {
-                        return Checkbox(
-                          value: listTag[index].isCheck,
-                          onChanged: (value) {
-                            listTag[index].isCheck = value!;
-                            context.read<TagBloc>().add(PickEvent());
-                          },
-                        );
-                      },
-                    ),
-                    Expanded(child: tagItem(listTag[index])),
-                  ],
-                )
-              : Slidable(
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    extentRatio: 0.3,
-                    children: [
-                      SlidableAction(
-                        onPressed: (_) {
-                          Navigator.of(context).push(createRoute(
-                            screen: AddTagPage(
-                              tag: listTag[index],
-                              onChange: () {
-                                context.read<TagBloc>().add(UpdateData());
+          child: preferencesModel.user!.userRole != "ADMIN"
+              ? tagItem(listTag[index])
+              : widget.onPick != null
+                  ? Row(
+                      children: [
+                        BlocBuilder<TagBloc, TagState>(
+                          buildWhen: (previous, current) =>
+                              current is PickState,
+                          builder: (context, state) {
+                            return Checkbox(
+                              value: listTag[index].isCheck,
+                              onChanged: (value) {
+                                listTag[index].isCheck = value!;
+                                context.read<TagBloc>().add(PickEvent());
                               },
-                            ),
-                            begin: const Offset(0, 1),
-                          ));
-                        },
-                        backgroundColor: AppColors.statusBarColor,
-                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                        icon: FontAwesomeIcons.penToSquare,
-                        borderRadius: BorderRadius.circular(15),
+                            );
+                          },
+                        ),
+                        Expanded(child: tagItem(listTag[index])),
+                      ],
+                    )
+                  : Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.3,
+                        children: [
+                          SlidableAction(
+                            onPressed: (_) {
+                              Navigator.of(context).push(createRoute(
+                                screen: AddTagPage(
+                                  tag: listTag[index],
+                                  onChange: () {
+                                    context.read<TagBloc>().add(UpdateData());
+                                  },
+                                ),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.penToSquare,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          SlidableAction(
+                            onPressed: (_) {
+                              _showAlertDialog(context, () {
+                                context
+                                    .read<TagBloc>()
+                                    .add(DeleteEvent(listTag[index].tagId!));
+                              });
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.trash,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ],
                       ),
-                      SlidableAction(
-                        onPressed: (_) {
-                          _showAlertDialog(context, () {
-                            context
-                                .read<TagBloc>()
-                                .add(DeleteEvent(listTag[index].tagId!));
-                          });
-                        },
-                        backgroundColor: AppColors.statusBarColor,
-                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                        icon: FontAwesomeIcons.trash,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ],
-                  ),
-                  child: tagItem(listTag[index]),
-                ),
+                      child: tagItem(listTag[index]),
+                    ),
         );
       },
     );

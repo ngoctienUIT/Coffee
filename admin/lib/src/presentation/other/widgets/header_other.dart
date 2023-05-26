@@ -2,14 +2,17 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/language/bloc/language_cubit.dart';
+import '../../../core/services/bloc/service_state.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/title_bottom_sheet.dart';
@@ -116,45 +119,45 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
   }
 
   Widget body() {
-    return BlocBuilder<OtherBloc, OtherState>(
-      buildWhen: (previous, current) => current is! ChangeLanguageState,
+    return BlocBuilder<ServiceBloc, ServiceState>(
+      buildWhen: (previous, current) => current is ChangeUserInfoState,
       builder: (context, state) {
-        if (state is OtherLoaded) {
-          return Column(
-            children: [
-              ClipOval(
-                child: (state.user.imageUrl == null
-                    ? Image.asset(AppImages.imgNonAvatar, height: 100)
-                    : CachedNetworkImage(
-                        height: 80,
-                        width: 80,
-                        imageUrl: state.user.imageUrl!,
-                        placeholder: (context, url) => itemLoading(80, 80, 90),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      )),
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        return Column(
+          children: [
+            ClipOval(
+              child: (preferencesModel.user!.imageUrl == null
+                  ? Image.asset(AppImages.imgNonAvatar, height: 100)
+                  : CachedNetworkImage(
+                      height: 80,
+                      width: 80,
+                      imageUrl: preferencesModel.user!.imageUrl!,
+                      placeholder: (context, url) => itemLoading(80, 80, 90),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    )),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              preferencesModel.user!.displayName,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 10),
-              Text(
-                state.user.displayName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              preferencesModel.user!.userRole,
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 10),
-              Text(
-                state.user.userRole,
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          );
-        }
+            ),
+          ],
+        );
         return _buildLoading();
       },
     );

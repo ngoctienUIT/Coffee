@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,12 +18,9 @@ import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
 
 class HeaderProfilePage extends StatefulWidget {
-  const HeaderProfilePage(
-      {Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const HeaderProfilePage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
-  final VoidCallback onChange;
+  final User user;
 
   @override
   State<HeaderProfilePage> createState() => _HeaderProfilePageState();
@@ -71,7 +67,6 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
         if (state is EditProfileSate) isEdit = state.isEdit;
         if (state is DeleteAvatarState) {
           widget.user.imageUrl = null;
-          widget.onChange();
         }
         return InkWell(
           onTap: widget.user.imageUrl != null || isEdit
@@ -142,8 +137,9 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               if (isEdit)
                 itemAction("delete_profile_picture".translate(context), () {
                   Navigator.pop(context);
-                  context.read<ProfileBloc>().add(
-                      DeleteAvatarEvent(User.fromUserResponse(widget.user)));
+                  context
+                      .read<ProfileBloc>()
+                      .add(DeleteAvatarEvent(widget.user));
                 }),
               itemAction(
                 "cancel".translate(context),

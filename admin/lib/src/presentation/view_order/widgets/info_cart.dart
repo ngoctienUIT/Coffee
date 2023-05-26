@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../../domain/entities/user/user_response.dart';
+import '../../../data/models/user.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
 class InfoCart extends StatelessWidget {
@@ -18,7 +18,7 @@ class InfoCart extends StatelessWidget {
 
   final bool isBringBack;
   final OrderResponse order;
-  final UserResponse? user;
+  final User? user;
   final Color selectedColor = AppColors.statusBarColor;
   final Color unselectedColor = AppColors.unselectedColor;
 
@@ -125,9 +125,18 @@ class InfoCart extends StatelessWidget {
   }
 
   Widget bringBack() {
-    return itemInfo(
-      Icons.location_on,
-      "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4},",
+    String address =
+        "${order.address1}, ${order.address2}, ${order.address3}, ${order.address4}";
+    return GestureDetector(
+      onTap: () async {
+        String googleUrl =
+            "https://www.google.com/maps/search/?api=1&query=$address";
+        if (await canLaunchUrlString(googleUrl)) {
+          await launchUrlString(googleUrl,
+              mode: LaunchMode.externalApplication);
+        }
+      },
+      child: itemInfo(Icons.location_on, address),
     );
   }
 

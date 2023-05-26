@@ -3,18 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../../domain/entities/user/user_response.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/profile_bloc.dart';
 import '../widgets/body_profile.dart';
 import '../widgets/header_profile.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
-  final VoidCallback onChange;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +24,8 @@ class ProfilePage extends StatelessWidget {
             AppBarGeneral(title: "profile".translate(context), elevation: 0),
         body: Column(
           children: [
-            HeaderProfilePage(user: user, onChange: onChange),
-            Expanded(child: BodyProfilePage(user: user, onChange: onChange)),
+            HeaderProfilePage(user: user),
+            Expanded(child: BodyProfilePage(user: user)),
           ],
         ),
       ),

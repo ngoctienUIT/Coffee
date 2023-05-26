@@ -1,5 +1,4 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../data/models/product.dart';
+import '../../../data/models/user.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
 import '../../../domain/repositories/order/order_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -24,7 +24,7 @@ class ViewOrderPage extends StatelessWidget {
       : super(key: key);
 
   final OrderResponse? order;
-  final UserResponse? user;
+  final User? user;
   final VoidCallback? onPress;
   final String? id;
 
@@ -44,7 +44,7 @@ class ViewOrderView extends StatelessWidget {
       : super(key: key);
 
   final OrderResponse? order;
-  final UserResponse? user;
+  final User? user;
   final VoidCallback? onPress;
   final String? id;
 
@@ -84,8 +84,7 @@ class ViewOrderView extends StatelessWidget {
     );
   }
 
-  Widget buildOrder(
-      BuildContext context, OrderResponse order, UserResponse? user) {
+  Widget buildOrder(BuildContext context, OrderResponse order, User? user) {
     return Scaffold(
       appBar: AppBarGeneral(
         title:
@@ -119,7 +118,7 @@ class ViewOrderView extends StatelessWidget {
       ),
       bottomSheet: user != null && order.orderStatus == "PLACED"
           ? BottomCartPage(
-              userID: user.id,
+              userID: user.id!,
               total: order.orderAmount!,
               id: order.orderId!,
               onPress: onPress,

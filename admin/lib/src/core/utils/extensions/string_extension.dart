@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../language/localization/app_localizations.dart';
+import '../../services/language/localization/app_localizations.dart';
 
 extension EmailValidator on String {
   bool isValidEmail() {

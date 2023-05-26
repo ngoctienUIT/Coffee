@@ -1,8 +1,14 @@
+import '../../../data/models/preferences_model.dart';
+
 abstract class LoginState {}
 
 class InitState extends LoginState {}
 
-class LoginSuccessState extends LoginState {}
+class LoginSuccessState extends LoginState {
+  PreferencesModel preferencesModel;
+
+  LoginSuccessState(this.preferencesModel);
+}
 
 class LoginLoadingState extends LoginState {}
 

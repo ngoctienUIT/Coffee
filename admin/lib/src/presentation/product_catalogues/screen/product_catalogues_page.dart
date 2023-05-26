@@ -14,8 +14,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 import '../bloc/product_catalogues_event.dart';
@@ -46,28 +48,34 @@ class ProductCataloguesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBarGeneral(
           title: "product_catalogues".translate(context), elevation: 0),
-      body: buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddProductCataloguesPage(
-              onChange: () =>
-                  context.read<ProductCataloguesBloc>().add(UpdateData()),
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+      body: buildBody(context),
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddProductCataloguesPage(
+                    onChange: () =>
+                        context.read<ProductCataloguesBloc>().add(UpdateData()),
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocConsumer<ProductCataloguesBloc, ProductCataloguesState>(
       listener: (context, state) {
         if (state is ProductCataloguesError) {
@@ -99,52 +107,58 @@ class ProductCataloguesView extends StatelessWidget {
                         : null,
                     child: Stack(
                       children: [
-                        Slidable(
-                          endActionPane: ActionPane(
-                            motion: const ScrollMotion(),
-                            extentRatio: 0.32,
-                            children: [
-                              SlidableAction(
-                                onPressed: (_) {
-                                  Navigator.of(context).push(createRoute(
-                                    screen: AddProductCataloguesPage(
-                                      productCatalogues:
-                                          ProductCatalogues.fromResponse(
-                                              listProductCatalogues[index]),
-                                      onChange: () {
-                                        context
-                                            .read<ProductCataloguesBloc>()
-                                            .add(UpdateData());
+                        preferencesModel.user!.userRole != "ADMIN"
+                            ? productCataloguesItem(
+                                listProductCatalogues[index])
+                            : Slidable(
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  extentRatio: 0.32,
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (_) {
+                                        Navigator.of(context).push(createRoute(
+                                          screen: AddProductCataloguesPage(
+                                            productCatalogues:
+                                                ProductCatalogues.fromResponse(
+                                                    listProductCatalogues[
+                                                        index]),
+                                            onChange: () {
+                                              context
+                                                  .read<ProductCataloguesBloc>()
+                                                  .add(UpdateData());
+                                            },
+                                          ),
+                                          begin: const Offset(0, 1),
+                                        ));
                                       },
+                                      backgroundColor: AppColors.statusBarColor,
+                                      foregroundColor: const Color.fromRGBO(
+                                          231, 231, 231, 1),
+                                      icon: FontAwesomeIcons.penToSquare,
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
-                                    begin: const Offset(0, 1),
-                                  ));
-                                },
-                                backgroundColor: AppColors.statusBarColor,
-                                foregroundColor:
-                                    const Color.fromRGBO(231, 231, 231, 1),
-                                icon: FontAwesomeIcons.penToSquare,
-                                borderRadius: BorderRadius.circular(15),
+                                    SlidableAction(
+                                      onPressed: (_) {
+                                        _showAlertDialog(context, () {
+                                          context
+                                              .read<ProductCataloguesBloc>()
+                                              .add(DeleteEvent(
+                                                  listProductCatalogues[index]
+                                                      .id));
+                                        });
+                                      },
+                                      backgroundColor: AppColors.statusBarColor,
+                                      foregroundColor: const Color.fromRGBO(
+                                          231, 231, 231, 1),
+                                      icon: FontAwesomeIcons.trash,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ],
+                                ),
+                                child: productCataloguesItem(
+                                    listProductCatalogues[index]),
                               ),
-                              SlidableAction(
-                                onPressed: (_) {
-                                  _showAlertDialog(context, () {
-                                    context.read<ProductCataloguesBloc>().add(
-                                        DeleteEvent(
-                                            listProductCatalogues[index].id));
-                                  });
-                                },
-                                backgroundColor: AppColors.statusBarColor,
-                                foregroundColor:
-                                    const Color.fromRGBO(231, 231, 231, 1),
-                                icon: FontAwesomeIcons.trash,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ],
-                          ),
-                          child: productCataloguesItem(
-                              listProductCatalogues[index]),
-                        ),
                         if (id == listProductCatalogues[index].id)
                           Positioned(
                             right: 5,

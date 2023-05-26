@@ -46,10 +46,10 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
           unselectedLabelStyle: const TextStyle(fontSize: 16),
           indicatorColor: AppColors.statusBarColor,
           tabs: [
-            Tab(text: "all".translate(context)),
             Tab(text: "placed".translate(context)),
             Tab(text: "completed".translate(context)),
             Tab(text: "cancelled".translate(context)),
+            Tab(text: "all".translate(context)),
           ],
         ),
       ),

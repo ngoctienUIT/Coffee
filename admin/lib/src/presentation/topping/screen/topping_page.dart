@@ -14,8 +14,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/topping_bloc.dart';
 import '../bloc/topping_event.dart';
@@ -53,24 +55,28 @@ class _ToppingViewState extends State<ToppingView> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Topping", elevation: 0),
       body: bodyTopping(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddToppingPage(
-              onChange: () {
-                context.read<ToppingBloc>().add(UpdateData());
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddToppingPage(
+                    onChange: () {
+                      context.read<ToppingBloc>().add(UpdateData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
               },
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -138,6 +144,8 @@ class _ToppingViewState extends State<ToppingView> {
   }
 
   Widget listToppingWidget(List<Topping> listTopping) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return ListView.builder(
       physics: widget.onPick == null
           ? const BouncingScrollPhysics(
@@ -150,62 +158,69 @@ class _ToppingViewState extends State<ToppingView> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: widget.onPick != null
-              ? Row(
-                  children: [
-                    BlocBuilder<ToppingBloc, ToppingState>(
-                      buildWhen: (previous, current) => current is PickState,
-                      builder: (context, state) {
-                        return Checkbox(
-                          value: listTopping[index].isCheck,
-                          onChanged: (value) {
-                            listTopping[index].isCheck = value!;
-                            context.read<ToppingBloc>().add(PickEvent());
-                          },
-                        );
-                      },
-                    ),
-                    Expanded(child: itemTopping(listTopping[index])),
-                  ],
-                )
-              : Slidable(
-                  endActionPane: ActionPane(
-                    motion: const ScrollMotion(),
-                    extentRatio: 0.35,
-                    children: [
-                      SlidableAction(
-                        onPressed: (_) {
-                          Navigator.of(context).push(createRoute(
-                            screen: AddToppingPage(
-                              topping: listTopping[index],
-                              onChange: () {
-                                context.read<ToppingBloc>().add(UpdateData());
+          child: preferencesModel.user!.userRole != "ADMIN"
+              ? itemTopping(listTopping[index])
+              : widget.onPick != null
+                  ? Row(
+                      children: [
+                        BlocBuilder<ToppingBloc, ToppingState>(
+                          buildWhen: (previous, current) =>
+                              current is PickState,
+                          builder: (context, state) {
+                            return Checkbox(
+                              value: listTopping[index].isCheck,
+                              onChanged: (value) {
+                                listTopping[index].isCheck = value!;
+                                context.read<ToppingBloc>().add(PickEvent());
                               },
-                            ),
-                            begin: const Offset(0, 1),
-                          ));
-                        },
-                        backgroundColor: AppColors.statusBarColor,
-                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                        icon: FontAwesomeIcons.penToSquare,
-                        borderRadius: BorderRadius.circular(15),
+                            );
+                          },
+                        ),
+                        Expanded(child: itemTopping(listTopping[index])),
+                      ],
+                    )
+                  : Slidable(
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
+                        extentRatio: 0.35,
+                        children: [
+                          SlidableAction(
+                            onPressed: (_) {
+                              Navigator.of(context).push(createRoute(
+                                screen: AddToppingPage(
+                                  topping: listTopping[index],
+                                  onChange: () {
+                                    context
+                                        .read<ToppingBloc>()
+                                        .add(UpdateData());
+                                  },
+                                ),
+                                begin: const Offset(0, 1),
+                              ));
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.penToSquare,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          SlidableAction(
+                            onPressed: (_) {
+                              _showAlertDialog(context, () {
+                                context.read<ToppingBloc>().add(
+                                    DeleteEvent(listTopping[index].toppingId!));
+                              });
+                            },
+                            backgroundColor: AppColors.statusBarColor,
+                            foregroundColor:
+                                const Color.fromRGBO(231, 231, 231, 1),
+                            icon: FontAwesomeIcons.trash,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ],
                       ),
-                      SlidableAction(
-                        onPressed: (_) {
-                          _showAlertDialog(context, () {
-                            context.read<ToppingBloc>().add(
-                                DeleteEvent(listTopping[index].toppingId!));
-                          });
-                        },
-                        backgroundColor: AppColors.statusBarColor,
-                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                        icon: FontAwesomeIcons.trash,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ],
-                  ),
-                  child: itemTopping(listTopping[index]),
-                ),
+                      child: itemTopping(listTopping[index]),
+                    ),
         );
       },
     );

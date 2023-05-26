@@ -14,8 +14,10 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 
@@ -36,23 +38,28 @@ class RecommendView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar:
           AppBarGeneral(title: "recommend".translate(context), elevation: 0),
       body: SafeArea(child: bodyRecommend()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddRecommendPage(
-              onChange: () => context.read<RecommendBloc>().add(UpdateData()),
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddRecommendPage(
+                    onChange: () =>
+                        context.read<RecommendBloc>().add(UpdateData()),
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

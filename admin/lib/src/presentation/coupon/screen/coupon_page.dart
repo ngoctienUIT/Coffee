@@ -11,8 +11,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
 import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';
@@ -41,6 +43,8 @@ class _CouponViewState extends State<CouponView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -54,20 +58,22 @@ class _CouponViewState extends State<CouponView>
         ),
       ),
       body: buildBody(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddCouponPage(
-              onChange: () {
-                context.read<CouponBloc>().add(FetchData());
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddCouponPage(
+                    onChange: () {
+                      context.read<CouponBloc>().add(FetchData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
               },
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -79,6 +85,8 @@ class _CouponViewState extends State<CouponView>
         }
       },
       builder: (context, state) {
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
         if (state is CouponLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
@@ -93,53 +101,62 @@ class _CouponViewState extends State<CouponView>
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: Slidable(
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      extentRatio: 0.35,
-                      children: [
-                        SlidableAction(
-                          onPressed: (_) {
-                            Navigator.of(context).push(createRoute(
-                              screen: AddCouponPage(
-                                onChange: () {
-                                  context.read<CouponBloc>().add(FetchData());
+                  child: preferencesModel.user!.userRole == "ADMIN"
+                      ? Slidable(
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            extentRatio: 0.35,
+                            children: [
+                              SlidableAction(
+                                onPressed: (_) {
+                                  Navigator.of(context).push(createRoute(
+                                    screen: AddCouponPage(
+                                      onChange: () {
+                                        context
+                                            .read<CouponBloc>()
+                                            .add(FetchData());
+                                      },
+                                      coupon: state.listCoupon[index],
+                                    ),
+                                    begin: const Offset(0, 1),
+                                  ));
                                 },
-                                coupon: state.listCoupon[index],
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.penToSquare,
+                                borderRadius: BorderRadius.circular(15),
                               ),
-                              begin: const Offset(0, 1),
-                            ));
-                          },
-                          backgroundColor: AppColors.statusBarColor,
-                          foregroundColor:
-                              const Color.fromRGBO(231, 231, 231, 1),
-                          icon: FontAwesomeIcons.penToSquare,
-                          borderRadius: BorderRadius.circular(15),
+                              SlidableAction(
+                                onPressed: (_) {
+                                  _showAlertDialog(context, () {
+                                    context.read<CouponBloc>().add(DeleteEvent(
+                                        state.listCoupon[index].id));
+                                  });
+                                },
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.trash,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ],
+                          ),
+                          child: TicketWidget(
+                            onPress: null,
+                            title: state.listCoupon[index].couponName,
+                            content: state.listCoupon[index].content,
+                            image: state.listCoupon[index].imageUrl ?? "",
+                            date: state.listCoupon[index].dueDate,
+                          ),
+                        )
+                      : TicketWidget(
+                          onPress: null,
+                          title: state.listCoupon[index].couponName,
+                          content: state.listCoupon[index].content,
+                          image: state.listCoupon[index].imageUrl ?? "",
+                          date: state.listCoupon[index].dueDate,
                         ),
-                        SlidableAction(
-                          onPressed: (_) {
-                            _showAlertDialog(context, () {
-                              context
-                                  .read<CouponBloc>()
-                                  .add(DeleteEvent(state.listCoupon[index].id));
-                            });
-                          },
-                          backgroundColor: AppColors.statusBarColor,
-                          foregroundColor:
-                              const Color.fromRGBO(231, 231, 231, 1),
-                          icon: FontAwesomeIcons.trash,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ],
-                    ),
-                    child: TicketWidget(
-                      onPress: null,
-                      title: state.listCoupon[index].couponName,
-                      content: state.listCoupon[index].content,
-                      image: state.listCoupon[index].imageUrl ?? "",
-                      date: state.listCoupon[index].dueDate,
-                    ),
-                  ),
                 );
               },
             ),

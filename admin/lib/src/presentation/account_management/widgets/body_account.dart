@@ -1,5 +1,6 @@
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,12 @@ class BodyAccount extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(createRoute(
                       screen: ProfilePage(
-                        user: listAccount[index],
-                        onChange: () {
-                          context
-                              .read<AccountBloc>()
-                              .add(UpdateData(indexState));
-                        },
+                        user: User.fromUserResponse(listAccount[index]),
+                        // onChange: () {
+                        //   context
+                        //       .read<AccountBloc>()
+                        //       .add(UpdateData(indexState));
+                        // },
                       ),
                       begin: const Offset(1, 0),
                     ));

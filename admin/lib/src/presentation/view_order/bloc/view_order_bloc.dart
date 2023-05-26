@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
 
@@ -80,7 +81,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
       final orderResponse = await apiService.getOrderByID("Bearer $token", id);
       final userResponse = await apiService.getUserByID(
           "Bearer $token", orderResponse.data.userId!);
-      emit(GetOrderSuccessState(userResponse.data, orderResponse.data));
+      emit(GetOrderSuccessState(
+          User.fromUserResponse(userResponse.data), orderResponse.data));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

@@ -3,12 +3,15 @@ import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/repositories/product/product_response.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 import '../../view_product/screen/view_product_page.dart';
@@ -29,6 +32,8 @@ class ListItemProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return ListView.builder(
       physics: const BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics(),
@@ -47,25 +52,27 @@ class ListItemProduct extends StatelessWidget {
               begin: const Offset(0, 1),
             ));
           },
-          child: Slidable(
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              extentRatio: 0.2,
-              children: [
-                SlidableAction(
-                  onPressed: (_) {
-                    _showAlertDialog(
-                        context, () => onDelete(listProduct[index].id));
-                  },
-                  backgroundColor: AppColors.statusBarColor,
-                  foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
-                  icon: FontAwesomeIcons.trash,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ],
-            ),
-            child: itemOrder(index),
-          ),
+          child: preferencesModel.user!.userRole == "ADMIN"
+              ? Slidable(
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(),
+                    extentRatio: 0.2,
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) {
+                          _showAlertDialog(
+                              context, () => onDelete(listProduct[index].id));
+                        },
+                        backgroundColor: AppColors.statusBarColor,
+                        foregroundColor: const Color.fromRGBO(231, 231, 231, 1),
+                        icon: FontAwesomeIcons.trash,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ],
+                  ),
+                  child: itemOrder(index),
+                )
+              : itemOrder(index),
         );
       },
     );

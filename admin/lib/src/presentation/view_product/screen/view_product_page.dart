@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../add_product/screen/add_product_page.dart';
 import '../../product/widgets/list_product_loading.dart';
@@ -46,6 +48,8 @@ class _ViewProductPageState extends State<ViewProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
       create: (context) => ViewProductBloc()
         ..add(DataTransmissionEvent(
@@ -60,7 +64,8 @@ class _ViewProductPageState extends State<ViewProductPage> {
               AppBarProduct(
                 isTop: isTop,
                 name: widget.product.name,
-                onEdit: widget.productCatalogues == null
+                onEdit: widget.productCatalogues == null ||
+                        preferencesModel.user!.userRole != "ADMIN"
                     ? null
                     : () {
                         Navigator.of(context).push(createRoute(

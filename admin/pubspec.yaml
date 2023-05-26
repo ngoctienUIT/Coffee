@@ -55,7 +55,7 @@ dependencies:
   firebase_core: ^2.9.0
   dvhcvn: ^2.0.20221001
   firebase_storage: ^11.1.0
-  shimmer: ^2.0.0
+  shimmer: ^3.0.0
   url_launcher: ^6.1.10
   firebase_messaging: ^14.4.1
   cloud_firestore: ^4.5.2

@@ -1,6 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import '../../domain/entities/user/user_response.dart';
 
-class User {
+class User extends Equatable {
+  String? id;
   final String username;
   String displayName;
   bool isMale;
@@ -12,6 +15,7 @@ class User {
   final String userRole;
 
   User({
+    this.id,
     required this.username,
     required this.displayName,
     required this.isMale,
@@ -25,6 +29,7 @@ class User {
 
   factory User.fromUserResponse(UserResponse userResponse) {
     return User(
+      id: userResponse.id,
       username: userResponse.username,
       displayName: userResponse.displayName,
       isMale: userResponse.isMale,
@@ -45,6 +50,7 @@ class User {
     final String? birthOfDate,
   }) {
     return User(
+      id: id,
       username: username,
       displayName: displayName ?? this.displayName,
       isMale: isMale ?? this.isMale,
@@ -69,4 +75,8 @@ class User {
       "birthOfDate": birthOfDate,
     };
   }
+
+  @override
+  List<Object?> get props =>
+      [displayName, imageUrl, birthOfDate, isMale, email];
 }

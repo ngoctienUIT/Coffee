@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/entities/user/user_response.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/profile_bloc.dart';
@@ -18,11 +20,9 @@ import 'custom_picker_widget.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
-  const BodyProfilePage({Key? key, required this.user, required this.onChange})
-      : super(key: key);
+  const BodyProfilePage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
-  final VoidCallback onChange;
+  final User user;
 
   @override
   State<BodyProfilePage> createState() => _BodyProfilePageState();
@@ -58,7 +58,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         if (state is SaveProfileLoaded) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
           customToast(context, "save_changes_successfully".translate(context));
-          widget.onChange();
           Navigator.pop(context);
         }
         if (state is SaveProfileLoading) {
@@ -94,13 +93,19 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        context
-            .read<ProfileBloc>()
-            .add(SaveProfileEvent(User.fromUserResponse(widget.user).copyWith(
-              displayName: nameController.text,
-              isMale: isMale,
-              birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
-            )));
+        PreferencesModel preferencesModel =
+            context.read<ServiceBloc>().preferencesModel;
+        User user = widget.user.copyWith(
+          displayName: nameController.text,
+          isMale: isMale,
+          birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
+        );
+        if (user == preferencesModel.user) {
+          context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
+        } else {
+          context.read<ProfileBloc>().add(SaveProfileEvent(user));
+          context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
+        }
       }
     } else {
       context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));

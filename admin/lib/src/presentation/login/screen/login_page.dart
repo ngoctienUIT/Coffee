@@ -10,8 +10,11 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
 import '../../main/screen/main_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -137,7 +140,11 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
     prefs.setString('password', passwordController.text);
   }
 
-  void loginSuccess() {
+  void loginSuccess(PreferencesModel newModel) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
+    context.read<ServiceBloc>().add(SetDataEvent(
+        preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
     isLogin = true;
     customToast(context, "logged_in_successfully".translate(context));
     saveLogin();
@@ -152,7 +159,7 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
     return BlocListener<LoginBloc, LoginState>(
       listener: (_, state) {
         if (state is LoginLoadingState) loadingAnimation(context);
-        if (state is LoginSuccessState) loginSuccess();
+        if (state is LoginSuccessState) loginSuccess(state.preferencesModel);
         if (state is LoginErrorState) {
           customToast(context, state.status);
           Navigator.pop(context);

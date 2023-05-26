@@ -6,7 +6,7 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../domain/entities/user/user_response.dart';
+import '../../../data/models/user.dart';
 import '../../change_password/screen/change_password_page.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
@@ -19,7 +19,7 @@ import '../bloc/setting_state.dart';
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SettingPage extends StatelessWidget {
 class SettingView extends StatelessWidget {
   const SettingView({Key? key, required this.user}) : super(key: key);
 
-  final UserResponse user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class SettingView extends StatelessWidget {
                   }),
                 ),
               ]),
-              if (user.hashedPassword.isNotEmpty)
+              if (user.password.isNotEmpty)
                 groupItemOther("security".translate(context), [
                   itemOther(
                     "change_password".translate(context),

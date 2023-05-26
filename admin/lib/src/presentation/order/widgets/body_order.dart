@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
@@ -9,11 +8,14 @@ import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.d
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
 import '../bloc/order_event.dart';
@@ -24,6 +26,8 @@ class BodyOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
         if (state is OrderError) {
@@ -46,10 +50,10 @@ class BodyOrder extends StatelessWidget {
               itemCount: listOrder.length,
               itemBuilder: (context, index) {
                 return FutureBuilder(
-                  future: getUserInfo(listOrder[index].userId!),
+                  future: getUserInfo(context, listOrder[index].userId!),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      UserResponse? user = snapshot.requireData;
+                      User? user = snapshot.requireData;
                       return InkWell(
                         onTap: () {
                           Navigator.of(context).push(createRoute(
@@ -126,14 +130,28 @@ class BodyOrder extends StatelessWidget {
     );
   }
 
-  Future<UserResponse?> getUserInfo(String id) async {
+  Future<User?> getUserInfo(BuildContext context, String id) async {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      final response = await apiService.getUserByID('Bearer $token', id);
-      return response.data;
+      User? user = preferencesModel.getUser(id);
+      if (user == null) {
+        ApiService apiService =
+            ApiService(Dio(BaseOptions(contentType: "application/json")));
+        // final prefs = await SharedPreferences.getInstance();
+        // String token = prefs.getString("token") ?? "";
+        final response = await apiService.getUserByID(
+            'Bearer ${preferencesModel.token}', id);
+        user = User.fromUserResponse(response.data);
+        List<User> list = [user];
+        list.addAll(preferencesModel.listUser);
+        if (context.mounted) {
+          context
+              .read<ServiceBloc>()
+              .add(SetDataEvent(preferencesModel.copyWith(listUser: list)));
+        }
+      }
+      return user;
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -144,8 +162,7 @@ class BodyOrder extends StatelessWidget {
     return null;
   }
 
-  Widget bodyItem(
-      BuildContext context, OrderResponse order, UserResponse? user) {
+  Widget bodyItem(BuildContext context, OrderResponse order, User? user) {
     return Row(
       children: [
         ClipOval(
@@ -199,8 +216,7 @@ class BodyOrder extends StatelessWidget {
     );
   }
 
-  Widget itemOrder(
-      BuildContext context, OrderResponse order, UserResponse? user) {
+  Widget itemOrder(BuildContext context, OrderResponse order, User? user) {
     int number = 0;
     for (var item in order.orderItems!) {
       number += item.quantity;

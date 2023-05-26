@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/repositories/store/store_response.dart';
 import '../../add_store/screen/add_store_page.dart';
 import '../../login/widgets/custom_button.dart';
@@ -15,6 +18,8 @@ void showStoreBottomSheet(
   StoreResponse store,
   VoidCallback onChange,
 ) {
+  PreferencesModel preferencesModel =
+      context.read<ServiceBloc>().preferencesModel;
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -51,25 +56,26 @@ void showStoreBottomSheet(
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: customButton(
-                text: "edit".translate(context),
-                isOnPress: true,
-                onPress: () {
-                  Navigator.of(context).push(createRoute(
-                    screen: AddStorePage(
-                      store: store,
-                      onChange: () {
-                        onChange();
-                        Navigator.pop(context);
-                      },
-                    ),
-                    begin: const Offset(0, 1),
-                  ));
-                },
+            if (preferencesModel.user!.userRole == "ADMIN")
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: customButton(
+                  text: "edit".translate(context),
+                  isOnPress: true,
+                  onPress: () {
+                    Navigator.of(context).push(createRoute(
+                      screen: AddStorePage(
+                        store: store,
+                        onChange: () {
+                          onChange();
+                          Navigator.pop(context);
+                        },
+                      ),
+                      begin: const Offset(0, 1),
+                    ));
+                  },
+                ),
               ),
-            ),
           ],
         ),
       );
@@ -104,7 +110,7 @@ Widget phoneAndHour(BuildContext context, StoreResponse store) {
       GestureDetector(
         onTap: () async {
           if (await canLaunchUrlString('tel:${store.hotlineNumber}')) {
-          await launchUrlString('tel:${store.hotlineNumber}');
+            await launchUrlString('tel:${store.hotlineNumber}');
           }
         },
         child: Padding(

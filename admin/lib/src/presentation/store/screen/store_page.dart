@@ -10,8 +10,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/repositories/store/store_response.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -50,22 +52,26 @@ class _StoreViewState extends State<StoreView> {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: appBar(),
       body: SafeArea(child: bodyStore()),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(createRoute(
-            screen: AddStorePage(
-              onChange: () => context.read<StoreBloc>().add(UpdateData()),
-            ),
-            begin: const Offset(0, 1),
-          ));
-        },
-        backgroundColor: AppColors.statusBarColor,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddStorePage(
+                    onChange: () => context.read<StoreBloc>().add(UpdateData()),
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -99,6 +105,8 @@ class _StoreViewState extends State<StoreView> {
   }
 
   Widget bodyStore() {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
@@ -128,29 +136,31 @@ class _StoreViewState extends State<StoreView> {
                           SearchStore(storeName: searchAddressController.text));
                     },
                   ),
-                  child: Slidable(
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      extentRatio: 0.2,
-                      children: [
-                        SlidableAction(
-                          onPressed: (_) {
-                            _showAlertDialog(context, () {
-                              context.read<StoreBloc>().add(DeleteEvent(
-                                  state.listStore[index].storeId,
-                                  searchAddressController.text));
-                            });
-                          },
-                          backgroundColor: AppColors.statusBarColor,
-                          foregroundColor:
-                              const Color.fromRGBO(231, 231, 231, 1),
-                          icon: FontAwesomeIcons.trash,
-                          borderRadius: BorderRadius.circular(15),
+                  child: preferencesModel.user!.userRole != "ADMIN"
+                      ? itemStore(state.listStore[index])
+                      : Slidable(
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            extentRatio: 0.2,
+                            children: [
+                              SlidableAction(
+                                onPressed: (_) {
+                                  _showAlertDialog(context, () {
+                                    context.read<StoreBloc>().add(DeleteEvent(
+                                        state.listStore[index].storeId,
+                                        searchAddressController.text));
+                                  });
+                                },
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.trash,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ],
+                          ),
+                          child: itemStore(state.listStore[index]),
                         ),
-                      ],
-                    ),
-                    child: itemStore(state.listStore[index]),
-                  ),
                 );
               },
             ),

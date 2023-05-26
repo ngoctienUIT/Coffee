@@ -1,7 +1,6 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
-import 'package:coffee_admin/src/presentation/other/bloc/other_event.dart';
 import 'package:coffee_admin/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/screen/product_catalogues_page.dart';
 import 'package:coffee_admin/src/presentation/recommend/screen/recommend_page.dart';
@@ -15,8 +14,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/language/bloc/language_cubit.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../info/screen/info_page.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../setting/screen/setting_page.dart';
@@ -30,6 +31,8 @@ class BodyOtherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -42,18 +45,12 @@ class BodyOtherPage extends StatelessWidget {
           children: [
             groupItemOther("account".translate(context), [
               itemOther("profile".translate(context), Icons.person, () {
-                OtherState otherState = context.read<OtherBloc>().state;
-                if (otherState is OtherLoaded) {
-                  Navigator.of(context).push(createRoute(
-                    screen: ProfilePage(
-                      user: otherState.user,
-                      onChange: () {
-                        context.read<OtherBloc>().add(FetchData());
-                      },
-                    ),
-                    begin: const Offset(1, 0),
-                  ));
-                }
+                PreferencesModel preferencesModel =
+                    context.read<ServiceBloc>().preferencesModel;
+                Navigator.of(context).push(createRoute(
+                  screen: ProfilePage(user: preferencesModel.user!),
+                  begin: const Offset(1, 0),
+                ));
               }),
               const Divider(),
               itemOther("setting".translate(context), Icons.settings, () {
@@ -67,31 +64,34 @@ class BodyOtherPage extends StatelessWidget {
               })
             ]),
             groupItemOther("manage".translate(context), [
-              itemOther("create_account".translate(context),
-                  Icons.account_circle_outlined, () {
-                OtherState otherState = context.read<OtherBloc>().state;
-                if (otherState is OtherLoaded) {
+              if (preferencesModel.user!.userRole == "ADMIN")
+                itemOther("create_account".translate(context),
+                    Icons.account_circle_outlined, () {
+                  OtherState otherState = context.read<OtherBloc>().state;
+                  if (otherState is OtherLoaded) {
+                    Navigator.of(context).push(createRoute(
+                      screen: SignUpPage(role: otherState.user.userRole),
+                      begin: const Offset(1, 0),
+                    ));
+                  }
+                }),
+              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
+              if (preferencesModel.user!.userRole == "ADMIN")
+                itemOther("recommend".translate(context), Icons.cloud, () {
                   Navigator.of(context).push(createRoute(
-                    screen: SignUpPage(role: otherState.user.userRole),
+                    screen: const RecommendPage(),
                     begin: const Offset(1, 0),
                   ));
-                }
-              }),
-              const Divider(),
-              itemOther("recommend".translate(context), Icons.cloud, () {
-                Navigator.of(context).push(createRoute(
-                  screen: const RecommendPage(),
-                  begin: const Offset(1, 0),
-                ));
-              }),
-              const Divider(),
-              itemOther("store".translate(context), Icons.store, () {
-                Navigator.of(context).push(createRoute(
-                  screen: const StorePage(),
-                  begin: const Offset(1, 0),
-                ));
-              }),
-              const Divider(),
+                }),
+              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
+              if (preferencesModel.user!.userRole == "ADMIN")
+                itemOther("store".translate(context), Icons.store, () {
+                  Navigator.of(context).push(createRoute(
+                    screen: const StorePage(),
+                    begin: const Offset(1, 0),
+                  ));
+                }),
+              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
               itemOther("product_catalogues".translate(context),
                   FontAwesomeIcons.mugSaucer, () {
                 Navigator.of(context).push(createRoute(

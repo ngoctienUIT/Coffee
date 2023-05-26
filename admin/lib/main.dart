@@ -1,5 +1,8 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:coffee_admin/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee_admin/src/core/utils/constants/constants.dart';
+import 'package:coffee_admin/src/data/models/preferences_model.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +11,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
-import 'src/core/language/bloc/language_cubit.dart';
-import 'src/core/language/bloc/language_state.dart';
-import 'src/core/language/localization/app_localizations_setup.dart';
+import 'src/core/services/bloc/service_event.dart';
+import 'src/core/services/language/bloc/language_cubit.dart';
+import 'src/core/services/language/bloc/language_state.dart';
+import 'src/core/services/language/localization/app_localizations_setup.dart';
+import 'src/data/models/store.dart';
+import 'src/domain/api_service.dart';
 import 'src/presentation/login/screen/login_page.dart';
 
 int? language;
@@ -43,6 +49,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LanguageCubit>(
           create: (context) => LanguageCubit(language: language),
         ),
+        BlocProvider<ServiceBloc>(create: (context) => ServiceBloc()),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
         buildWhen: (previous, current) => previous != current,
@@ -79,14 +86,40 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: AnimatedSplashScreen(
-              nextScreen: const LoginPage(),
-              splash: AppImages.imgLogo,
-              splashIconSize: 250,
-            ),
+            home: const SplashScreen(),
           );
         },
       ),
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSplashScreen.withScreenFunction(
+      screenFunction: () async {
+        ApiService apiService =
+            ApiService(Dio(BaseOptions(contentType: "application/json")));
+        final storeResponse = apiService.getAllStores();
+
+        PreferencesModel preferencesModel = PreferencesModel(
+          token: "",
+          listStore: (await storeResponse)
+              .data
+              .map((e) => Store.fromStoreResponse(e))
+              .toList(),
+        );
+        if (context.mounted) {
+          context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
+        }
+
+        return const LoginPage();
+      },
+      splash: AppImages.imgLogo,
+      splashIconSize: 250,
     );
   }
 }

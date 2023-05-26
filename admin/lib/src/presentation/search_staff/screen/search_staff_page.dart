@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/user.dart';
 import '../../account_management/widgets/item_account.dart';
 import '../../profile/screen/profile_page.dart';
 import '../bloc/search_staff_bloc.dart';
@@ -70,12 +71,13 @@ class _SearchStaffViewState extends State<SearchStaffView> {
                         onTap: () {
                           Navigator.of(context).push(createRoute(
                             screen: ProfilePage(
-                              user: state.listUser[index],
-                              onChange: () {
-                                context
-                                    .read<SearchStaffBloc>()
-                                    .add(SearchStaff(searchController.text));
-                              },
+                              user:
+                                  User.fromUserResponse(state.listUser[index]),
+                              // onChange: () {
+                              //   context
+                              //       .read<SearchStaffBloc>()
+                              //       .add(SearchStaff(searchController.text));
+                              // },
                             ),
                             begin: const Offset(1, 0),
                           ));

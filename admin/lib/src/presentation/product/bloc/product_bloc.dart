@@ -2,15 +2,16 @@ import 'package:coffee_admin/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   List<ProductCataloguesResponse> listProductCatalogues = [];
+  PreferencesModel preferencesModel;
 
-  ProductBloc() : super(InitState()) {
+  ProductBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<RefreshData>((event, emit) => getDataProduct(event.index, emit));
@@ -92,15 +93,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
+      // final prefs = await SharedPreferences.getInstance();
+      // String token = prefs.getString("token") ?? "";
       final catalogueResponse = await apiService
           .getProductCatalogueByID(listProductCatalogues[index].id);
       List<String> list = catalogueResponse.data.associatedProductIds!;
       list.remove(id);
       await apiService.updateProductIdsProductCatalogues(
-          'Bearer $token', list, listProductCatalogues[index].id);
-      await apiService.removeProductByID('Bearer $token', id);
+        'Bearer ${preferencesModel.token}',
+        list,
+        listProductCatalogues[index].id,
+      );
+      await apiService.removeProductByID(
+          'Bearer ${preferencesModel.token}', id);
       final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
       emit(RefreshLoaded(index, response.data));
