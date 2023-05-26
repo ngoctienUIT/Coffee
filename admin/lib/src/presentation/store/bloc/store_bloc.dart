@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import 'store_event.dart';
 import 'store_state.dart';
 
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
-  StoreBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  StoreBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<UpdateData>((event, emit) => updateData(emit));
@@ -56,9 +58,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeStoreByID(id, "Bearer $token");
+      await apiService.removeStoreByID(id, "Bearer ${preferencesModel.token}");
       final response = await apiService.searchStoresByName(query);
       emit(StoreLoaded(response.data));
     } on DioError catch (e) {

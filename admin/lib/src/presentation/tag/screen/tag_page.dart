@@ -29,8 +29,10 @@ class TagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => TagBloc()..add(FetchData()),
+      create: (context) => TagBloc(preferencesModel)..add(FetchData()),
       child: TagView(onPick: onPick, listTag: listTag),
     );
   }

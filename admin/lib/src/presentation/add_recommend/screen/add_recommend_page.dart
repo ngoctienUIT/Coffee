@@ -11,7 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
@@ -28,8 +30,10 @@ class AddRecommendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddRecommendBloc(),
+      create: (context) => AddRecommendBloc(preferencesModel),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBar(

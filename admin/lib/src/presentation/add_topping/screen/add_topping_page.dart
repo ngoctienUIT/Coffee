@@ -9,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -29,8 +31,10 @@ class AddToppingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddToppingBloc(),
+      create: (context) => AddToppingBloc(preferencesModel),
       child: Scaffold(
         appBar: AppBarGeneral(
             elevation: 0, title: "add_topping".translate(context)),

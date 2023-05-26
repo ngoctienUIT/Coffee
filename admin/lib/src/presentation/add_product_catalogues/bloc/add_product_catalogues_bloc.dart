@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product_catalogues.dart';
 import '../../../domain/api_service.dart';
 import 'add_product_catalogues_event.dart';
@@ -13,8 +13,9 @@ import 'add_product_catalogues_state.dart';
 class AddProductCataloguesBloc
     extends Bloc<AddProductCataloguesEvent, AddProductCataloguesState> {
   String image = "";
+  PreferencesModel preferencesModel;
 
-  AddProductCataloguesBloc() : super(InitState()) {
+  AddProductCataloguesBloc(this.preferencesModel) : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -36,13 +37,12 @@ class AddProductCataloguesBloc
       emit(AddProductCataloguesLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
+
       if (image.isNotEmpty) {
         productCatalogues.image = await uploadImage(image.split("/").last);
       }
       await apiService.createNewProductCatalogue(
-        'Bearer $token',
+        'Bearer ${preferencesModel.token}',
         productCatalogues.toJson(),
       );
       emit(AddProductCataloguesSuccessState());
@@ -63,13 +63,11 @@ class AddProductCataloguesBloc
       emit(AddProductCataloguesLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         productCatalogues.image = await uploadImage(image.split("/").last);
       }
       await apiService.updateExistingProductCatalogue(
-        'Bearer $token',
+        'Bearer ${preferencesModel.token}',
         productCatalogues.toJson(),
         productCatalogues.id!,
       );

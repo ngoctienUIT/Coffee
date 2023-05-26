@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import 'coupon_event.dart';
 import 'coupon_state.dart';
 
 class CouponBloc extends Bloc<CouponEvent, CouponState> {
-  CouponBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  CouponBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<DeleteEvent>((event, emit) => deleteCoupon(event.id, emit));
@@ -36,9 +38,7 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeCouponByID(id, 'Bearer $token');
+      await apiService.removeCouponByID(id, 'Bearer ${preferencesModel.token}');
       final response = await apiService.getAllCoupons();
       emit(CouponLoaded(response.data));
     } on DioError catch (e) {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
 import '../widgets/body_account.dart';
@@ -19,8 +21,10 @@ class _AccountManagementPageState extends State<AccountManagementPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AccountBloc()..add(FetchData()),
+      create: (context) => AccountBloc(preferencesModel)..add(FetchData()),
       child: const Scaffold(
         backgroundColor: AppColors.bgColor,
         body: SafeArea(

@@ -45,40 +45,45 @@ class BodyAccount extends StatelessWidget {
               itemCount: listAccount.length,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(
-                      screen: ProfilePage(
-                        user: User.fromUserResponse(listAccount[index]),
-                        // onChange: () {
-                        //   context
-                        //       .read<AccountBloc>()
-                        //       .add(UpdateData(indexState));
-                        // },
-                      ),
-                      begin: const Offset(1, 0),
-                    ));
-                  },
-                  child: Slidable(
-                      endActionPane: ActionPane(
-                        motion: const ScrollMotion(),
-                        extentRatio: 0.2,
-                        children: [
-                          SlidableAction(
-                            onPressed: (_) {
-                              _showAlertDialog(context, () {
-                                context.read<AccountBloc>().add(DeleteEvent(
-                                    listAccount[index].id, indexState));
-                              });
-                            },
-                            backgroundColor: AppColors.statusBarColor,
-                            foregroundColor:
-                                const Color.fromRGBO(231, 231, 231, 1),
-                            icon: FontAwesomeIcons.trash,
-                            borderRadius: BorderRadius.circular(15),
+                  onTap: listAccount[index].userRole != "ADMIN"
+                      ? () {
+                          Navigator.of(context).push(createRoute(
+                            screen: ProfilePage(
+                              user: User.fromUserResponse(listAccount[index]),
+                              // onChange: () {
+                              //   context
+                              //       .read<AccountBloc>()
+                              //       .add(UpdateData(indexState));
+                              // },
+                            ),
+                            begin: const Offset(1, 0),
+                          ));
+                        }
+                      : null,
+                  child: listAccount[index].userRole != "ADMIN"
+                      ? Slidable(
+                          endActionPane: ActionPane(
+                            motion: const ScrollMotion(),
+                            extentRatio: 0.2,
+                            children: [
+                              SlidableAction(
+                                onPressed: (_) {
+                                  _showAlertDialog(context, () {
+                                    context.read<AccountBloc>().add(DeleteEvent(
+                                        listAccount[index].id, indexState));
+                                  });
+                                },
+                                backgroundColor: AppColors.statusBarColor,
+                                foregroundColor:
+                                    const Color.fromRGBO(231, 231, 231, 1),
+                                icon: FontAwesomeIcons.trash,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: ItemAccount(user: listAccount[index])),
+                          child: ItemAccount(user: listAccount[index]),
+                        )
+                      : ItemAccount(user: listAccount[index]),
                 );
               },
             ),

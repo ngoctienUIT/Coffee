@@ -6,7 +6,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../account_management/widgets/item_account.dart';
 import '../../profile/screen/profile_page.dart';
@@ -20,8 +22,11 @@ class SearchStaffPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => SearchStaffBloc()..add(SearchStaff("")),
+      create: (context) =>
+          SearchStaffBloc(preferencesModel)..add(SearchStaff("")),
       child: const SearchStaffView(),
     );
   }
@@ -68,36 +73,41 @@ class _SearchStaffViewState extends State<SearchStaffView> {
                     itemCount: state.listUser.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(createRoute(
-                            screen: ProfilePage(
-                              user:
-                                  User.fromUserResponse(state.listUser[index]),
-                              // onChange: () {
-                              //   context
-                              //       .read<SearchStaffBloc>()
-                              //       .add(SearchStaff(searchController.text));
-                              // },
-                            ),
-                            begin: const Offset(1, 0),
-                          ));
-                        },
-                        child: Slidable(
-                            endActionPane: ActionPane(
-                              motion: const ScrollMotion(),
-                              extentRatio: 0.2,
-                              children: [
-                                SlidableAction(
-                                  onPressed: (_) {},
-                                  backgroundColor: AppColors.statusBarColor,
-                                  foregroundColor:
-                                      const Color.fromRGBO(231, 231, 231, 1),
-                                  icon: FontAwesomeIcons.trash,
-                                  borderRadius: BorderRadius.circular(15),
+                        onTap: state.listUser[index].userRole != "ADMIN"
+                            ? () {
+                                Navigator.of(context).push(createRoute(
+                                  screen: ProfilePage(
+                                    user: User.fromUserResponse(
+                                        state.listUser[index]),
+                                    // onChange: () {
+                                    //   context
+                                    //       .read<SearchStaffBloc>()
+                                    //       .add(SearchStaff(searchController.text));
+                                    // },
+                                  ),
+                                  begin: const Offset(1, 0),
+                                ));
+                              }
+                            : null,
+                        child: state.listUser[index].userRole != "ADMIN"
+                            ? Slidable(
+                                endActionPane: ActionPane(
+                                  motion: const ScrollMotion(),
+                                  extentRatio: 0.2,
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (_) {},
+                                      backgroundColor: AppColors.statusBarColor,
+                                      foregroundColor: const Color.fromRGBO(
+                                          231, 231, 231, 1),
+                                      icon: FontAwesomeIcons.trash,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: ItemAccount(user: state.listUser[index])),
+                                child: ItemAccount(user: state.listUser[index]),
+                              )
+                            : ItemAccount(user: state.listUser[index]),
                       );
                     },
                   )),

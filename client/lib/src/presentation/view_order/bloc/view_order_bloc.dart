@@ -2,13 +2,15 @@ import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
 
 class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
-  ViewOrderBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  ViewOrderBloc(this.preferencesModel) : super(InitState()) {
     on<GetOrderEvent>((event, emit) => getData(event.id, emit));
 
     on<CancelOrderEvent>((event, emit) => cancelOrder(event.id, emit));
@@ -17,11 +19,10 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
   Future getData(String id, Emitter emit) async {
     try {
       emit(ViewOrderLoading());
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getOrderByID("Bearer $token", id);
+      final response =
+          await apiService.getOrderByID("Bearer ${preferencesModel.token}", id);
 
       emit(ViewOrderSuccess(response.data));
     } on DioError catch (e) {
@@ -40,9 +41,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
       emit(ViewOrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      final response = await apiService.cancelOrder("Bearer $token", id);
+      final response =
+          await apiService.cancelOrder("Bearer ${preferencesModel.token}", id);
       sendPushMessageTopic(
         orderID: response.data.orderId!,
         body: "Đơn hàng ${response.data.orderId} đã được hủy thành công",

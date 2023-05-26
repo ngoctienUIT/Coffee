@@ -2,13 +2,15 @@ import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_ca
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 
 class ProductCataloguesBloc
     extends Bloc<ProductCataloguesEvent, ProductCataloguesState> {
-  ProductCataloguesBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  ProductCataloguesBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<UpdateData>((event, emit) => updateData(emit));
@@ -55,9 +57,8 @@ class ProductCataloguesBloc
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeProductCataloguesByID("Bearer $token", id);
+      await apiService.removeProductCataloguesByID(
+          "Bearer ${preferencesModel.token}", id);
       final response = await apiService.getAllProductCatalogues();
       emit(ProductCataloguesLoaded(response.data));
     } on DioError catch (e) {

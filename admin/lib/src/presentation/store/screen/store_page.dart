@@ -27,8 +27,10 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc()..add(FetchData()),
+      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
       child: const StoreView(),
     );
   }

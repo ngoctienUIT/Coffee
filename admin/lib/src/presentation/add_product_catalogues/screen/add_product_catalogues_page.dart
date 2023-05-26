@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/app_images.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product_catalogues.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -29,8 +31,10 @@ class AddProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddProductCataloguesBloc(),
+      create: (context) => AddProductCataloguesBloc(preferencesModel),
       child: Scaffold(
         appBar: AppBarGeneral(
             elevation: 0, title: "add_product_catalog".translate(context)),

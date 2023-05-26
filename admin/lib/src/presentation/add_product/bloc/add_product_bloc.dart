@@ -6,15 +6,16 @@ import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   String image = "";
   String catalogueID = "";
+  PreferencesModel preferencesModel;
 
-  AddProductBloc() : super(InitState()) {
+  AddProductBloc(this.preferencesModel) : super(InitState()) {
     on<ChangeImageEvent>((event, emit) {
       image = event.image;
       emit(ChangeImageState());
@@ -42,19 +43,17 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       emit(AddProductLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         product.image = await uploadImage(image.split("/").last);
       }
       final catalogueResponse =
           await apiService.getProductCatalogueByID(catalogueID);
-      final response =
-          await apiService.createNewProduct('Bearer $token', product.toJson());
+      final response = await apiService.createNewProduct(
+          'Bearer ${preferencesModel.token}', product.toJson());
       List<String> list = catalogueResponse.data.associatedProductIds!;
       list.add(response.data.id);
       await apiService.updateProductIdsProductCatalogues(
-          'Bearer $token', list, catalogueID);
+          'Bearer ${preferencesModel.token}', list, catalogueID);
       emit(AddProductSuccessState());
     } on DioError catch (e) {
       String error =
@@ -72,13 +71,11 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
       emit(AddProductLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         product.image = await uploadImage(image.split("/").last);
       }
       await apiService.updateExistingProducts(
-          product.id!, 'Bearer $token', product.toJson());
+          product.id!, 'Bearer ${preferencesModel.token}', product.toJson());
       emit(AddProductSuccessState());
     } on DioError catch (e) {
       String error =

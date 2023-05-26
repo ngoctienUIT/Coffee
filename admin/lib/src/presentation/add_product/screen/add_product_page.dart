@@ -18,7 +18,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
@@ -41,8 +43,10 @@ class AddProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddProductBloc(),
+      create: (context) => AddProductBloc(preferencesModel),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBar(

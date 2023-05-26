@@ -24,8 +24,10 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => CouponBloc()..add(FetchData()),
+      create: (context) => CouponBloc(preferencesModel)..add(FetchData()),
       child: const CouponView(),
     );
   }

@@ -32,8 +32,11 @@ class ProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ProductCataloguesBloc()..add(FetchData()),
+      create: (context) =>
+          ProductCataloguesBloc(preferencesModel)..add(FetchData()),
       child: ProductCataloguesView(id: id, onPick: onPick),
     );
   }

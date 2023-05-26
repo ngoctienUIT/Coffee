@@ -26,8 +26,6 @@ class BodyOrder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocConsumer<OrderBloc, OrderState>(
       listener: (context, state) {
         if (state is OrderError) {

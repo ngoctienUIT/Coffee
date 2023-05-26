@@ -26,8 +26,10 @@ class RecommendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => RecommendBloc()..add(FetchData()),
+      create: (context) => RecommendBloc(preferencesModel)..add(FetchData()),
       child: const RecommendView(),
     );
   }

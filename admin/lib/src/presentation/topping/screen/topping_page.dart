@@ -32,8 +32,10 @@ class ToppingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ToppingBloc()..add(FetchData()),
+      create: (context) => ToppingBloc(preferencesModel)..add(FetchData()),
       child: ToppingView(onPick: onPick, listTopping: listTopping),
     );
   }

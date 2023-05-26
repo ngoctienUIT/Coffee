@@ -7,6 +7,8 @@ import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../../domain/repositories/item_order/item_order_response.dart';
 import '../../../domain/repositories/order/order_response.dart';
@@ -30,10 +32,13 @@ class ViewOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
       create: order == null
-          ? (context) => ViewOrderBloc()..add(GetOrderEvent(id!))
-          : (context) => ViewOrderBloc(),
+          ? (context) =>
+              ViewOrderBloc(preferencesModel)..add(GetOrderEvent(id!))
+          : (context) => ViewOrderBloc(preferencesModel),
       child:
           ViewOrderView(index: index, id: id, onPress: onPress, order: order),
     );

@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../../domain/api_service.dart';
 import 'add_tag_event.dart';
 import 'add_tag_state.dart';
 
 class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
-  AddTagBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  AddTagBloc(this.preferencesModel) : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -24,9 +26,8 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
       emit(AddTagLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.createNewTag('Bearer $token', tag.toJson());
+      await apiService.createNewTag(
+          'Bearer ${preferencesModel.token}', tag.toJson());
       emit(AddTagSuccessState());
     } on DioError catch (e) {
       String error =
@@ -44,10 +45,8 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
       emit(AddTagLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       await apiService.updateExistingTag(
-          'Bearer $token', tag.toJson(), tag.tagId!);
+          'Bearer ${preferencesModel.token}', tag.toJson(), tag.tagId!);
       emit(AddTagSuccessState());
     } on DioError catch (e) {
       String error =

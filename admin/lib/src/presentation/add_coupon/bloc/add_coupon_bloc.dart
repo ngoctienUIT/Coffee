@@ -3,17 +3,18 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/coupon.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import 'add_coupon_event.dart';
 import 'add_coupon_state.dart';
 
 class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
   String image = "";
+  PreferencesModel preferencesModel;
 
-  AddCouponBloc() : super(InitState()) {
+  AddCouponBloc(this.preferencesModel) : super(InitState()) {
     on<ChangeImageEvent>((event, emit) {
       image = event.image;
       emit(ChangeImageState());
@@ -36,12 +37,11 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
       emit(AddCouponLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         coupon.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewCoupon('Bearer $token', coupon.toJson());
+      await apiService.createNewCoupon(
+          'Bearer ${preferencesModel.token}', coupon.toJson());
       emit(AddCouponSuccessState());
     } on DioError catch (e) {
       String error =
@@ -59,13 +59,11 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
       emit(AddCouponLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         coupon.imageUrl = await uploadImage(image.split("/").last);
       }
       await apiService.updateExistingCoupon(
-          coupon.id!, 'Bearer $token', coupon.toJson());
+          coupon.id!, 'Bearer ${preferencesModel.token}', coupon.toJson());
       emit(AddCouponSuccessState());
     } on DioError catch (e) {
       String error =

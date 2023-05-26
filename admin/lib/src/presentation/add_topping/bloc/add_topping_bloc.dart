@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/topping.dart';
 import '../../../domain/api_service.dart';
 import 'add_topping_event.dart';
@@ -12,8 +12,9 @@ import 'add_topping_state.dart';
 
 class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
   String image = "";
+  PreferencesModel preferencesModel;
 
-  AddToppingBloc() : super(InitState()) {
+  AddToppingBloc(this.preferencesModel) : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -32,12 +33,11 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
       emit(AddToppingLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewTopping('Bearer $token', topping.toJson());
+      await apiService.createNewTopping(
+          'Bearer ${preferencesModel.token}', topping.toJson());
       emit(AddToppingSuccessState());
     } on DioError catch (e) {
       String error =
@@ -55,13 +55,11 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
       emit(AddToppingLoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
       if (image.isNotEmpty) {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingTopping(
-          topping.toppingId!, 'Bearer $token', topping.toJson());
+      await apiService.updateExistingTopping(topping.toppingId!,
+          'Bearer ${preferencesModel.token}', topping.toJson());
       emit(AddToppingSuccessState());
     } on DioError catch (e) {
       String error =

@@ -2,14 +2,16 @@ import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_event.d
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
 
 class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
-  ViewOrderBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  ViewOrderBloc(this.preferencesModel) : super(InitState()) {
     on<CancelOrderEvent>(
         (event, emit) => cancelOrder(event.id, event.userID, emit));
 
@@ -24,9 +26,7 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
       emit(LoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.cancelOrder("Bearer $token", id);
+      await apiService.cancelOrder("Bearer ${preferencesModel.token}", id);
       emit(CancelSuccessState());
       sendPushMessage(
         token: await getTokenFCM(userID),
@@ -50,9 +50,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
       emit(LoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.closeSuccessOrder("Bearer $token", id);
+      await apiService.closeSuccessOrder(
+          "Bearer ${preferencesModel.token}", id);
       emit(CompletedSuccessState());
       sendPushMessage(
         token: await getTokenFCM(userID),
@@ -76,11 +75,10 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
       emit(LoadingState());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      final orderResponse = await apiService.getOrderByID("Bearer $token", id);
+      final orderResponse =
+          await apiService.getOrderByID("Bearer ${preferencesModel.token}", id);
       final userResponse = await apiService.getUserByID(
-          "Bearer $token", orderResponse.data.userId!);
+          "Bearer ${preferencesModel.token}", orderResponse.data.userId!);
       emit(GetOrderSuccessState(
           User.fromUserResponse(userResponse.data), orderResponse.data));
     } on DioError catch (e) {

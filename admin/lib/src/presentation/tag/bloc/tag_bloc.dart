@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import 'tag_event.dart';
 import 'tag_state.dart';
 
 class TagBloc extends Bloc<TagEvent, TagState> {
-  TagBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  TagBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<UpdateData>((event, emit) => updateData(emit));
@@ -56,9 +58,7 @@ class TagBloc extends Bloc<TagEvent, TagState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeTagByID('Bearer $token', id);
+      await apiService.removeTagByID('Bearer ${preferencesModel.token}', id);
       final response = await apiService.getAllTags();
       emit(TagLoaded(response.data));
     } on DioError catch (e) {

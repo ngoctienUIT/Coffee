@@ -17,8 +17,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -39,8 +41,10 @@ class AddStorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddStoreBloc(),
+      create: (context) => AddStoreBloc(preferencesModel),
       child: Scaffold(
         appBar:
             AppBarGeneral(elevation: 0, title: "add_stores".translate(context)),

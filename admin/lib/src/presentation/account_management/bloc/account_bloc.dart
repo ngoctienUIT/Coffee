@@ -1,13 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/preferences_model.dart';
 import '../../../domain/api_service.dart';
 import 'account_event.dart';
 import 'account_state.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  AccountBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+
+  AccountBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<UpdateData>((event, emit) => updateData(event.index, emit));
@@ -23,13 +25,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       emit(AccountLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
-      final response = await apiService.getAllUsers('Bearer $token');
+      final response =
+          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = response.data
           .where((element) =>
-              element.email != email &&
+              element.email != preferencesModel.user!.email &&
               (element.userRole == "ADMIN" || element.userRole == "STAFF"))
           .toList();
 
@@ -49,20 +49,19 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      final response = await apiService.getAllUsers('Bearer $token');
+      final response =
+          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
           ? response.data
               .where((element) =>
-                  element.email != email &&
+                  element.email != preferencesModel.user!.email &&
                   (element.userRole == "ADMIN" || element.userRole == "STAFF"))
               .toList()
           : response.data
               .where((element) =>
-                  element.email != email && element.userRole == status)
+                  element.email != preferencesModel.user!.email &&
+                  element.userRole == status)
               .toList();
 
       emit(AccountLoaded(index, listAccount));
@@ -82,20 +81,19 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       emit(AccountLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      final response = await apiService.getAllUsers('Bearer $token');
+      final response =
+          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
           ? response.data
               .where((element) =>
-                  element.email != email &&
+                  element.email != preferencesModel.user!.email &&
                   (element.userRole == "ADMIN" || element.userRole == "STAFF"))
               .toList()
           : response.data
               .where((element) =>
-                  element.email != email && element.userRole == status)
+                  element.email != preferencesModel.user!.email &&
+                  element.userRole == status)
               .toList();
 
       emit(AccountLoaded(index, listAccount));
@@ -114,21 +112,20 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      apiService.removeUserByID('Bearer $token', id);
-      final response = await apiService.getAllUsers('Bearer $token');
+      apiService.removeUserByID('Bearer ${preferencesModel.token}', id);
+      final response =
+          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
           ? response.data
               .where((element) =>
-                  element.email != email &&
+                  element.email != preferencesModel.user!.email &&
                   (element.userRole == "ADMIN" || element.userRole == "STAFF"))
               .toList()
           : response.data
               .where((element) =>
-                  element.email != email && element.userRole == status)
+                  element.email != preferencesModel.user!.email &&
+                  element.userRole == status)
               .toList();
 
       emit(AccountLoaded(index, listAccount));
