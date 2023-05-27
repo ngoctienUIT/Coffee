@@ -113,6 +113,9 @@ class _AddToppingViewState extends State<AddToppingView> {
           customToast(context, state.status);
           Navigator.pop(context);
         }
+        if (state is ChangeImageState) {
+          checkEmpty();
+        }
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

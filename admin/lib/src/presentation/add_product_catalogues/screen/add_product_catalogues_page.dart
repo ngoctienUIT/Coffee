@@ -114,6 +114,9 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
           Navigator.pop(context);
           customToast(context, state.status);
         }
+        if (state is ChangeImageState) {
+          checkEmpty();
+        }
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

@@ -50,11 +50,11 @@ class BodyAccount extends StatelessWidget {
                           Navigator.of(context).push(createRoute(
                             screen: ProfilePage(
                               user: User.fromUserResponse(listAccount[index]),
-                              // onChange: () {
-                              //   context
-                              //       .read<AccountBloc>()
-                              //       .add(UpdateData(indexState));
-                              // },
+                              onChange: () {
+                                context
+                                    .read<AccountBloc>()
+                                    .add(UpdateData(indexState));
+                              },
                             ),
                             begin: const Offset(1, 0),
                           ));

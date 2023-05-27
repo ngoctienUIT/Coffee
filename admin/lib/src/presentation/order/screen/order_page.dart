@@ -5,9 +5,13 @@ import 'package:coffee_admin/src/presentation/order/widgets/header_order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
+import '../../../domain/repositories/order/order_response.dart';
+import '../bloc/order_state.dart';
+import '../widgets/list_order_loading.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -25,14 +29,35 @@ class _OrderPageState extends State<OrderPage>
         context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
       create: (context) => OrderBloc(preferencesModel)..add(FetchData()),
-      child: const Scaffold(
+      child: Scaffold(
         backgroundColor: AppColors.bgColor,
         body: SafeArea(
           child: Column(
             children: [
-              HeaderOrderPage(),
-              SizedBox(height: 10),
-              Expanded(child: BodyOrder()),
+              const HeaderOrderPage(),
+              const SizedBox(height: 10),
+              Expanded(
+                child: BlocConsumer<OrderBloc, OrderState>(
+                  listener: (context, state) {
+                    if (state is OrderError) {
+                      customToast(context, state.message.toString());
+                    }
+                  },
+                  buildWhen: (previous, current) =>
+                      current is! ChangeOrderListState,
+                  builder: (context, state) {
+                    if (state is OrderLoaded) {
+                      List<OrderResponse> listOrder = state.listOrder;
+                      int indexState = state.index;
+                      return BodyOrder(
+                        listOrder: listOrder,
+                        indexState: indexState,
+                      );
+                    }
+                    return listOrderLoading();
+                  },
+                ),
+              ),
             ],
           ),
         ),

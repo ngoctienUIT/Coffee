@@ -10,14 +10,16 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
   PreferencesModel preferencesModel;
 
   CouponBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(true, emit));
+
+    on<UpdateData>((event, emit) => getData(false, emit));
 
     on<DeleteEvent>((event, emit) => deleteCoupon(event.id, emit));
   }
 
-  Future getData(Emitter emit) async {
+  Future getData(bool check, Emitter emit) async {
     try {
-      emit(CouponLoading());
+      if (check) emit(CouponLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllCoupons();

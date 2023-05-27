@@ -66,7 +66,7 @@ class _CouponViewState extends State<CouponView>
                 Navigator.of(context).push(createRoute(
                   screen: AddCouponPage(
                     onChange: () {
-                      context.read<CouponBloc>().add(FetchData());
+                      context.read<CouponBloc>().add(UpdateData());
                     },
                   ),
                   begin: const Offset(0, 1),

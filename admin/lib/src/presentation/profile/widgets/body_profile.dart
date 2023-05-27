@@ -20,9 +20,11 @@ import 'custom_picker_widget.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
-  const BodyProfilePage({Key? key, required this.user}) : super(key: key);
+  const BodyProfilePage({Key? key, required this.user, this.onChange})
+      : super(key: key);
 
   final User user;
+  final VoidCallback? onChange;
 
   @override
   State<BodyProfilePage> createState() => _BodyProfilePageState();
@@ -58,6 +60,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         if (state is SaveProfileLoaded) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
           customToast(context, "save_changes_successfully".translate(context));
+          if (widget.onChange != null) {
+            widget.onChange!.call();
+          }
           Navigator.pop(context);
         }
         if (state is SaveProfileLoading) {
@@ -92,9 +97,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
 
   void onSave() {
     if (isEdit) {
+      PreferencesModel preferencesModel =
+          context.read<ServiceBloc>().preferencesModel;
       if (_formKey.currentState!.validate()) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         User user = widget.user.copyWith(
           displayName: nameController.text,
           isMale: isMale,
@@ -104,7 +109,9 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
         } else {
           context.read<ProfileBloc>().add(SaveProfileEvent(user));
-          context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
+          if (user.email == preferencesModel.user!.email) {
+            context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
+          }
         }
       }
     } else {

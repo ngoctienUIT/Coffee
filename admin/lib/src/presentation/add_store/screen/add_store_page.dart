@@ -128,6 +128,7 @@ class _AddStoreViewState extends State<AddStoreView> {
   Widget build(BuildContext context) {
     return BlocListener<AddStoreBloc, AddStoreState>(
       listener: (context, state) {
+        // checkEmpty();
         if (state is AddStoreSuccessState) {
           widget.onChange();
           customToast(context, "successfully_added_store".translate(context));
@@ -140,6 +141,12 @@ class _AddStoreViewState extends State<AddStoreView> {
         if (state is AddStoreErrorState) {
           customToast(context, state.status);
           Navigator.pop(context);
+        }
+        if (state is ChangeCloseState ||
+            state is ChangeOpenState ||
+            state is ChangeAddressState ||
+            state is ChangeImageState) {
+          checkEmpty();
         }
       },
       child: SingleChildScrollView(

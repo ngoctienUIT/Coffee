@@ -3,13 +3,11 @@ import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
-import 'package:coffee_admin/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
@@ -19,84 +17,82 @@ import '../../../data/models/user.dart';
 import '../../../domain/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
 import '../bloc/order_event.dart';
+import '../bloc/order_state.dart';
 import 'item_loading.dart';
 
 class BodyOrder extends StatelessWidget {
-  const BodyOrder({Key? key}) : super(key: key);
+  const BodyOrder({Key? key, required this.listOrder, required this.indexState})
+      : super(key: key);
+
+  final List<OrderResponse> listOrder;
+  final int indexState;
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OrderBloc, OrderState>(
-      listener: (context, state) {
-        if (state is OrderError) {
-          customToast(context, state.message.toString());
-        }
-      },
+    return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        if (state is OrderLoaded) {
-          List<OrderResponse> listOrder = state.listOrder;
-          int indexState = state.index;
-          return RefreshIndicator(
-            onRefresh: () async {
-              context.read<OrderBloc>().add(RefreshData(indexState));
-            },
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              itemCount: listOrder.length,
-              itemBuilder: (context, index) {
-                return FutureBuilder(
-                  future: getUserInfo(context, listOrder[index].userId!),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      User? user = snapshot.requireData;
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(createRoute(
-                            screen: ViewOrderPage(
-                              user: user,
-                              order: listOrder[index],
-                              onPress: () {
-                                context
-                                    .read<OrderBloc>()
-                                    .add(RefreshData(indexState));
-                              },
-                            ),
-                            begin: const Offset(1, 0),
-                          ));
-                        },
-                        child: itemOrder(context, listOrder[index], user),
-                      );
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return itemOrderLoading();
-                    }
+        if (state is ChangeOrderListState) {
+          listOrder.removeWhere((element) => element.orderId == state.id);
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<OrderBloc>().add(RefreshData(indexState));
+          },
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            itemCount: listOrder.length,
+            itemBuilder: (context, index) {
+              return FutureBuilder(
+                future: getUserInfo(context, listOrder[index].userId!),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    User? user = snapshot.requireData;
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(createRoute(
                           screen: ViewOrderPage(
-                            user: null,
+                            user: user,
                             order: listOrder[index],
                             onPress: () {
-                              context
-                                  .read<OrderBloc>()
-                                  .add(RefreshData(indexState));
+                              context.read<OrderBloc>().add(
+                                  ChangeOrderListEvent(
+                                      listOrder[index].orderId!));
                             },
                           ),
                           begin: const Offset(1, 0),
                         ));
                       },
-                      child: itemOrder(context, listOrder[index], null),
+                      child: itemOrder(context, listOrder[index], user),
                     );
-                  },
-                );
-              },
-            ),
-          );
-        }
-        return listOrderLoading();
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return itemOrderLoading();
+                  }
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(createRoute(
+                        screen: ViewOrderPage(
+                          user: null,
+                          order: listOrder[index],
+                          onPress: () {
+                            context
+                                .read<OrderBloc>()
+                                .add(RefreshData(indexState));
+                          },
+                        ),
+                        begin: const Offset(1, 0),
+                      ));
+                    },
+                    child: itemOrder(context, listOrder[index], null),
+                  );
+                },
+              );
+            },
+          ),
+        );
       },
     );
   }
@@ -118,9 +114,10 @@ class BodyOrder extends StatelessWidget {
           child: Text(
             order.selectedPickupStore != null
                 ? order.selectedPickupStore!.storeName.toString()
-                : "",
+                : order.getAddress(),
             // overflow: TextOverflow.ellipsis,
             maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),

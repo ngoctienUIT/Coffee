@@ -15,7 +15,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
     on<RefreshData>((event, emit) => getDataOrder(event.index, emit));
 
-    on<UpdateData>((event, emit) => getDataOrder(event.index, emit));
+    on<UpdateData>((event, emit) => updateDataOrder(event.index, emit));
+
+    on<ChangeOrderListEvent>(
+        (event, emit) => emit(ChangeOrderListState(event.id)));
   }
 
   Future getData(Emitter emit) async {
@@ -49,8 +52,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
       String status = index == 3
           ? ""
           : (index == 0 ? "PLACED" : (index == 1 ? "COMPLETED" : "CANCELLED"));
@@ -82,8 +83,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
       String status = index == 3
           ? ""
           : (index == 0 ? "PLACED" : (index == 1 ? "COMPLETED" : "CANCELLED"));

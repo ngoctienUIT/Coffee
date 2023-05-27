@@ -110,8 +110,8 @@ class _AddCouponViewState extends State<AddCouponView> {
     if (titleController.text.isNotEmpty &&
         contentController.text.isNotEmpty &&
         minApplyController.text.isNotEmpty &&
-        couponCodeController.text.isNotEmpty &&
-        (image != null || widget.coupon != null) &&
+        // couponCodeController.text.isNotEmpty &&
+        (image != null || imageNetWork != null || widget.coupon != null) &&
         (amountController.text.isNotEmpty ||
             (rateController.text.isNotEmpty &&
                 capAmountController.text.isNotEmpty))) {
@@ -148,6 +148,11 @@ class _AddCouponViewState extends State<AddCouponView> {
         if (state is AddCouponErrorState) {
           customToast(context, state.status);
           Navigator.pop(context);
+        }
+        if (state is ChangeDateState ||
+            state is ChangeTypeState ||
+            state is ChangeImageState) {
+          checkEmpty();
         }
       },
       child: SingleChildScrollView(

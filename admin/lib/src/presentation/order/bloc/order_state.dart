@@ -18,3 +18,9 @@ class OrderError extends OrderState {
 
   OrderError(this.message);
 }
+
+class ChangeOrderListState extends OrderState {
+  String id;
+
+  ChangeOrderListState(this.id);
+}

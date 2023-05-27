@@ -102,6 +102,9 @@ class _AddTagViewState extends State<AddTagView> {
           customToast(context, state.status);
           Navigator.pop(context);
         }
+        if (state is ChangeColorState) {
+          checkEmpty();
+        }
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

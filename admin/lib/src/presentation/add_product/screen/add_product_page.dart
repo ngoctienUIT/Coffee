@@ -162,6 +162,12 @@ class _AddProductViewState extends State<AddProductView> {
           Navigator.pop(context);
           customToast(context, state.status);
         }
+        if (state is ChangeCatalogueState ||
+            state is ChangeTagState ||
+            state is ChangeToppingState ||
+            state is ChangeImageState) {
+          checkEmpty();
+        }
       },
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

@@ -87,4 +87,6 @@ class OrderResponse {
     }
     return total;
   }
+
+  String getAddress() => "$address1, $address2, $address3, $address4";
 }

@@ -13,3 +13,9 @@ class RefreshData extends OrderEvent {
 
   RefreshData(this.index);
 }
+
+class ChangeOrderListEvent extends OrderEvent {
+  String id;
+
+  ChangeOrderListEvent(this.id);
+}

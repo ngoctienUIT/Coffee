@@ -111,6 +111,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
 
   @override
   Widget build(BuildContext context) {
+    checkEmpty();
     return BlocListener<AddRecommendBloc, AddRecommendState>(
       listener: (context, state) {
         if (state is AddRecommendSuccess) {
@@ -125,6 +126,9 @@ class _AddRecommendViewState extends State<AddRecommendView> {
         if (state is AddRecommendError) {
           Navigator.pop(context);
           customToast(context, state.status);
+        }
+        if (state is ChangeTagState || state is ChangeWeatherState) {
+          checkEmpty();
         }
       },
       child: SingleChildScrollView(
