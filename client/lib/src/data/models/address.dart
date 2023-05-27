@@ -52,13 +52,16 @@ class AddressAPI {
     dvhcvn.Level2? district,
     dvhcvn.Level3? ward,
     String? address,
+    bool isProvince = true,
+    bool isDistrict = true,
+    bool isWard = true,
   }) {
     return AddressAPI(
       country: country ?? this.country,
       address: address ?? this.address,
-      district: district ?? this.district,
-      province: province ?? this.province,
-      ward: ward ?? this.ward,
+      district: isDistrict ? district : district ?? this.district,
+      province: isProvince ? province : province ?? this.province,
+      ward: isWard ? ward : ward ?? this.ward,
     );
   }
 

@@ -86,7 +86,8 @@ class BottomSheetOrder extends StatelessWidget {
 
   Widget infoStore() {
     return BlocBuilder<ServiceBloc, ServiceState>(
-      buildWhen: (previous, current) => current is ChangeStoreState,
+      buildWhen: (previous, current) =>
+          current is ChangeOrderState || current is ChangeStoreState,
       builder: (context, state) {
         PreferencesModel preferencesModel =
             context.read<ServiceBloc>().preferencesModel;

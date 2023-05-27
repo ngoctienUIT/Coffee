@@ -61,19 +61,20 @@ class _AddAddressPageState extends State<AddAddressPage> {
             text: "save".translate(context),
             isOnPress: true,
             onPress: () async {
-              if (addressAPI
-                  .copyWith(address: addressController.text)
-                  .checkNull()) {
+              final myAddress = addressAPI.copyWith(
+                address: addressController.text,
+                isWard: false,
+                isProvince: false,
+                isDistrict: false,
+              );
+              if (myAddress.checkNull()) {
                 customToast(
                     context, "please_enter_full_address".translate(context));
               } else {
-                final myAddress = addressAPI
-                    .copyWith(address: addressController.text)
-                    .toAddress();
-                widget.onSave(myAddress);
+                widget.onSave(myAddress.toAddress());
                 Navigator.pop(context);
                 final prefs = await SharedPreferences.getInstance();
-                prefs.setString("address", myAddress.getAddress());
+                prefs.setString("address", myAddress.toAddress().getAddress());
               }
             },
           ),
