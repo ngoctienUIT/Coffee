@@ -1,16 +1,65 @@
-# coffee
+# **Đồ án 2**
+<a name="top"><a>
+## Mục lục
 
-The Coffee Application
+[Thông tin nhóm](#info)\
+[Đề tài](#topic)\
+[Mô tả project](#project)\
+&nbsp;&nbsp;&nbsp; [Công nghệ sử dụng](#use)\
+&nbsp;&nbsp;&nbsp; [Tính năng chính](#main-feature)\
+&nbsp;&nbsp;&nbsp; [Danh sách các màn hình](#screen)\
+[Demo](#demo)
 
-## Getting Started
+## Thông tin nhóm <a name="info"></a>
 
-This project is a starting point for a Flutter application.
+Lớp: **SE122.N21** \
+Giảng viên hướng dẫn: **Huỳnh Tuấn Anh** \
+Thành viên:
+| STT  | Tên                | MSSV      | Ghi chú     |
+|:-----|:-------------------|:----------|:------------|
+|  1   |  Trần Ngọc Tiến | 20520808  |  |
+|  2   |  Huỳnh Minh Nhật    |  19521952 |             |
 
-A few resources to get you started if this is your first Flutter project:
+[Lên đầu trang](#top)
+## Đề tài <a name="topic"></a>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Ứng dụng di động kinh doanh coffee
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Mô tả Project <a name="project"></a>
+
+### Công nghệ sử dụng <a name="use"></a>
+- Backend
+    - Ngôn ngữ: Java
+    - Famework: Spring Boot
+- Frontend
+    - Ngôn ngữ: Dart
+    - Famework: Flutter
+
+[Lên đầu trang](#top)
+### Tính năng chính <a name="main-feature"></a>
+- Đăng ký
+- Đăng nhập username + password
+- Đăng nhập bằng Google
+- Đăng ký bằng Google
+- Quên mật khẩu
+- Đổi mật khẩu
+- Thêm, xóa, sửa sản phẩm vào giỏ hàng
+- Xem đề xuất sản phẩm
+- Thêm coupon vào đơn hàng
+- Đặt hàng
+- Chọn nơi giao + đặt hàng
+- Chỉnh sửa thông tin cá nhân
+- Tìm kiếm sản phẩm
+- Xem lịch sử + theo dõi đơn hàng 
+- Xóa tài khoản
+- Đổi ngôn ngữ
+- Liên kết với tài khoản Google
+- Ghi nhớ đăng nhập
+- Hủy đơn hàng
+- Đăng xuất
+
+
+### Danh sách các màn hình <a name="screen"></a>
+## Demo <a name="demo"></a>
+  
+[Lên đầu trang](#top)
