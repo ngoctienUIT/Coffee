@@ -12,7 +12,11 @@ class ViewOrderSuccess extends ViewOrderState {
   ViewOrderSuccess(this.order);
 }
 
-class CancelOrderSuccess extends ViewOrderState {}
+class CancelOrderSuccess extends ViewOrderState {
+  String id;
+
+  CancelOrderSuccess(this.id);
+}
 
 class ViewOrderError extends ViewOrderState {
   String error;

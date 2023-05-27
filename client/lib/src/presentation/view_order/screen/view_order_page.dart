@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
+import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
@@ -21,12 +22,10 @@ import '../widgets/payment_methods.dart';
 import '../widgets/total_payment.dart';
 
 class ViewOrderPage extends StatelessWidget {
-  const ViewOrderPage(
-      {Key? key, this.order, this.onPress, required this.index, this.id})
+  const ViewOrderPage({Key? key, this.order, required this.index, this.id})
       : super(key: key);
 
   final OrderResponse? order;
-  final VoidCallback? onPress;
   final int index;
   final String? id;
 
@@ -39,18 +38,15 @@ class ViewOrderPage extends StatelessWidget {
           ? (context) =>
               ViewOrderBloc(preferencesModel)..add(GetOrderEvent(id!))
           : (context) => ViewOrderBloc(preferencesModel),
-      child:
-          ViewOrderView(index: index, id: id, onPress: onPress, order: order),
+      child: ViewOrderView(index: index, id: id, order: order),
     );
   }
 }
 
 class ViewOrderView extends StatelessWidget {
-  const ViewOrderView(
-      {Key? key, this.order, this.onPress, required this.index, this.id})
+  const ViewOrderView({Key? key, this.order, required this.index, this.id})
       : super(key: key);
   final OrderResponse? order;
-  final VoidCallback? onPress;
   final int index;
   final String? id;
 
@@ -68,7 +64,7 @@ class ViewOrderView extends StatelessWidget {
           customToast(context, state.error);
         }
         if (state is CancelOrderSuccess) {
-          onPress!();
+          context.read<ServiceBloc>().add(CancelServiceOrderEvent(state.id));
           Navigator.pop(context);
           Navigator.pop(context);
         }

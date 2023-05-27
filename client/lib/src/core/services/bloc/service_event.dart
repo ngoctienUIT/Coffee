@@ -26,6 +26,12 @@ class ChangeStoreEvent extends ServiceEvent {}
 
 class PlacedOrderEvent extends ServiceEvent {}
 
+class CancelServiceOrderEvent extends ServiceEvent {
+  String id;
+
+  CancelServiceOrderEvent(this.id);
+}
+
 class CheckLoginEvent extends ServiceEvent {}
 
 class StopTimeEvent extends ServiceEvent {}

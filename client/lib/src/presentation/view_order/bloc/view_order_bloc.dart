@@ -43,12 +43,12 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response =
           await apiService.cancelOrder("Bearer ${preferencesModel.token}", id);
+      emit(CancelOrderSuccess(id));
       sendPushMessageTopic(
         orderID: response.data.orderId!,
         body: "Đơn hàng ${response.data.orderId} đã được hủy thành công",
         title: "Hủy đơn hàng",
       );
-      emit(CancelOrderSuccess());
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

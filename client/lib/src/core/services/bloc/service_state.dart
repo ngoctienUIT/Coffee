@@ -10,4 +10,10 @@ class ChangeStoreState extends ServiceState {}
 
 class PlacedOrderState extends ServiceState {}
 
+class CancelServiceOrderState extends ServiceState {
+  String id;
+
+  CancelServiceOrderState(this.id);
+}
+
 class LogOutState extends ServiceState {}
