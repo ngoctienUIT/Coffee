@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,12 @@ class _BodyProductPageState extends State<BodyProductPage> {
         if (state is ProductError) {
           customToast(context, state.message.toString());
         }
+        if (state is ProductLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is RefreshLoaded && !state.check) {
+          Navigator.pop(context);
+        }
       },
       child: Column(
         children: [header(), const SizedBox(height: 10), body()],
@@ -36,7 +43,9 @@ class _BodyProductPageState extends State<BodyProductPage> {
 
   Widget header() {
     return BlocBuilder<ProductBloc, ProductState>(
-      buildWhen: (previous, current) => current is! RefreshLoading,
+      buildWhen: (previous, current) =>
+          current is! RefreshLoading &&
+          !(current is ProductLoading && !current.check),
       builder: (context, state) {
         if (state is ProductLoaded || state is RefreshLoaded) {
           int index = state is ProductLoaded
@@ -60,7 +69,8 @@ class _BodyProductPageState extends State<BodyProductPage> {
 
   Widget body() {
     return BlocBuilder<ProductBloc, ProductState>(
-      buildWhen: (previous, current) => previous != current,
+      buildWhen: (previous, current) =>
+          previous != current && !(current is ProductLoading && !current.check),
       builder: (context, state) {
         print(state);
         if (state is ProductLoaded || state is RefreshLoaded) {

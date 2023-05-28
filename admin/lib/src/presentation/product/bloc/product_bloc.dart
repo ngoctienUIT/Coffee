@@ -91,6 +91,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future deleteProduct(String id, int index, Emitter emit) async {
     try {
+      emit(ProductLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final catalogueResponse = await apiService
@@ -106,7 +107,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           'Bearer ${preferencesModel.token}', id);
       final response = await apiService.getAllProductsFromProductCatalogueID(
           listProductCatalogues[index].id);
-      emit(RefreshLoaded(index, response.data));
+      emit(RefreshLoaded(index, response.data, false));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

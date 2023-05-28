@@ -5,7 +5,11 @@ abstract class ProductState {}
 
 class InitState extends ProductState {}
 
-class ProductLoading extends ProductState {}
+class ProductLoading extends ProductState {
+  bool check;
+
+  ProductLoading([this.check = true]);
+}
 
 class ProductLoaded extends ProductState {
   final int index;
@@ -25,6 +29,7 @@ class RefreshLoading extends ProductState {}
 class RefreshLoaded extends ProductState {
   final int index;
   final List<ProductResponse> listProduct;
+  final bool check;
 
-  RefreshLoaded(this.index, this.listProduct);
+  RefreshLoaded(this.index, this.listProduct, [this.check = true]);
 }

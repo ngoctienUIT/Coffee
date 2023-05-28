@@ -65,9 +65,10 @@ class _HeaderProductPageState extends State<HeaderProductPage>
   Widget tabBar(BuildContext context) {
     return BlocBuilder<ProductBloc, ProductState>(
       buildWhen: (previous, current) =>
-          current is ProductLoading ||
-          current is ProductLoaded ||
-          current is ProductError,
+          (current is ProductLoading ||
+              current is ProductLoaded ||
+              current is ProductError) &&
+          !(current is ProductLoading && !current.check),
       builder: (context, state) {
         if (state is ProductLoaded) {
           _productController = TabController(
