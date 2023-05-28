@@ -10,20 +10,22 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
   PreferencesModel preferencesModel;
 
   StoreBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(true, "", emit));
 
-    on<UpdateData>((event, emit) => updateData(emit));
+    on<UpdateData>((event, emit) => getData(false, event.query, emit));
 
-    on<DeleteEvent>((event, emit) => deleteStore(event.id, event.query, emit));
+    on<DeleteEvent>((event, emit) => deleteStore(event.id, emit));
 
     on<SearchStore>((event, emit) => searchStore(emit, event.storeName));
   }
 
-  Future updateData(Emitter emit) async {
+  Future getData(bool check, String query, Emitter emit) async {
     try {
+      if (check) emit(StoreLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllStores();
+      // final response = await apiService.getAllStores();
+      final response = await apiService.searchStoresByName(query);
       emit(StoreLoaded(response.data));
     } on DioError catch (e) {
       String error =
@@ -36,31 +38,14 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
     }
   }
 
-  Future getData(Emitter emit) async {
+  Future deleteStore(String id, Emitter emit) async {
     try {
-      emit(StoreLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllStores();
-      emit(StoreLoaded(response.data));
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
-    }
-  }
-
-  Future deleteStore(String id, String query, Emitter emit) async {
-    try {
+      emit(StoreLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.removeStoreByID(id, "Bearer ${preferencesModel.token}");
-      final response = await apiService.searchStoresByName(query);
-      emit(StoreLoaded(response.data));
+      // final response = await apiService.searchStoresByName(query);
+      emit(DeleteSuccess(id));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

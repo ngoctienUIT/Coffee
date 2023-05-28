@@ -13,9 +13,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   OrderBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
-    on<RefreshData>((event, emit) => getDataOrder(event.index, emit));
+    on<RefreshData>((event, emit) => getDataOrder(true, event.index, emit));
 
-    on<UpdateData>((event, emit) => updateDataOrder(event.index, emit));
+    on<UpdateData>((event, emit) => getDataOrder(false, event.index, emit));
 
     on<ChangeOrderListEvent>(
         (event, emit) => emit(ChangeOrderListState(event.id)));
@@ -26,8 +26,6 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
       final response = await apiService.getAllOrders(
           'Bearer ${preferencesModel.token}', "", "PLACED");
       final listOrder = response.data;
@@ -47,40 +45,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     }
   }
 
-  Future getDataOrder(int index, Emitter emit) async {
+  Future getDataOrder(bool check, int index, Emitter emit) async {
     try {
-      emit(OrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      String status = index == 3
-          ? ""
-          : (index == 0 ? "PLACED" : (index == 1 ? "COMPLETED" : "CANCELLED"));
-      final response = await apiService.getAllOrders(
-          'Bearer ${preferencesModel.token}', "", status);
-      final listOrder = index != 3
-          ? response.data
-          : response.data
-              .where((element) => element.orderStatus != "PENDING")
-              .toList();
-      listOrder.sort((a, b) => b.createdDate!
-          .toDateTime2()
-          .difference(a.createdDate!.toDateTime2())
-          .inSeconds);
-
-      emit(OrderLoaded(index, listOrder));
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(OrderError(error));
-      print(error);
-    } catch (e) {
-      emit(OrderError(e.toString()));
-      print(e);
-    }
-  }
-
-  Future updateDataOrder(int index, Emitter emit) async {
-    try {
+      if (check) emit(OrderLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 3

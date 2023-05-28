@@ -12,12 +12,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc(this.preferencesModel) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
-    on<UpdateData>((event, emit) => updateData(event.index, emit));
+    on<UpdateData>((event, emit) => getDataAccount(false, event.index, emit));
 
     on<DeleteEvent>(
         (event, emit) => deleteAccount(event.id, event.index, emit));
 
-    on<RefreshData>((event, emit) => getDataAccount(event.index, emit));
+    on<RefreshData>((event, emit) => getDataAccount(true, event.index, emit));
   }
 
   Future getData(Emitter emit) async {
@@ -45,40 +45,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
     }
   }
 
-  Future updateData(int index, Emitter emit) async {
+  Future getDataAccount(bool check, int index, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      final response =
-          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
-      final listAccount = index == 0
-          ? response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  (element.userRole == "ADMIN" || element.userRole == "STAFF"))
-              .toList()
-          : response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  element.userRole == status)
-              .toList();
-
-      emit(AccountLoaded(index, listAccount));
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AccountError(error));
-      print(error);
-    } catch (e) {
-      emit(AccountError(e.toString()));
-      print(e);
-    }
-  }
-
-  Future getDataAccount(int index, Emitter emit) async {
-    try {
-      emit(AccountLoading());
+      if (check) emit(AccountLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");

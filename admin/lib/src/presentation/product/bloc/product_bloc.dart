@@ -93,8 +93,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     try {
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final prefs = await SharedPreferences.getInstance();
-      // String token = prefs.getString("token") ?? "";
       final catalogueResponse = await apiService
           .getProductCatalogueByID(listProductCatalogues[index].id);
       List<String> list = catalogueResponse.data.associatedProductIds!;

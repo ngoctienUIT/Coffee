@@ -10,35 +10,18 @@ class TagBloc extends Bloc<TagEvent, TagState> {
   PreferencesModel preferencesModel;
 
   TagBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(true, emit));
 
-    on<UpdateData>((event, emit) => updateData(emit));
+    on<UpdateData>((event, emit) => getData(false, emit));
 
     on<PickEvent>((event, emit) => emit(PickState()));
 
     on<DeleteEvent>((event, emit) => deleteTag(event.id, emit));
   }
 
-  Future updateData(Emitter emit) async {
+  Future getData(bool check, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllTags();
-      emit(TagLoaded(response.data));
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(TagError(error));
-      print(error);
-    } catch (e) {
-      emit(TagError(e.toString()));
-      print(e);
-    }
-  }
-
-  Future getData(Emitter emit) async {
-    try {
-      emit(TagLoading());
+      if (check) emit(TagLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllTags();
@@ -56,11 +39,12 @@ class TagBloc extends Bloc<TagEvent, TagState> {
 
   Future deleteTag(String id, Emitter emit) async {
     try {
+      emit(TagLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.removeTagByID('Bearer ${preferencesModel.token}', id);
-      final response = await apiService.getAllTags();
-      emit(TagLoaded(response.data));
+      // final response = await apiService.getAllTags();
+      emit(DeleteSuccess(id));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

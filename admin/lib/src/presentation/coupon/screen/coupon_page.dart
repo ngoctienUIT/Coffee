@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_event.dart';
@@ -15,6 +16,7 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/preferences_model.dart';
+import '../../../domain/repositories/coupon/coupon_response.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
 import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';
@@ -42,6 +44,8 @@ class CouponView extends StatefulWidget {
 
 class _CouponViewState extends State<CouponView>
     with AutomaticKeepAliveClientMixin {
+  List<CouponResponse> listCoupon = [];
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -85,11 +89,26 @@ class _CouponViewState extends State<CouponView>
         if (state is CouponError) {
           customToast(context, state.message.toString());
         }
+        if (state is CouponLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteCouponSuccess) {
+          Navigator.pop(context);
+        }
       },
+      buildWhen: (previous, current) =>
+          !(current is CouponLoading && !current.check),
       builder: (context, state) {
         PreferencesModel preferencesModel =
             context.read<ServiceBloc>().preferencesModel;
-        if (state is CouponLoaded) {
+        if (state is CouponLoaded || state is DeleteCouponSuccess) {
+          if (state is CouponLoaded) {
+            listCoupon = [];
+            listCoupon.addAll(state.listCoupon);
+          }
+          if (state is DeleteCouponSuccess) {
+            listCoupon.removeWhere((element) => element.id == state.id);
+          }
           return RefreshIndicator(
             onRefresh: () async {
               context.read<CouponBloc>().add(FetchData());
@@ -99,7 +118,7 @@ class _CouponViewState extends State<CouponView>
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               padding: const EdgeInsets.all(10),
-              itemCount: state.listCoupon.length,
+              itemCount: listCoupon.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
@@ -118,7 +137,7 @@ class _CouponViewState extends State<CouponView>
                                             .read<CouponBloc>()
                                             .add(FetchData());
                                       },
-                                      coupon: state.listCoupon[index],
+                                      coupon: listCoupon[index],
                                     ),
                                     begin: const Offset(0, 1),
                                   ));
@@ -132,8 +151,9 @@ class _CouponViewState extends State<CouponView>
                               SlidableAction(
                                 onPressed: (_) {
                                   _showAlertDialog(context, () {
-                                    context.read<CouponBloc>().add(DeleteEvent(
-                                        state.listCoupon[index].id));
+                                    context
+                                        .read<CouponBloc>()
+                                        .add(DeleteEvent(listCoupon[index].id));
                                   });
                                 },
                                 backgroundColor: AppColors.statusBarColor,
@@ -146,18 +166,18 @@ class _CouponViewState extends State<CouponView>
                           ),
                           child: TicketWidget(
                             onPress: null,
-                            title: state.listCoupon[index].couponName,
-                            content: state.listCoupon[index].content,
-                            image: state.listCoupon[index].imageUrl ?? "",
-                            date: state.listCoupon[index].dueDate,
+                            title: listCoupon[index].couponName,
+                            content: listCoupon[index].content,
+                            image: listCoupon[index].imageUrl ?? "",
+                            date: listCoupon[index].dueDate,
                           ),
                         )
                       : TicketWidget(
                           onPress: null,
-                          title: state.listCoupon[index].couponName,
-                          content: state.listCoupon[index].content,
-                          image: state.listCoupon[index].imageUrl ?? "",
-                          date: state.listCoupon[index].dueDate,
+                          title: listCoupon[index].couponName,
+                          content: listCoupon[index].content,
+                          image: listCoupon[index].imageUrl ?? "",
+                          date: listCoupon[index].dueDate,
                         ),
                 );
               },

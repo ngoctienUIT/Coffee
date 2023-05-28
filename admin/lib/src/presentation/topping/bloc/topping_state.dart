@@ -4,7 +4,17 @@ abstract class ToppingState {}
 
 class InitState extends ToppingState {}
 
-class ToppingLoading extends ToppingState {}
+class DeleteSuccess extends ToppingState {
+  String id;
+
+  DeleteSuccess(this.id);
+}
+
+class ToppingLoading extends ToppingState {
+  bool check;
+
+  ToppingLoading([this.check = true]);
+}
 
 class PickState extends ToppingState {}
 

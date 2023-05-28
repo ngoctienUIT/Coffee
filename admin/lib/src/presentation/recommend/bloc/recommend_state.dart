@@ -4,7 +4,17 @@ abstract class RecommendState {}
 
 class InitState extends RecommendState {}
 
-class RecommendLoading extends RecommendState {}
+class DeleteSuccess extends RecommendState {
+  String id;
+
+  DeleteSuccess(this.id);
+}
+
+class RecommendLoading extends RecommendState {
+  bool check;
+
+  RecommendLoading([this.check = true]);
+}
 
 class RecommendLoaded extends RecommendState {
   List<RecommendResponse> listRecommend;

@@ -54,7 +54,7 @@ class BottomSheetOrder extends StatelessWidget {
             ],
           ),
         );
-        return _buildLoading(context);
+        // return _buildLoading(context);
       },
     );
   }
@@ -182,40 +182,40 @@ class BottomSheetOrder extends StatelessWidget {
     );
   }
 
-  Widget _buildLoading(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: const BoxDecoration(color: AppColors.statusBarColor),
-      child: Row(
-        children: [
-          const Icon(Icons.location_on, color: Colors.white),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "at_table".translate(context),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                const Icon(
-                  Icons.keyboard_arrow_down_outlined,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: double.infinity,
-            child: cartNumber(0),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildLoading(BuildContext context) {
+  //   return Container(
+  //     width: double.infinity,
+  //     height: 56,
+  //     padding: const EdgeInsets.symmetric(horizontal: 10),
+  //     decoration: const BoxDecoration(color: AppColors.statusBarColor),
+  //     child: Row(
+  //       children: [
+  //         const Icon(Icons.location_on, color: Colors.white),
+  //         const SizedBox(width: 10),
+  //         Expanded(
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Text(
+  //                 "at_table".translate(context),
+  //                 style: const TextStyle(color: Colors.white),
+  //               ),
+  //               const Icon(
+  //                 Icons.keyboard_arrow_down_outlined,
+  //                 color: Colors.white,
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: double.infinity,
+  //           child: cartNumber(0),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void showMyBottomSheet({
     required BuildContext context,

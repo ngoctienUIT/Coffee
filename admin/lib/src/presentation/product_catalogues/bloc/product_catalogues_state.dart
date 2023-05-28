@@ -4,7 +4,17 @@ abstract class ProductCataloguesState {}
 
 class InitState extends ProductCataloguesState {}
 
-class ProductCataloguesLoading extends ProductCataloguesState {}
+class DeleteSuccess extends ProductCataloguesState {
+  String id;
+
+  DeleteSuccess(this.id);
+}
+
+class ProductCataloguesLoading extends ProductCataloguesState {
+  bool check;
+
+  ProductCataloguesLoading([this.check = true]);
+}
 
 class ProductCataloguesLoaded extends ProductCataloguesState {
   final List<ProductCataloguesResponse> listProductCatalogues;

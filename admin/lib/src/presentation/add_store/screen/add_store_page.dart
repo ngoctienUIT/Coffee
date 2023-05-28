@@ -99,6 +99,7 @@ class _AddStoreViewState extends State<AddStoreView> {
     nameController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
     addressController.addListener(() => checkEmpty());
+    checkEmpty();
     super.initState();
   }
 

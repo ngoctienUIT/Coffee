@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
@@ -63,22 +64,23 @@ class _ToppingViewState extends State<ToppingView> {
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Topping", elevation: 0),
       body: bodyTopping(),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
-          ? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(createRoute(
-                  screen: AddToppingPage(
-                    onChange: () {
-                      context.read<ToppingBloc>().add(UpdateData());
-                    },
-                  ),
-                  begin: const Offset(0, 1),
-                ));
-              },
-              backgroundColor: AppColors.statusBarColor,
-              child: const Icon(Icons.add),
-            )
-          : null,
+      floatingActionButton:
+          preferencesModel.user!.userRole == "ADMIN" && widget.onPick == null
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(createRoute(
+                      screen: AddToppingPage(
+                        onChange: () {
+                          context.read<ToppingBloc>().add(UpdateData());
+                        },
+                      ),
+                      begin: const Offset(0, 1),
+                    ));
+                  },
+                  backgroundColor: AppColors.statusBarColor,
+                  child: const Icon(Icons.add),
+                )
+              : null,
     );
   }
 
@@ -88,19 +90,32 @@ class _ToppingViewState extends State<ToppingView> {
         if (state is ToppingError) {
           customToast(context, state.message.toString());
         }
+        if (state is ToppingLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccess) {
+          Navigator.pop(context);
+        }
       },
-      buildWhen: (previous, current) => current is! PickState,
+      buildWhen: (previous, current) =>
+          (current is! PickState) &&
+          !(current is ToppingLoading && !current.check),
       builder: (context, state) {
-        if (state is ToppingLoaded) {
-          listTopping = state.listTopping
-              .map((e) => Topping.fromToppingResponse(e))
-              .toList();
-          if (widget.listTopping != null) {
-            for (int i = 0; i < listTopping.length; i++) {
-              if (widget.listTopping!.contains(listTopping[i].toppingId)) {
-                listTopping[i].isCheck = true;
+        if (state is ToppingLoaded || state is DeleteSuccess) {
+          if (state is ToppingLoaded) {
+            listTopping = state.listTopping
+                .map((e) => Topping.fromToppingResponse(e))
+                .toList();
+            if (widget.listTopping != null) {
+              for (int i = 0; i < listTopping.length; i++) {
+                if (widget.listTopping!.contains(listTopping[i].toppingId)) {
+                  listTopping[i].isCheck = true;
+                }
               }
             }
+          }
+          if (state is DeleteSuccess) {
+            listTopping.removeWhere((element) => element.toppingId == state.id);
           }
           return widget.onPick == null
               ? RefreshIndicator(

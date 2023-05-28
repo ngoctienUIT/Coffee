@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
@@ -152,7 +151,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
             )
           ],
         );
-        return _buildLoading();
+        // return _buildLoading();
       },
     );
   }
@@ -222,16 +221,16 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
     );
   }
 
-  Widget _buildLoading() {
-    var rng = Random();
-    return Column(
-      children: [
-        itemLoading(80, 80, 90),
-        const SizedBox(height: 10),
-        itemLoading(15, rng.nextDouble() * 50 + 100, 10),
-        const SizedBox(height: 10),
-        itemLoading(20, 100, 10),
-      ],
-    );
-  }
+  // Widget _buildLoading() {
+  //   var rng = Random();
+  //   return Column(
+  //     children: [
+  //       itemLoading(80, 80, 90),
+  //       const SizedBox(height: 10),
+  //       itemLoading(15, rng.nextDouble() * 50 + 100, 10),
+  //       const SizedBox(height: 10),
+  //       itemLoading(20, 100, 10),
+  //     ],
+  //   );
+  // }
 }

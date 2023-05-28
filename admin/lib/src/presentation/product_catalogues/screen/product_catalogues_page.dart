@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
 import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
@@ -58,7 +59,8 @@ class ProductCataloguesView extends StatelessWidget {
       appBar: AppBarGeneral(
           title: "product_catalogues".translate(context), elevation: 0),
       body: buildBody(context),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN" &&
+              onPick == null
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -79,15 +81,31 @@ class ProductCataloguesView extends StatelessWidget {
   Widget buildBody(BuildContext context) {
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
+    List<ProductCataloguesResponse> listProductCatalogues = [];
     return BlocConsumer<ProductCataloguesBloc, ProductCataloguesState>(
       listener: (context, state) {
         if (state is ProductCataloguesError) {
           customToast(context, state.message.toString());
         }
+        if (state is ProductCataloguesLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccess) {
+          Navigator.pop(context);
+        }
       },
+      buildWhen: (previous, current) =>
+          !(current is ProductCataloguesLoading && !current.check),
       builder: (context, state) {
-        if (state is ProductCataloguesLoaded) {
-          final listProductCatalogues = state.listProductCatalogues;
+        if (state is ProductCataloguesLoaded || state is DeleteSuccess) {
+          if (state is ProductCataloguesLoaded) {
+            listProductCatalogues = [];
+            listProductCatalogues.addAll(state.listProductCatalogues);
+          }
+          if (state is DeleteSuccess) {
+            listProductCatalogues
+                .removeWhere((element) => element.id == state.id);
+          }
           return RefreshIndicator(
             onRefresh: () async {
               context.read<ProductCataloguesBloc>().add(FetchData());
@@ -110,10 +128,9 @@ class ProductCataloguesView extends StatelessWidget {
                         : null,
                     child: Stack(
                       children: [
-                        preferencesModel.user!.userRole != "ADMIN"
-                            ? productCataloguesItem(
-                                listProductCatalogues[index])
-                            : Slidable(
+                        preferencesModel.user!.userRole == "ADMIN" &&
+                                onPick == null
+                            ? Slidable(
                                 endActionPane: ActionPane(
                                   motion: const ScrollMotion(),
                                   extentRatio: 0.32,
@@ -161,7 +178,9 @@ class ProductCataloguesView extends StatelessWidget {
                                 ),
                                 child: productCataloguesItem(
                                     listProductCatalogues[index]),
-                              ),
+                              )
+                            : productCataloguesItem(
+                                listProductCatalogues[index]),
                         if (id == listProductCatalogues[index].id)
                           Positioned(
                             right: 5,

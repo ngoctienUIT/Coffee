@@ -10,34 +10,18 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
   PreferencesModel preferencesModel;
 
   ToppingBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+    on<FetchData>((event, emit) => getData(true, emit));
 
-    on<UpdateData>((event, emit) => updateData(emit));
+    on<UpdateData>((event, emit) => getData(false, emit));
 
     on<PickEvent>((event, emit) => emit(PickState()));
 
     on<DeleteEvent>((event, emit) => deleteTopping(event.id, emit));
   }
 
-  Future updateData(Emitter emit) async {
+  Future getData(bool check, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllToppings();
-      emit(ToppingLoaded(response.data));
-    } on DioError catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ToppingError(error));
-    } catch (e) {
-      emit(ToppingError(e.toString()));
-      print(e);
-    }
-  }
-
-  Future getData(Emitter emit) async {
-    try {
-      emit(ToppingLoading());
+      if (check) emit(ToppingLoading());
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllToppings();
@@ -54,12 +38,13 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
 
   Future deleteTopping(String id, Emitter emit) async {
     try {
+      emit(ToppingLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.removeToppingByID(
           "Bearer ${preferencesModel.token}", id);
-      final response = await apiService.getAllToppings();
-      emit(ToppingLoaded(response.data));
+      // final response = await apiService.getAllToppings();
+      emit(DeleteSuccess(id));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

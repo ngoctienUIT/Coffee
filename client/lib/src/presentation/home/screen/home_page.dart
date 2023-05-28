@@ -161,7 +161,7 @@ class _HomeViewState extends State<HomeView>
                 ? 0
                 : preferencesModel.order!.orderItems.length);
 
-            return cartNumber(0);
+            // return cartNumber(0);
           },
         ),
       ),

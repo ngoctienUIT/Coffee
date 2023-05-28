@@ -349,7 +349,10 @@ class _SignUpViewState extends State<SignUpView> {
     );
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
-      if (mounted) context.read<SignUpBloc>().add(ChangeBirthdayEvent());
+      if (mounted) {
+        context.read<SignUpBloc>().add(ChangeBirthdayEvent());
+        checkEmpty();
+      }
     }
   }
 }

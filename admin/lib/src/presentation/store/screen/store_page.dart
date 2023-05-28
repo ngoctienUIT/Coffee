@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/add_store/screen/add_store_page.dart';
 import 'package:flutter/material.dart';
@@ -44,11 +45,11 @@ class StoreView extends StatefulWidget {
 }
 
 class _StoreViewState extends State<StoreView> {
-  TextEditingController searchAddressController = TextEditingController();
+  TextEditingController searchStoreController = TextEditingController();
 
   @override
   void dispose() {
-    searchAddressController.dispose();
+    searchStoreController.dispose();
     super.dispose();
   }
 
@@ -65,7 +66,9 @@ class _StoreViewState extends State<StoreView> {
               onPressed: () {
                 Navigator.of(context).push(createRoute(
                   screen: AddStorePage(
-                    onChange: () => context.read<StoreBloc>().add(UpdateData()),
+                    onChange: () => context
+                        .read<StoreBloc>()
+                        .add(UpdateData(searchStoreController.text)),
                   ),
                   begin: const Offset(0, 1),
                 ));
@@ -91,7 +94,7 @@ class _StoreViewState extends State<StoreView> {
           onChanged: (value) {
             context.read<StoreBloc>().add(SearchStore(storeName: value));
           },
-          controller: searchAddressController,
+          controller: searchStoreController,
           hint: "address_search".translate(context),
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -109,37 +112,53 @@ class _StoreViewState extends State<StoreView> {
   Widget bodyStore() {
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
+    List<StoreResponse> listStore = [];
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
           customToast(context, state.message.toString());
         }
+        if (state is StoreLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccess) {
+          Navigator.pop(context);
+        }
       },
+      buildWhen: (previous, current) =>
+          !(current is StoreLoading && !current.check),
       builder: (context, state) {
         print(state);
-        if (state is StoreLoaded) {
+        if (state is StoreLoaded || state is DeleteSuccess) {
+          if (state is StoreLoaded) {
+            listStore = [];
+            listStore.addAll(state.listStore);
+          }
+          if (state is DeleteSuccess) {
+            listStore.removeWhere((element) => element.storeId == state.id);
+          }
           return RefreshIndicator(
             onRefresh: () async {
               context
                   .read<StoreBloc>()
-                  .add(SearchStore(storeName: searchAddressController.text));
+                  .add(SearchStore(storeName: searchStoreController.text));
             },
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
-              itemCount: state.listStore.length,
+              itemCount: listStore.length,
               padding: const EdgeInsets.fromLTRB(5, 10, 5, 60),
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () => showStoreBottomSheet(
                     context,
-                    state.listStore[index],
+                    listStore[index],
                     () {
                       context.read<StoreBloc>().add(
-                          SearchStore(storeName: searchAddressController.text));
+                          SearchStore(storeName: searchStoreController.text));
                     },
                   ),
                   child: preferencesModel.user!.userRole != "ADMIN"
-                      ? itemStore(state.listStore[index])
+                      ? itemStore(listStore[index])
                       : Slidable(
                           endActionPane: ActionPane(
                             motion: const ScrollMotion(),
@@ -148,9 +167,8 @@ class _StoreViewState extends State<StoreView> {
                               SlidableAction(
                                 onPressed: (_) {
                                   _showAlertDialog(context, () {
-                                    context.read<StoreBloc>().add(DeleteEvent(
-                                        state.listStore[index].storeId,
-                                        searchAddressController.text));
+                                    context.read<StoreBloc>().add(
+                                        DeleteEvent(listStore[index].storeId));
                                   });
                                 },
                                 backgroundColor: AppColors.statusBarColor,
@@ -161,7 +179,7 @@ class _StoreViewState extends State<StoreView> {
                               ),
                             ],
                           ),
-                          child: itemStore(state.listStore[index]),
+                          child: itemStore(listStore[index]),
                         ),
                 );
               },

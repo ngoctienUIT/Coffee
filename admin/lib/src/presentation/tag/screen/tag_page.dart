@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
@@ -59,7 +60,8 @@ class _TagViewState extends State<TagView> {
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: preferencesModel.user!.userRole == "ADMIN" &&
+              widget.onPick == null
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -83,17 +85,29 @@ class _TagViewState extends State<TagView> {
         if (state is TagError) {
           customToast(context, state.message.toString());
         }
+        if (state is TagLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccess) {
+          Navigator.pop(context);
+        }
       },
-      buildWhen: (previous, current) => current is! PickState,
+      buildWhen: (previous, current) =>
+          (current is! PickState) && !(current is TagLoading && !current.check),
       builder: (context, state) {
-        if (state is TagLoaded) {
-          listTag = state.listTag.map((e) => Tag.fromTagResponse(e)).toList();
-          if (widget.listTag != null) {
-            for (int i = 0; i < listTag.length; i++) {
-              if (widget.listTag!.contains(listTag[i].tagId)) {
-                listTag[i].isCheck = true;
+        if (state is TagLoaded || state is DeleteSuccess) {
+          if (state is TagLoaded) {
+            listTag = state.listTag.map((e) => Tag.fromTagResponse(e)).toList();
+            if (widget.listTag != null) {
+              for (int i = 0; i < listTag.length; i++) {
+                if (widget.listTag!.contains(listTag[i].tagId)) {
+                  listTag[i].isCheck = true;
+                }
               }
             }
+          }
+          if (state is DeleteSuccess) {
+            listTag.removeWhere((element) => element.tagId == state.id);
           }
           return widget.onPick == null
               ? RefreshIndicator(

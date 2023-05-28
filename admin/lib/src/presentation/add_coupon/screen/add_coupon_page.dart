@@ -81,7 +81,7 @@ class _AddCouponViewState extends State<AddCouponView> {
   DateTime selectedDate = DateTime.now();
   File? image;
   String? imageNetWork;
-  bool isRate = true;
+  bool isRate = false;
   final Color selectedColor = AppColors.statusBarColor;
   final Color unselectedColor = AppColors.unselectedColor;
 
@@ -172,7 +172,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                 hint: "voucher_title".translate(context),
                 title: "title".translate(context).toLowerCase(),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
               descriptionLine(text: "coupon_code".translate(context)),
               const SizedBox(height: 10),
               CustomTextInput(

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/screen/add_recommend_page.dart';
@@ -66,15 +67,30 @@ class RecommendView extends StatelessWidget {
   }
 
   Widget bodyRecommend() {
+    List<RecommendResponse> listRecommend = [];
     return BlocConsumer<RecommendBloc, RecommendState>(
       listener: (context, state) {
         if (state is RecommendError) {
           customToast(context, state.error.toString());
         }
+        if (state is RecommendLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is DeleteSuccess) {
+          Navigator.pop(context);
+        }
       },
-      // buildWhen: (previous, current) => current is! PickState,
+      buildWhen: (previous, current) =>
+          !(current is RecommendLoading && !current.check),
       builder: (context, state) {
-        if (state is RecommendLoaded) {
+        if (state is RecommendLoaded || state is DeleteSuccess) {
+          if (state is RecommendLoaded) {
+            listRecommend = [];
+            listRecommend.addAll(state.listRecommend);
+          }
+          if (state is DeleteSuccess) {
+            listRecommend.removeWhere((element) => element.id == state.id);
+          }
           return RefreshIndicator(
             onRefresh: () async {
               context.read<RecommendBloc>().add(FetchData());
@@ -84,7 +100,7 @@ class RecommendView extends StatelessWidget {
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               padding: const EdgeInsets.fromLTRB(10, 8, 10, 70),
-              itemCount: state.listRecommend.length,
+              itemCount: listRecommend.length,
               itemBuilder: (context, index) {
                 return Slidable(
                   endActionPane: ActionPane(
@@ -95,7 +111,7 @@ class RecommendView extends StatelessWidget {
                         onPressed: (_) {
                           Navigator.of(context).push(createRoute(
                             screen: AddRecommendPage(
-                              recommend: state.listRecommend[index],
+                              recommend: listRecommend[index],
                               onChange: () {
                                 context.read<RecommendBloc>().add(UpdateData());
                               },
@@ -111,8 +127,9 @@ class RecommendView extends StatelessWidget {
                       SlidableAction(
                         onPressed: (_) {
                           _showAlertDialog(context, () {
-                            context.read<RecommendBloc>().add(
-                                DeleteEvent(state.listRecommend[index].id!));
+                            context
+                                .read<RecommendBloc>()
+                                .add(DeleteEvent(listRecommend[index].id!));
                           });
                         },
                         backgroundColor: AppColors.statusBarColor,
@@ -122,7 +139,7 @@ class RecommendView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: itemRecommend(context, state.listRecommend[index]),
+                  child: itemRecommend(context, listRecommend[index]),
                 );
               },
             ),

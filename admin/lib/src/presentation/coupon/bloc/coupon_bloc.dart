@@ -38,11 +38,12 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
 
   Future deleteCoupon(String id, Emitter emit) async {
     try {
+      emit(CouponLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.removeCouponByID(id, 'Bearer ${preferencesModel.token}');
-      final response = await apiService.getAllCoupons();
-      emit(CouponLoaded(response.data));
+      // final response = await apiService.getAllCoupons();
+      emit(DeleteCouponSuccess(id));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

@@ -74,3 +74,5 @@ Thành viên:
 ## Demo <a name="demo"></a>
   
 [Lên đầu trang](#top)
+
+**Link source server chính:** [Tại đây](https://github.com/tori4582/HighlandMimic.git)

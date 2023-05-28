@@ -2,13 +2,16 @@ abstract class StoreEvent {}
 
 class FetchData extends StoreEvent {}
 
-class UpdateData extends StoreEvent {}
+class UpdateData extends StoreEvent {
+  String query;
+
+  UpdateData(this.query);
+}
 
 class DeleteEvent extends StoreEvent {
   String id;
-  String query;
 
-  DeleteEvent(this.id, this.query);
+  DeleteEvent(this.id);
 }
 
 class SearchStore extends StoreEvent {
