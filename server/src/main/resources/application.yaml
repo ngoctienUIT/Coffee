@@ -1,0 +1,44 @@
+spring:
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/
+  #  security:
+  #    oauth2:
+  #      client:
+  #        registration:
+  #          google:
+  #            client-id: 968922685559-4go5ovamlqkd2nj9atm6tupr1ht8tthq.apps.googleusercontent.com
+  #            client-secret: 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
+  #            scope:
+  #              - email
+  #              - profile
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hungtran6360
+    password: weapsadpimnqtkfv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  main:
+    allow-circular-references: true
+
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:admin@mongo-aufgabe-dev.671lr.mongodb.net/highland-mimic?retryWrites=true&w=majority
+      database: highland-mimic
+
+server:
+  endpoint: http://localhost:8080
+
+openweather:
+  api:
+    key: 380fd411d2353633955055e9007437d7
