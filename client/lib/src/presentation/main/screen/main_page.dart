@@ -5,10 +5,12 @@ import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
 import 'package:coffee/src/presentation/other/screen/other_page.dart';
 import 'package:coffee/src/presentation/store/screen/store_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
+import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
@@ -18,7 +20,9 @@ import '../../home/screen/home_page.dart';
 import '../../login/screen/login_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  const MainPage({Key? key, required this.checkConnect}) : super(key: key);
+
+  final bool checkConnect;
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -31,9 +35,14 @@ class _MainPageState extends State<MainPage> {
   final PageController _pageController = PageController();
   late List<Widget> screens;
   NotificationServices notificationServices = NotificationServices();
+  late NetworkConnectivity _networkConnectivity;
 
   @override
   void initState() {
+    if (!widget.checkConnect) {
+      _networkConnectivity = NetworkConnectivity.instance;
+      initConnect();
+    }
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
@@ -52,9 +61,29 @@ class _MainPageState extends State<MainPage> {
     super.initState();
   }
 
+  void initConnect() {
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      print('main source $source');
+      switch (source) {
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.wifi:
+          customToast(
+              context, "internet_connection_is_available".translate(context));
+          break;
+        case ConnectivityResult.none:
+          customToast(context, "no_internet_connection".translate(context));
+          break;
+      }
+    });
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
+    if (!widget.checkConnect) {
+      _networkConnectivity.disposeStream();
+    }
     super.dispose();
   }
 

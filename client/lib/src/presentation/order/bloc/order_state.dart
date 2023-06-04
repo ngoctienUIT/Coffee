@@ -26,7 +26,11 @@ class OrderError extends OrderState {
   OrderError(this.message);
 }
 
-class RefreshOrderLoading extends OrderState {}
+class RefreshOrderLoading extends OrderState {
+  int index;
+
+  RefreshOrderLoading(this.index);
+}
 
 class RefreshOrderLoaded extends OrderState {
   final List<ProductResponse> listProduct;

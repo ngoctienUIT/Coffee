@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../domain/repositories/product/product_response.dart';
+import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 
@@ -29,17 +30,29 @@ class _BodyOrderPageState extends State<BodyOrderPage> {
   Widget header() {
     return BlocBuilder<OrderBloc, OrderState>(
       buildWhen: (previous, current) =>
-          current is OrderLoading || current is OrderLoaded,
+          current is OrderLoading ||
+          current is OrderLoaded ||
+          current is RefreshOrderLoaded ||
+          current is RefreshOrderLoading,
       builder: (context, state) {
+        int index = 0;
+        List<ProductCataloguesResponse> list =
+            context.read<OrderBloc>().listProductCatalogues;
+        if (state is RefreshOrderLoading) {
+          index = state.index;
+        }
+        if (state is RefreshOrderLoaded) {
+          index = state.index;
+        }
         if (state is OrderLoaded) {
+          index = state.index;
+        }
+        if (list.isNotEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                descriptionLine(
-                  text: state.listProductCatalogues[state.index].name
-                      .toUpperCase(),
-                ),
+                descriptionLine(text: list[index].name.toUpperCase()),
                 const Spacer(),
                 InkWell(
                   onTap: () => setState(() => check = true),

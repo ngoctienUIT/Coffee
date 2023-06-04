@@ -14,7 +14,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "140370042684-3o6ii43kejbk29age59ifmdr62tnvj05.apps.googleusercontent.com",
+          "client_id": "140370042684-5caquqnq0mnnki0dpqjhra7t31qrn33i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uit.coffee",
+            "certificate_hash": "636ca3960e3da74ee11f0fc5d6bc8bfc5d10345c"
+          }
+        },
+        {
+          "client_id": "140370042684-ivaash0i0n1iiq6mlebq8fura9t17vpq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uit.coffee",
+            "certificate_hash": "70dd73f0551eaf9237676467f332f605535d9a10"
+          }
+        },
+        {
+          "client_id": "140370042684-kqou29c88qpbvgc8kbsmht1m7ccf67q8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -29,6 +45,49 @@
             {
               "client_id": "140370042684-3o6ii43kejbk29age59ifmdr62tnvj05.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "140370042684-4qvvvqtbnoao01dtn5h49h9f98d0se0b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uit.coffeeAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140370042684:android:6431140bd75ec21f670839",
+        "android_client_info": {
+          "package_name": "com.uit.coffee_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140370042684-kqou29c88qpbvgc8kbsmht1m7ccf67q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhURWj6wXyxd4gzADpJsPw8BN4xZwyd_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140370042684-3o6ii43kejbk29age59ifmdr62tnvj05.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "140370042684-4qvvvqtbnoao01dtn5h49h9f98d0se0b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uit.coffeeAdmin"
+              }
             }
           ]
         }

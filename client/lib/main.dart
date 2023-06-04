@@ -1,5 +1,4 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
@@ -20,7 +19,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
-import 'src/core/function/network_connectivity.dart';
+import 'src/core/function/custom_toast.dart';
 import 'src/core/services/language/bloc/language_cubit.dart';
 import 'src/core/services/language/bloc/language_state.dart';
 import 'src/core/services/language/localization/app_localizations_setup.dart';
@@ -108,7 +107,7 @@ class MyApp extends StatelessWidget {
                 foregroundColor: Colors.black,
               ),
             ),
-            home: const NavigatePage(),
+            home: const SplashPage(),
           );
         },
       ),
@@ -116,40 +115,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class NavigatePage extends StatefulWidget {
-  const NavigatePage({Key? key}) : super(key: key);
-
-  @override
-  State<NavigatePage> createState() => _NavigatePageState();
-}
-
-class _NavigatePageState extends State<NavigatePage> {
-  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    if (isLogin) {}
-    _networkConnectivity.initialise();
-    _networkConnectivity.myStream.listen((source) {
-      print('source $source');
-      switch (source) {
-        case ConnectivityResult.mobile:
-        case ConnectivityResult.wifi:
-          customToast(
-              context, "internet_connection_is_available".translate(context));
-          break;
-        case ConnectivityResult.none:
-          customToast(context, "no_internet_connection".translate(context));
-          break;
-      }
-    });
-  }
+class SplashPage extends StatelessWidget {
+  const SplashPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
       screenFunction: () async {
+        var connectivityResult = await Connectivity().checkConnectivity();
+        if (connectivityResult == ConnectivityResult.none) {
+          if (context.mounted) {
+            customToast(context, "no_internet_connection".translate(context));
+          }
+          return const LoginPage();
+        }
         ApiService apiService =
             ApiService(Dio(BaseOptions(contentType: "application/json")));
         final storeResponse = apiService.getAllStores();
@@ -177,7 +156,7 @@ class _NavigatePageState extends State<NavigatePage> {
           if (context.mounted) {
             context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
           }
-          return const MainPage();
+          return const MainPage(checkConnect: false);
         }
         PreferencesModel preferencesModel = PreferencesModel(
             token: "",
@@ -193,11 +172,5 @@ class _NavigatePageState extends State<NavigatePage> {
       splash: AppImages.imgLogo,
       splashIconSize: 250,
     );
-  }
-
-  @override
-  void dispose() {
-    _networkConnectivity.disposeStream();
-    super.dispose();
   }
 }

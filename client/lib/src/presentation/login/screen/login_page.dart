@@ -6,10 +6,12 @@ import 'package:coffee/src/domain/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
@@ -68,12 +70,14 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity.instance;
   final _formKey = GlobalKey<FormState>();
   bool isRemember = false;
   bool hide = true;
 
   @override
   void initState() {
+    initConnect();
     SharedPreferences.getInstance().then((value) {
       isRemember = value.getBool("isRemember") ?? false;
       phoneController.text = isRemember ? value.getString("username")! : "";
@@ -84,6 +88,23 @@ class _LoginViewState extends State<LoginView> {
     passwordController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
     super.initState();
+  }
+
+  void initConnect() {
+    _networkConnectivity.initialise();
+    _networkConnectivity.myStream.listen((source) {
+      print('login source $source');
+      switch (source) {
+        case ConnectivityResult.mobile:
+        case ConnectivityResult.wifi:
+          customToast(
+              context, "internet_connection_is_available".translate(context));
+          break;
+        case ConnectivityResult.none:
+          customToast(context, "no_internet_connection".translate(context));
+          break;
+      }
+    });
   }
 
   void checkEmpty() {
@@ -98,6 +119,7 @@ class _LoginViewState extends State<LoginView> {
   void dispose() {
     phoneController.dispose();
     passwordController.dispose();
+    _networkConnectivity.disposeStream();
     super.dispose();
   }
 
@@ -124,9 +146,7 @@ class _LoginViewState extends State<LoginView> {
     customToast(context, "logged_in_successfully".translate(context));
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(
-      screen: const MainPage(),
-      begin: const Offset(0, 1),
-    ));
+        screen: const MainPage(checkConnect: true), begin: const Offset(0, 1)));
   }
 
   @override

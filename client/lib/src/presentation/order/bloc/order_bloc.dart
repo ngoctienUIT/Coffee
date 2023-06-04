@@ -46,7 +46,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
 
   Future refreshData(int index, Emitter emit) async {
     try {
-      emit(RefreshOrderLoading());
+      emit(RefreshOrderLoading(index));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.getAllProductsFromProductCatalogueID(
