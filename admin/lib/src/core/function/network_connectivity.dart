@@ -19,11 +19,13 @@ class NetworkConnectivity {
   }
 
   void _checkStatus(ConnectivityResult result) async {
-    if (previousState != null && checkChangeState(result) ||
-        result == ConnectivityResult.none) {
-      _controller.sink.add(result);
+    if (!_controller.isClosed) {
+      if (previousState != null && checkChangeState(result) ||
+          result == ConnectivityResult.none) {
+        _controller.sink.add(result);
+      }
+      previousState = result;
     }
-    previousState ??= result;
   }
 
   bool checkChangeState(ConnectivityResult result) {
@@ -38,5 +40,9 @@ class NetworkConnectivity {
     }
   }
 
-  void disposeStream() => _controller.close();
+  void disposeStream() {
+    if (!_controller.isClosed) {
+      _controller.close();
+    }
+  }
 }

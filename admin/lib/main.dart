@@ -1,7 +1,10 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee_admin/src/core/utils/constants/constants.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/preferences_model.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -100,26 +103,33 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
+      splash: AppImages.imgLogo,
+      splashIconSize: 250,
       screenFunction: () async {
-        ApiService apiService =
-            ApiService(Dio(BaseOptions(contentType: "application/json")));
-        final storeResponse = apiService.getAllStores();
+        var connectivityResult = await Connectivity().checkConnectivity();
+        if (connectivityResult == ConnectivityResult.none) {
+          if (context.mounted) {
+            customToast(context, "no_internet_connection".translate(context));
+          }
+        } else {
+          ApiService apiService =
+              ApiService(Dio(BaseOptions(contentType: "application/json")));
+          final storeResponse = apiService.getAllStores();
 
-        PreferencesModel preferencesModel = PreferencesModel(
-          token: "",
-          listStore: (await storeResponse)
-              .data
-              .map((e) => Store.fromStoreResponse(e))
-              .toList(),
-        );
-        if (context.mounted) {
-          context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
+          PreferencesModel preferencesModel = PreferencesModel(
+            token: "",
+            listStore: (await storeResponse)
+                .data
+                .map((e) => Store.fromStoreResponse(e))
+                .toList(),
+          );
+          if (context.mounted) {
+            context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
+          }
         }
 
         return const LoginPage();
       },
-      splash: AppImages.imgLogo,
-      splashIconSize: 250,
     );
   }
 }

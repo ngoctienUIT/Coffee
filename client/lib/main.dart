@@ -121,6 +121,8 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
+      splash: AppImages.imgLogo,
+      splashIconSize: 250,
       screenFunction: () async {
         var connectivityResult = await Connectivity().checkConnectivity();
         if (connectivityResult == ConnectivityResult.none) {
@@ -169,8 +171,6 @@ class SplashPage extends StatelessWidget {
         }
         return const LoginPage();
       },
-      splash: AppImages.imgLogo,
-      splashIconSize: 250,
     );
   }
 }
