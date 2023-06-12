@@ -123,6 +123,7 @@ class _StoreViewState extends State<StoreView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
+          customToast(context, "delete_successfully".translate(context));
         }
       },
       buildWhen: (previous, current) =>

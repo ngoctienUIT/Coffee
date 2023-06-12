@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
+import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
@@ -27,7 +28,16 @@ class BodyAccount extends StatelessWidget {
         if (state is AccountError) {
           customToast(context, state.message.toString());
         }
+        if (state is AccountLoading && !state.check) {
+          loadingAnimation(context);
+        }
+        if (state is AccountLoaded && !state.check) {
+          Navigator.pop(context);
+          customToast(context, "delete_successfully".translate(context));
+        }
       },
+      buildWhen: (previous, current) =>
+          !(current is AccountLoading && !current.check),
       builder: (context, state) {
         if (state is AccountLoaded) {
           List<UserResponse> listAccount = state.listAccount;

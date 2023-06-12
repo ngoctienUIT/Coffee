@@ -90,6 +90,7 @@ class _TagViewState extends State<TagView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
+          customToast(context, "delete_successfully".translate(context));
         }
       },
       buildWhen: (previous, current) =>

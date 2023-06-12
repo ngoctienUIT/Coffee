@@ -4,13 +4,18 @@ abstract class AccountState {}
 
 class InitState extends AccountState {}
 
-class AccountLoading extends AccountState {}
+class AccountLoading extends AccountState {
+  bool check;
+
+  AccountLoading([this.check = true]);
+}
 
 class AccountLoaded extends AccountState {
   final int index;
   final List<UserResponse> listAccount;
+  final bool check;
 
-  AccountLoaded(this.index, this.listAccount);
+  AccountLoaded(this.index, this.listAccount, [this.check = true]);
 }
 
 class AccountError extends AccountState {

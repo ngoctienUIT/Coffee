@@ -79,10 +79,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
   Future deleteAccount(String id, int index, Emitter emit) async {
     try {
+      emit(AccountLoading(false));
       ApiService apiService =
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      apiService.removeUserByID('Bearer ${preferencesModel.token}', id);
+      await apiService.removeUserByID('Bearer ${preferencesModel.token}', id);
       final response =
           await apiService.getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
@@ -97,7 +98,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
                   element.userRole == status)
               .toList();
 
-      emit(AccountLoaded(index, listAccount));
+      emit(AccountLoaded(index, listAccount, false));
     } on DioError catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();

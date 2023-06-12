@@ -120,7 +120,8 @@ class _SignUpViewState extends State<SignUpView> {
         if (state is SignUpLoadingState) loadingAnimation(context);
         if (state is SignUpSuccessState) {
           Navigator.pop(context);
-          Navigator.pop(context);
+          customToast(
+              context, "account_successfully_created".translate(context));
         }
         if (state is SignUpErrorState) {
           customToast(context, state.status);

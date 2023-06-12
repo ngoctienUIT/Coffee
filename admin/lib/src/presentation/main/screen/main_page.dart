@@ -1,7 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
-import 'package:coffee_admin/src/presentation/product/sreen/product_page.dart';
+import 'package:coffee_admin/src/presentation/product/screen/product_page.dart';
 import 'package:coffee_admin/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

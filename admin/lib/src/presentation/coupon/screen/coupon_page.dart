@@ -94,6 +94,7 @@ class _CouponViewState extends State<CouponView>
         }
         if (state is DeleteCouponSuccess) {
           Navigator.pop(context);
+          customToast(context, "delete_successfully".translate(context));
         }
       },
       buildWhen: (previous, current) =>
