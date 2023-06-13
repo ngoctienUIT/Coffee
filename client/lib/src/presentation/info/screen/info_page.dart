@@ -24,7 +24,7 @@ class InfoPage extends StatelessWidget {
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          const Text("Version 1.0.1"),
+          const Text("Version 1.0.2"),
           const SizedBox(height: 5),
           Text("${'developed_by'.translate(context)} UIT team"),
           const SizedBox(height: 15),

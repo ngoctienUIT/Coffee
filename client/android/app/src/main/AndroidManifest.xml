@@ -2,13 +2,15 @@
     package="com.uit.coffee">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
-    <queries>
-        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
-    </queries>
+<!--    <queries>-->
+<!--        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />-->
+<!--    </queries>-->
 
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>

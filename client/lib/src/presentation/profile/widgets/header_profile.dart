@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/view_image/screen/view_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,22 +116,36 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               if (isEdit)
                 itemAction("take_photo".translate(context), () async {
                   Navigator.pop(context);
-                  var status = await Permission.camera.status;
-                  if (status.isDenied) {
-                    await Permission.camera.request();
+                  var status = await Permission.camera.status.isGranted;
+                  if (!status) {
+                    status = await Permission.camera.request().isGranted;
                   }
-                  status = await Permission.camera.status;
-                  if (status.isGranted) pickAvatar(true);
+                  if (status) pickAvatar(true);
                 }),
               if (isEdit)
                 itemAction("select_image_gallery".translate(context), () async {
                   Navigator.pop(context);
-                  var status = await Permission.storage.status;
-                  if (status.isDenied) {
-                    await Permission.storage.request();
+                  bool isStoragePermission = false;
+                  bool isPhotosPermission = false;
+                  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                  if (androidInfo.version.sdkInt >= 33) {
+                    isPhotosPermission =
+                        await Permission.photos.status.isGranted;
+                    if (!isPhotosPermission) {
+                      isPhotosPermission =
+                          await Permission.photos.request().isGranted;
+                    }
+                    if (isPhotosPermission) pickAvatar(false);
+                  } else {
+                    isStoragePermission =
+                        await Permission.storage.status.isGranted;
+                    if (!isStoragePermission) {
+                      isStoragePermission =
+                          await Permission.storage.request().isGranted;
+                    }
+                    if (isStoragePermission) pickAvatar(false);
                   }
-                  status = await Permission.storage.status;
-                  if (status.isGranted) pickAvatar(false);
                 }),
               itemAction("view_profile_picture".translate(context), () {
                 Navigator.pop(context);
