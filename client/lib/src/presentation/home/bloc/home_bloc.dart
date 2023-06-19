@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
 import 'home_event.dart';
 import 'home_state.dart';
@@ -80,15 +79,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   Future getData(bool check, Emitter emit) async {
     try {
       emit(HomeLoading(check));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       Position? position = await _getCurrentPosition(emit);
       print("position ${position?.toJson()}");
       if (position != null) {
-        final weather = apiService.weatherRecommendations(
-            position.longitude, position.latitude);
-        final listProduct =
-            apiService.recommendation(position.longitude, position.latitude);
+        final weather = preferencesModel.apiService
+            .weatherRecommendations(position.longitude, position.latitude);
+        final listProduct = preferencesModel.apiService
+            .recommendation(position.longitude, position.latitude);
 
         emit(HomeLoaded(
           user: preferencesModel.user!,
@@ -97,7 +94,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           address: await _getAddressFromLatLng(position),
         ));
       } else {
-        final listProduct = apiService.getAllProducts();
+        final listProduct = preferencesModel.apiService.getAllProducts();
         emit(HomeLoaded(
           user: preferencesModel.user!,
           listProduct: (await listProduct).data,
@@ -116,9 +113,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future getOrderSpending(Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
+      final response = await preferencesModel.apiService.getAllOrders(
         "Bearer ${preferencesModel.token}",
         preferencesModel.user!.username,
         "PENDING",
@@ -138,9 +133,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future getCoupon(Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final listCoupon = await apiService.getAllCoupons();
+      final listCoupon = await preferencesModel.apiService.getAllCoupons();
       emit(CouponLoaded(listCoupon: listCoupon.data));
     } on DioException catch (e) {
       String error =

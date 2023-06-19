@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import '../../../domain/repositories/order/order_response.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
@@ -20,15 +19,16 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   Future getData(int index, Emitter emit) async {
     try {
       emit(ActivityLoading(index));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
       List<OrderResponse> listOrder;
       final response = index == 0
-          ? await apiService.getAllOrders("Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username, "PLACED")
-          : await apiService.getAllOrders("Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username, "");
+          ? await preferencesModel.apiService.getAllOrders(
+              "Bearer ${preferencesModel.token}",
+              preferencesModel.user!.username,
+              "PLACED")
+          : await preferencesModel.apiService.getAllOrders(
+              "Bearer ${preferencesModel.token}",
+              preferencesModel.user!.username,
+              "");
       listOrder = index == 0
           ? response.data
           : response.data
@@ -54,15 +54,16 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
   Future updateData(int index, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
       List<OrderResponse> listOrder;
       final response = index == 0
-          ? await apiService.getAllOrders("Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username, "PLACED")
-          : await apiService.getAllOrders("Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username, "");
+          ? await preferencesModel.apiService.getAllOrders(
+              "Bearer ${preferencesModel.token}",
+              preferencesModel.user!.username,
+              "PLACED")
+          : await preferencesModel.apiService.getAllOrders(
+              "Bearer ${preferencesModel.token}",
+              preferencesModel.user!.username,
+              "");
       listOrder = index == 0
           ? response.data
           : response.data

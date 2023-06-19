@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/address.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
@@ -45,12 +44,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future addNote(String note, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       Order order = preferencesModel.order!;
       order.orderNote = note;
 
-      await apiService.updatePendingOrder(
+      await preferencesModel.apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
     } on DioException catch (e) {
       String error =
@@ -66,9 +63,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future placeOrder(Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.placeOrder(
+      await preferencesModel.apiService.placeOrder(
           "Bearer ${preferencesModel.token}", preferencesModel.order!.orderId!);
       emit(GetOrderSuccessState(null, OrderStatus.placed));
       sendPushMessageTopic(
@@ -96,8 +91,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       final prefs = await SharedPreferences.getInstance();
       Order order = preferencesModel.order!;
       order.selectedPickupOption = isBringBack ? "DELIVERY" : "AT_STORE";
@@ -119,8 +112,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         prefs.setString("storeID", storeID);
       }
       emit(ChangeStoreCartState());
-      final orderResponse = await apiService.updatePendingOrder(
-          "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
+      final orderResponse = await preferencesModel.apiService
+          .updatePendingOrder("Bearer ${preferencesModel.token}",
+              order.toJson(), order.orderId!);
       emit(GetOrderSuccessState(Order.fromOrderResponse(orderResponse.data)));
     } on DioException catch (e) {
       String error =
@@ -169,9 +163,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future deleteOrderSpending(Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.removePendingOrder(
+      await preferencesModel.apiService.removePendingOrder(
           "Bearer ${preferencesModel.token}", preferencesModel.user!.username);
       emit(GetOrderSuccessState(null, OrderStatus.delete));
     } on DioException catch (e) {
@@ -188,20 +180,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future deleteProduct(int index, Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
       Order order = preferencesModel.order!;
       // order.orderItems =
       //     order.orderItems.where((element) => element.productId != id).toList();
       order.orderItems.removeAt(index);
       if (order.orderItems.isEmpty) {
-        await apiService.removePendingOrder("Bearer ${preferencesModel.token}",
+        await preferencesModel.apiService.removePendingOrder(
+            "Bearer ${preferencesModel.token}",
             preferencesModel.user!.username);
         emit(GetOrderSuccessState(null, OrderStatus.delete));
       } else {
         emit(GetOrderSuccessState(Order.fromOrderResponse(
-            (await apiService.updatePendingOrder(
+            (await preferencesModel.apiService.updatePendingOrder(
                     "Bearer ${preferencesModel.token}",
                     order.toJson(),
                     order.orderId!))
@@ -221,10 +211,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future attachCouponToOrder(String id, Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
-      final responseCoupon = await apiService.attachCouponToOrder(
+      final responseCoupon =
+          await preferencesModel.apiService.attachCouponToOrder(
         "Bearer ${preferencesModel.token}",
         id,
         preferencesModel.order!.orderId!,
@@ -245,12 +233,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future deleteCouponOrder(Emitter emit) async {
     try {
       emit(GetOrderLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       Order order = preferencesModel.order!;
       order.appliedCoupons = null;
-      final responseCoupon = await apiService.updatePendingOrder(
-          "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
+      final responseCoupon = await preferencesModel.apiService
+          .updatePendingOrder("Bearer ${preferencesModel.token}",
+              order.toJson(), order.orderId!);
 
       emit(GetOrderSuccessState(Order.fromOrderResponse(responseCoupon.data)));
     } on DioException catch (e) {

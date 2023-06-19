@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import '../../../domain/firebase/firebase_service.dart';
 
 class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
@@ -19,10 +18,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
   Future getData(String id, Emitter emit) async {
     try {
       emit(ViewOrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response =
-          await apiService.getOrderByID("Bearer ${preferencesModel.token}", id);
+      final response = await preferencesModel.apiService
+          .getOrderByID("Bearer ${preferencesModel.token}", id);
 
       emit(ViewOrderSuccess(response.data));
     } on DioException catch (e) {
@@ -39,10 +36,8 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
   Future cancelOrder(String id, Emitter emit) async {
     try {
       emit(ViewOrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response =
-          await apiService.cancelOrder("Bearer ${preferencesModel.token}", id);
+      final response = await preferencesModel.apiService
+          .cancelOrder("Bearer ${preferencesModel.token}", id);
       emit(CancelOrderSuccess(id));
       sendPushMessageTopic(
         orderID: response.data.orderId!,

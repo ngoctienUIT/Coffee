@@ -7,7 +7,6 @@ import '../../../data/models/item_order.dart';
 import '../../../data/models/order.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
-import '../../../domain/api_service.dart';
 import 'product_event.dart';
 import 'product_state.dart';
 
@@ -56,8 +55,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required Emitter emit,
   }) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       String address = preferencesModel.address ?? "";
       bool isBringBack = preferencesModel.isBringBack;
       String? storeID = preferencesModel.storeID;
@@ -78,8 +75,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       if (isBringBack && address.isNotEmpty) {
         order.addAddress(address.toAddressAPI().toAddress());
       }
-      final response = await apiService.createNewOrder(
-          "Bearer ${preferencesModel.token}", order.toJson());
+      final response = await preferencesModel.apiService
+          .createNewOrder("Bearer ${preferencesModel.token}", order.toJson());
       emit(AddProductToOrderSuccessState(
           Order.fromOrderResponse(response.data)));
     } on DioException catch (e) {
@@ -99,8 +96,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     required Emitter emit,
   }) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       // int index = order.orderItems.indexWhere((element) =>
       //     element.productId == product.id &&
       //     element.selectedSize == product.sizeIndex);
@@ -113,7 +108,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       print(order.toJson());
-      final response = await apiService.updatePendingOrder(
+      final response = await preferencesModel.apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(AddProductToOrderSuccessState(
           Order.fromOrderResponse(response.data)));
@@ -146,8 +141,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future updateProductOrder(int index, Product product, Emitter emit) async {
     try {
       emit(ProductLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       print("update product");
       print(product.toItemOrder().toJson());
       Order order = preferencesModel.order!;
@@ -167,7 +160,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       order.storeId ??= "6425d2c7cf1d264dca4bcc82";
       print(order.toJson());
 
-      final response = await apiService.updatePendingOrder(
+      final response = await preferencesModel.apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(UpdateSuccessState(Order.fromOrderResponse(response.data)));
     } on DioException catch (e) {
@@ -184,16 +177,15 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future deleteProductOrder(int index, Emitter emit) async {
     try {
       emit(ProductLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       Order? order = preferencesModel.order!;
       order.orderItems.removeAt(index);
       if (order.orderItems.isEmpty) {
-        await apiService.removePendingOrder("Bearer ${preferencesModel.token}",
+        await preferencesModel.apiService.removePendingOrder(
+            "Bearer ${preferencesModel.token}",
             preferencesModel.user!.username);
         order = null;
       } else {
-        final response = await apiService.updatePendingOrder(
+        final response = await preferencesModel.apiService.updatePendingOrder(
             "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
         order = Order.fromOrderResponse(response.data);
       }

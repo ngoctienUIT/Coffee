@@ -1,3 +1,6 @@
+import 'package:dio/dio.dart';
+
+import '../../domain/api_service.dart';
 import 'order.dart';
 import 'product.dart';
 import 'store.dart';
@@ -12,6 +15,8 @@ class PreferencesModel {
   Order? order;
   List<Store> listStore;
   List<Product> listProduct;
+  ApiService apiService =
+      ApiService(Dio(BaseOptions(contentType: "application/json")));
 
   PreferencesModel({
     this.token = "",

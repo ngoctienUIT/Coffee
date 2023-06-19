@@ -10,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
+import '../../../core/services/bloc/service_bloc.dart';
+import '../../../data/models/preferences_model.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
@@ -22,8 +24,10 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferencesModel preferencesModel =
+        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ChangePasswordBloc(),
+      create: (context) => ChangePasswordBloc(preferencesModel),
       child: Scaffold(
         appBar: const AppBarGeneral(elevation: 0),
         body: Padding(

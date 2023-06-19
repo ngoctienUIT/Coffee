@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   String image = "";
@@ -43,12 +42,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
       if (googleUser != null) {
         emit(LinkAccountWithGoogleLoadingState());
-        ApiService apiService =
-            ApiService(Dio(BaseOptions(contentType: "application/json")));
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
 
-        await apiService.linkAccountWithOAuth2Provider(
+        await preferencesModel.apiService.linkAccountWithOAuth2Provider(
           "Bearer ${preferencesModel.token}",
           {
             "oauth2ProviderUserId": googleUser.id,
@@ -77,10 +74,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future unlinkAccountWithGoogleEvent(Emitter emit) async {
     try {
       emit(UnlinkAccountWithGoogleLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
-      await apiService.unlinkAccountWithOAuth2Provider(
+      await preferencesModel.apiService.unlinkAccountWithOAuth2Provider(
           "Bearer ${preferencesModel.token}", preferencesModel.user!.id!);
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleSuccessState());
@@ -100,12 +94,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   Future saveProfile(User user, Emitter emit) async {
     try {
       emit(SaveProfileLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         user.imageUrl = await uploadImage(preferencesModel.user!.username);
       }
-      final response = await apiService.updateExistingUser(
+      final response = await preferencesModel.apiService.updateExistingUser(
           "Bearer ${preferencesModel.token}",
           preferencesModel.user!.username,
           user.toJson());
@@ -124,10 +116,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   Future deleteAvatar(User user, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       user.imageUrl = null;
-      final response = await apiService.updateExistingUser(
+      final response = await preferencesModel.apiService.updateExistingUser(
           "Bearer ${preferencesModel.token}",
           preferencesModel.user!.username,
           user.toJson());

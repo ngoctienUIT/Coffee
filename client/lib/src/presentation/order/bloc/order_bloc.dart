@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
@@ -20,11 +19,10 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future fetchData(Emitter emit) async {
     try {
       emit(OrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProductCatalogues();
+      final response =
+          await preferencesModel.apiService.getAllProductCatalogues();
       listProductCatalogues = response.data;
-      final productResponse = await apiService
+      final productResponse = await preferencesModel.apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
       final listProduct = productResponse.data;
 
@@ -47,10 +45,9 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future refreshData(int index, Emitter emit) async {
     try {
       emit(RefreshOrderLoading(index));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProductsFromProductCatalogueID(
-          listProductCatalogues[index].id);
+      final response = await preferencesModel.apiService
+          .getAllProductsFromProductCatalogueID(
+              listProductCatalogues[index].id);
       final listProduct = response.data;
 
       emit(RefreshOrderLoaded(index, listProduct));

@@ -1,15 +1,15 @@
 import 'package:coffee/src/data/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../data/models/preferences_model.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
 
 class ChangePasswordBloc
     extends Bloc<ChangePasswordEvent, ChangePasswordState> {
-  ChangePasswordBloc() : super(InitState()) {
+  PreferencesModel preferencesModel;
+  ChangePasswordBloc(this.preferencesModel) : super(InitState()) {
     on<ClickChangePasswordEvent>(
         (event, emit) => changePassword(event.user, emit));
 
@@ -25,13 +25,10 @@ class ChangePasswordBloc
   Future changePassword(User user, Emitter emit) async {
     try {
       emit(ChangePasswordLoadingState());
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.updateExistingUser(
-          "Bearer $token", email, user.toJson());
+      await preferencesModel.apiService.updateExistingUser(
+          "Bearer ${preferencesModel.token}",
+          preferencesModel.user!.email,
+          user.toJson());
       emit(ChangePasswordSuccessState());
     } on DioException catch (e) {
       String error =
