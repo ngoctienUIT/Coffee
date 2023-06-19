@@ -101,8 +101,12 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
     return BlocListener<AddProductCataloguesBloc, AddProductCataloguesState>(
       listener: (context, state) {
         if (state is AddProductCataloguesSuccessState) {
-          customToast(
-              context, "add_successful_product_categories".translate(context));
+          if (widget.productCatalogues == null) {
+            customToast(context,
+                "add_successful_product_categories".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);

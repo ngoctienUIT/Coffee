@@ -51,6 +51,7 @@
   "enter_old_password": "Enter old password",
   "enter_new_password": "Enter new password",
   "confirm_password": "Confirm password",
+  "account_successfully_created": "Account successfully created",
   "password_needs_characters": "Password needs to be at least 8 characters long",
   "forgot_your_password": "Forgot your password",
   "email_phone_number": "Email/Phone number",

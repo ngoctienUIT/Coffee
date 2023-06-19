@@ -51,6 +51,7 @@
   "enter_old_password": "Nhập mật khẩu cũ",
   "enter_new_password": "Nhập mật khẩu mới",
   "confirm_password": "Xác nhận mật khẩu",
+  "account_successfully_created": "Tạo tài khoản thành công",
   "password_needs_characters": "Mật khẩu cần dài ít nhất 8 ký tự",
   "forgot_your_password": "Quên mật khẩu của bạn",
   "email_phone_number": "Email/Số điện thoại",

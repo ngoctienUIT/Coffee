@@ -151,7 +151,11 @@ class _AddProductViewState extends State<AddProductView> {
       listener: (context, state) {
         if (state is AddProductSuccessState) {
           widget.onChange();
-          customToast(context, "add_successful_products".translate(context));
+          if (widget.product == null) {
+            customToast(context, "add_successful_products".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }

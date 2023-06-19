@@ -260,6 +260,7 @@ class _SignUpViewState extends State<SignUpView> {
           keyboardType: TextInputType.phone,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
+            LengthLimitingTextInputFormatter(11),
           ],
         ),
         const SizedBox(height: 10),

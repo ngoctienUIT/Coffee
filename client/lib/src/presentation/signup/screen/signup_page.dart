@@ -9,6 +9,7 @@ import 'package:coffee/src/presentation/signup/bloc/signup_state.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -121,6 +122,8 @@ class _SignUpViewState extends State<SignUpView> {
     return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
         if (state is SignUpSuccessState) {
+          customToast(
+              context, "account_successfully_created".translate(context));
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
             begin: const Offset(0, 1),
@@ -251,6 +254,10 @@ class _SignUpViewState extends State<SignUpView> {
           hint: "phone_number".translate(context),
           typeInput: const [TypeInput.phone],
           keyboardType: TextInputType.phone,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
+            LengthLimitingTextInputFormatter(11),
+          ],
         ),
         const SizedBox(height: 10),
         CustomTextInput(

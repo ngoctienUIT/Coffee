@@ -91,7 +91,11 @@ class _AddTagViewState extends State<AddTagView> {
       listener: (context, state) {
         if (state is AddTagSuccessState) {
           widget.onChange();
-          customToast(context, "add_successful_tag".translate(context));
+          if (widget.tag == null) {
+            customToast(context, "add_successful_tag".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }

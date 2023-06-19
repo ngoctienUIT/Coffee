@@ -116,7 +116,11 @@ class _AddRecommendViewState extends State<AddRecommendView> {
       listener: (context, state) {
         if (state is AddRecommendSuccess) {
           widget.onChange();
-          customToast(context, "add_successful_recommend".translate(context));
+          if (widget.recommend == null) {
+            customToast(context, "add_successful_recommend".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }

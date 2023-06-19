@@ -138,7 +138,12 @@ class _AddCouponViewState extends State<AddCouponView> {
       listener: (context, state) {
         if (state is AddCouponSuccessState) {
           widget.onChange();
-          customToast(context, "successfully_added_coupon".translate(context));
+          if (widget.coupon == null) {
+            customToast(
+                context, "successfully_added_coupon".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }

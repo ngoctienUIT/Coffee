@@ -132,7 +132,11 @@ class _AddStoreViewState extends State<AddStoreView> {
         // checkEmpty();
         if (state is AddStoreSuccessState) {
           widget.onChange();
-          customToast(context, "successfully_added_store".translate(context));
+          if (widget.store == null) {
+            customToast(context, "successfully_added_store".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }

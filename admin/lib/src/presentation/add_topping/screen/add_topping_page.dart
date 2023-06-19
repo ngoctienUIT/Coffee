@@ -101,7 +101,12 @@ class _AddToppingViewState extends State<AddToppingView> {
     return BlocListener<AddToppingBloc, AddToppingState>(
       listener: (context, state) {
         if (state is AddToppingSuccessState) {
-          customToast(context, "successfully_added_topping".translate(context));
+          if (widget.topping == null) {
+            customToast(
+                context, "successfully_added_topping".translate(context));
+          } else {
+            customToast(context, "update_successful".translate(context));
+          }
           widget.onChange();
           Navigator.pop(context);
           Navigator.pop(context);
