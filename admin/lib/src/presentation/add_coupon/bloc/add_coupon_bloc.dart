@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/coupon.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import 'add_coupon_event.dart';
 import 'add_coupon_state.dart';
 
@@ -35,15 +34,13 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
   Future createCoupon(Coupon coupon, Emitter emit) async {
     try {
       emit(AddCouponLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         coupon.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewCoupon(
-          'Bearer ${preferencesModel.token}', coupon.toJson());
+      await preferencesModel.apiService
+          .createNewCoupon('Bearer ${preferencesModel.token}', coupon.toJson());
       emit(AddCouponSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddCouponErrorState(error));
@@ -57,15 +54,13 @@ class AddCouponBloc extends Bloc<AddCouponEvent, AddCouponState> {
   Future updateCoupon(Coupon coupon, Emitter emit) async {
     try {
       emit(AddCouponLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         coupon.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingCoupon(
+      await preferencesModel.apiService.updateExistingCoupon(
           coupon.id!, 'Bearer ${preferencesModel.token}', coupon.toJson());
       emit(AddCouponSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddCouponErrorState(error));

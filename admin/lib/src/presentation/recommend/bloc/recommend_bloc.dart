@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 
 class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
   PreferencesModel preferencesModel;
@@ -20,12 +19,10 @@ class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
   Future getData(bool check, Emitter emit) async {
     try {
       if (check) emit(RecommendLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService
+      final response = await preferencesModel.apiService
           .getListRecommendation('Bearer ${preferencesModel.token}');
       emit(RecommendLoaded(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(RecommendError(error));
@@ -38,14 +35,12 @@ class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
   Future deleteRecommend(String id, Emitter emit) async {
     try {
       emit(RecommendLoading(false));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.deleteRecommendation(
-          "Bearer ${preferencesModel.token}", id);
+      await preferencesModel.apiService
+          .deleteRecommendation("Bearer ${preferencesModel.token}", id);
       // final response = await apiService
       //     .getListRecommendation('Bearer ${preferencesModel.token}');
       emit(DeleteSuccess(id));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(RecommendError(error));

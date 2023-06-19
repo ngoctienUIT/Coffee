@@ -52,7 +52,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
       await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -77,7 +77,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             "Đơn hàng ${preferencesModel.order!.orderId!} đã được đặt thành công",
         title: "Đơn hàng mới",
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -122,7 +122,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final orderResponse = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(GetOrderSuccessState(Order.fromOrderResponse(orderResponse.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -155,7 +155,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       //     emit(GetOrderSuccessState(order, null, false));
       //   }
       // }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -174,7 +174,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       await apiService.removePendingOrder(
           "Bearer ${preferencesModel.token}", preferencesModel.user!.username);
       emit(GetOrderSuccessState(null, OrderStatus.delete));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -207,7 +207,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                     order.orderId!))
                 .data)));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));
@@ -230,7 +230,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         preferencesModel.order!.orderId!,
       );
       emit(GetOrderSuccessState(Order.fromOrderResponse(responseCoupon.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error = e.response != null
           ? e.response!.data["message"].toString()
           : e.toString();
@@ -253,7 +253,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
 
       emit(GetOrderSuccessState(Order.fromOrderResponse(responseCoupon.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(GetOrderErrorState(error));

@@ -26,7 +26,7 @@ class OtherBloc extends Bloc<OtherEvent, OtherState> {
       // final response = await apiService.getUserByID('Bearer $token', id);
 
       emit(OtherLoaded(preferencesModel.user!));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(OtherError(error));

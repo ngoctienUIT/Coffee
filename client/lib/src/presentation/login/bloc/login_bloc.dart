@@ -51,7 +51,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         token: user.accessToken,
         user: User.fromUserResponse(user.userResponse),
       )));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(LoginErrorState(status: error));
@@ -94,7 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginGoogleErrorState(status: ""));
         GoogleSignIn().signOut();
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       GoogleSignIn().signOut();

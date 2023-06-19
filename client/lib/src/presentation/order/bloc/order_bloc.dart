@@ -33,7 +33,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
         listProduct: listProduct,
         listProductCatalogues: listProductCatalogues,
       ));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(OrderError(error));
@@ -54,7 +54,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
       final listProduct = response.data;
 
       emit(RefreshOrderLoaded(index, listProduct));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(OrderError(error));

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/topping.dart';
-import '../../../domain/api_service.dart';
 import 'add_topping_event.dart';
 import 'add_topping_state.dart';
 
@@ -31,15 +30,13 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
   Future createTopping(Topping topping, Emitter emit) async {
     try {
       emit(AddToppingLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewTopping(
+      await preferencesModel.apiService.createNewTopping(
           'Bearer ${preferencesModel.token}', topping.toJson());
       emit(AddToppingSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddToppingErrorState(error));
@@ -53,15 +50,15 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
   Future updateTopping(Topping topping, Emitter emit) async {
     try {
       emit(AddToppingLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         topping.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingTopping(topping.toppingId!,
-          'Bearer ${preferencesModel.token}', topping.toJson());
+      await preferencesModel.apiService.updateExistingTopping(
+          topping.toppingId!,
+          'Bearer ${preferencesModel.token}',
+          topping.toJson());
       emit(AddToppingSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddToppingErrorState(error));

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
-import '../../../domain/api_service.dart';
 import 'add_store_event.dart';
 import 'add_store_state.dart';
 
@@ -37,15 +36,13 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
   Future createStore(Store store, Emitter emit) async {
     try {
       emit(AddStoreLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         store.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.registerNewStore(
-          'Bearer ${preferencesModel.token}', store.toJson());
+      await preferencesModel.apiService
+          .registerNewStore('Bearer ${preferencesModel.token}', store.toJson());
       emit(AddStoreSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddStoreErrorState(error));
@@ -59,15 +56,13 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
   Future updateStore(Store store, Emitter emit) async {
     try {
       emit(AddStoreLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         store.imageUrl = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingStore(
+      await preferencesModel.apiService.updateExistingStore(
           store.storeId!, 'Bearer ${preferencesModel.token}', store.toJson());
       emit(AddStoreSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddStoreErrorState(error));

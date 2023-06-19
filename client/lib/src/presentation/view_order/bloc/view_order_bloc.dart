@@ -25,7 +25,7 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
           await apiService.getOrderByID("Bearer ${preferencesModel.token}", id);
 
       emit(ViewOrderSuccess(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ViewOrderError(error));
@@ -49,7 +49,7 @@ class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
         body: "Đơn hàng ${response.data.orderId} đã được hủy thành công",
         title: "Hủy đơn hàng",
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ViewOrderError(error));

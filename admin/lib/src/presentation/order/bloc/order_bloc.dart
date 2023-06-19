@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   PreferencesModel preferencesModel;
@@ -24,17 +23,15 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future getData(Emitter emit) async {
     try {
       emit(OrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllOrders(
-          'Bearer ${preferencesModel.token}', "", "PLACED");
+      final response = await preferencesModel.apiService
+          .getAllOrders('Bearer ${preferencesModel.token}', "", "PLACED");
       final listOrder = response.data;
       listOrder.sort((a, b) => b.createdDate!
           .toDateTime2()
           .difference(a.createdDate!.toDateTime2())
           .inSeconds);
       emit(OrderLoaded(0, listOrder));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(OrderError(error));
@@ -48,13 +45,11 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   Future getDataOrder(bool check, int index, Emitter emit) async {
     try {
       if (check) emit(OrderLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 3
           ? ""
           : (index == 0 ? "PLACED" : (index == 1 ? "COMPLETED" : "CANCELLED"));
-      final response = await apiService.getAllOrders(
-          'Bearer ${preferencesModel.token}', "", status);
+      final response = await preferencesModel.apiService
+          .getAllOrders('Bearer ${preferencesModel.token}', "", status);
       final listOrder = index != 3
           ? response.data
           : response.data
@@ -66,7 +61,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
           .inSeconds);
 
       emit(OrderLoaded(index, listOrder));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(OrderError(error));

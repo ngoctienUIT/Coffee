@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import 'coupon_event.dart';
 import 'coupon_state.dart';
 
@@ -20,12 +19,10 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
   Future getData(bool check, Emitter emit) async {
     try {
       if (check) emit(CouponLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllCoupons();
+      final response = await preferencesModel.apiService.getAllCoupons();
 
       emit(CouponLoaded(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(CouponError(error));
@@ -39,12 +36,11 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
   Future deleteCoupon(String id, Emitter emit) async {
     try {
       emit(CouponLoading(false));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.removeCouponByID(id, 'Bearer ${preferencesModel.token}');
+      await preferencesModel.apiService
+          .removeCouponByID(id, 'Bearer ${preferencesModel.token}');
       // final response = await apiService.getAllCoupons();
       emit(DeleteCouponSuccess(id));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(CouponError(error));

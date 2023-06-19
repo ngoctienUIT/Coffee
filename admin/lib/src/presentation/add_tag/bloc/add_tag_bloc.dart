@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
-import '../../../domain/api_service.dart';
 import 'add_tag_event.dart';
 import 'add_tag_state.dart';
 
@@ -24,12 +23,10 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
   Future createTag(Tag tag, Emitter emit) async {
     try {
       emit(AddTagLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.createNewTag(
-          'Bearer ${preferencesModel.token}', tag.toJson());
+      await preferencesModel.apiService
+          .createNewTag('Bearer ${preferencesModel.token}', tag.toJson());
       emit(AddTagSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddTagErrorState(error));
@@ -43,12 +40,10 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
   Future updateTag(Tag tag, Emitter emit) async {
     try {
       emit(AddTagLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.updateExistingTag(
+      await preferencesModel.apiService.updateExistingTag(
           'Bearer ${preferencesModel.token}', tag.toJson(), tag.tagId!);
       emit(AddTagSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddTagErrorState(error));

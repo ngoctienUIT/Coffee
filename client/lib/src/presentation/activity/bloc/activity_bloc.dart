@@ -41,7 +41,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           .difference(a.createdDate!.toDateTime2())
           .inSeconds);
       emit(ActivityLoaded(listOrder: listOrder, index: index));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ActivityError(message: error, index: index));
@@ -75,7 +75,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           .difference(a.createdDate!.toDateTime2())
           .inSeconds);
       emit(UpdateSuccess(listOrder, index));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ActivityError(message: error, index: index));

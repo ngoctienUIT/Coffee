@@ -22,7 +22,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
       await apiService.removeUserByID("Bearer $token", id);
       prefs.setBool("isLogin", false);
       emit(DeleteSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(DeleteErrorState(error));

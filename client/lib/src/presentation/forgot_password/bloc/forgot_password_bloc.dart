@@ -20,7 +20,7 @@ class ForgotPasswordBloc
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final response = await apiService.resetPasswordIssue(email);
       emit(SuccessState(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ErrorState(error));

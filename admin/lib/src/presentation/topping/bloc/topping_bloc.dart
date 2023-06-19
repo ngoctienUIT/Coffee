@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import 'topping_event.dart';
 import 'topping_state.dart';
 
@@ -22,11 +21,9 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
   Future getData(bool check, Emitter emit) async {
     try {
       if (check) emit(ToppingLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllToppings();
+      final response = await preferencesModel.apiService.getAllToppings();
       emit(ToppingLoaded(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ToppingError(error));
@@ -39,13 +36,11 @@ class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
   Future deleteTopping(String id, Emitter emit) async {
     try {
       emit(ToppingLoading(false));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.removeToppingByID(
-          "Bearer ${preferencesModel.token}", id);
+      await preferencesModel.apiService
+          .removeToppingByID("Bearer ${preferencesModel.token}", id);
       // final response = await apiService.getAllToppings();
       emit(DeleteSuccess(id));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ToppingError(error));

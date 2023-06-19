@@ -26,7 +26,7 @@ class CouponBloc extends Bloc<CouponEvent, CouponState> {
               element.dueDate.toDate().difference(DateTime.now()).inSeconds >=
               0)
           .toList()));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(CouponError(error));

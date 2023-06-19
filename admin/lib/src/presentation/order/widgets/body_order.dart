@@ -147,7 +147,7 @@ class BodyOrder extends StatelessWidget {
         }
       }
       return user;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       print(error);

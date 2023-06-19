@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 
 class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   String image = "";
@@ -41,21 +40,19 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   Future createProduct(Product product, Emitter emit) async {
     try {
       emit(AddProductLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         product.image = await uploadImage(image.split("/").last);
       }
-      final catalogueResponse =
-          await apiService.getProductCatalogueByID(catalogueID);
-      final response = await apiService.createNewProduct(
+      final catalogueResponse = await preferencesModel.apiService
+          .getProductCatalogueByID(catalogueID);
+      final response = await preferencesModel.apiService.createNewProduct(
           'Bearer ${preferencesModel.token}', product.toJson());
       List<String> list = catalogueResponse.data.associatedProductIds!;
       list.add(response.data.id);
-      await apiService.updateProductIdsProductCatalogues(
+      await preferencesModel.apiService.updateProductIdsProductCatalogues(
           'Bearer ${preferencesModel.token}', list, catalogueID);
       emit(AddProductSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddProductErrorState(error));
@@ -69,15 +66,13 @@ class AddProductBloc extends Bloc<AddProductEvent, AddProductState> {
   Future updateProduct(Product product, Emitter emit) async {
     try {
       emit(AddProductLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         product.image = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingProducts(
+      await preferencesModel.apiService.updateExistingProducts(
           product.id!, 'Bearer ${preferencesModel.token}', product.toJson());
       emit(AddProductSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddProductErrorState(error));

@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
@@ -25,15 +24,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future getData(Emitter emit) async {
     try {
       emit(ProductLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProductCatalogues();
+      final response =
+          await preferencesModel.apiService.getAllProductCatalogues();
       listProductCatalogues = response.data;
-      final productResponse = await apiService
+      final productResponse = await preferencesModel.apiService
           .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
       final listProduct = productResponse.data;
       emit(ProductLoaded(0, listProduct, listProductCatalogues));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductError(error));
@@ -47,18 +45,17 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future getDataProduct(int index, Emitter emit) async {
     try {
       emit(RefreshLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final productResponse =
-          await apiService.getAllProductsFromProductCatalogueID(
+      final productResponse = await preferencesModel.apiService
+          .getAllProductsFromProductCatalogueID(
               listProductCatalogues[index].id);
       final listProduct = productResponse.data;
-      final response = await apiService.getAllProductCatalogues();
+      final response =
+          await preferencesModel.apiService.getAllProductCatalogues();
       if (response.data.length != listProductCatalogues.length) {
         listProductCatalogues = response.data;
       }
       emit(ProductLoaded(index, listProduct, listProductCatalogues));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductError(error));
@@ -71,14 +68,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future updateDataProduct(int index, Emitter emit) async {
     try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.getAllProductsFromProductCatalogueID(
-          listProductCatalogues[index].id);
+      final response = await preferencesModel.apiService
+          .getAllProductsFromProductCatalogueID(
+              listProductCatalogues[index].id);
       final listProduct = response.data;
-
       emit(RefreshLoaded(index, listProduct));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductError(error));
@@ -92,23 +87,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   Future deleteProduct(String id, int index, Emitter emit) async {
     try {
       emit(ProductLoading(false));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final catalogueResponse = await apiService
+      final catalogueResponse = await preferencesModel.apiService
           .getProductCatalogueByID(listProductCatalogues[index].id);
       List<String> list = catalogueResponse.data.associatedProductIds!;
       list.remove(id);
-      await apiService.updateProductIdsProductCatalogues(
+      await preferencesModel.apiService.updateProductIdsProductCatalogues(
         'Bearer ${preferencesModel.token}',
         list,
         listProductCatalogues[index].id,
       );
-      await apiService.removeProductByID(
-          'Bearer ${preferencesModel.token}', id);
-      final response = await apiService.getAllProductsFromProductCatalogueID(
-          listProductCatalogues[index].id);
+      await preferencesModel.apiService
+          .removeProductByID('Bearer ${preferencesModel.token}', id);
+      final response = await preferencesModel.apiService
+          .getAllProductsFromProductCatalogueID(
+              listProductCatalogues[index].id);
       emit(RefreshLoaded(index, response.data, false));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductError(error));

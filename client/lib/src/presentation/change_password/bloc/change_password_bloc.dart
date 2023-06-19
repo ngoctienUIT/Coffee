@@ -33,7 +33,7 @@ class ChangePasswordBloc
       await apiService.updateExistingUser(
           "Bearer $token", email, user.toJson());
       emit(ChangePasswordSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ChangePasswordErrorState(status: error));

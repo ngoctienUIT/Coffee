@@ -61,7 +61,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else {
         emit(LinkAccountWithGoogleErrorState("Hủy bỏ liên kết"));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       GoogleSignIn().signOut();
@@ -84,7 +84,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           "Bearer ${preferencesModel.token}", preferencesModel.user!.id!);
       GoogleSignIn().signOut();
       emit(UnlinkAccountWithGoogleSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       GoogleSignIn().signOut();
@@ -111,7 +111,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           user.toJson());
 
       emit(SaveProfileLoaded(User.fromUserResponse(response.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(SaveProfileError(error));
@@ -133,7 +133,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           user.toJson());
 
       emit(DeleteAvatarState(User.fromUserResponse(response.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(DeleteAvatarErrorState(error));

@@ -32,7 +32,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
       //     preferencesModel.storeID ?? "",
       //   ));
       // }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(StoreError(error));
@@ -60,7 +60,7 @@ class StoreBloc extends Bloc<StoreEvent, StoreState> {
             .toList(),
         preferencesModel.storeID ?? "",
       ));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(StoreError(error));

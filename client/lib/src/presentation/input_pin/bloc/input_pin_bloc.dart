@@ -21,7 +21,7 @@ class InputPinBloc extends Bloc<InputPinEvent, InputPinState> {
       final response =
           await apiService.validateResetTokenClient(resetCredential, pin);
       emit(SuccessState(response.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ErrorState(error));

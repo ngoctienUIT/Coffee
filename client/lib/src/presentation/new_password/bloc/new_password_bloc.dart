@@ -25,7 +25,7 @@ class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.issueNewPasswordUser(resetCredential, password);
       emit(ChangePasswordSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ChangePasswordErrorState(status: error));

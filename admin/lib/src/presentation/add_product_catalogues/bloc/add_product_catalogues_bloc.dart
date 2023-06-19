@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product_catalogues.dart';
-import '../../../domain/api_service.dart';
 import 'add_product_catalogues_event.dart';
 import 'add_product_catalogues_state.dart';
 
@@ -35,18 +34,15 @@ class AddProductCataloguesBloc
       ProductCatalogues productCatalogues, Emitter emit) async {
     try {
       emit(AddProductCataloguesLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-
       if (image.isNotEmpty) {
         productCatalogues.image = await uploadImage(image.split("/").last);
       }
-      await apiService.createNewProductCatalogue(
+      await preferencesModel.apiService.createNewProductCatalogue(
         'Bearer ${preferencesModel.token}',
         productCatalogues.toJson(),
       );
       emit(AddProductCataloguesSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddProductCataloguesErrorState(error));
@@ -61,18 +57,16 @@ class AddProductCataloguesBloc
       ProductCatalogues productCatalogues, Emitter emit) async {
     try {
       emit(AddProductCataloguesLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       if (image.isNotEmpty) {
         productCatalogues.image = await uploadImage(image.split("/").last);
       }
-      await apiService.updateExistingProductCatalogue(
+      await preferencesModel.apiService.updateExistingProductCatalogue(
         'Bearer ${preferencesModel.token}',
         productCatalogues.toJson(),
         productCatalogues.id!,
       );
       emit(AddProductCataloguesSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddProductCataloguesErrorState(error));

@@ -33,7 +33,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       await apiService.signup(user.toJson());
       emit(SignUpSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(SignUpErrorState(status: error));
@@ -58,7 +58,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         GoogleSignIn().signOut();
         emit(SignUpGoogleErrorState(status: "Hủy đăng ký Google"));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(SignUpGoogleErrorState(status: error));

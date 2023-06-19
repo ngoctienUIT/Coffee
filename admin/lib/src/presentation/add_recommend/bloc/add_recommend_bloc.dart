@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 
 class AddRecommendBloc extends Bloc<AddRecommendEvent, AddRecommendState> {
   PreferencesModel preferencesModel;
@@ -28,12 +27,10 @@ class AddRecommendBloc extends Bloc<AddRecommendEvent, AddRecommendState> {
   Future createRecommend(Recommend recommend, Emitter emit) async {
     try {
       emit(AddRecommendLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.createNewRecommendation(
+      await preferencesModel.apiService.createNewRecommendation(
           'Bearer ${preferencesModel.token}', recommend.toJson());
       emit(AddRecommendSuccess());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddRecommendError(error));
@@ -47,14 +44,12 @@ class AddRecommendBloc extends Bloc<AddRecommendEvent, AddRecommendState> {
   Future updateRecommend(Recommend recommend, Emitter emit) async {
     try {
       emit(AddRecommendLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.updateExistingRecommendation(
+      await preferencesModel.apiService.updateExistingRecommendation(
           'Bearer ${preferencesModel.token}',
           recommend.id!,
           recommend.toJson());
       emit(AddRecommendSuccess());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AddRecommendError(error));

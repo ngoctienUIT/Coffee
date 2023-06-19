@@ -42,7 +42,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       await apiService.updateExistingUser(
           "Bearer $token", user.email, user.toJson());
       emit(SaveProfileLoaded());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProfileError(error));
@@ -65,7 +65,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           "Bearer $token", email, user.toJson());
 
       emit(DeleteAvatarState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProfileError(error));

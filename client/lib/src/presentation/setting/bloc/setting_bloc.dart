@@ -30,7 +30,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         emit(DeleteErrorState(
             "Bạn vẫn còn ${response.data.length} đơn hàng chưa hoàn tất"));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(DeleteErrorState(error));

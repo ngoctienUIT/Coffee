@@ -40,7 +40,7 @@ class InputInfoBloc extends Bloc<InputInfoEvent, InputInfoState> {
       });
       GoogleSignIn().signOut();
       emit(SubmitSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       GoogleSignIn().signOut();

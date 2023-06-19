@@ -103,7 +103,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           listProduct: (await listProduct).data,
         ));
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(HomeError(error));
@@ -125,7 +125,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       );
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
       emit(CartLoaded(myOrder));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(HomeError(error));
@@ -142,7 +142,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ApiService(Dio(BaseOptions(contentType: "application/json")));
       final listCoupon = await apiService.getAllCoupons();
       emit(CouponLoaded(listCoupon: listCoupon.data));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(HomeError(error));

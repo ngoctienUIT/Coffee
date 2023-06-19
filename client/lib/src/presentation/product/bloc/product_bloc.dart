@@ -40,7 +40,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         await updatePendingOrder(
             order: preferencesModel.order!, product: product, emit: emit);
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductErrorState(error));
@@ -82,7 +82,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           "Bearer ${preferencesModel.token}", order.toJson());
       emit(AddProductToOrderSuccessState(
           Order.fromOrderResponse(response.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductErrorState(error));
@@ -117,7 +117,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(AddProductToOrderSuccessState(
           Order.fromOrderResponse(response.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductErrorState(error));
@@ -170,7 +170,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final response = await apiService.updatePendingOrder(
           "Bearer ${preferencesModel.token}", order.toJson(), order.orderId!);
       emit(UpdateSuccessState(Order.fromOrderResponse(response.data)));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductErrorState(error));
@@ -198,7 +198,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         order = Order.fromOrderResponse(response.data);
       }
       emit(DeleteSuccessState(order));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ProductErrorState(error));

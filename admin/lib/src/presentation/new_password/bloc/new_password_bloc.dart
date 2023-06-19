@@ -31,7 +31,7 @@ class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
       print("Digest as hex string: $digest");
       await apiService.issueNewPasswordUser(resetCredential, digest.toString());
       emit(ChangePasswordSuccessState());
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(ChangePasswordErrorState(status: error));

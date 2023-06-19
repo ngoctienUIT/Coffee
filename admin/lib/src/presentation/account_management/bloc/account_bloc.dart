@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
 import 'account_event.dart';
 import 'account_state.dart';
 
@@ -23,10 +22,8 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future getData(Emitter emit) async {
     try {
       emit(AccountLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response =
-          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
+      final response = await preferencesModel.apiService
+          .getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = response.data
           .where((element) =>
               element.email != preferencesModel.user!.email &&
@@ -34,7 +31,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
           .toList();
 
       emit(AccountLoaded(0, listAccount));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AccountError(error));
@@ -48,11 +45,9 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future getDataAccount(bool check, int index, Emitter emit) async {
     try {
       if (check) emit(AccountLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      final response =
-          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
+      final response = await preferencesModel.apiService
+          .getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
           ? response.data
               .where((element) =>
@@ -66,7 +61,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
               .toList();
 
       emit(AccountLoaded(index, listAccount));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AccountError(error));
@@ -80,12 +75,11 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
   Future deleteAccount(String id, int index, Emitter emit) async {
     try {
       emit(AccountLoading(false));
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
       String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      await apiService.removeUserByID('Bearer ${preferencesModel.token}', id);
-      final response =
-          await apiService.getAllUsers('Bearer ${preferencesModel.token}');
+      await preferencesModel.apiService
+          .removeUserByID('Bearer ${preferencesModel.token}', id);
+      final response = await preferencesModel.apiService
+          .getAllUsers('Bearer ${preferencesModel.token}');
       final listAccount = index == 0
           ? response.data
               .where((element) =>
@@ -99,7 +93,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
               .toList();
 
       emit(AccountLoaded(index, listAccount, false));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
       emit(AccountError(error));
