@@ -1,3 +1,8 @@
+[![](https://img.shields.io/github/license/ngoctienUIT/Coffee.svg)](https://github.com/ngoctienUIT/Coffee)
+[![](https://tokei.rs/b1/github/ngoctienUIT/Coffee)](https://github.com/ngoctienUIT/Coffee)
+[![](https://img.shields.io/github/repo-size/ngoctienUIT/Coffee)](https://github.com/ngoctienUIT/Coffee)
+[![](https://img.shields.io/github/languages/code-size/ngoctienUIT/Coffee)](https://github.com/ngoctienUIT/Coffee)
+
 # **Đồ án 2**
 <a name="top"><a>
 ## Mục lục
@@ -23,6 +28,11 @@ Thành viên:
 ## Đề tài <a name="topic"></a>
 
 Ứng dụng di động kinh doanh coffee
+
+|Ứng dụng|Link CH Play|
+|:-----|:------|
+|Coffee| [Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee) |
+|Coffee Admin|[Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee_admin)|
 
 ## Mô tả Project <a name="project"></a>
 
