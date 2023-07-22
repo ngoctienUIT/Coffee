@@ -62,6 +62,65 @@ Thành viên:
 - Đăng xuất
 
 ### Danh sách các màn hình <a name="screen"></a>
+<p float="left">
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-15-45-183_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-15-59-691_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-06-214_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-14-158_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-20-753_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-33-813_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-45-693_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-53-817_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-16-59-003_com.uit.coffee_admin.jpg" width="200" /> 
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-04-845_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-09-621_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-14-875_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-29-260_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-35-774_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-39-434_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-47-452_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-17-52-315_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-07-794_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-11-301_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-15-412_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-18-721_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-23-936_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-29-196_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-35-123_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-40-228_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-43-605_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-48-369_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-18-55-458_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-00-051_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-05-582_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-15-271_com.uit.coffee_admin.jpg" width="200" /> 
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-19-122_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-23-643_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-28-188_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-35-039_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-38-686_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-44-205_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-48-675_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-54-834_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-19-58-438_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-20-02-833_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-20-07-360_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-20-27-193_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-20-32-626_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-21-40-892_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-21-45-552_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-21-59-716_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-22-17-096_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-22-20-508_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-05-09-21-23-12-948_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-48-19-254_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-48-40-096_com.uit.coffee_admin.jpg" width="200" /> 
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-48-54-484_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-49-04-700_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-49-17-007_com.uit.coffee_admin.jpg" width="200" />
+  <img src="https://github.com/ngoctienUIT/Coffee/blob/main/screenshots/admin/Screenshot_2023-06-05-16-49-31-140_com.uit.coffee_admin.jpg" width="200" />
+</p>
+
 ## Demo <a name="demo"></a>
   
 [Lên đầu trang](#top)

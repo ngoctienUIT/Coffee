@@ -31,10 +31,10 @@ Thành viên:
 
 Ứng dụng di động kinh doanh coffee
 
-|Ứng dụng|Link CH Play|
-|:-----|:------|
-|Coffee| [Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee) |
-|Coffee Admin|[Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee_admin)|
+|Ứng dụng|Link CH Play|Ảnh chụp màn hình|
+|:-----|:------|:------|
+|Coffee| [Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee) | [Coffee](https://github.com/ngoctienUIT/Coffee/blob/main/client/README.md#danh-sa%CC%81ch-ca%CC%81c-ma%CC%80n-hi%CC%80nh-)
+|Coffee Admin|[Tại đây](https://play.google.com/store/apps/details?id=com.uit.coffee_admin)| [Coffee Admin](https://github.com/ngoctienUIT/Coffee/blob/main/client/README.md#danh-sa%CC%81ch-ca%CC%81c-ma%CC%80n-hi%CC%80nh-)
 
 ## Mô tả Project <a name="project"></a>
 
