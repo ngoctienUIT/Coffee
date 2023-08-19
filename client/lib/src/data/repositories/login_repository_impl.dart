@@ -9,10 +9,12 @@ import 'package:coffee/src/data/remote/response/login/login_response.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/login_repository.dart';
 
+@LazySingleton(as: LoginRepository)
 class LoginRepositoryImpl extends LoginRepository {
   LoginRepositoryImpl(this._apiService, this._sharedPref);
 

@@ -1,9 +1,12 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../core/request/login_request/login_google_request.dart';
 import '../../../core/resources/data_state.dart';
 import '../../../core/use_cases/use_case.dart';
 import '../../../data/remote/response/login/login_response.dart';
 import '../../repositories/login_repository.dart';
 
+@injectable
 class LoginGoogleUseCase
     extends UseCase<DataState<LoginResponse>, LoginGoogleRequest> {
   LoginGoogleUseCase(this._loginRepository);

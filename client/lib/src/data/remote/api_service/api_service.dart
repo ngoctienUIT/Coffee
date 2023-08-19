@@ -15,6 +15,7 @@ import '../response/weather/weather_response.dart';
 part 'api_service.g.dart';
 
 //flutter pub run build_runner build
+// flutter pub run build_runner build --delete-conflicting-outputs
 @RestApi(baseUrl: 'http://192.168.1.219:8080')
 // @RestApi(baseUrl: 'http://34.87.121.133:8080')
 abstract class ApiService {

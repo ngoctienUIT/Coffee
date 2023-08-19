@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/input_info/screen/input_info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
@@ -49,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: BlocProvider(
-              create: (context) => SignUpBloc(),
+              create: (context) => getIt<SignUpBloc>(),
               child: const SignUpView(),
             ),
           ),

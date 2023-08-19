@@ -5,11 +5,13 @@ import 'package:coffee/src/domain/use_cases/login_use_case/login_email_password.
 import 'package:coffee/src/domain/use_cases/login_use_case/login_google.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../core/resources/data_state.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
+@injectable
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginEmailPasswordUseCase _loginEmailPasswordUseCase;
   final LoginGoogleUseCase _loginGoogleUseCase;
