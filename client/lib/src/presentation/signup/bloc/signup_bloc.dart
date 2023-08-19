@@ -1,5 +1,5 @@
 import 'package:coffee/src/data/models/user.dart';
-import 'package:coffee/src/domain/api_service.dart';
+import 'package:coffee/src/data/remote/api_service/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';

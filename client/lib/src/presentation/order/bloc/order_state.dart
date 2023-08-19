@@ -1,6 +1,6 @@
-import 'package:coffee/src/domain/repositories/product/product_response.dart';
+import 'package:coffee/src/data/remote/response/product/product_response.dart';
 
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 
 abstract class OrderState {}
 

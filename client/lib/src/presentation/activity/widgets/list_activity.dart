@@ -2,7 +2,7 @@ import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:coffee/src/data/remote/response/order/order_response.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:flutter/material.dart';

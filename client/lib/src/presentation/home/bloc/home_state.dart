@@ -1,9 +1,9 @@
-import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
-import 'package:coffee/src/domain/repositories/product/product_response.dart';
+import 'package:coffee/src/data/remote/response/coupon/coupon_response.dart';
+import 'package:coffee/src/data/remote/response/product/product_response.dart';
 
 import '../../../data/models/user.dart';
-import '../../../domain/repositories/order/order_response.dart';
-import '../../../domain/repositories/weather/weather_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
+import '../../../data/remote/response/weather/weather_response.dart';
 
 abstract class HomeState {}
 

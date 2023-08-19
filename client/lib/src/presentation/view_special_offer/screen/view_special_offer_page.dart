@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../../store/widgets/item_loading.dart';
 
 class ViewSpecialOfferPage extends StatelessWidget {

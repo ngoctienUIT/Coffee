@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 import 'search_event.dart';
 import 'search_state.dart';
 

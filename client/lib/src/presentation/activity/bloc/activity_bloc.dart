@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   PreferencesModel preferencesModel;

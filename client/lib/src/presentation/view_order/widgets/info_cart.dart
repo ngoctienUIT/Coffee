@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:coffee/src/data/remote/response/order/order_response.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

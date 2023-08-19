@@ -2,7 +2,7 @@ import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/item_order/item_order_response.dart';
+import '../../../data/remote/response/item_order/item_order_response.dart';
 import 'item_product.dart';
 
 class ListProduct extends StatelessWidget {

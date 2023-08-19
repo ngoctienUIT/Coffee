@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/tag/tag_response.dart';
+import 'package:coffee/src/data/remote/response/tag/tag_response.dart';
 
 class Tag {
   final String tagId;

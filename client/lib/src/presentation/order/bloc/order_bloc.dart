@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 
 class OrderBloc extends Bloc<OrderEvent, OrderState> {
   List<ProductCataloguesResponse> listProductCatalogues = [];

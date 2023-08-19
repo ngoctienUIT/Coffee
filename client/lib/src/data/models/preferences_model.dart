@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/api_service.dart';
+import '../../data/remote/api_service/api_service.dart';
 import 'order.dart';
 import 'product.dart';
 import 'store.dart';

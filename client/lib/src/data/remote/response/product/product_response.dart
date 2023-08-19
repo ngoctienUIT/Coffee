@@ -1,8 +1,8 @@
-import 'package:coffee/src/domain/repositories/tag/tag_response.dart';
-import 'package:coffee/src/domain/repositories/topping/topping_response.dart';
+import 'package:coffee/src/data/remote/response/tag/tag_response.dart';
+import 'package:coffee/src/data/remote/response/topping/topping_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../entities/upsize/upsize_entity.dart';
+import '../upsize/upsize_response.dart';
 
 part 'product_response.g.dart';
 
@@ -33,7 +33,7 @@ class ProductResponse {
   final List<TagResponse> tags;
 
   @JsonKey(name: "upsizeOptions")
-  final UpsizeEntity upsizeOptions;
+  final UpsizeResponse upsizeOptions;
 
   ProductResponse({
     this.image,

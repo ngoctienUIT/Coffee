@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/order.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   PreferencesModel preferencesModel = PreferencesModel();

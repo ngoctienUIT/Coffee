@@ -12,7 +12,7 @@ import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/firebase/firebase_service.dart';
+import '../../../data/remote/firebase/firebase_service.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../info/screen/info_page.dart';
 import '../../login/screen/login_page.dart';

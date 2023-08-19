@@ -1,6 +1,6 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/utils/extensions/time_of_date_extension.dart';
-import 'package:coffee/src/domain/repositories/store/store_response.dart';
+import 'package:coffee/src/data/remote/response/store/store_response.dart';
 import 'package:flutter/material.dart';
 
 class Store {

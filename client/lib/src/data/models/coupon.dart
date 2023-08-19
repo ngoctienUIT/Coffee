@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
+import 'package:coffee/src/data/remote/response/coupon/coupon_response.dart';
 import 'package:equatable/equatable.dart';
 
 class Coupon extends Equatable {

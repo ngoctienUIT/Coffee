@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/provider/provider_response.dart';
+import 'package:coffee/src/data/remote/response/provider/provider_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_response.g.dart';

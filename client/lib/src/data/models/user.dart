@@ -1,7 +1,7 @@
-import 'package:coffee/src/domain/entities/user/user_response.dart';
+import 'package:coffee/src/data/remote/response/user/user_response.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../domain/repositories/provider/provider_response.dart';
+import '../../data/remote/response/provider/provider_response.dart';
 
 //ignore: must_be_immutable
 class User extends Equatable {

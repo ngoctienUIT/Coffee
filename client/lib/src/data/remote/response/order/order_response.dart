@@ -1,5 +1,5 @@
-import 'package:coffee/src/domain/repositories/coupon/coupon_response.dart';
-import 'package:coffee/src/domain/repositories/item_order/item_order_response.dart';
+import 'package:coffee/src/data/remote/response/coupon/coupon_response.dart';
+import 'package:coffee/src/data/remote/response/item_order/item_order_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../store/store_response.dart';

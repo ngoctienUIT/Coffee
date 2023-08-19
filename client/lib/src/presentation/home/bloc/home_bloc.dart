@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 

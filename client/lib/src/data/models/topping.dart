@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/topping/topping_response.dart';
+import 'package:coffee/src/data/remote/response/topping/topping_response.dart';
 
 class Topping {
   final String toppingId;

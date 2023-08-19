@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/models/address.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/firebase/firebase_service.dart';
+import '../../../data/remote/firebase/firebase_service.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   PreferencesModel preferencesModel;

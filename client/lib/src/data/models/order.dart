@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/repositories/order/order_response.dart';
+import '../../data/remote/response/order/order_response.dart';
 import 'address.dart';
 import 'coupon.dart';
 import 'item_order.dart';

@@ -1,19 +1,20 @@
-import 'package:coffee/src/domain/repositories/weather/weather_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-import 'entities/user/user_response.dart';
-import 'repositories/coupon/coupon_response.dart';
-import 'repositories/login/login_response.dart';
-import 'repositories/order/order_response.dart';
-import 'repositories/product/product_response.dart';
-import 'repositories/product_catalogues/product_catalogues_response.dart';
-import 'repositories/store/store_response.dart';
-import 'repositories/tag/tag_response.dart';
-import 'repositories/topping/topping_response.dart';
+import '../response/user/user_response.dart';
+import '../response/coupon/coupon_response.dart';
+import '../response/login/login_response.dart';
+import '../response/order/order_response.dart';
+import '../response/product/product_response.dart';
+import '../response/product_catalogues/product_catalogues_response.dart';
+import '../response/store/store_response.dart';
+import '../response/tag/tag_response.dart';
+import '../response/topping/topping_response.dart';
+import '../response/weather/weather_response.dart';
 
 part 'api_service.g.dart';
 
+//flutter pub run build_runner build
 // @RestApi(baseUrl: 'http://192.168.1.219:8080')
 @RestApi(baseUrl: 'http://34.87.121.133:8080')
 abstract class ApiService {

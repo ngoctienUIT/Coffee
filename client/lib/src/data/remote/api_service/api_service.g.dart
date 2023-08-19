@@ -21,7 +21,7 @@ class _ApiService implements ApiService {
   String? baseUrl;
 
   @override
-  Future<HttpResponse<UserResponse>> signup(user) async {
+  Future<HttpResponse<UserResponse>> signup(Map<String, dynamic> user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -39,14 +39,19 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<LoginResponse>> loginCredentialTokenOAuth2(user) async {
+  Future<HttpResponse<LoginResponse>> loginCredentialTokenOAuth2(
+      Map<String, dynamic> user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -64,7 +69,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = LoginResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -72,8 +81,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<dynamic>> linkAccountWithOAuth2Provider(
-    token,
-    user,
+    String token,
+    Map<String, dynamic> user,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -93,7 +102,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = _result.data;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -101,8 +114,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<dynamic>> unlinkAccountWithOAuth2Provider(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -121,14 +134,18 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = _result.data;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<LoginResponse>> login(user) async {
+  Future<HttpResponse<LoginResponse>> login(Map<String, dynamic> user) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -146,14 +163,18 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = LoginResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<String>> resetPasswordIssue(email) async {
+  Future<HttpResponse<String>> resetPasswordIssue(String email) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -170,7 +191,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = _result.data!;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -178,8 +203,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<bool>> validateResetTokenClient(
-    token,
-    text,
+    String token,
+    String text,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -197,7 +222,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = _result.data!;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -205,8 +234,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<UserResponse>> issueNewPasswordUser(
-    token,
-    text,
+    String token,
+    String text,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -224,7 +253,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -232,10 +265,10 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<UserResponse>> updateUserField(
-    token,
-    email,
-    field,
-    body,
+    String token,
+    String email,
+    String field,
+    dynamic body,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -254,7 +287,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -262,9 +299,9 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<UserResponse>> updateExistingUser(
-    token,
-    email,
-    body,
+    String token,
+    String email,
+    Map<String, dynamic> body,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -284,7 +321,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -292,8 +333,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<dynamic>> removeUserByID(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -312,7 +353,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = _result.data;
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -320,8 +365,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<UserResponse>> getUserByID(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -340,7 +385,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = UserResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -364,7 +413,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -373,7 +426,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<ProductResponse>> getProductByID(id) async {
+  Future<HttpResponse<ProductResponse>> getProductByID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -390,7 +443,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ProductResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -398,7 +455,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<ProductResponse>>> searchProductsByName(
-      query) async {
+      String query) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -415,7 +472,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -442,7 +503,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) =>
             ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
@@ -453,7 +518,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<ProductCataloguesResponse>> getProductCatalogueByID(
-      id) async {
+      String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -470,7 +535,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ProductCataloguesResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -478,7 +547,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<ProductCataloguesResponse>>>
-      searchProductCataloguesByName(query) async {
+      searchProductCataloguesByName(String query) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -495,7 +564,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) =>
             ProductCataloguesResponse.fromJson(i as Map<String, dynamic>))
@@ -506,7 +579,7 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<ProductResponse>>>
-      getAllProductsFromProductCatalogueID(id) async {
+      getAllProductsFromProductCatalogueID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -523,7 +596,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -549,7 +626,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => CouponResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -558,7 +639,8 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<List<CouponResponse>>> getAvailableCoupons(id) async {
+  Future<HttpResponse<List<CouponResponse>>> getAvailableCoupons(
+      dynamic id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -575,7 +657,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => CouponResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -584,7 +670,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<CouponResponse>> getCouponByID(id) async {
+  Future<HttpResponse<CouponResponse>> getCouponByID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -601,14 +687,19 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = CouponResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<List<CouponResponse>>> searchCouponsByName(query) async {
+  Future<HttpResponse<List<CouponResponse>>> searchCouponsByName(
+      String query) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -625,7 +716,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => CouponResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -651,7 +746,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => StoreResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -660,7 +759,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<StoreResponse>> getStoreByID(id) async {
+  Future<HttpResponse<StoreResponse>> getStoreByID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -677,14 +776,19 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = StoreResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }
 
   @override
-  Future<HttpResponse<List<StoreResponse>>> searchStoresByName(query) async {
+  Future<HttpResponse<List<StoreResponse>>> searchStoresByName(
+      String query) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -701,7 +805,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => StoreResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -727,7 +835,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => TagResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -736,7 +848,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<TagResponse>> getTagByID(id) async {
+  Future<HttpResponse<TagResponse>> getTagByID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -753,7 +865,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = TagResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -777,7 +893,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => ToppingResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -786,7 +906,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<ToppingResponse>> getToppingByID(id) async {
+  Future<HttpResponse<ToppingResponse>> getToppingByID(String id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -803,7 +923,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = ToppingResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -811,9 +935,9 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<OrderResponse>>> getAllOrders(
-    token,
-    email,
-    status,
+    String token,
+    String email,
+    String status,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -832,7 +956,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => OrderResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -842,8 +970,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> getOrderByID(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -862,7 +990,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -870,8 +1002,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> createNewOrder(
-    token,
-    order,
+    String token,
+    Map<String, dynamic> order,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -891,7 +1023,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -899,9 +1035,9 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> updatePendingOrder(
-    token,
-    order,
-    id,
+    String token,
+    Map<String, dynamic> order,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -921,7 +1057,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -929,9 +1069,9 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> attachCouponToOrder(
-    token,
-    couponID,
-    id,
+    String token,
+    String couponID,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -950,7 +1090,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -958,8 +1102,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> cancelOrder(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -978,7 +1122,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -986,8 +1134,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<OrderResponse>> placeOrder(
-    token,
-    id,
+    String token,
+    String id,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -1006,7 +1154,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = OrderResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -1014,8 +1166,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<OrderResponse>>> removePendingOrder(
-    token,
-    email,
+    String token,
+    String email,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -1034,7 +1186,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => OrderResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -1044,8 +1200,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<WeatherResponse>> weatherRecommendations(
-    long,
-    lat,
+    double long,
+    double lat,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -1063,7 +1219,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = WeatherResponse.fromJson(_result.data!);
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
@@ -1071,8 +1231,8 @@ class _ApiService implements ApiService {
 
   @override
   Future<HttpResponse<List<ProductResponse>>> recommendation(
-    long,
-    lat,
+    double long,
+    double lat,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -1090,7 +1250,11 @@ class _ApiService implements ApiService {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     var value = _result.data!
         .map((dynamic i) => ProductResponse.fromJson(i as Map<String, dynamic>))
         .toList();
@@ -1109,5 +1273,22 @@ class _ApiService implements ApiService {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
