@@ -1,3 +1,4 @@
+import 'package:coffee/injection_container.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
@@ -14,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/request/login_request/login_email_password_request.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: BlocProvider<LoginBloc>(
-              create: (_) => LoginBloc(),
+              create: (_) => getIt<LoginBloc>(),
               child: const LoginView(),
             ),
           ),
@@ -281,10 +283,12 @@ class _LoginViewState extends State<LoginView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
+              context
+                  .read<LoginBloc>()
+                  .add(LoginWithEmailPasswordEvent(LoginEmailPasswordRequest(
                     email: phoneController.text,
                     password: passwordController.text,
-                  ));
+                  )));
             }
           },
         );

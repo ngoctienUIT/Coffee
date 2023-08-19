@@ -1,10 +1,11 @@
+import '../../../core/request/login_request/login_email_password_request.dart';
+
 abstract class LoginEvent {}
 
 class LoginWithEmailPasswordEvent extends LoginEvent {
-  final String email;
-  final String password;
+  LoginEmailPasswordRequest request;
 
-  LoginWithEmailPasswordEvent({required this.email, required this.password});
+  LoginWithEmailPasswordEvent(this.request);
 }
 
 class LoginWithGoogleEvent extends LoginEvent {}
