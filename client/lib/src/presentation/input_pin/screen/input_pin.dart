@@ -1,3 +1,5 @@
+import 'package:coffee/injection.dart';
+import 'package:coffee/src/core/request/input_pin_request/input_pin_request.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +25,8 @@ class InputPinPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => InputPinBloc(),
+    return BlocProvider<InputPinBloc>(
+      create: (context) => getIt<InputPinBloc>(),
       child: InputPinView(resetCredential: resetCredential),
     );
   }
@@ -129,9 +131,10 @@ class _InputPinViewState extends State<InputPinView> {
           text: "continue".translate(context),
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context
-                  .read<InputPinBloc>()
-                  .add(SendEvent(widget.resetCredential, controller.text));
+              context.read<InputPinBloc>().add(SendEvent(InputPinRequest(
+                    resetCredential: widget.resetCredential,
+                    pin: controller.text,
+                  )));
             }
           },
           isOnPress: state is ContinueState ? state.isContinue : false,

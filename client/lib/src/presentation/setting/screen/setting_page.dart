@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
@@ -23,8 +24,8 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingBloc(),
+    return BlocProvider<SettingBloc>(
+      create: (context) => getIt<SettingBloc>(),
       child: SettingView(user: user),
     );
   }

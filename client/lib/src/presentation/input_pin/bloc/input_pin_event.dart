@@ -1,10 +1,11 @@
+import '../../../core/request/input_pin_request/input_pin_request.dart';
+
 abstract class InputPinEvent {}
 
 class SendEvent extends InputPinEvent {
-  String resetCredential;
-  String pin;
+  final InputPinRequest request;
 
-  SendEvent(this.resetCredential, this.pin);
+  SendEvent(this.request);
 }
 
 class ShowButtonEvent extends InputPinEvent {

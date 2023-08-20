@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +21,8 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ForgotPasswordBloc(),
+    return BlocProvider<ForgotPasswordBloc>(
+      create: (context) => getIt<ForgotPasswordBloc>(),
       child: const ForgotPasswordView(),
     );
   }

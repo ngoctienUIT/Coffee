@@ -6,7 +6,7 @@ import '../../../core/request/signup_request/signup_email_password_request.dart'
 import '../../../core/resources/data_state.dart';
 import '../../../core/use_cases/use_case.dart';
 
-@injectable
+@lazySingleton
 class SignupEmailPasswordUseCase
     extends UseCase<DataState<UserResponse>, SignupEmailPasswordRequest> {
   SignupEmailPasswordUseCase(this._repository);
@@ -15,7 +15,7 @@ class SignupEmailPasswordUseCase
 
   @override
   Future<DataState<UserResponse>> call(
-      {required SignupEmailPasswordRequest params}) async {
+      {required SignupEmailPasswordRequest params}) {
     return _repository.signupWithEmailPassword(params);
   }
 }

@@ -6,8 +6,10 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../injection.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/request/new_password_request/new_password_request.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/screen/login_page.dart';
 import '../../login/widgets/custom_button.dart';
@@ -24,8 +26,8 @@ class NewPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NewPasswordBloc(),
+    return BlocProvider<NewPasswordBloc>(
+      create: (context) => getIt<NewPasswordBloc>(),
       child: NewPasswordView(resetCredential: resetCredential),
     );
   }
@@ -141,8 +143,12 @@ class _NewPasswordViewState extends State<NewPasswordView> {
             if (_formKey.currentState!.validate()) {
               var bytes = utf8.encode(newPasswordController.text);
               var digest = sha256.convert(bytes);
-              context.read<NewPasswordBloc>().add(ChangePasswordEvent(
-                  widget.resetCredential, digest.toString()));
+              context
+                  .read<NewPasswordBloc>()
+                  .add(ChangePasswordEvent(NewPasswordRequest(
+                    resetCredential: widget.resetCredential,
+                    password: digest.toString(),
+                  )));
             }
           },
         );

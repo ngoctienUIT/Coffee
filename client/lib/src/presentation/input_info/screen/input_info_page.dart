@@ -1,3 +1,5 @@
+import 'package:coffee/injection.dart';
+import 'package:coffee/src/core/request/input_info_request/input_info_request.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/input_info/bloc/input_info_bloc.dart';
@@ -41,8 +43,8 @@ class InputInfoPage extends StatelessWidget {
         child: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: BlocProvider(
-              create: (context) => InputInfoBloc(),
+            child: BlocProvider<InputInfoBloc>(
+              create: (context) => getIt<InputInfoBloc>(),
               child: InputInfoView(account: account),
             ),
           ),
@@ -238,7 +240,7 @@ class _InputInfoViewState extends State<InputInfoView> {
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<InputInfoBloc>().add(SubmitEvent(
+              context.read<InputInfoBloc>().add(SubmitEvent(InputInfoRequest(
                   account: widget.account,
                   user: User(
                     username: emailController.text,
@@ -248,7 +250,7 @@ class _InputInfoViewState extends State<InputInfoView> {
                     phoneNumber: phoneController.text,
                     password: "",
                     birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
-                  )));
+                  ))));
             }
           },
         );

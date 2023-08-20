@@ -1,33 +1,29 @@
-import 'package:dio/dio.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/remote/api_service/api_service.dart';
+import '../../../domain/use_cases/forgot_password_use_case/forgot_password.dart';
 import 'forgot_password_event.dart';
 import 'forgot_password_state.dart';
 
+@injectable
 class ForgotPasswordBloc
     extends Bloc<ForgotPasswordEvent, ForgotPasswordState> {
-  ForgotPasswordBloc() : super(InitState()) {
+  final ForgotPasswordUseCase _userCase;
+
+  ForgotPasswordBloc(this._userCase) : super(InitState()) {
     on<ShowButtonEvent>((event, emit) => emit(ContinueState(event.isContinue)));
 
-    on<SendForgotPasswordEvent>((event, emit) => sendApi(event.email, emit));
+    on<SendForgotPasswordEvent>(_sendEmail);
   }
 
-  Future sendApi(String email, Emitter emit) async {
-    try {
-      emit(LoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response = await apiService.resetPasswordIssue(email);
-      emit(SuccessState(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(ErrorState(e.toString()));
-      print(e);
+  Future _sendEmail(SendForgotPasswordEvent event, Emitter emit) async {
+    emit(LoadingState());
+    final response = await _userCase.call(params: event.email);
+    if (response is DataSuccess) {
+      emit(SuccessState(response.data!));
+    } else {
+      emit(ErrorState(response.error ?? ""));
     }
   }
 }

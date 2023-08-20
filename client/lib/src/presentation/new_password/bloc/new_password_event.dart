@@ -1,3 +1,5 @@
+import '../../../core/request/new_password_request/new_password_request.dart';
+
 abstract class NewPasswordEvent {}
 
 class ShowChangeButtonEvent extends NewPasswordEvent {
@@ -11,8 +13,7 @@ class HidePasswordEvent extends NewPasswordEvent {}
 class TextChangeEvent extends NewPasswordEvent {}
 
 class ChangePasswordEvent extends NewPasswordEvent {
-  String resetCredential;
-  String password;
+  final NewPasswordRequest request;
 
-  ChangePasswordEvent(this.resetCredential, this.password);
+  ChangePasswordEvent(this.request);
 }

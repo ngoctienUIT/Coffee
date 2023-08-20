@@ -6,7 +6,7 @@ import '../../../core/use_cases/use_case.dart';
 import '../../../data/remote/response/login/login_response.dart';
 import '../../repositories/login_repository.dart';
 
-@injectable
+@lazySingleton
 class LoginGoogleUseCase
     extends UseCase<DataState<LoginResponse>, LoginGoogleRequest> {
   LoginGoogleUseCase(this._loginRepository);
