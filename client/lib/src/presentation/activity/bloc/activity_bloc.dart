@@ -1,89 +1,37 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/remote/response/order/order_response.dart';
+import '../../../domain/use_cases/activity_use_case/get_activity.dart';
 
+@injectable
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
-  PreferencesModel preferencesModel;
+  final GetActivityUseCase _useCase;
 
-  ActivityBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(event.index, emit));
+  ActivityBloc(this._useCase) : super(InitState()) {
+    on<FetchData>(_getData);
 
-    on<UpdateData>((event, emit) => updateData(event.index, emit));
+    on<UpdateData>(_updateData);
   }
 
-  Future getData(int index, Emitter emit) async {
-    try {
-      emit(ActivityLoading(index));
-      List<OrderResponse> listOrder;
-      final response = index == 0
-          ? await preferencesModel.apiService.getAllOrders(
-              "Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username,
-              "PLACED")
-          : await preferencesModel.apiService.getAllOrders(
-              "Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username,
-              "");
-      listOrder = index == 0
-          ? response.data
-          : response.data
-              .where((element) =>
-                  element.orderStatus == "COMPLETED" ||
-                  element.orderStatus == "CANCELLED")
-              .toList();
-      listOrder.sort((a, b) => b.createdDate!
-          .toDateTime2()
-          .difference(a.createdDate!.toDateTime2())
-          .inSeconds);
-      emit(ActivityLoaded(listOrder: listOrder, index: index));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ActivityError(message: error, index: index));
-      print(error);
-    } catch (e) {
-      emit(ActivityError(message: e.toString(), index: index));
-      print(e);
+  Future _getData(FetchData event, Emitter emit) async {
+    emit(ActivityLoading(event.index));
+    final response = await _useCase.call(params: event.index);
+    if (response is DataSuccess) {
+      emit(ActivityLoaded(listOrder: response.data!, index: event.index));
+    } else {
+      emit(ActivityError(message: response.error ?? "", index: event.index));
     }
   }
 
-  Future updateData(int index, Emitter emit) async {
-    try {
-      List<OrderResponse> listOrder;
-      final response = index == 0
-          ? await preferencesModel.apiService.getAllOrders(
-              "Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username,
-              "PLACED")
-          : await preferencesModel.apiService.getAllOrders(
-              "Bearer ${preferencesModel.token}",
-              preferencesModel.user!.username,
-              "");
-      listOrder = index == 0
-          ? response.data
-          : response.data
-              .where((element) =>
-                  element.orderStatus == "COMPLETED" ||
-                  element.orderStatus == "CANCELLED")
-              .toList();
-      listOrder.sort((a, b) => b.createdDate!
-          .toDateTime2()
-          .difference(a.createdDate!.toDateTime2())
-          .inSeconds);
-      emit(UpdateSuccess(listOrder, index));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ActivityError(message: error, index: index));
-      print(error);
-    } catch (e) {
-      emit(ActivityError(message: e.toString(), index: index));
-      print(e);
+  Future _updateData(UpdateData event, Emitter emit) async {
+    final response = await _useCase.call(params: event.index);
+    if (response is DataSuccess) {
+      emit(UpdateSuccess(response.data!, event.index));
+    } else {
+      emit(ActivityError(message: response.error ?? "", index: event.index));
     }
   }
 }

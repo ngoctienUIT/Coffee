@@ -1,4 +1,3 @@
-import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -8,10 +7,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
+import 'injection.dart';
 import 'my_app.dart';
-
-int? language;
-bool isLogin = false;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,8 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final prefs = getIt<SharedPreferences>();
-  language = prefs.getInt('language');
-  isLogin = prefs.getBool('isLogin') ?? false;
+  bool isLogin = prefs.getBool('isLogin') ?? false;
   String? timeLogin = prefs.getString('timeLogin');
   if (isLogin &&
       timeLogin != null &&

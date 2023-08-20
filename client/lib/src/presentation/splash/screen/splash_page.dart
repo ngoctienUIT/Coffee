@@ -1,12 +1,13 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/local/dao/user_dao.dart';
+import 'package:coffee/src/data/local/entity/user_entity.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../main.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
@@ -38,9 +39,10 @@ class SplashPage extends StatelessWidget {
         }
         ApiService apiService = getIt<ApiService>();
         final storeResponse = apiService.getAllStores();
+        final prefs = getIt<SharedPreferences>();
+        bool isLogin = prefs.getBool('isLogin') ?? false;
 
         if (isLogin) {
-          final prefs = getIt<SharedPreferences>();
           String token = prefs.getString("token") ?? "";
           String? userID = prefs.getString("userID");
           String? storeID = prefs.getString("storeID");
@@ -48,14 +50,16 @@ class SplashPage extends StatelessWidget {
           bool isBringBack = prefs.getBool("isBringBack") ?? false;
 
           final userResponse =
-          apiService.getUserByID("Bearer $token", userID ?? "");
+              apiService.getUserByID("Bearer $token", userID ?? "");
           final list = await Future.wait([userResponse, storeResponse]);
+          UserResponse user = list.first.data as UserResponse;
+          upsertUser(user.toUserEntity());
           PreferencesModel preferencesModel = PreferencesModel(
               token: token,
               isBringBack: isBringBack,
               address: address,
               storeID: storeID,
-              user: User.fromUserResponse((list.first.data as UserResponse)),
+              user: User.fromUserResponse(user),
               listStore: (list.last.data as List<StoreResponse>)
                   .map((e) => Store.fromStoreResponse(e))
                   .toList());
@@ -76,5 +80,15 @@ class SplashPage extends StatelessWidget {
         return const LoginPage();
       },
     );
+  }
+
+  Future upsertUser(UserEntity user) async {
+    UserDao userDao = getIt<UserDao>();
+    final data = await userDao.findUserById(user.id).first;
+    if (data == null) {
+      userDao.insertUser(user);
+    } else {
+      userDao.updateUser(user);
+    }
   }
 }

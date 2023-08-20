@@ -8,17 +8,12 @@ import 'firebase_options.dart';
 import 'injection.dart';
 import 'my_app.dart';
 
-int? language;
-bool isLogin = false;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureDependencies();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final prefs = getIt<SharedPreferences>();
   prefs.setBool("isOpen", true);
-  language = prefs.getInt('language');
-  isLogin = prefs.getBool('isLogin') ?? false;
   FirebaseMessaging.instance.getToken().then((value) {
     print(value);
   });

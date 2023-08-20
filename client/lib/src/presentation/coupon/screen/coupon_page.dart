@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_event.dart';
@@ -13,9 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../view_special_offer/screen/view_special_offer_page.dart';
 
 class CouponPage extends StatelessWidget {
@@ -28,10 +27,8 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => CouponBloc(preferencesModel)..add(FetchData()),
+    return BlocProvider<CouponBloc>(
+      create: (context) => getIt<CouponBloc>()..add(FetchData()),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBarGeneral(

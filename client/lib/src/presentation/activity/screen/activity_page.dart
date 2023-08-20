@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
@@ -14,7 +15,6 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../store/widgets/item_loading.dart';
 import '../bloc/activity_state.dart';
 
@@ -25,10 +25,8 @@ class ActivityPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => ActivityBloc(preferencesModel)..add(FetchData(0)),
+    return BlocProvider<ActivityBloc>(
+      create: (context) => getIt<ActivityBloc>()..add(FetchData(0)),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: CustomAppBar(
