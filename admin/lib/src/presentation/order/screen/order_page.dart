@@ -9,7 +9,7 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 import '../bloc/order_state.dart';
 import '../widgets/list_order_loading.dart';
 

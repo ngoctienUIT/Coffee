@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/remote/response/user/user_response.dart';
 import '../../order/widgets/item_loading.dart';
 
 class ItemAccount extends StatelessWidget {

@@ -75,10 +75,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  retrofit_generator: ^7.0.0
+  retrofit_generator: ^7.0.8
   injectable_generator: ^2.4.0
-  json_serializable: ^6.6.1
-  build_runner: ^2.3.3
+  json_serializable: ^6.7.1
+  build_runner: ^2.4.6
   flutter_launcher_icons: ^0.13.1
 
   # The "flutter_lints" package below contains a set of recommended lints to

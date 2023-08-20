@@ -1,6 +1,6 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/recommend.dart';
-import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
+import 'package:coffee_admin/src/data/remote/response/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_state.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';

@@ -1,4 +1,4 @@
-import '../../../domain/repositories/topping/topping_response.dart';
+import '../../../data/remote/response/topping/topping_response.dart';
 
 abstract class ToppingState {}
 

@@ -3,7 +3,7 @@ import 'package:coffee_admin/src/presentation/input_pin/bloc/input_pin_state.dar
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 
 class InputPinBloc extends Bloc<InputPinEvent, InputPinState> {
   InputPinBloc() : super(InitState()) {

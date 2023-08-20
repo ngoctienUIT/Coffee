@@ -1,5 +1,5 @@
-import '../../../domain/repositories/product/product_response.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 
 abstract class ProductState {}
 

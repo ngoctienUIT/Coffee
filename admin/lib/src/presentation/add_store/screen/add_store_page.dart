@@ -6,7 +6,7 @@ import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
 import 'package:coffee_admin/src/data/models/address.dart';
 import 'package:coffee_admin/src/data/models/store.dart';
-import 'package:coffee_admin/src/domain/repositories/store/store_response.dart';
+import 'package:coffee_admin/src/data/remote/response/store/store_response.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/district_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/province_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.dart';

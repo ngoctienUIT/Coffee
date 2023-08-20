@@ -1,4 +1,4 @@
-import '../../domain/repositories/product/product_response.dart';
+import '../../data/remote/response/product/product_response.dart';
 import 'item_order.dart';
 import 'tag.dart';
 import 'topping.dart';

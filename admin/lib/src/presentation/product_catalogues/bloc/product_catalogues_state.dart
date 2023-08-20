@@ -1,4 +1,4 @@
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 
 abstract class ProductCataloguesState {}
 

@@ -1,7 +1,7 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../../coupon/widgets/ticket_widget.dart';
 
 class AddCoupons extends StatelessWidget {

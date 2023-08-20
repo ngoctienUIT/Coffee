@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/firebase/firebase_service.dart';
+import '../../../data/remote/firebase/firebase_service.dart';
 
 class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
   PreferencesModel preferencesModel;

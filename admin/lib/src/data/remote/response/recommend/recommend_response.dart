@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/domain/repositories/tag/tag_response.dart';
+import 'package:coffee_admin/src/data/remote/response/tag/tag_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'recommend_response.g.dart';

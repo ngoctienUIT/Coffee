@@ -5,7 +5,7 @@ import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
-import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_event.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state.dart';

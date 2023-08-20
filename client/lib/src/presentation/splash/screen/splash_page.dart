@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,12 +36,11 @@ class SplashPage extends StatelessWidget {
           }
           return const LoginPage();
         }
-        ApiService apiService =
-        ApiService(Dio(BaseOptions(contentType: "application/json")));
+        ApiService apiService = getIt<ApiService>();
         final storeResponse = apiService.getAllStores();
 
         if (isLogin) {
-          final prefs = await SharedPreferences.getInstance();
+          final prefs = getIt<SharedPreferences>();
           String token = prefs.getString("token") ?? "";
           String? userID = prefs.getString("userID");
           String? storeID = prefs.getString("storeID");

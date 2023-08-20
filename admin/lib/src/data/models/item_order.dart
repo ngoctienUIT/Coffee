@@ -1,4 +1,4 @@
-import '../../domain/repositories/item_order/item_order_response.dart';
+import '../../data/remote/response/item_order/item_order_response.dart';
 
 class ItemOrder {
   String productId;

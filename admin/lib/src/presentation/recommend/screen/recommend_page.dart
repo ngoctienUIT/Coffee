@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
+import 'package:coffee_admin/src/data/remote/response/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/screen/add_recommend_page.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_bloc.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_event.dart';

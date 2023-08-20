@@ -2,7 +2,7 @@ import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 class TotalPayment extends StatelessWidget {
   const TotalPayment({Key? key, required this.order}) : super(key: key);

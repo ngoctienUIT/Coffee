@@ -12,8 +12,8 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/product/product_response.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {

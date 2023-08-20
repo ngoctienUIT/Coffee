@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
+import 'package:coffee_admin/src/data/remote/response/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.dart';
 import 'package:dio/dio.dart';
@@ -14,7 +14,7 @@ import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
 import '../bloc/order_event.dart';
 import '../bloc/order_state.dart';

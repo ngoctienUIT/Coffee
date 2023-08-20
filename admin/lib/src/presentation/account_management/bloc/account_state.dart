@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
+import '../../../data/remote/response/user/user_response.dart';
 
 abstract class AccountState {}
 

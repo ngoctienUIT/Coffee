@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 class InfoCart extends StatelessWidget {
   const InfoCart({

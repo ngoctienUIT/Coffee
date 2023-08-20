@@ -20,8 +20,8 @@ ProductResponse _$ProductResponseFromJson(Map<String, dynamic> json) =>
       toppingOptions: (json['toppingOptions'] as List<dynamic>)
           .map((e) => ToppingResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
-      upsizeOptions:
-          UpsizeEntity.fromJson(json['upsizeOptions'] as Map<String, dynamic>),
+      upsizeOptions: UpsizeResponse.fromJson(
+          json['upsizeOptions'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProductResponseToJson(ProductResponse instance) =>

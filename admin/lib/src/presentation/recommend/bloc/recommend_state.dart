@@ -1,4 +1,4 @@
-import '../../../domain/repositories/recommend/recommend_response.dart';
+import '../../../data/remote/response/recommend/recommend_response.dart';
 
 abstract class RecommendState {}
 

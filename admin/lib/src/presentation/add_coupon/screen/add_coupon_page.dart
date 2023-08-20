@@ -5,7 +5,7 @@ import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/coupon.dart';
-import 'package:coffee_admin/src/domain/repositories/coupon/coupon_response.dart';
+import 'package:coffee_admin/src/data/remote/response/coupon/coupon_response.dart';
 import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_event.dart';
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';

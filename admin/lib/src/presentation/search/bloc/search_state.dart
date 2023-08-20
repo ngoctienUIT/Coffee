@@ -1,4 +1,4 @@
-import '../../../domain/repositories/product/product_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
 
 abstract class SearchState {}
 

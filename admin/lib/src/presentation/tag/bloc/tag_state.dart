@@ -1,4 +1,4 @@
-import '../../../domain/repositories/tag/tag_response.dart';
+import '../../../data/remote/response/tag/tag_response.dart';
 
 abstract class TagState {}
 

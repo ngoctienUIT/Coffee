@@ -1,4 +1,4 @@
-import '../../domain/repositories/order/order_response.dart';
+import '../../data/remote/response/order/order_response.dart';
 import 'address.dart';
 import 'item_order.dart';
 

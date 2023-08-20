@@ -19,7 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  final prefs = await SharedPreferences.getInstance();
+  final prefs = getIt<SharedPreferences>();
   language = prefs.getInt('language');
   isLogin = prefs.getBool('isLogin') ?? false;
   String? timeLogin = prefs.getString('timeLogin');

@@ -1,4 +1,4 @@
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 
 abstract class CouponState {}
 

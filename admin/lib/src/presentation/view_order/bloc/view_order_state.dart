@@ -1,5 +1,5 @@
 import '../../../data/models/user.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 abstract class ViewOrderState {}
 

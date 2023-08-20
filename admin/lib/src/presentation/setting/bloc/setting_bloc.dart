@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 import 'setting_event.dart';
 import 'setting_state.dart';
 

@@ -8,7 +8,7 @@ import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/store/store_response.dart';
+import '../../../data/remote/response/store/store_response.dart';
 import '../../add_store/screen/add_store_page.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';

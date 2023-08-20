@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../domain/api_service.dart';
+import '../remote/api_service/api_service.dart';
 import 'store.dart';
 import 'user.dart';
 

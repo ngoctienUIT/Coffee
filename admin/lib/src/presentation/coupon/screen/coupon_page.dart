@@ -16,7 +16,7 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
 import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/constants/app_images.dart';
-import 'package:coffee_admin/src/domain/repositories/product/product_response.dart';
-import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/data/remote/response/product/product_response.dart';
+import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/app_bar_product.dart';
 import 'package:coffee_admin/src/presentation/view_product/widgets/body_product.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import '../../domain/repositories/tag/tag_response.dart';
+import '../../data/remote/response/tag/tag_response.dart';
 
 class Tag {
   final String? tagId;

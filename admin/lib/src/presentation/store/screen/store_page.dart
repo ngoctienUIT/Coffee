@@ -15,7 +15,7 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/store/store_response.dart';
+import '../../../data/remote/response/store/store_response.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/store_bloc.dart';
