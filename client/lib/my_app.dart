@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<LanguageCubit>(
           create: (context) => LanguageCubit(language: language),
         ),
-        BlocProvider<ServiceBloc>(create: (context) => ServiceBloc()),
+        BlocProvider<ServiceBloc>(create: (context) => getIt<ServiceBloc>()),
       ],
       child: BlocBuilder<LanguageCubit, LanguageState>(
         buildWhen: (previous, current) => previous != current,

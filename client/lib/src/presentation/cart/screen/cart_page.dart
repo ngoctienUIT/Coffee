@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/enum/enums.dart';
@@ -22,17 +23,14 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => CartBloc(preferencesModel)..add(GetOrderSpending()),
+    return BlocProvider<CartBloc>(
+      create: (context) => getIt<CartBloc>()..add(GetOrderSpending()),
       child: const CartView(),
     );
   }
@@ -46,9 +44,7 @@ class CartView extends StatelessWidget {
     return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
         if (state is ChangeOrderState) {
-          PreferencesModel preferencesModel =
-              context.read<ServiceBloc>().preferencesModel;
-          context.read<CartBloc>().add(SetPreferencesModel(preferencesModel));
+          // context.read<CartBloc>().add(SetPreferencesModel(preferencesModel));
           context.read<CartBloc>().add(GetOrderSpending());
         }
       },

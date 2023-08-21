@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
@@ -8,11 +9,10 @@ import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../add_address/screen/add_address_page.dart';
 import '../bloc/cart_bloc.dart';
@@ -163,12 +163,11 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget atTable() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    if (!isBringBack && store == null && preferencesModel.storeID != null) {
-      setState(() {
-        store = preferencesModel.getStore();
-      });
+    final sharedPref = getIt<SharedPreferences>();
+    if (!isBringBack &&
+        store == null &&
+        sharedPref.getString("storeID") != null) {
+      setState(() => store = getIt<Store>());
     }
     return InkWell(
       onTap: () {
@@ -219,12 +218,10 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget bringBack() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    if (!isBringBack && address == null && preferencesModel.address != null) {
-      setState(() {
-        address = preferencesModel.address!.toAddressAPI().toAddress();
-      });
+    final sharedPref = getIt<SharedPreferences>();
+    String? addressStr = sharedPref.getString("address");
+    if (!isBringBack && address == null && addressStr != null) {
+      setState(() => address = addressStr.toAddressAPI().toAddress());
     }
     return InkWell(
       onTap: () {

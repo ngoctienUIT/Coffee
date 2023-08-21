@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
@@ -6,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../bloc/profile_state.dart';
@@ -21,10 +20,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => ProfileBloc(preferencesModel),
+    return BlocProvider<ProfileBloc>(
+      create: (context) => getIt<ProfileBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.statusBarColor,
         appBar:

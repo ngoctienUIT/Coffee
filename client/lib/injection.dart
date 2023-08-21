@@ -6,6 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'src/data/local/dao/store_dao.dart';
+import 'src/data/models/user.dart';
 import 'src/data/remote/api_service/api_service.dart';
 import 'src/data/remote/firebase/firebase_service.dart';
 
@@ -28,6 +30,9 @@ abstract class InjectionModule {
   @lazySingleton
   UserDao get userDao => getIt<CoffeeDatabase>().userDao;
 
+  @lazySingleton
+  StoreDao get storeDao => getIt<CoffeeDatabase>().storeDao;
+
   // @lazySingleton
   // Dio get dio => Dio(BaseOptions(contentType: "application/json"));
 
@@ -38,4 +43,14 @@ abstract class InjectionModule {
   @lazySingleton
   FirebaseService get firebaseService =>
       FirebaseService(Dio(BaseOptions(contentType: "application/json")));
+
+  // @lazySingleton
+  // User get user => User(
+  //       username: "",
+  //       displayName: "",
+  //       isMale: false,
+  //       email: "",
+  //       phoneNumber: "",
+  //       password: "",
+  //     );
 }

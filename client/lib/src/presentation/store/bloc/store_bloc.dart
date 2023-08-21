@@ -1,73 +1,67 @@
-import 'package:dio/dio.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/store_use_case/get_data_store.dart';
+import '../../../domain/use_cases/store_use_case/get_store.dart';
+import '../../../domain/use_cases/store_use_case/search_store.dart';
 import 'store_event.dart';
 import 'store_state.dart';
 
+@injectable
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
-  PreferencesModel preferencesModel;
+  final GetDataStoreUseCase _getDataStoreUseCase;
+  final GetStoreUseCase _getStoreUseCase;
+  final SearchStoreUseCase _searchStoreUseCase;
+  final SharedPreferences _prefs;
 
-  StoreBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+  StoreBloc(
+    this._prefs,
+    this._getDataStoreUseCase,
+    this._getStoreUseCase,
+    this._searchStoreUseCase,
+  ) : super(InitState()) {
+    on<FetchData>(_getData);
 
-    on<SearchStore>((event, emit) => searchStore(emit, event.storeName));
+    on<SearchStore>(_searchStore);
+
+    on<RefreshData>(_refreshData);
   }
 
-  Future getData(Emitter emit) async {
-    try {
-      if (preferencesModel.listStore.isEmpty) {
-        emit(StoreLoading());
-      }
-      if (preferencesModel.listStore.isNotEmpty) {
-        emit(StoreLoaded(
-            preferencesModel.listStore, preferencesModel.storeID ?? ""));
-      }
-      // ApiService apiService =
-      //     ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final response = await apiService.getAllStores();
-      // if (response.data.length != preferencesModel.listStore.length) {
-      //   emit(StoreLoaded(
-      //     response.data.map((e) => Store.fromStoreResponse(e)).toList(),
-      //     preferencesModel.storeID ?? "",
-      //   ));
-      // }
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
+  Future _getData(FetchData event, Emitter emit) async {
+    emit(StoreLoading());
+    final response = await _getStoreUseCase.call();
+    final storeID = _prefs.getString("storeID");
+    if (response is DataSuccess) {
+      emit(StoreLoaded(
+          response.data!.map((e) => e.toStore()).toList(), storeID ?? ""));
+    } else {
+      emit(StoreError(response.error));
     }
   }
 
-  Future searchStore(Emitter emit, String query) async {
-    try {
-      emit(StoreLoading());
-      // ApiService apiService =
-      //     ApiService(Dio(BaseOptions(contentType: "application/json")));
-      // final response = await apiService.searchStoresByName(query);
-      // emit(StoreLoaded(
-      //   response.data.map((e) => Store.fromStoreResponse(e)).toList(),
-      //   preferencesModel.storeID ?? "",
-      // ));
+  Future _refreshData(RefreshData event, Emitter emit) async {
+    emit(StoreLoading());
+    final response = await _getDataStoreUseCase.call();
+    final storeID = _prefs.getString("storeID");
+    if (response is DataSuccess) {
       emit(StoreLoaded(
-        preferencesModel.listStore
-            .where(
-                (e) => e.storeName!.toUpperCase().contains(query.toUpperCase()))
-            .toList(),
-        preferencesModel.storeID ?? "",
-      ));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
+          response.data!.map((e) => e.toStore()).toList(), storeID ?? ""));
+    } else {
+      emit(StoreError(response.error));
+    }
+  }
+
+  Future _searchStore(SearchStore event, Emitter emit) async {
+    emit(StoreLoading());
+    final response = await _searchStoreUseCase.call(params: event.storeName);
+    final storeID = _prefs.getString("storeID");
+    if (response is DataSuccess) {
+      emit(StoreLoaded(
+          response.data!.map((e) => e.toStore()).toList(), storeID ?? ""));
+    } else {
+      emit(StoreError(response.error));
     }
   }
 }

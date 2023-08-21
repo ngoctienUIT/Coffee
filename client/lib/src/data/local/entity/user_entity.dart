@@ -1,3 +1,5 @@
+import 'package:coffee/src/data/models/user.dart';
+import 'package:coffee/src/data/remote/response/provider/provider_response.dart';
 import 'package:floor/floor.dart';
 
 @Entity(tableName: "User")
@@ -52,4 +54,20 @@ class UserEntity {
     this.provider,
     this.google,
   );
+
+  User toUser() {
+    return User(
+      id: id,
+      username: username,
+      displayName: displayName,
+      isMale: isMale,
+      email: email,
+      phoneNumber: phoneNumber,
+      password: hashedPassword,
+      birthOfDate: birthOfDate,
+      imageUrl: imageUrl,
+      userRole: userRole,
+      accountProvider: ProviderResponse(google: google, provider: provider),
+    );
+  }
 }

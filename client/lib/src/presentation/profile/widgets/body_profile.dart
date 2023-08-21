@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/user.dart';
@@ -15,7 +16,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
@@ -60,8 +60,6 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           current is LinkAccountWithGoogleSuccessState ||
           current is UnlinkAccountWithGoogleSuccessState,
       listener: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         if (state is SaveProfileLoaded) {
           Navigator.pop(context);
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
@@ -72,13 +70,13 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           customToast(
               context, "google_account_link_successful".translate(context));
           context.read<ServiceBloc>().add(ChangeUserInfoEvent(
-              preferencesModel.user!.copyWith(isAccountProvider: true)));
+              getIt<User>().copyWith(isAccountProvider: true)));
         }
         if (state is UnlinkAccountWithGoogleSuccessState) {
           customToast(context,
               "unlinked_google_account_successfully".translate(context));
           context.read<ServiceBloc>().add(ChangeUserInfoEvent(
-              preferencesModel.user!.copyWith(isAccountProvider: false)));
+              getIt<User>().copyWith(isAccountProvider: false)));
         }
         if (state is LinkAccountWithGoogleErrorState) {
           customToast(context, state.message.toString());
@@ -179,14 +177,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   void onSave() {
     if (isEdit) {
       if (_formKey.currentState!.validate()) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         User user = widget.user.copyWith(
           displayName: nameController.text,
           isMale: isMale,
           birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
         );
-        if (user == preferencesModel.user) {
+        if (user == getIt<User>()) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
         } else {
           context.read<ProfileBloc>().add(SaveProfileEvent(user));

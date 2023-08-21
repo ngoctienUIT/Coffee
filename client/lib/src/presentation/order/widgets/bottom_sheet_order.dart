@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
@@ -13,7 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/order.dart';
 import '../../../data/models/store.dart';
 import '../../cart/screen/cart_page.dart';
 import '../../store/screen/store_page.dart';
@@ -64,8 +65,8 @@ class BottomSheetOrder extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is ChangeOrderState || current is ChangeStoreState,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
+        Order? order =
+            getIt.isRegistered(instance: Order) ? getIt<Order>() : null;
         return InkWell(
           onTap: () {
             Navigator.of(context).push(createRoute(
@@ -75,9 +76,7 @@ class BottomSheetOrder extends StatelessWidget {
           },
           child: SizedBox(
             height: double.infinity,
-            child: cartNumber(preferencesModel.order == null
-                ? 0
-                : preferencesModel.order!.orderItems.length),
+            child: cartNumber(order == null ? 0 : order.orderItems.length),
           ),
         );
       },
@@ -89,11 +88,10 @@ class BottomSheetOrder extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is ChangeOrderState || current is ChangeStoreState,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
-        Store? store = preferencesModel.getStore();
-        bool isBringBack = preferencesModel.isBringBack;
-        String address = preferencesModel.address ?? "";
+        final sharedPref = getIt<SharedPreferences>();
+        Store? store = getIt<Store>();
+        bool isBringBack = sharedPref.getBool("isBringBack") ?? false;
+        String address = sharedPref.getString("address") ?? "";
         return InkWell(
           onTap: () => showMyBottomSheet(
             context: context,
@@ -156,11 +154,7 @@ class BottomSheetOrder extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      isBringBack
-                          ? address
-                          : store == null
-                              ? ""
-                              : store.storeName.toString(),
+                      isBringBack ? address : store.storeName.toString(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

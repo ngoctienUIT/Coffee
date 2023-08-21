@@ -3,6 +3,8 @@ import 'package:coffee/src/core/utils/extensions/time_of_date_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../../local/entity/store_entity.dart';
+
 part 'store_response.g.dart';
 
 @JsonSerializable()
@@ -78,4 +80,24 @@ class StoreResponse {
   bool checkOpen() =>
       openingHour.toTime().toInt() <= TimeOfDay.now().toInt() &&
       TimeOfDay.now().toInt() <= closingHour.toTime().toInt();
+
+  StoreEntity toStoreEntity() {
+    return StoreEntity(
+      storeId,
+      storeName,
+      address1,
+      address2,
+      address3,
+      address4,
+      openingHour,
+      closingHour,
+      latitude,
+      longitude,
+      imageUrl,
+      hotlineNumber,
+      googleMapUrl,
+      registrationDate,
+      lastUpdateDate,
+    );
+  }
 }

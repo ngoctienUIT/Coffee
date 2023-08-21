@@ -1,4 +1,6 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/data/local/dao/user_dao.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 
 import 'package:coffee/src/data/remote/response/user/user_response.dart';
@@ -7,8 +9,6 @@ import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/change_password_repository.dart';
-import '../local/dao/user_dao.dart';
-import '../local/entity/user_entity.dart';
 import '../models/user.dart';
 
 @LazySingleton(as: ChangePasswordRepository)
@@ -27,10 +27,9 @@ class ChangePasswordRepositoryImpl extends ChangePasswordRepository {
   Future<DataState<UserResponse>> changePassword(User user) async {
     try {
       String token = _sharedPref.getString("token") ?? "";
-      String userID = _sharedPref.getString("userID") ?? "";
-      UserEntity? userEntity = await _userDao.findUserById(userID).first;
+      User? userEntity = getIt<User>();
       final response = await _apiService.updateExistingUser(
-          "Bearer $token", userEntity!.email, user.toJson());
+          "Bearer $token", userEntity.email, user.toJson());
       _userDao.updateUser(response.data.toUserEntity());
       return DataSuccess(response.data);
     } on DioException catch (e) {

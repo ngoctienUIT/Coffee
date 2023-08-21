@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/services/bloc/service_bloc.dart';
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_event.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -24,10 +23,8 @@ class _OrderPageState extends State<OrderPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<OrderBloc>(
-      create: (_) => OrderBloc(preferencesModel)..add(FetchData()),
+      create: (_) => getIt<OrderBloc>()..add(FetchData()),
       child: BlocListener<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state is OrderError) {

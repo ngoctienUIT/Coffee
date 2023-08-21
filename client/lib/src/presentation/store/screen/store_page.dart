@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/signup/widgets/custom_text_input.dart';
@@ -15,7 +16,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../bloc/store_event.dart';
@@ -36,10 +36,8 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
+      create: (_) => getIt<StoreBloc>()..add(FetchData()),
       child: StoreView(
         onPress: onPress,
         isPick: isPick,
@@ -140,48 +138,46 @@ class _StoreViewState extends State<StoreView>
   }
 
   Widget bodyStore() {
-    print("rebuild list store");
     return BlocBuilder<StoreBloc, StoreState>(
       builder: (context, state) {
-        print(state);
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
-        String storeID = preferencesModel.storeID ?? "";
+        final sharedPref = getIt<SharedPreferences>();
+        String storeID = sharedPref.getString("storeID") ?? "";
         if (state is StoreLoaded) {
           List<Store> listStore = state.listStore;
-          if (preferencesModel.listStore.length != listStore.length) {
-            context.read<ServiceBloc>().add(
-                SetDataEvent(preferencesModel.copyWith(listStore: listStore)));
-          }
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: listStore.length,
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: () => showStoreBottomSheet(
-                  context,
-                  listStore[index],
-                  () {
-                    if (widget.onPress != null) {
-                      widget.onPress!(listStore[index]);
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    } else {
-                      SharedPreferences.getInstance().then((value) {
-                        value.setString(
-                            "storeID", listStore[index].storeId ?? "");
-                        value.setBool("isBringBack", false);
-                        context.read<ServiceBloc>().add(ChangeStoreEvent());
-                        Navigator.pop(context);
-                        if (widget.onChange != null) widget.onChange!();
-                      });
-                    }
-                  },
-                ),
-                child: itemStore(listStore[index], storeID),
-              );
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<StoreBloc>().add(RefreshData());
             },
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              itemCount: listStore.length,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () => showStoreBottomSheet(
+                    context,
+                    listStore[index],
+                    () {
+                      if (widget.onPress != null) {
+                        widget.onPress!(listStore[index]);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        SharedPreferences.getInstance().then((value) {
+                          value.setString(
+                              "storeID", listStore[index].storeId ?? "");
+                          value.setBool("isBringBack", false);
+                          context.read<ServiceBloc>().add(ChangeStoreEvent());
+                          Navigator.pop(context);
+                          if (widget.onChange != null) widget.onChange!();
+                        });
+                      }
+                    },
+                  ),
+                  child: itemStore(listStore[index], storeID),
+                );
+              },
+            ),
           );
         }
 

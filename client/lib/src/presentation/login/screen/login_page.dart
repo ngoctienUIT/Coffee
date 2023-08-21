@@ -2,7 +2,7 @@ import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/data/models/preferences_model.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/data/remote/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
@@ -139,12 +139,10 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void loginSuccess(PreferencesModel newModel) {
+  void loginSuccess(User user, String token) {
     saveNewTokenFCM();
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    context.read<ServiceBloc>().add(SetDataEvent(
-        preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
+    getIt.resetLazySingleton(instance: User);
+    getIt.registerLazySingleton(() => user);
     customToast(context, "logged_in_successfully".translate(context));
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(
@@ -157,10 +155,10 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           saveLogin();
-          loginSuccess(state.preferencesModel);
+          loginSuccess(state.user, state.token);
         }
         if (state is LoginGoogleSuccessState) {
-          loginSuccess(state.preferencesModel);
+          loginSuccess(state.user, state.token);
         }
         if (state is LoginLoadingState || state is LoginGoogleLoadingState) {
           loadingAnimation(context);

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/presentation/view_image/screen/view_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -14,7 +15,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../store/widgets/item_loading.dart';
 import '../bloc/profile_bloc.dart';
@@ -68,13 +68,12 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           current is ChangeAvatarState ||
           current is DeleteAvatarState,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         if (state is EditProfileSate) isEdit = state.isEdit;
         if (state is DeleteAvatarState) {
           widget.user.imageUrl = null;
-          context.read<ServiceBloc>().add(ChangeUserInfoEvent(
-              preferencesModel.user!.copyWith(imageUrl: null)));
+          context
+              .read<ServiceBloc>()
+              .add(ChangeUserInfoEvent(getIt<User>().copyWith(imageUrl: null)));
         }
         return InkWell(
           onTap: widget.user.imageUrl != null || isEdit

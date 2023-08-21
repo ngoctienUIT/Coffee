@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../search/screen/search_page.dart';
 import '../../store/widgets/item_loading.dart';
@@ -33,15 +34,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             buildWhen: (previous, current) =>
                 current is ChangeUserInfoState || current is InitServiceState,
             builder: (context, state) {
-              PreferencesModel preferencesModel =
-                  context.read<ServiceBloc>().preferencesModel;
+              final user = getIt<User>();
               return AppBar(
                 backgroundColor: Colors.white,
                 elevation: elevation,
                 leading: InkWell(
                   onTap: () {
                     Navigator.of(context).push(createRoute(
-                      screen: ProfilePage(user: preferencesModel.user!),
+                      screen: ProfilePage(user: user),
                       begin: const Offset(1, 0),
                     ));
                   },
@@ -49,12 +49,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: ClipOval(
-                      child: preferencesModel.user!.imageUrl == null
+                      child: user.imageUrl == null
                           ? Image.asset(AppImages.imgNonAvatar, height: 80)
                           : CachedNetworkImage(
                               height: 50,
                               width: 50,
-                              imageUrl: preferencesModel.user!.imageUrl ?? "",
+                              imageUrl: user.imageUrl ?? "",
                               placeholder: (context, url) =>
                                   itemLoading(80, 80, 90),
                               errorWidget: (context, url, error) =>

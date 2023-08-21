@@ -1,5 +1,4 @@
 import 'package:coffee/src/core/request/login_request/login_google_request.dart';
-import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/domain/use_cases/login_use_case/login_email_password.dart';
 import 'package:coffee/src/domain/use_cases/login_use_case/login_google.dart';
@@ -39,10 +38,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final response =
         await _loginEmailPasswordUseCase.call(params: event.request);
     if (response is DataSuccess && response.data != null) {
-      emit(LoginSuccessState(PreferencesModel(
+      emit(LoginSuccessState(
         token: response.data!.accessToken,
         user: User.fromUserResponse(response.data!.userResponse),
-      )));
+      ));
     } else {
       emit(LoginErrorState(status: response.error ?? ""));
     }
@@ -57,10 +56,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final response = await _loginGoogleUseCase.call(
           params: LoginGoogleRequest(googleUser));
       if (response is DataSuccess && response.data != null) {
-        emit(LoginGoogleSuccessState(PreferencesModel(
+        emit(LoginGoogleSuccessState(
           token: response.data!.accessToken,
           user: User.fromUserResponse(response.data!.userResponse),
-        )));
+        ));
       } else {
         emit(LoginGoogleErrorState(status: response.error ?? ""));
         GoogleSignIn().signOut();
