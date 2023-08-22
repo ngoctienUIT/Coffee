@@ -75,7 +75,7 @@ class BottomSheetOrder extends StatelessWidget {
           },
           child: SizedBox(
             height: double.infinity,
-            child: cartNumber(order == null ? 0 : order.orderItems.length),
+            child: cartNumber(order?.orderItems.length ?? 0),
           ),
         );
       },

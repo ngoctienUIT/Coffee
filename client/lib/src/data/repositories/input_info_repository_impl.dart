@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
@@ -30,8 +31,7 @@ class InputInfoRepositoryImpl extends InputInfoRepository {
       });
       return DataSuccess("ok");
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

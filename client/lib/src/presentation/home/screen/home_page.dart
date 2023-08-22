@@ -154,7 +154,7 @@ class _HomeViewState extends State<HomeView>
               current is ChangeOrderState || current is ChangeStoreState,
           builder: (context, state) {
             Order? order = getIt.isRegistered<Order>() ? getIt<Order>() : null;
-            return cartNumber(order == null ? 0 : order.orderItems.length);
+            return cartNumber(order?.orderItems.length ?? 0);
             // return cartNumber(0);
           },
         ),

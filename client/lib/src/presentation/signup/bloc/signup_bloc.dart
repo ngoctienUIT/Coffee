@@ -1,5 +1,6 @@
 import 'package:coffee/src/core/request/signup_request/signup_email_password_request.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -56,8 +57,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         emit(SignUpGoogleErrorState(status: "Hủy đăng ký Google"));
       }
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       emit(SignUpGoogleErrorState(status: error));
       print(error);
     } catch (e) {

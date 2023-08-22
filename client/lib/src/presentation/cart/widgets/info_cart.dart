@@ -237,10 +237,7 @@ class _InfoCartState extends State<InfoCart> {
           begin: const Offset(1, 0),
         ));
       },
-      child: itemInfo(
-        Icons.location_on,
-        address == null ? "" : address!.getAddress(),
-      ),
+      child: itemInfo(Icons.location_on, address?.getAddress() ?? ""),
     );
   }
 

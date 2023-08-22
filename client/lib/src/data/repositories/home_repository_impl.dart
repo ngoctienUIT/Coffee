@@ -3,6 +3,7 @@ import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:coffee/src/core/resources/request_state.dart';
 
 import 'package:coffee/src/core/response/home_response/recommend_response.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/list_extension.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 import 'package:coffee/src/data/remote/response/coupon/coupon_response.dart';
@@ -37,8 +38,7 @@ class HomeRepositoryImpl extends HomeRepository {
       final listCoupon = await _apiService.getAllCoupons();
       return DataSuccess(listCoupon.data.filterCoupon());
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -57,8 +57,7 @@ class HomeRepositoryImpl extends HomeRepository {
       OrderResponse? myOrder = response.data.isEmpty ? null : response.data[0];
       return DataSuccess(myOrder);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -98,8 +97,7 @@ class HomeRepositoryImpl extends HomeRepository {
         return DataFailed(result.error ?? "");
       }
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

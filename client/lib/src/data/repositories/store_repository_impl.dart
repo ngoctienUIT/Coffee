@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/data/local/dao/store_dao.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 import 'package:dio/dio.dart';
@@ -22,8 +23,7 @@ class StoreRepositoryImpl extends StoreRepository {
       _storeDao.insertListStore(list);
       return DataSuccess(list);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

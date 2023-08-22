@@ -81,7 +81,7 @@ class CartView extends StatelessWidget {
             if (state.order == null) {
               return emptyCart(context);
             } else {
-              print(state.order != null ? state.order!.toJson() : null);
+              print(state.order?.toJson());
               return buildBody(context, state);
             }
           }

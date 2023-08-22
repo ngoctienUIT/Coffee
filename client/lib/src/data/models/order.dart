@@ -93,9 +93,7 @@ class Order extends Equatable {
       address2: orderResponse.address2,
       address3: orderResponse.address3,
       address4: orderResponse.address4,
-      appliedCoupons: orderResponse.appliedCoupon == null
-          ? null
-          : orderResponse.appliedCoupon!.id,
+      appliedCoupons: orderResponse.appliedCoupon?.id,
       appliedCoupon: orderResponse.appliedCoupon == null
           ? null
           : Coupon.fromCouponResponse(orderResponse.appliedCoupon!),
@@ -104,9 +102,7 @@ class Order extends Equatable {
       orderAmount: orderResponse.orderAmount,
       selectedPaymentMethod: orderResponse.selectedPaymentMethod,
       selectedPickupOption: orderResponse.selectedPickupOption,
-      storeId: orderResponse.selectedPickupStore == null
-          ? null
-          : orderResponse.selectedPickupStore!.storeId,
+      storeId: orderResponse.selectedPickupStore?.storeId,
       selectedPickupStore: orderResponse.selectedPickupStore == null
           ? null
           : Store.fromStoreResponse(orderResponse.selectedPickupStore!),

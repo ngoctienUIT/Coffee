@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
@@ -30,8 +31,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
           "Bearer $token", getIt<User>().username, user.toJson());
       return DataSuccess(User.fromUserResponse(response.data));
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -59,8 +59,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
       );
       return DataSuccess(null);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -81,8 +80,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
           "Bearer $token", getIt<User>().username, request.user.toJson());
       return DataSuccess(User.fromUserResponse(response.data));
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -99,8 +97,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
           "Bearer $token", getIt<User>().id!);
       return DataSuccess(null);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,8 +88,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       }
       emit(ChangeStoreState());
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
     } catch (e) {
       print(e);

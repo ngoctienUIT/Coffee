@@ -1,5 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/data/local/dao/user_dao.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 
@@ -33,8 +34,7 @@ class ChangePasswordRepositoryImpl extends ChangePasswordRepository {
       _userDao.updateUser(response.data.toUserEntity());
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

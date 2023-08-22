@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/data/remote/response/login/login_response.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
@@ -41,8 +42,7 @@ class LoginRepositoryImpl extends LoginRepository {
       print(user.accessToken);
       return DataSuccess(user);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       return DataFailed(error);
     } catch (e) {
       return DataFailed(e.toString());
@@ -71,8 +71,7 @@ class LoginRepositoryImpl extends LoginRepository {
       _sharedPref.setBool("isLogin", true);
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       return DataFailed(error);
     } catch (e) {
       return DataFailed(e.toString());

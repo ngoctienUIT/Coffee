@@ -3,6 +3,7 @@ import 'package:coffee/src/core/request/product_request/delete_product_in_order_
 import 'package:coffee/src/core/request/product_request/update_order_request.dart';
 import 'package:coffee/src/core/request/product_request/update_product_in_order_request.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/models/order.dart';
 import 'package:coffee/src/data/models/user.dart';
@@ -51,8 +52,7 @@ class ProductRepositoryImpl extends ProductRepository {
           await _apiService.createNewOrder("Bearer $token", order.toJson());
       return DataSuccess(Order.fromOrderResponse(response.data));
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -79,8 +79,7 @@ class ProductRepositoryImpl extends ProductRepository {
           "Bearer $token", request.order.toJson(), request.order.orderId!);
       return DataSuccess(Order.fromOrderResponse(response.data));
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -130,8 +129,7 @@ class ProductRepositoryImpl extends ProductRepository {
           "Bearer $token", request.order.toJson(), request.order.orderId!);
       return DataSuccess(Order.fromOrderResponse(response.data));
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -158,8 +156,7 @@ class ProductRepositoryImpl extends ProductRepository {
       }
       return DataSuccess(order);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

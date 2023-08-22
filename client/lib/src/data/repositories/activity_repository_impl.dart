@@ -1,5 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/list_extension.dart';
 
 import 'package:coffee/src/data/remote/response/order/order_response.dart';
@@ -33,8 +34,7 @@ class ActivityRepositoryImpl extends ActivityRepository {
       listOrder.sortByTime();
       return DataSuccess(listOrder);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

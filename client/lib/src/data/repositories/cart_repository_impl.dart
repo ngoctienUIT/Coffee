@@ -1,5 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 
@@ -29,9 +30,7 @@ class CartRepositoryImpl extends CartRepository {
           "Bearer $token", id, getIt<Order>().orderId!);
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error = e.response != null
-          ? e.response!.data["message"].toString()
-          : e.toString();
+      String error = e.response?.data["message"].toString() ?? e.toString();
       print(error);
       return DataFailed(e.toString());
     } catch (e) {
@@ -67,8 +66,7 @@ class CartRepositoryImpl extends CartRepository {
           "Bearer $token", order.toJson(), order.orderId!);
       return DataSuccess(orderResponse.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -88,8 +86,7 @@ class CartRepositoryImpl extends CartRepository {
 
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -106,8 +103,7 @@ class CartRepositoryImpl extends CartRepository {
           "Bearer $token", getIt<User>().username);
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -132,8 +128,7 @@ class CartRepositoryImpl extends CartRepository {
         return DataSuccess(response.data);
       }
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -156,8 +151,7 @@ class CartRepositoryImpl extends CartRepository {
       );
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {
@@ -176,8 +170,7 @@ class CartRepositoryImpl extends CartRepository {
           "Bearer $token", order.toJson(), order.orderId!);
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

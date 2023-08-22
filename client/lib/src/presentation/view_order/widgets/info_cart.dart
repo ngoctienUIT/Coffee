@@ -98,9 +98,7 @@ class InfoCart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  order.selectedPickupStore != null
-                      ? order.selectedPickupStore!.storeName!
-                      : "",
+                  order.selectedPickupStore?.storeName! ?? "",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -108,9 +106,7 @@ class InfoCart extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 5),
-                Text(order.selectedPickupStore != null
-                    ? order.selectedPickupStore!.hotlineNumber!
-                    : ""),
+                Text(order.selectedPickupStore?.hotlineNumber! ?? ""),
                 const SizedBox(height: 5),
                 Text(order.selectedPickupStore == null
                     ? ""

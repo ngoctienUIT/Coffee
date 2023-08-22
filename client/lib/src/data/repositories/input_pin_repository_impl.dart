@@ -1,6 +1,7 @@
 import 'package:coffee/src/core/request/input_pin_request/input_pin_request.dart';
 
 import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/data/remote/api_service/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -20,8 +21,7 @@ class InputPinRepositoryImpl extends InputPinRepository {
           request.resetCredential, request.pin);
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

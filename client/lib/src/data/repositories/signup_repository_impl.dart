@@ -1,3 +1,4 @@
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
@@ -20,8 +21,7 @@ class SignupRepositoryImpl extends SignupRepository {
       var response = await _apiService.signup(request.user.toJson());
       return DataSuccess(response.data);
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
       return DataFailed(error);
     } catch (e) {

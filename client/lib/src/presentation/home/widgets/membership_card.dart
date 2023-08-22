@@ -58,8 +58,7 @@ class MembershipCard extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          getIconWeather(
-                              state.weather == null ? "" : state.weather!.main),
+                          getIconWeather(state.weather?.main ?? ""),
                           width: 30,
                         ),
                         const SizedBox(width: 10),
