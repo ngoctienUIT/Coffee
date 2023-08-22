@@ -65,8 +65,7 @@ class BottomSheetOrder extends StatelessWidget {
       buildWhen: (previous, current) =>
           current is ChangeOrderState || current is ChangeStoreState,
       builder: (context, state) {
-        Order? order =
-            getIt.isRegistered(instance: Order) ? getIt<Order>() : null;
+        Order? order = getIt.isRegistered<Order>() ? getIt<Order>() : null;
         return InkWell(
           onTap: () {
             Navigator.of(context).push(createRoute(
@@ -89,30 +88,26 @@ class BottomSheetOrder extends StatelessWidget {
           current is ChangeOrderState || current is ChangeStoreState,
       builder: (context, state) {
         final sharedPref = getIt<SharedPreferences>();
-        Store? store = getIt<Store>();
+        Store? store = getIt.isRegistered<Store>() ? getIt<Store>() : null;
         bool isBringBack = sharedPref.getBool("isBringBack") ?? false;
         String address = sharedPref.getString("address") ?? "";
         return InkWell(
           onTap: () => showMyBottomSheet(
             context: context,
             onPress: (isBring) {
-              SharedPreferences.getInstance().then((value) {
-                value.setBool("isBringBack", isBring);
-                context.read<ServiceBloc>().add(ChangeStoreEvent());
-                Navigator.pop(context);
-              });
+              sharedPref.setBool("isBringBack", isBring);
+              context.read<ServiceBloc>().add(ChangeStoreEvent());
+              Navigator.pop(context);
             },
             onEditAtTable: () {
               Navigator.of(context).push(createRoute(
                 screen: StorePage(
                   isPick: true,
                   onPress: (store) {
-                    SharedPreferences.getInstance().then((value) {
-                      value.setString("storeID", store.storeId!);
-                      value.setBool("isBringBack", false);
-                      context.read<ServiceBloc>().add(ChangeStoreEvent());
-                      Navigator.pop(context);
-                    });
+                    sharedPref.setString("storeID", store.storeId!);
+                    sharedPref.setBool("isBringBack", false);
+                    context.read<ServiceBloc>().add(ChangeStoreEvent());
+                    Navigator.pop(context);
                   },
                 ),
                 begin: const Offset(1, 0),
@@ -122,12 +117,10 @@ class BottomSheetOrder extends StatelessWidget {
               Navigator.of(context).push(createRoute(
                 screen: AddAddressPage(
                   onSave: (address) {
-                    SharedPreferences.getInstance().then((value) {
-                      value.setBool("isBringBack", true);
-                      value.setString("address", address.getAddress());
-                      context.read<ServiceBloc>().add(ChangeStoreEvent());
-                      Navigator.pop(context);
-                    });
+                    sharedPref.setBool("isBringBack", true);
+                    sharedPref.setString("address", address.getAddress());
+                    context.read<ServiceBloc>().add(ChangeStoreEvent());
+                    Navigator.pop(context);
                   },
                   address: address.isNotEmpty
                       ? address.toAddressAPI().toAddress()
@@ -154,7 +147,7 @@ class BottomSheetOrder extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      isBringBack ? address : store.storeName.toString(),
+                      isBringBack ? address : store?.storeName.toString() ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

@@ -40,6 +40,7 @@ class _InfoCartState extends State<InfoCart> {
   TextEditingController noteController = TextEditingController();
   Color selectedColor = AppColors.statusBarColor;
   Color unselectedColor = AppColors.unselectedColor;
+  final sharedPref = getIt<SharedPreferences>();
   bool isBringBack = false;
   Address? address;
   Store? store;
@@ -163,11 +164,10 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget atTable() {
-    final sharedPref = getIt<SharedPreferences>();
-    if (!isBringBack &&
-        store == null &&
-        sharedPref.getString("storeID") != null) {
-      setState(() => store = getIt<Store>());
+    if (store == null && sharedPref.getString("storeID") != null) {
+      setState(() {
+        store = getIt.isRegistered<Store>() ? getIt<Store>() : null;
+      });
     }
     return InkWell(
       onTap: () {
@@ -196,7 +196,7 @@ class _InfoCartState extends State<InfoCart> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    store != null ? store!.storeName! : "",
+                    store?.storeName! ?? "",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -204,9 +204,9 @@ class _InfoCartState extends State<InfoCart> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
-                  Text(store != null ? store!.hotlineNumber! : ""),
+                  Text(store?.hotlineNumber! ?? ""),
                   const SizedBox(height: 5),
-                  Text(store == null ? "" : store!.getAddress()),
+                  Text(store?.getAddress() ?? ""),
                 ],
               ),
             ),
@@ -218,7 +218,6 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget bringBack() {
-    final sharedPref = getIt<SharedPreferences>();
     String? addressStr = sharedPref.getString("address");
     if (!isBringBack && address == null && addressStr != null) {
       setState(() => address = addressStr.toAddressAPI().toAddress());

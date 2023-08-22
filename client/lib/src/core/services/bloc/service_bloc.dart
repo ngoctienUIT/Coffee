@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
@@ -20,11 +21,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   String? timeStr;
 
   final SharedPreferences _prefs;
+  final ApiService _apiService;
 
-  ServiceBloc(this._prefs) : super(InitServiceState()) {
-    // on<SetDataEvent>(
-    //     (event, emit) => preferencesModel = event.preferencesModel.copyWith());
-
+  ServiceBloc(this._prefs, this._apiService) : super(InitServiceState()) {
     on<SaveTimeEvent>((event, emit) => _saveTime(event.duration));
 
     on<CheckLoginEvent>((event, emit) => _checkLogin(emit));
@@ -58,27 +57,35 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
       address = event.order!.getAddress();
       _prefs.setString("address", address);
     }
-    getIt.resetLazySingleton(instance: Order);
-    getIt.registerLazySingleton<Order>(() => event.order!);
+    if (getIt.isRegistered<Order>()) {
+      await getIt.unregister<Order>();
+    }
+    if (event.order != null) {
+      getIt.registerSingleton<Order>(event.order!);
+    }
     emit(ChangeOrderState());
   }
 
   Future _changeStore(ChangeStoreEvent event, Emitter emit) async {
-    updateStoreOrder();
-    emit(ChangeStoreState());
-  }
-
-  Future updateStoreOrder() async {
     try {
       String token = _prefs.getString("token") ?? "";
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      Order? order =
-          getIt.isRegistered(instance: Order) ? getIt<Order>() : null;
+      String storeID = _prefs.getString("storeID") ?? "";
+      bool isBringBack = _prefs.getBool("isBringBack") ?? false;
+      Order? order;
+      if (getIt.isRegistered<Order>()) {
+        print(getIt<Order>().toJson());
+        getIt<Order>().storeId = storeID;
+        getIt<Order>().selectedPickupOption =
+            isBringBack ? "DELIVERY" : "AT_STORE";
+        order = getIt<Order>();
+        print("change store event");
+        print(order.toJson());
+      }
       if (order != null) {
-        await apiService.updatePendingOrder(
+        _apiService.updatePendingOrder(
             "Bearer $token", order.toJson(), order.orderId!);
       }
+      emit(ChangeStoreState());
     } on DioException catch (e) {
       String error =
           e.response != null ? e.response!.data.toString() : e.toString();
@@ -90,10 +97,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   Future _checkLogin(Emitter emit) async {
     String? timeLogin = timeStr;
-    if (timeLogin == null) {
-      await SharedPreferences.getInstance()
-          .then((value) => timeLogin = value.getString('timeLogin') ?? "");
-    }
+    timeLogin ??= _prefs.getString('timeLogin');
     Duration duration = timeLogin!.toDateTime().difference(DateTime.now());
     if (duration.inSeconds > 0) {
       _startNewTimer(duration, emit);
@@ -104,10 +108,8 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   Future _saveTime(Duration duration) async {
     timeStr =
         DateFormat("dd/MM/yyyy HH:mm:ss").format(DateTime.now().add(duration));
-    SharedPreferences.getInstance().then((value) {
-      value.setString("timeLogin", timeStr!);
-      print(timeStr);
-    });
+    _prefs.setString("timeLogin", timeStr!);
+    print(timeStr);
   }
 
   Future _startNewTimer(Duration duration, Emitter emit) async {
@@ -115,8 +117,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     _timer = Timer.periodic(duration, (_) {
       _stopTimer();
       GoogleSignIn().signOut();
-      SharedPreferences.getInstance()
-          .then((value) => value.setBool("isLogin", false));
+      _prefs.setBool("isLogin", false);
       emit(LogOutState());
     });
   }

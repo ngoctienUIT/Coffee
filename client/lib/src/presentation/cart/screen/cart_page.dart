@@ -115,12 +115,10 @@ class CartView extends StatelessWidget {
           child: Column(
             children: [
               InfoCart(
-                store: state.order != null
-                    ? state.order!.selectedPickupStore
-                    : null,
+                store: state.order?.selectedPickupStore,
                 address: address,
-                note: state.order!.orderNote,
-                selectedPickupOption: state.order!.selectedPickupOption!,
+                note: state.order?.orderNote,
+                selectedPickupOption: state.order?.selectedPickupOption! ?? "",
               ),
               const SizedBox(height: 10),
               ListProduct(

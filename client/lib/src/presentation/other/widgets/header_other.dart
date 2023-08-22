@@ -40,15 +40,15 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
     super.initState();
   }
 
-  Future changeLanguage(int lang) async {
+  void changeLanguage(int lang) {
     if (lang != language) {
       if (lang == 0) {
         BlocProvider.of<LanguageCubit>(context).toVietnamese();
       } else {
         BlocProvider.of<LanguageCubit>(context).toEnglish();
       }
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('language', lang);
+      final prefs = getIt<SharedPreferences>();
+      prefs.setInt('language', lang);
       if (!mounted) return;
       language = lang;
       context.read<OtherBloc>().add(ChangeLanguageEvent(language: language));
@@ -122,7 +122,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipOval(
-              child: user.imageUrl != null
+              child: user.imageUrl == null
                   ? Image.asset(AppImages.imgNonAvatar, height: 80)
                   : CachedNetworkImage(
                       height: 80,

@@ -29,8 +29,7 @@ class BodyProduct extends StatelessWidget {
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
           print(state.order!.toJson());
-          context.read<ServiceBloc>().add(ChangeOrderEvent(
-              state.order != null ? state.order!.copyWith() : null));
+          context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
           if (state is AddProductToOrderSuccessState) {
             customToast(
                 context, "product_added_cart_successfully".translate(context));

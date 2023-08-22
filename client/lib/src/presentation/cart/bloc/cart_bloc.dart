@@ -90,7 +90,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future _getOrderSpending(GetOrderSpending event, Emitter emit) async {
     emit(GetOrderLoadingState());
-    emit(GetOrderSuccessState(getIt<Order>()));
+    Order? order = getIt.isRegistered<Order>() ? getIt<Order>() : null;
+    print("get order spending");
+    print(order?.toJson());
+    emit(GetOrderSuccessState(order));
   }
 
   Future _deleteOrderSpending(DeleteOrderEvent event, Emitter emit) async {

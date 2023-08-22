@@ -12,22 +12,28 @@ import 'package:coffee/src/data/remote/response/weather/weather_response.dart';
 import 'package:dio/dio.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:injectable/injectable.dart';
+import 'package:injectable/injectable.dart' as inject;
+import 'package:retrofit/retrofit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repositories/home_repository.dart';
+import '../local/dao/store_dao.dart';
+import '../models/order.dart';
+import '../models/store.dart';
 import '../models/user.dart';
 
-@LazySingleton(as: HomeRepository)
+@inject.LazySingleton(as: HomeRepository)
 class HomeRepositoryImpl extends HomeRepository {
-  HomeRepositoryImpl(this._apiService, this._prefs);
+  HomeRepositoryImpl(this._apiService, this._prefs, this._storeDao);
 
   final ApiService _apiService;
   final SharedPreferences _prefs;
+  final StoreDao _storeDao;
 
   @override
   Future<DataState<List<CouponResponse>>> getCoupon() async {
     try {
+      registerStore();
       final listCoupon = await _apiService.getAllCoupons();
       return DataSuccess(listCoupon.data.filterCoupon());
     } on DioException catch (e) {
@@ -78,9 +84,10 @@ class HomeRepositoryImpl extends HomeRepository {
           final response = await Future.wait([listProduct, weather, address]);
           return DataSuccess(RecommendResponse(
             user: user,
-            listProduct: response[1] as List<ProductResponse>,
-            weather: response[2] as WeatherResponse?,
-            address: response[3] as String?,
+            listProduct:
+                (response[0] as HttpResponse<List<ProductResponse>>).data,
+            weather: (response[1] as HttpResponse<WeatherResponse?>).data,
+            address: response[2] as String?,
           ));
         } else {
           final listProduct = await _apiService.getAllProducts();
@@ -98,6 +105,17 @@ class HomeRepositoryImpl extends HomeRepository {
     } catch (e) {
       print(e);
       return DataFailed(e.toString());
+    }
+  }
+
+  Future registerStore() async {
+    String? storeID = _prefs.getString("storeID");
+    if (storeID != null) {
+      if (getIt.isRegistered<Store>()) {
+        getIt.unregister<Store>();
+      }
+      final store = await _storeDao.findStoreById(storeID).first;
+      getIt.registerSingleton<Store>(store!.toStore());
     }
   }
 

@@ -16,6 +16,7 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../data/models/order.dart';
 import '../../../data/models/store.dart';
 import '../../activity/widgets/custom_app_bar.dart';
 import '../bloc/store_event.dart';
@@ -158,19 +159,24 @@ class _StoreViewState extends State<StoreView>
                     context,
                     listStore[index],
                     () {
+                      if (getIt.isRegistered<Store>()) {
+                        getIt.unregister<Store>();
+                      }
+                      if (getIt.isRegistered<Order>()) {
+                        getIt<Order>().selectedPickupStore = listStore[index];
+                      }
+                      getIt.registerSingleton<Store>(listStore[index]);
                       if (widget.onPress != null) {
                         widget.onPress!(listStore[index]);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       } else {
-                        SharedPreferences.getInstance().then((value) {
-                          value.setString(
-                              "storeID", listStore[index].storeId ?? "");
-                          value.setBool("isBringBack", false);
-                          context.read<ServiceBloc>().add(ChangeStoreEvent());
-                          Navigator.pop(context);
-                          if (widget.onChange != null) widget.onChange!();
-                        });
+                        sharedPref.setString(
+                            "storeID", listStore[index].storeId ?? "");
+                        sharedPref.setBool("isBringBack", false);
+                        context.read<ServiceBloc>().add(ChangeStoreEvent());
+                        Navigator.pop(context);
+                        if (widget.onChange != null) widget.onChange!();
                       }
                     },
                   ),

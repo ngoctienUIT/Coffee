@@ -141,8 +141,10 @@ class _LoginViewState extends State<LoginView> {
 
   void loginSuccess(User user, String token) {
     saveNewTokenFCM();
-    getIt.resetLazySingleton(instance: User);
-    getIt.registerLazySingleton(() => user);
+    if (getIt.isRegistered<User>()) {
+      getIt.unregister<User>();
+    }
+    getIt.registerSingleton(user);
     customToast(context, "logged_in_successfully".translate(context));
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(

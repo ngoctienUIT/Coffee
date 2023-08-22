@@ -21,27 +21,31 @@ class BuildListSpecialOffer extends StatelessWidget {
           current is CouponLoaded || current is HomeLoading && current.check,
       builder: (context, state) {
         if (state is CouponLoaded) {
-          return SizedBox(
-            height: 250,
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: state.listCoupon.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(
-                      screen:
-                          ViewSpecialOfferPage(coupon: state.listCoupon[index]),
-                      begin: const Offset(0, 1),
-                    ));
-                  },
-                  child: buildSpecialOffer(state.listCoupon[index]),
-                );
-              },
-            ),
-          );
+          if (state.listCoupon.isNotEmpty) {
+            return SizedBox(
+              height: 250,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: state.listCoupon.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () {
+                      Navigator.of(context).push(createRoute(
+                        screen: ViewSpecialOfferPage(
+                            coupon: state.listCoupon[index]),
+                        begin: const Offset(0, 1),
+                      ));
+                    },
+                    child: buildSpecialOffer(state.listCoupon[index]),
+                  );
+                },
+              ),
+            );
+          } else {
+            return const Text("Không có dữ liệu");
+          }
         }
         return _buildLoading();
       },

@@ -3,8 +3,6 @@ import '../../../data/models/user.dart';
 
 abstract class ServiceEvent {}
 
-class SetDataEvent extends ServiceEvent {}
-
 class ChangeUserInfoEvent extends ServiceEvent {
   User user;
 

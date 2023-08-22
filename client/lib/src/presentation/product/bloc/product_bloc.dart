@@ -43,7 +43,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   Future _addProductToOrder(AddProductToOrderEvent event, Emitter emit) async {
     emit(ProductLoadingState());
-    if (!getIt.isRegistered(instance: Order)) {
+    if (!getIt.isRegistered<Order>()) {
       final response = await _createNewOrderUseCase.call(params: event.product);
       if (response is DataSuccess) {
         emit(AddProductToOrderSuccessState(response.data!));
