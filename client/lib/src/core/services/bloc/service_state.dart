@@ -28,7 +28,7 @@ class PlacedOrderState extends ServiceState {
 }
 
 class CancelServiceOrderState extends ServiceState {
-  String id;
+  final String id;
 
   CancelServiceOrderState(this.id);
 

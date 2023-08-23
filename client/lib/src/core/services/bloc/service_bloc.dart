@@ -5,6 +5,7 @@ import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,6 +13,7 @@ import 'package:injectable/injectable.dart' as inject;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/local/dao/user_dao.dart';
 import '../../../data/models/order.dart';
 import '../../../data/remote/api_service/api_service.dart';
 
@@ -22,8 +24,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
   final SharedPreferences _prefs;
   final ApiService _apiService;
+  final UserDao _userDao;
 
-  ServiceBloc(this._prefs, this._apiService) : super(InitServiceState()) {
+  ServiceBloc(this._prefs, this._apiService, this._userDao)
+      : super(InitServiceState()) {
     on<SaveTimeEvent>((event, emit) => _saveTime(event.duration));
 
     on<CheckLoginEvent>((event, emit) => _checkLogin(emit));
@@ -35,11 +39,20 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<CancelServiceOrderEvent>(
         (event, emit) => emit(CancelServiceOrderState(event.id)));
 
-    on<ChangeUserInfoEvent>((event, emit) => emit(ChangeUserInfoState()));
+    on<ChangeUserInfoEvent>(_changeUserInfo);
 
     on<ChangeOrderEvent>(_changeOrder);
 
     on<ChangeStoreEvent>(_changeStore);
+  }
+
+  Future _changeUserInfo(ChangeUserInfoEvent event, Emitter emit) async {
+    if (getIt.isRegistered<User>()) {
+      getIt.unregister<User>();
+    }
+    getIt.registerSingleton<User>(event.user);
+    _userDao.updateUser(event.user.toUserEntity());
+    emit(ChangeUserInfoState());
   }
 
   Future _changeOrder(ChangeOrderEvent event, Emitter emit) async {

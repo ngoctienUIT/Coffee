@@ -44,8 +44,8 @@ class SplashPage extends StatelessWidget {
           final userResponse =
               await apiService.getUserByID("Bearer $token", userID ?? "");
           upsertUser(userResponse.data.toUserEntity());
-          getIt.registerLazySingleton(
-              () => User.fromUserResponse(userResponse.data));
+          getIt.registerSingleton<User>(
+              User.fromUserResponse(userResponse.data));
           return const MainPage(checkConnect: false);
         }
         return const LoginPage();

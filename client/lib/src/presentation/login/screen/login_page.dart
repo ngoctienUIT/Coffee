@@ -145,7 +145,7 @@ class _LoginViewState extends State<LoginView> {
     if (getIt.isRegistered<User>()) {
       getIt.unregister<User>();
     }
-    getIt.registerSingleton(user);
+    getIt.registerSingleton<User>(user);
     customToast(context, AppLocalizations.of(context).loggedInSuccessfully);
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(

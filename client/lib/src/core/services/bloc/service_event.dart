@@ -6,7 +6,7 @@ import '../../../data/models/user.dart';
 abstract class ServiceEvent extends Equatable {}
 
 class ChangeUserInfoEvent extends ServiceEvent {
-  User user;
+  final User user;
 
   ChangeUserInfoEvent(this.user);
 
@@ -15,7 +15,7 @@ class ChangeUserInfoEvent extends ServiceEvent {
 }
 
 class ChangeOrderEvent extends ServiceEvent {
-  Order? order;
+  final Order? order;
 
   ChangeOrderEvent([this.order]);
 
@@ -34,7 +34,7 @@ class PlacedOrderEvent extends ServiceEvent {
 }
 
 class CancelServiceOrderEvent extends ServiceEvent {
-  String id;
+  final String id;
 
   CancelServiceOrderEvent(this.id);
 
@@ -53,7 +53,7 @@ class StopTimeEvent extends ServiceEvent {
 }
 
 class SaveTimeEvent extends ServiceEvent {
-  Duration duration;
+  final Duration duration;
 
   SaveTimeEvent(this.duration);
 

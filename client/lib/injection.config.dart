@@ -322,6 +322,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i72.ServiceBloc>(() => _i72.ServiceBloc(
           gh<_i27.SharedPreferences>(),
           gh<_i3.ApiService>(),
+          gh<_i33.UserDao>(),
         ));
     gh.lazySingleton<_i73.SettingRepository>(() => _i74.SettingRepositoryImpl(
           gh<_i3.ApiService>(),

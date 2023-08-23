@@ -1,3 +1,4 @@
+import 'package:coffee/src/data/local/entity/user_entity.dart';
 import 'package:coffee/src/data/remote/response/user/user_response.dart';
 import 'package:equatable/equatable.dart';
 
@@ -88,6 +89,23 @@ class User extends Equatable {
       "birthOfDate": birthOfDate,
       "isMale": isMale,
     };
+  }
+
+  UserEntity toUserEntity() {
+    return UserEntity(
+      id ?? "",
+      username,
+      displayName,
+      isMale,
+      birthOfDate ?? "",
+      email,
+      phoneNumber,
+      password,
+      imageUrl ?? "",
+      userRole,
+      accountProvider?.provider ?? "",
+      accountProvider?.google ?? "",
+    );
   }
 
   @override
