@@ -1,7 +1,7 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
@@ -81,7 +81,8 @@ class ViewOrderView extends StatelessWidget {
 
   Widget buildOrder(BuildContext context, OrderResponse order) {
     return Scaffold(
-      appBar: AppBarGeneral(title: "order2".translate(context), elevation: 0),
+      appBar: AppBarGeneral(
+          title: AppLocalizations.of(context).order2, elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(

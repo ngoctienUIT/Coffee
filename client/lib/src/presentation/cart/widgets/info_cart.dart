@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
@@ -71,7 +72,7 @@ class _InfoCartState extends State<InfoCart> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Text("${"method".translate(context)}:"),
+                Text("${AppLocalizations.of(context).method}:"),
                 const Spacer(),
                 SizedBox(
                   height: 45,
@@ -94,7 +95,7 @@ class _InfoCartState extends State<InfoCart> {
                         }, isBringBack);
                       }
                     },
-                    child: Text("at_table".translate(context)),
+                    child: Text(AppLocalizations.of(context).atTable),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -119,7 +120,7 @@ class _InfoCartState extends State<InfoCart> {
                         }, isBringBack);
                       }
                     },
-                    child: Text("bring_back".translate(context)),
+                    child: Text(AppLocalizations.of(context).bringBack),
                   ),
                 )
               ],
@@ -139,7 +140,7 @@ class _InfoCartState extends State<InfoCart> {
                     onChanged: _onChangeHandler,
                     controller: noteController,
                     decoration: InputDecoration(
-                      hintText: "order_notes".translate(context),
+                      hintText: AppLocalizations.of(context).orderNotes,
                       border: InputBorder.none,
                     ),
                   ),
@@ -252,9 +253,9 @@ class _InfoCartState extends State<InfoCart> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "confirm".translate(context),
+          title: AppLocalizations.of(context).confirm,
           content:
-              "${"you_want_change_method_from".translate(context)} ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}",
+              "${AppLocalizations.of(context).youWantChangeMethodFrom} ${isBring ? AppLocalizations.of(context).bringBack : AppLocalizations.of(context).atTable} thành ${isBring ? AppLocalizations.of(context).atTable : AppLocalizations.of(context).bringBack}",
           onOK: () {
             okPress();
             Navigator.pop(context);

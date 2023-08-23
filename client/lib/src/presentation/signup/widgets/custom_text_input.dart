@@ -1,4 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -123,7 +124,7 @@ class CustomTextInput extends StatelessWidget {
           if (value!.isNotEmpty) {
             return null;
           } else {
-            error = "${"please_enter".translate(context)} $title";
+            error = "${AppLocalizations.of(context).pleaseEnter} $title";
           }
           break;
         case TypeInput.email:
@@ -131,7 +132,7 @@ class CustomTextInput extends StatelessWidget {
             return null;
           } else if (!value.isValidEmail() && !value.isOnlyNumbers() ||
               value.isEmpty) {
-            error = "please_enter_email".translate(context);
+            error = AppLocalizations.of(context).pleaseEnterEmail;
           }
           break;
         case TypeInput.phone:
@@ -139,7 +140,7 @@ class CustomTextInput extends StatelessWidget {
             return null;
           } else if (!value.isValidPhone() && value.isOnlyNumbers() ||
               value.isEmpty) {
-            error = "please_enter_phone_number".translate(context);
+            error = AppLocalizations.of(context).pleaseEnterPhoneNumber;
           }
           break;
       }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:coffee/src/presentation/view_special_offer/screen/view_special_offer_page.dart';
@@ -44,7 +45,7 @@ class BuildListSpecialOffer extends StatelessWidget {
               ),
             );
           } else {
-            return const Text("Không có dữ liệu");
+            return  Text(AppLocalizations.of(context).noData);
           }
         }
         return _buildLoading();

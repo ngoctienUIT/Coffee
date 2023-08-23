@@ -1,6 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/request/input_pin_request/input_pin_request.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -81,7 +81,8 @@ class _InputPinViewState extends State<InputPinView> {
               begin: const Offset(1, 0),
             ));
           } else {
-            customToast(context, "PIN_code_is_not_correct".translate(context));
+            customToast(
+                context, AppLocalizations.of(context).pinCodeIsNotCorrect);
           }
         }
       },
@@ -102,7 +103,7 @@ class _InputPinViewState extends State<InputPinView> {
                       height: 200,
                     ),
                   ),
-                  Text("enter_the_PIN_code".translate(context)),
+                  Text(AppLocalizations.of(context).enterThePINCode),
                   const SizedBox(height: 20),
                   CustomTextInput(
                     controller: controller,
@@ -111,7 +112,7 @@ class _InputPinViewState extends State<InputPinView> {
                     typeInput: const [TypeInput.text],
                   ),
                   const SizedBox(height: 20),
-                  Text("enter_PIN_that_sent_your_email".translate(context)),
+                  Text(AppLocalizations.of(context).enterPINThatSentYourEmail),
                   const SizedBox(height: 50),
                   continueButton(),
                 ],
@@ -128,7 +129,7 @@ class _InputPinViewState extends State<InputPinView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text: AppLocalizations.of(context).continue1,
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context.read<InputPinBloc>().add(SendEvent(InputPinRequest(

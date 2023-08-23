@@ -114,12 +114,12 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/fonts/
      - assets/images/
-     - assets/lang/
      - assets/banner/
   #   - images/a_dot_ham.jpeg
 

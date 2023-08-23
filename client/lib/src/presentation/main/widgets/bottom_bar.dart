@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -15,23 +15,23 @@ class BottomBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
           icon: const Icon(FontAwesomeIcons.house),
-          label: 'home'.translate(context),
+          label: AppLocalizations.of(context).home,
         ),
         BottomNavigationBarItem(
           icon: const Icon(FontAwesomeIcons.cartShopping),
-          label: 'order'.translate(context),
+          label: AppLocalizations.of(context).order,
         ),
         BottomNavigationBarItem(
           icon: const Icon(FontAwesomeIcons.clockRotateLeft),
-          label: 'activity'.translate(context),
+          label: AppLocalizations.of(context).activity,
         ),
         BottomNavigationBarItem(
           icon: const Icon(FontAwesomeIcons.store),
-          label: 'store'.translate(context),
+          label: AppLocalizations.of(context).store,
         ),
         BottomNavigationBarItem(
           icon: const Icon(FontAwesomeIcons.bars),
-          label: 'other'.translate(context),
+          label: AppLocalizations.of(context).other,
         ),
       ],
       type: BottomNavigationBarType.fixed,

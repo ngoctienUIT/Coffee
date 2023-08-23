@@ -1,6 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/request/input_info_request/input_info_request.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:coffee/src/presentation/input_info/bloc/input_info_bloc.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +103,7 @@ class _InputInfoViewState extends State<InputInfoView> {
     return BlocListener<InputInfoBloc, InputInfoState>(
       listener: (context, state) {
         if (state is SubmitSuccessState) {
-          customToast(context, "sign_up_success".translate(context));
+          customToast(context, AppLocalizations.of(context).signUpSuccess);
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
             begin: const Offset(0, 1),
@@ -138,7 +138,7 @@ class _InputInfoViewState extends State<InputInfoView> {
         ),
         const SizedBox(height: 10),
         Text(
-          "start_journey".translate(context),
+          AppLocalizations.of(context).startJourney,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 25,
@@ -169,8 +169,9 @@ class _InputInfoViewState extends State<InputInfoView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text:
-              isMale ? "male".translate(context) : "female".translate(context),
+          text: isMale
+              ? AppLocalizations.of(context).male
+              : AppLocalizations.of(context).female,
           onPress: () => showMyBottomSheet(
             context: context,
             isMale: isMale,
@@ -193,7 +194,7 @@ class _InputInfoViewState extends State<InputInfoView> {
         return CustomPickerWidget(
           checkEdit: true,
           text: selectedDate == null
-              ? "birthday".translate(context)
+              ? AppLocalizations.of(context).birthday
               : DateFormat("dd/MM/yyyy").format(selectedDate!),
           onPress: () => selectDate(),
         );
@@ -204,8 +205,8 @@ class _InputInfoViewState extends State<InputInfoView> {
   Widget registerName() {
     return CustomTextInput(
       controller: nameController,
-      hint: "name".translate(context),
-      title: "name".translate(context).toLowerCase(),
+      hint: AppLocalizations.of(context).name,
+      title: AppLocalizations.of(context).name,
       typeInput: const [TypeInput.text],
     );
   }
@@ -215,7 +216,7 @@ class _InputInfoViewState extends State<InputInfoView> {
       children: [
         CustomTextInput(
           controller: phoneController,
-          hint: "phone_number".translate(context),
+          hint: AppLocalizations.of(context).phoneNumber,
           typeInput: const [TypeInput.phone],
           keyboardType: TextInputType.phone,
         ),
@@ -236,7 +237,7 @@ class _InputInfoViewState extends State<InputInfoView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text: AppLocalizations.of(context).continue1,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

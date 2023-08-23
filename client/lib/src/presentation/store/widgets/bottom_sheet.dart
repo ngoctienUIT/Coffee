@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_strings.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -47,7 +47,7 @@ void showStoreBottomSheet(
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: customButton(
-                text: "order_here".translate(context).toUpperCase(),
+                text: AppLocalizations.of(context).orderHere.toUpperCase(),
                 isOnPress: true,
                 onPress: onPress,
               ),
@@ -113,7 +113,7 @@ Widget phoneAndHour(BuildContext context, Store store) {
       const Divider(),
       const SizedBox(height: 10),
       Text(
-        "hour".translate(context),
+        AppLocalizations.of(context).hour,
         style: const TextStyle(
           color: Color(0xff4F2C1F),
           fontSize: 18,

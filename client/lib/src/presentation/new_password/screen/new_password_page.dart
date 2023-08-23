@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:coffee/src/core/function/loading_animation.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -112,12 +112,12 @@ class _NewPasswordViewState extends State<NewPasswordView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "change_password".translate(context),
+                  AppLocalizations.of(context).changePassword,
                   style: const TextStyle(
                       fontSize: 25, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 10),
-                Text("password_needs_characters".translate(context)),
+                Text(AppLocalizations.of(context).passwordNeedsCharacters),
                 const SizedBox(height: 10),
                 inputPassword(),
                 const Spacer(),
@@ -137,7 +137,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
           current is ContinueState || current is InitState,
       builder: (context, state) {
         return customButton(
-          text: "change_password".translate(context),
+          text: AppLocalizations.of(context).changePassword,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
@@ -164,7 +164,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
           children: [
             CustomPasswordInput(
               controller: newPasswordController,
-              hint: "enter_new_password".translate(context),
+              hint: AppLocalizations.of(context).enterNewPassword,
               hide: isHide,
               onPress: () {
                 isHide = !isHide;
@@ -175,7 +175,7 @@ class _NewPasswordViewState extends State<NewPasswordView> {
             CustomPasswordInput(
               controller: confirmPasswordController,
               confirmPassword: newPasswordController.text,
-              hint: "confirm_password".translate(context),
+              hint: AppLocalizations.of(context).confirmPassword,
               hide: isHide,
               onPress: () {
                 isHide = !isHide;

@@ -1,6 +1,6 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
 import 'package:coffee/src/presentation/profile/widgets/header_profile.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +24,8 @@ class ProfilePage extends StatelessWidget {
       create: (context) => getIt<ProfileBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.statusBarColor,
-        appBar:
-            AppBarGeneral(title: "profile".translate(context), elevation: 0),
+        appBar: AppBarGeneral(
+            title: AppLocalizations.of(context).profile, elevation: 0),
         body: BlocListener<ProfileBloc, ProfileState>(
           listener: (context, state) {
             if (state is SaveProfileLoading) {

@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class BottomCartPage extends StatelessWidget {
           Row(
             children: [
               Text(
-                "total".translate(context),
+                AppLocalizations.of(context).total,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -43,7 +43,7 @@ class BottomCartPage extends StatelessWidget {
             ],
           ),
           customButton(
-            text: "cancel_order".translate(context),
+            text: AppLocalizations.of(context).cancelOrder,
             onPress: () {
               context.read<ViewOrderBloc>().add(CancelOrderEvent(id));
             },

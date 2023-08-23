@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:coffee/src/presentation/product/screen/product_page.dart';
@@ -31,13 +31,13 @@ class ListProduct extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  "list_products".translate(context),
+                  AppLocalizations.of(context).listProducts,
                   style: const TextStyle(fontSize: 16),
                 ),
                 const Spacer(),
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("add_product".translate(context)),
+                  child: Text(AppLocalizations.of(context).addProduct),
                 )
               ],
             ),
@@ -117,9 +117,9 @@ class ListProduct extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "confirm".translate(context),
+          title: AppLocalizations.of(context).confirm,
           content:
-              "${"do_you_want_to_remove".translate(context)} $text ${"from_your_cart".translate(context)}",
+              "${AppLocalizations.of(context).doYouWantToRemove} $text ${AppLocalizations.of(context).fromYourCart}",
           onOK: () {
             onPress();
             Navigator.pop(context);

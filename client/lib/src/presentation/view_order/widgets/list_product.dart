@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class ListProduct extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: Text(
-              "list_products".translate(context),
+              AppLocalizations.of(context).listProducts,
               style: const TextStyle(fontSize: 16),
             ),
           ),

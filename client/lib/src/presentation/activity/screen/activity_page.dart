@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:coffee/src/presentation/activity/widgets/custom_app_bar.dart';
@@ -32,7 +32,7 @@ class ActivityPage extends StatelessWidget {
         appBar: CustomAppBar(
           elevation: 0,
           isPick: isAppBar,
-          title: "activity".translate(context),
+          title: AppLocalizations.of(context).activity,
         ),
         body: const SafeArea(child: ActivityView()),
       ),
@@ -92,8 +92,8 @@ class _ActivityViewState extends State<ActivityView>
               unselectedLabelStyle: const TextStyle(fontSize: 16),
               indicatorColor: AppColors.statusBarColor,
               tabs: [
-                Tab(text: "going_on".translate(context)),
-                Tab(text: "order_history".translate(context)),
+                Tab(text: AppLocalizations.of(context).goingOn),
+                Tab(text: AppLocalizations.of(context).orderHistory),
               ],
             ),
           ),
@@ -118,7 +118,9 @@ class _ActivityViewState extends State<ActivityView>
                       indexState: indexState,
                     );
                   }
-                  return Center(child: Text("no_data".translate(context)));
+                  return Center(
+                    child: Text(AppLocalizations.of(context).noData),
+                  );
                 }
                 return _buildLoading();
               },

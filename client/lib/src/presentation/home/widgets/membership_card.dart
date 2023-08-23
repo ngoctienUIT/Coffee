@@ -5,7 +5,7 @@ import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/home/bloc/home_bloc.dart';
 import 'package:coffee/src/presentation/home/bloc/home_state.dart';
@@ -77,8 +77,8 @@ class MembershipCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       state.address ??
-                          "please_enable_location_accurate_product_recommendations_for_you"
-                              .translate(context),
+                          AppLocalizations.of(context)
+                              .pleaseEnableLocationAccurateProductRecommendationsForYou,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -105,7 +105,7 @@ class MembershipCard extends StatelessWidget {
                         }),
                     const Spacer(),
                     Text(
-                      "member".translate(context),
+                      AppLocalizations.of(context).member,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,

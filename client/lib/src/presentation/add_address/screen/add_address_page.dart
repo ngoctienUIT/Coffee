@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/app_bar_add_address.dart';
 import 'package:coffee/src/presentation/add_address/widgets/edit_address.dart';
@@ -58,7 +58,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Center(
           child: customButton(
-            text: "save".translate(context),
+            text: AppLocalizations.of(context).save,
             isOnPress: true,
             onPress: () async {
               final myAddress = addressAPI.copyWith(
@@ -68,8 +68,8 @@ class _AddAddressPageState extends State<AddAddressPage> {
                 isDistrict: false,
               );
               if (myAddress.checkNull()) {
-                customToast(
-                    context, "please_enter_full_address".translate(context));
+                customToast(context,
+                    AppLocalizations.of(context).pleaseEnterFullAddress);
               } else {
                 widget.onSave(myAddress.toAddress());
                 Navigator.pop(context);

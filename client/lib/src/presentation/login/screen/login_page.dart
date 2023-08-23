@@ -1,7 +1,7 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/data/remote/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
@@ -99,11 +99,12 @@ class _LoginViewState extends State<LoginView> {
       switch (source) {
         case ConnectivityResult.mobile:
         case ConnectivityResult.wifi:
-          customToast(
-              context, "internet_connection_is_available".translate(context));
+          customToast(context,
+              AppLocalizations.of(context).internetConnectionIsAvailable);
           break;
         case ConnectivityResult.none:
-          customToast(context, "no_internet_connection".translate(context));
+          customToast(
+              context, AppLocalizations.of(context).noInternetConnection);
           break;
       }
     });
@@ -145,7 +146,7 @@ class _LoginViewState extends State<LoginView> {
       getIt.unregister<User>();
     }
     getIt.registerSingleton(user);
-    customToast(context, "logged_in_successfully".translate(context));
+    customToast(context, AppLocalizations.of(context).loggedInSuccessfully);
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(
         screen: const MainPage(checkConnect: true), begin: const Offset(0, 1)));
@@ -202,7 +203,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         Text(
-          "welcome_back".translate(context),
+          AppLocalizations.of(context).welcomeBack,
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
@@ -231,7 +232,7 @@ class _LoginViewState extends State<LoginView> {
           builder: (context, state) {
             return CustomPasswordInput(
               controller: passwordController,
-              hint: "password".translate(context),
+              hint: AppLocalizations.of(context).password,
               onPress: () {
                 context.read<LoginBloc>().add(HidePasswordEvent(isHide: !hide));
                 hide = !hide;
@@ -259,7 +260,7 @@ class _LoginViewState extends State<LoginView> {
             );
           },
         ),
-        Text("remember_login".translate(context)),
+        Text(AppLocalizations.of(context).rememberLogin),
         const Spacer(),
         TextButton(
           onPressed: () {
@@ -268,7 +269,7 @@ class _LoginViewState extends State<LoginView> {
               begin: const Offset(1, 0),
             ));
           },
-          child: Text("${"forgot_password".translate(context)}?"),
+          child: Text("${AppLocalizations.of(context).forgotPassword}?"),
         )
       ],
     );
@@ -279,7 +280,7 @@ class _LoginViewState extends State<LoginView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context).toUpperCase(),
+          text: AppLocalizations.of(context).continue1,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
@@ -305,7 +306,7 @@ class _LoginViewState extends State<LoginView> {
               child: Divider(thickness: 1, color: Colors.black54),
             ),
             const SizedBox(width: 10),
-            Text("or".translate(context)),
+            Text(AppLocalizations.of(context).or),
             const SizedBox(width: 10),
             const Expanded(
               child: Divider(thickness: 1, color: Colors.black54),
@@ -314,7 +315,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "login_with_google".translate(context),
+          text: AppLocalizations.of(context).loginWithGoogle,
           onPress: () {
             context.read<LoginBloc>().add(LoginWithGoogleEvent());
           },
@@ -327,7 +328,7 @@ class _LoginViewState extends State<LoginView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("${"new_customer".translate(context)}?"),
+        Text("${AppLocalizations.of(context).newCustomer}?"),
         TextButton(
           onPressed: () {
             Navigator.of(context).pushReplacement(createRoute(
@@ -335,7 +336,7 @@ class _LoginViewState extends State<LoginView> {
               begin: const Offset(0, 1),
             ));
           },
-          child: Text("create_account".translate(context)),
+          child: Text(AppLocalizations.of(context).createAccount),
         )
       ],
     );

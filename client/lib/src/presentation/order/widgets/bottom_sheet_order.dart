@@ -3,6 +3,7 @@ import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/add_address/screen/add_address_page.dart';
 import 'package:coffee/src/presentation/home/widgets/cart_number.dart';
 import 'package:coffee/src/presentation/order/widgets/item_bottom_sheet.dart';
@@ -139,8 +140,8 @@ class BottomSheetOrder extends StatelessWidget {
             children: [
               Text(
                 isBringBack
-                    ? "bring_back".translate(context)
-                    : "at_table".translate(context),
+                    ? AppLocalizations.of(context).bringBack
+                    : AppLocalizations.of(context).atTable,
                 style: const TextStyle(color: Colors.white),
               ),
               Row(
@@ -228,15 +229,15 @@ class BottomSheetOrder extends StatelessWidget {
             children: [
               const SizedBox(height: 10),
               titleBottomSheet(
-                "choose_delivery_method".translate(context),
+                AppLocalizations.of(context).chooseDeliveryMethod,
                 () => Navigator.pop(context),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 child: itemBottomSheet(
-                  title: "at_table".translate(context),
+                  title: AppLocalizations.of(context).atTable,
                   content: store == null
-                      ? "please_select_store".translate(context)
+                      ? AppLocalizations.of(context).pleaseSelectStore
                       : '''${store.storeName}
 ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
                   image: AppImages.imgLogo,
@@ -250,9 +251,9 @@ ${store.address1}, ${store.address2}, ${store.address3}, ${store.address4}''',
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 child: itemBottomSheet(
-                  title: "bring_back".translate(context),
+                  title: AppLocalizations.of(context).bringBack,
                   content: address.isEmpty
-                      ? "please_select_the_address".translate(context)
+                      ? AppLocalizations.of(context).pleaseSelectTheAddress
                       : address,
                   image: AppImages.imgLogo,
                   borderColor: isBringBack

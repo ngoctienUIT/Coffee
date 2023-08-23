@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/coupon/widgets/app_bar_general.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -14,10 +14,11 @@ class PolicyPage extends StatefulWidget {
 
 class _PolicyPageState extends State<PolicyPage> {
   bool isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarGeneral(title: "policy".translate(context)),
+      appBar: AppBarGeneral(title: AppLocalizations.of(context).policy),
       body: Stack(
         children: [
           isLoading

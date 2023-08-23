@@ -22,13 +22,10 @@ void main() async {
   if (isLogin &&
       timeLogin != null &&
       timeLogin.toDateTime().compareTo(DateTime.now()) <= 0) {
-    isLogin = false;
     GoogleSignIn().signOut();
-    SharedPreferences.getInstance().then((value) {
-      value.setBool("isLogin", false);
-      value.setString("storeID", "");
-      value.setBool("isBringBack", false);
-    });
+    prefs.setBool("isLogin", false);
+    prefs.setString("storeID", "");
+    prefs.setBool("isBringBack", false);
   }
   FirebaseMessaging.instance.getToken().then((value) {
     print(value);

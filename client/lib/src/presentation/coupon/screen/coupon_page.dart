@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:coffee/injection.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_event.dart';
 import 'package:coffee/src/presentation/coupon/bloc/coupon_state.dart';
@@ -32,10 +32,10 @@ class CouponPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBarGeneral(
-          title: "your_offer".translate(context),
+          title: AppLocalizations.of(context).yourOffer,
           elevation: 0,
           onAction: onDelete,
-          action: id == null ? null : "remove_coupon".translate(context),
+          action: id == null ? null : AppLocalizations.of(context).removeCoupon,
         ),
         body: CouponView(onPress: onPress, id: id),
       ),
@@ -107,7 +107,7 @@ class CouponView extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              "current_selection".translate(context),
+                              AppLocalizations.of(context).currentSelection,
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),

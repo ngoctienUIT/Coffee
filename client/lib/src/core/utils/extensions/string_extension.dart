@@ -2,8 +2,6 @@ import 'package:coffee/src/data/models/address.dart';
 import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
 
-import '../../services/language/localization/app_localizations.dart';
-
 extension EmailValidator on String {
   bool isValidEmail() {
     return RegExp(
@@ -58,9 +56,9 @@ extension EmailValidator on String {
     return firstStr.toDate2().add(lastStr.toDuration());
   }
 
-  String translate(BuildContext context) {
-    return AppLocalizations.of(context).translate(this);
-  }
+  // String translate(BuildContext context) {
+  //   return AppLocalizations.of(context).translate(this);
+  // }
 
   AddressAPI toAddressAPI() {
     List<String> list = split(", ");

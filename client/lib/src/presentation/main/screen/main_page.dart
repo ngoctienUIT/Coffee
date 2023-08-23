@@ -1,6 +1,6 @@
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/main/widgets/bottom_bar.dart';
 import 'package:coffee/src/presentation/order/screen/order_page.dart';
 import 'package:coffee/src/presentation/other/screen/other_page.dart';
@@ -68,11 +68,12 @@ class _MainPageState extends State<MainPage> {
       switch (source) {
         case ConnectivityResult.mobile:
         case ConnectivityResult.wifi:
-          customToast(
-              context, "internet_connection_is_available".translate(context));
+          customToast(context,
+              AppLocalizations.of(context).internetConnectionIsAvailable);
           break;
         case ConnectivityResult.none:
-          customToast(context, "no_internet_connection".translate(context));
+          customToast(
+              context, AppLocalizations.of(context).noInternetConnection);
           break;
       }
     });
@@ -92,8 +93,8 @@ class _MainPageState extends State<MainPage> {
     return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
         if (state is LogOutState) {
-          customToast(
-              context, "login_expired_please_login_again".translate(context));
+          customToast(context,
+              AppLocalizations.of(context).loginExpiredPleaseLoginAgain);
           Navigator.of(context).pushAndRemoveUntil(
             createRoute(
               screen: const LoginPage(),

@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/remote/response/order/order_response.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,7 +24,7 @@ class InfoCart extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Text("${"method".translate(context)}:"),
+                Text("${AppLocalizations.of(context).method}:"),
                 const Spacer(),
                 Container(
                   height: 40,
@@ -35,7 +35,7 @@ class InfoCart extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      "at_table".translate(context),
+                      AppLocalizations.of(context).atTable,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -53,7 +53,7 @@ class InfoCart extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      "bring_back".translate(context),
+                      AppLocalizations.of(context).bringBack,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -75,7 +75,7 @@ class InfoCart extends StatelessWidget {
                 const SizedBox(width: 5),
                 Expanded(
                   child: Text(order.orderCustomerNote == null
-                      ? "not_have".translate(context)
+                      ? AppLocalizations.of(context).notHave
                       : order.orderCustomerNote!),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/home/widgets/description_line.dart';
 import 'package:coffee/src/presentation/profile/bloc/profile_bloc.dart';
@@ -64,17 +65,18 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           Navigator.pop(context);
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
           context.read<ServiceBloc>().add(ChangeUserInfoEvent(state.user));
-          customToast(context, "save_changes_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context).saveChangesSuccessfully);
         }
         if (state is LinkAccountWithGoogleSuccessState) {
-          customToast(
-              context, "google_account_link_successful".translate(context));
+          customToast(context,
+              AppLocalizations.of(context).googleAccountLinkSuccessful);
           context.read<ServiceBloc>().add(ChangeUserInfoEvent(
               getIt<User>().copyWith(isAccountProvider: true)));
         }
         if (state is UnlinkAccountWithGoogleSuccessState) {
           customToast(context,
-              "unlinked_google_account_successfully".translate(context));
+              AppLocalizations.of(context).unlinkedGoogleAccountSuccessfully);
           context.read<ServiceBloc>().add(ChangeUserInfoEvent(
               getIt<User>().copyWith(isAccountProvider: false)));
         }
@@ -162,8 +164,8 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
                           .add(UnlinkAccountWithGoogleEvent());
                     }
                   } else {
-                    customToast(
-                        context, "you_cannot_unlink_google".translate(context));
+                    customToast(context,
+                        AppLocalizations.of(context).youCannotUnlinkGoogle);
                   }
                 },
               ),
@@ -200,28 +202,31 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         const SizedBox(height: 10),
         Row(
           children: [
-            descriptionLine(text: "general_info".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context).generalInfo),
             const Spacer(),
             TextButton(
               onPressed: onSave,
               child: Text(
-                (isEdit ? "save" : "edit").translate(context),
+                isEdit
+                    ? AppLocalizations.of(context).save
+                    : AppLocalizations.of(context).edit,
               ),
             ),
           ],
         ),
         CustomTextInput(
           controller: nameController,
-          hint: "name".translate(context),
-          title: "name".translate(context).toLowerCase(),
+          hint: AppLocalizations.of(context).name,
+          title: AppLocalizations.of(context).name.toUpperCase(),
           typeInput: const [TypeInput.text],
           checkEdit: isEdit,
         ),
         const SizedBox(height: 10),
         CustomPickerWidget(
           checkEdit: isEdit,
-          text:
-              isMale ? "male".translate(context) : "female".translate(context),
+          text: isMale
+              ? AppLocalizations.of(context).male
+              : AppLocalizations.of(context).female,
           onPress: () => showMyBottomSheet(
             context: context,
             isMale: isMale,
@@ -235,16 +240,16 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomPickerWidget(
           checkEdit: isEdit,
           text: selectedDate == null
-              ? "birthday".translate(context)
+              ? AppLocalizations.of(context).birthday
               : DateFormat("dd/MM/yyyy").format(selectedDate!),
           onPress: () => selectDate(),
         ),
         const SizedBox(height: 10),
-        descriptionLine(text: "phone_number".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context).phoneNumber),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: phoneController,
-          hint: "phone_number".translate(context),
+          hint: AppLocalizations.of(context).phoneNumber,
           checkEdit: false,
         ),
         const SizedBox(height: 10),
@@ -256,7 +261,7 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
           checkEdit: false,
         ),
         const SizedBox(height: 10),
-        descriptionLine(text: "affiliate_account".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context).affiliateAccount),
       ],
     );
   }

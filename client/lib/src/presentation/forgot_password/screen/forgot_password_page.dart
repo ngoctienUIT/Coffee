@@ -1,5 +1,5 @@
 import 'package:coffee/injection.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -91,7 +91,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       height: 200,
                     ),
                   ),
-                  Text("forgot_your_password".translate(context)),
+                  Text(AppLocalizations.of(context).forgotYourPassword),
                   const SizedBox(height: 20),
                   CustomTextInput(
                     controller: controller,
@@ -99,7 +99,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     typeInput: const [TypeInput.email],
                   ),
                   const SizedBox(height: 20),
-                  Text("enter_email_phone_reset_password".translate(context)),
+                  Text(AppLocalizations.of(context)
+                      .enterEmailPhoneResetPassword),
                   const SizedBox(height: 50),
                   continueButton(),
                 ],
@@ -116,7 +117,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text:AppLocalizations.of(context).continue1,
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context

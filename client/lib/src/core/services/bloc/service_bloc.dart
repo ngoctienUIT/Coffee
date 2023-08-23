@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';

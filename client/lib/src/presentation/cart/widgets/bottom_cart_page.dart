@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_event.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class BottomCartPage extends StatelessWidget {
           Row(
             children: [
               Text(
-                "total".translate(context),
+                AppLocalizations.of(context).total,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -43,15 +43,18 @@ class BottomCartPage extends StatelessWidget {
             ],
           ),
           customButton(
-            text: "order".translate(context),
+            text: AppLocalizations.of(context).order,
             onPress: () {
               if (order.selectedPickupOption == "DELIVERY" &&
                   order.address1 == null) {
-                customToast(context,
-                    "please_enter_your_shipping_address".translate(context));
+                customToast(
+                    context,
+                    AppLocalizations.of(context)
+                        .pleaseEnterYourShippingAddress);
               } else if (order.selectedPickupOption == "AT_STORE" &&
                   order.selectedPickupStore == null) {
-                customToast(context, "please_select_store".translate(context));
+                customToast(
+                    context, AppLocalizations.of(context).pleaseSelectStore);
               } else {
                 context.read<CartBloc>().add(PlaceOrder());
               }
