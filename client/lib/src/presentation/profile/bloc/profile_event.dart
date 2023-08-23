@@ -42,15 +42,15 @@ class PickAvatarEvent extends ProfileEvent {
 
 class ChangeBirthdayEvent extends ProfileEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LinkAccountWithGoogleEvent extends ProfileEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class UnlinkAccountWithGoogleEvent extends ProfileEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

@@ -15,7 +15,7 @@ class SignUpWithEmailPasswordEvent extends SignUpEvent {
 
 class SignUpWithGoogleEvent extends SignUpEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ClickSignUpEvent extends SignUpEvent {
@@ -38,15 +38,15 @@ class HidePasswordEvent extends SignUpEvent {
 
 class TextChangeEvent extends SignUpEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeBirthdayEvent extends SignUpEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeGenderEvent extends SignUpEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

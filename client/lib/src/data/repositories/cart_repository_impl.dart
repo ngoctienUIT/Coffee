@@ -101,7 +101,7 @@ class CartRepositoryImpl extends CartRepository {
       String token = _sharedPref.getString("token") ?? "";
       final response = await _apiService.removePendingOrder(
           "Bearer $token", getIt<User>().username);
-      return DataSuccess(response.data);
+      return DataSuccess(response.data[0]);
     } on DioException catch (e) {
       String error = e.getError();
       print(error);

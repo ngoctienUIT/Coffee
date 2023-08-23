@@ -5,12 +5,12 @@ abstract class CouponState extends Equatable {}
 
 class InitState extends CouponState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class CouponLoading extends CouponState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class CouponLoaded extends CouponState {

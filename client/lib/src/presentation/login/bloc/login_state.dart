@@ -6,12 +6,12 @@ abstract class LoginState extends Equatable {}
 
 class InitState extends LoginState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LoginLoadingState extends LoginState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LoginSuccessState extends LoginState {
@@ -35,7 +35,7 @@ class LoginErrorState extends LoginState {
 
 class LoginGoogleLoadingState extends LoginState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LoginGoogleSuccessState extends LoginState {
@@ -59,7 +59,7 @@ class LoginGoogleErrorState extends LoginState {
 
 class RememberState extends LoginState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ContinueState extends LoginState {

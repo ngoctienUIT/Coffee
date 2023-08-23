@@ -33,12 +33,6 @@ class BottomSheetOrder extends StatelessWidget {
           current is! RefreshOrderLoaded &&
           current is! OrderError,
       builder: (context, state) {
-        // Order? order = preferencesModel.order;
-        // if (state is AddProductToCartLoaded) {
-        //   order = state.order != null
-        //       ? Order.fromOrderResponse(state.order!)
-        //       : null;
-        // }
         return Container(
           width: double.infinity,
           height: 56,

@@ -6,7 +6,7 @@ abstract class ActivityState extends Equatable {}
 
 class InitState extends ActivityState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ActivityLoading extends ActivityState {

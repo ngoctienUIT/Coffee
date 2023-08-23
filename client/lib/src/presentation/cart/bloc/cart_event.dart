@@ -6,17 +6,12 @@ abstract class CartEvent extends Equatable {}
 
 class GetOrderSpending extends CartEvent {
   @override
-  List<Object?> get props => [];
-}
-
-class SetPreferencesModel extends CartEvent {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class DeleteOrderEvent extends CartEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class DeleteProductEvent extends CartEvent {
@@ -39,7 +34,7 @@ class AttachCouponToOrder extends CartEvent {
 
 class DeleteCouponOrder extends CartEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeMethod extends CartEvent {
@@ -55,7 +50,7 @@ class ChangeMethod extends CartEvent {
 
 class PlaceOrder extends CartEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class AddNote extends CartEvent {

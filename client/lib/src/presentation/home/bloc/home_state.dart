@@ -10,12 +10,12 @@ abstract class HomeState extends Equatable {}
 
 class InitState extends HomeState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeBannerState extends HomeState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class HomeLoading extends HomeState {

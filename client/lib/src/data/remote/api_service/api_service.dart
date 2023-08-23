@@ -206,7 +206,7 @@ abstract class ApiService {
   );
 
   @DELETE("/order/truncate-cart?userIdentity={email}")
-  Future<HttpResponse<OrderResponse>> removePendingOrder(
+  Future<HttpResponse<List<OrderResponse>>> removePendingOrder(
     @Header('Authorization') String token,
     @Path("email") String email,
   );

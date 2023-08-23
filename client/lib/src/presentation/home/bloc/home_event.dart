@@ -13,15 +13,15 @@ class FetchData extends HomeEvent {
 
 class ChangeBannerEvent extends HomeEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class GetOrderSpendingEvent extends HomeEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class GetCouponEvent extends HomeEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

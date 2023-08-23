@@ -37,10 +37,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   ) : super(InitState()) {
     on<GetOrderSpending>(_getOrderSpending);
 
-    on<SetPreferencesModel>((event, emit) {
-      // preferencesModel = event.preferencesModel.copyWith();
-    });
-
     on<DeleteOrderEvent>(_deleteOrderSpending);
 
     on<DeleteProductEvent>(_deleteProduct);
@@ -91,8 +87,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future _getOrderSpending(GetOrderSpending event, Emitter emit) async {
     emit(GetOrderLoadingState());
     Order? order = getIt.isRegistered<Order>() ? getIt<Order>() : null;
-    print("get order spending");
-    print(order?.toJson());
     emit(GetOrderSuccessState(order));
   }
 

@@ -5,12 +5,12 @@ abstract class SearchState extends Equatable {}
 
 class InitState extends SearchState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SearchLoading extends SearchState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SearchLoaded extends SearchState {

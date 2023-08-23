@@ -1165,7 +1165,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<HttpResponse<OrderResponse>> removePendingOrder(
+  Future<HttpResponse<List<OrderResponse>>> removePendingOrder(
     String token,
     String email,
   ) async {
@@ -1174,8 +1174,8 @@ class _ApiService implements ApiService {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<HttpResponse<OrderResponse>>(Options(
+    final _result = await _dio.fetch<List<dynamic>>(
+        _setStreamType<HttpResponse<List<OrderResponse>>>(Options(
       method: 'DELETE',
       headers: _headers,
       extra: _extra,
@@ -1191,7 +1191,9 @@ class _ApiService implements ApiService {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = OrderResponse.fromJson(_result.data!);
+    var value = _result.data!
+        .map((dynamic i) => OrderResponse.fromJson(i as Map<String, dynamic>))
+        .toList();
     final httpResponse = HttpResponse(value, _result);
     return httpResponse;
   }

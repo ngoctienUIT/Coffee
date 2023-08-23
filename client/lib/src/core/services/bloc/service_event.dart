@@ -25,12 +25,12 @@ class ChangeOrderEvent extends ServiceEvent {
 
 class ChangeStoreEvent extends ServiceEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class PlacedOrderEvent extends ServiceEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class CancelServiceOrderEvent extends ServiceEvent {
@@ -44,12 +44,12 @@ class CancelServiceOrderEvent extends ServiceEvent {
 
 class CheckLoginEvent extends ServiceEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class StopTimeEvent extends ServiceEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SaveTimeEvent extends ServiceEvent {

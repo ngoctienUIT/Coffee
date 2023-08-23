@@ -15,12 +15,12 @@ class LoginWithEmailPasswordEvent extends LoginEvent {
 
 class LoginWithGoogleEvent extends LoginEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class RememberLoginEvent extends LoginEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ClickLoginEvent extends LoginEvent {

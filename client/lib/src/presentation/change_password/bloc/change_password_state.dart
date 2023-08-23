@@ -4,17 +4,17 @@ abstract class ChangePasswordState extends Equatable {}
 
 class InitState extends ChangePasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangePasswordLoadingState extends ChangePasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangePasswordSuccessState extends ChangePasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangePasswordErrorState extends ChangePasswordState {
@@ -46,5 +46,5 @@ class HidePasswordState extends ChangePasswordState {
 
 class TextChangeState extends ChangePasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

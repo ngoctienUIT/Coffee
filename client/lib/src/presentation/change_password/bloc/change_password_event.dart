@@ -33,5 +33,5 @@ class HidePasswordEvent extends ChangePasswordEvent {
 
 class TextChangeEvent extends ChangePasswordEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

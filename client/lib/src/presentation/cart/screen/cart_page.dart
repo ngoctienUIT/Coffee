@@ -44,7 +44,6 @@ class CartView extends StatelessWidget {
     return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
         if (state is ChangeOrderState) {
-          // context.read<CartBloc>().add(SetPreferencesModel(preferencesModel));
           context.read<CartBloc>().add(GetOrderSpending());
         }
       },

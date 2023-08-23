@@ -5,17 +5,17 @@ abstract class SignUpState extends Equatable {}
 
 class InitState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SignUpLoadingState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SignUpSuccessState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SignUpErrorState extends SignUpState {
@@ -29,7 +29,7 @@ class SignUpErrorState extends SignUpState {
 
 class SignUpGoogleLoadingState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SignUpGoogleSuccessState extends SignUpState {
@@ -70,15 +70,15 @@ class HidePasswordState extends SignUpState {
 
 class TextChangeState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeBirthdayState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeGenderState extends SignUpState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

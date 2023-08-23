@@ -7,17 +7,17 @@ abstract class CartState extends Equatable {}
 
 class InitState extends CartState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeStoreCartState extends CartState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class GetOrderLoadingState extends CartState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class GetOrderSuccessState extends CartState {

@@ -10,17 +10,17 @@ abstract class ProductState extends Equatable {
 
 class InitState extends ProductState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class DataTransmissionState extends ProductState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ProductLoadingState extends ProductState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class AddProductToOrderSuccessState extends ProductState {

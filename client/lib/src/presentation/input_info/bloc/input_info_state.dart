@@ -4,17 +4,17 @@ abstract class InputInfoState extends Equatable {}
 
 class InitState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SubmitLoadingState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SubmitSuccessState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SubmitErrorState extends InputInfoState {
@@ -46,15 +46,15 @@ class HidePasswordState extends InputInfoState {
 
 class TextChangeState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeBirthdayState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeGenderState extends InputInfoState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

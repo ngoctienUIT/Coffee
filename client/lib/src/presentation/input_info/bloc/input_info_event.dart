@@ -24,10 +24,10 @@ class ClickSubmitEvent extends InputInfoEvent {
 
 class ChangeBirthdayEvent extends InputInfoEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeGenderEvent extends InputInfoEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }

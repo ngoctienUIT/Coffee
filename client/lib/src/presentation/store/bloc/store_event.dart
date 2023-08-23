@@ -4,12 +4,12 @@ abstract class StoreEvent extends Equatable {}
 
 class FetchData extends StoreEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class RefreshData extends StoreEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SearchStore extends StoreEvent {

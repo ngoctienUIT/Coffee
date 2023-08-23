@@ -5,7 +5,7 @@ abstract class ProfileState extends Equatable {}
 
 class InitState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class EditProfileSate extends ProfileState {
@@ -19,7 +19,7 @@ class EditProfileSate extends ProfileState {
 
 class SaveProfileLoading extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SaveProfileLoaded extends ProfileState {
@@ -42,7 +42,7 @@ class SaveProfileError extends ProfileState {
 
 class ChangeAvatarState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class DeleteAvatarState extends ProfileState {
@@ -60,22 +60,22 @@ class DeleteAvatarErrorState extends ProfileState {
   DeleteAvatarErrorState(this.error);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangeBirthdayState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LinkAccountWithGoogleSuccessState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LinkAccountWithGoogleLoadingState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LinkAccountWithGoogleErrorState extends ProfileState {
@@ -89,12 +89,12 @@ class LinkAccountWithGoogleErrorState extends ProfileState {
 
 class UnlinkAccountWithGoogleSuccessState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class UnlinkAccountWithGoogleLoadingState extends ProfileState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class UnlinkAccountWithGoogleErrorState extends ProfileState {

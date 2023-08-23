@@ -5,12 +5,12 @@ abstract class StoreState extends Equatable {}
 
 class InitState extends StoreState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class StoreLoading extends StoreState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class StoreLoaded extends StoreState {

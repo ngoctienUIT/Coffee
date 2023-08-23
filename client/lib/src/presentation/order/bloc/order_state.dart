@@ -7,12 +7,12 @@ abstract class OrderState extends Equatable {}
 
 class InitState extends OrderState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class OrderLoading extends OrderState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class OrderLoaded extends OrderState {

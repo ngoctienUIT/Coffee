@@ -4,12 +4,12 @@ abstract class ForgotPasswordState extends Equatable {}
 
 class InitState extends ForgotPasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class LoadingState extends ForgotPasswordState {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class SuccessState extends ForgotPasswordState {

@@ -15,12 +15,12 @@ class ShowChangeButtonEvent extends NewPasswordEvent {
 
 class HidePasswordEvent extends NewPasswordEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class TextChangeEvent extends NewPasswordEvent {
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [identityHashCode(this)];
 }
 
 class ChangePasswordEvent extends NewPasswordEvent {
