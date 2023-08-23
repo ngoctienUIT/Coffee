@@ -1,26 +1,50 @@
-abstract class ChangePasswordState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends ChangePasswordState {}
+abstract class ChangePasswordState extends Equatable {}
 
-class ChangePasswordLoadingState extends ChangePasswordState {}
+class InitState extends ChangePasswordState {
+  @override
+  List<Object?> get props => [];
+}
 
-class ChangePasswordSuccessState extends ChangePasswordState {}
+class ChangePasswordLoadingState extends ChangePasswordState {
+  @override
+  List<Object?> get props => [];
+}
+
+class ChangePasswordSuccessState extends ChangePasswordState {
+  @override
+  List<Object?> get props => [];
+}
 
 class ChangePasswordErrorState extends ChangePasswordState {
-  String status;
+  final String status;
+
   ChangePasswordErrorState({required this.status});
+
+  @override
+  List<Object?> get props => [status];
 }
 
 class ContinueState extends ChangePasswordState {
-  bool isContinue;
+  final bool isContinue;
 
   ContinueState({required this.isContinue});
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class HidePasswordState extends ChangePasswordState {
-  bool isHide;
+  final bool isHide;
 
   HidePasswordState({required this.isHide});
+
+  @override
+  List<Object?> get props => [isHide];
 }
 
-class TextChangeState extends ChangePasswordState {}
+class TextChangeState extends ChangePasswordState {
+  @override
+  List<Object?> get props => [];
+}

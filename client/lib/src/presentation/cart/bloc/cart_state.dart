@@ -1,25 +1,41 @@
 import 'package:coffee/src/core/utils/enum/enums.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../data/models/order.dart';
 
-abstract class CartState {}
+abstract class CartState extends Equatable {}
 
-class InitState extends CartState {}
+class InitState extends CartState {
+  @override
+  List<Object?> get props => [];
+}
 
-class ChangeStoreCartState extends CartState {}
+class ChangeStoreCartState extends CartState {
+  @override
+  List<Object?> get props => [];
+}
 
-class GetOrderLoadingState extends CartState {}
+class GetOrderLoadingState extends CartState {
+  @override
+  List<Object?> get props => [];
+}
 
 class GetOrderSuccessState extends CartState {
-  Order? order;
-  OrderStatus? status;
-  bool isLoading;
+  final Order? order;
+  final OrderStatus? status;
+  final bool isLoading;
 
   GetOrderSuccessState(this.order, [this.status, this.isLoading = true]);
+
+  @override
+  List<Object?> get props => [order, status, isLoading];
 }
 
 class GetOrderErrorState extends CartState {
-  String error;
+  final String error;
 
   GetOrderErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

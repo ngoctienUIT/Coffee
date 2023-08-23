@@ -1,13 +1,27 @@
-abstract class SettingState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends SettingState {}
+abstract class SettingState extends Equatable {}
 
-class DeleteLoadingState extends SettingState {}
+class InitState extends SettingState {
+  @override
+  List<Object?> get props => [];
+}
 
-class DeleteSuccessState extends SettingState {}
+class DeleteLoadingState extends SettingState {
+  @override
+  List<Object?> get props => [];
+}
+
+class DeleteSuccessState extends SettingState {
+  @override
+  List<Object?> get props => [];
+}
 
 class DeleteErrorState extends SettingState {
-  String error;
+  final String error;
 
   DeleteErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

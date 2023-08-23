@@ -1,23 +1,40 @@
-abstract class InputPinState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends InputPinState {}
+abstract class InputPinState extends Equatable {}
 
-class LoadingState extends InputPinState {}
+class InitState extends InputPinState {
+  @override
+  List<Object?> get props => [];
+}
+
+class LoadingState extends InputPinState {
+  @override
+  List<Object?> get props => [];
+}
 
 class SuccessState extends InputPinState {
-  bool check;
+  final bool check;
 
   SuccessState(this.check);
+
+  @override
+  List<Object?> get props => [check];
 }
 
 class ErrorState extends InputPinState {
-  String error;
+  final String error;
 
   ErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }
 
 class ContinueState extends InputPinState {
-  bool isContinue = false;
+  final bool isContinue;
 
   ContinueState(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }

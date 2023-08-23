@@ -1,11 +1,22 @@
-abstract class StoreEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends StoreEvent {}
+abstract class StoreEvent extends Equatable {}
 
-class RefreshData extends StoreEvent {}
+class FetchData extends StoreEvent {
+  @override
+  List<Object?> get props => [];
+}
+
+class RefreshData extends StoreEvent {
+  @override
+  List<Object?> get props => [];
+}
 
 class SearchStore extends StoreEvent {
-  String storeName;
+  final String storeName;
 
   SearchStore({required this.storeName});
+
+  @override
+  List<Object?> get props => [storeName];
 }

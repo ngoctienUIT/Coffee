@@ -1,12 +1,19 @@
 import 'package:coffee/src/data/remote/response/product/product_response.dart';
+import 'package:equatable/equatable.dart';
 
 import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 
-abstract class OrderState {}
+abstract class OrderState extends Equatable {}
 
-class InitState extends OrderState {}
+class InitState extends OrderState {
+  @override
+  List<Object?> get props => [];
+}
 
-class OrderLoading extends OrderState {}
+class OrderLoading extends OrderState {
+  @override
+  List<Object?> get props => [];
+}
 
 class OrderLoaded extends OrderState {
   final int index;
@@ -18,18 +25,27 @@ class OrderLoaded extends OrderState {
     required this.listProduct,
     required this.listProductCatalogues,
   });
+
+  @override
+  List<Object?> get props => [index, listProduct, listProductCatalogues];
 }
 
 class OrderError extends OrderState {
   final String? message;
 
   OrderError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class RefreshOrderLoading extends OrderState {
-  int index;
+  final int index;
 
   RefreshOrderLoading(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class RefreshOrderLoaded extends OrderState {
@@ -37,4 +53,7 @@ class RefreshOrderLoaded extends OrderState {
   final int index;
 
   RefreshOrderLoaded(this.index, this.listProduct);
+
+  @override
+  List<Object?> get props => [listProduct, index];
 }

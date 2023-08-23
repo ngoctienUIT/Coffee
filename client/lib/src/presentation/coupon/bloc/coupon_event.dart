@@ -1,3 +1,8 @@
-abstract class CouponEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends CouponEvent {}
+abstract class CouponEvent extends Equatable {}
+
+class FetchData extends CouponEvent {
+  @override
+  List<Object?> get props => [];
+}

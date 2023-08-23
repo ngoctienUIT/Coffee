@@ -1,13 +1,21 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/remote/response/order/order_response.dart';
 
-abstract class ActivityState {}
+abstract class ActivityState extends Equatable {}
 
-class InitState extends ActivityState {}
+class InitState extends ActivityState {
+  @override
+  List<Object?> get props => [];
+}
 
 class ActivityLoading extends ActivityState {
   final int index;
 
   ActivityLoading(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class ActivityLoaded extends ActivityState {
@@ -15,6 +23,9 @@ class ActivityLoaded extends ActivityState {
   final int index;
 
   ActivityLoaded({required this.listOrder, required this.index});
+
+  @override
+  List<Object?> get props => [index, listOrder];
 }
 
 class ActivityError extends ActivityState {
@@ -22,6 +33,9 @@ class ActivityError extends ActivityState {
   final int index;
 
   ActivityError({this.message, required this.index});
+
+  @override
+  List<Object?> get props => [index, message];
 }
 
 class UpdateSuccess extends ActivityState {
@@ -29,4 +43,7 @@ class UpdateSuccess extends ActivityState {
   final int index;
 
   UpdateSuccess(this.listOrder, this.index);
+
+  @override
+  List<Object?> get props => [listOrder, index];
 }

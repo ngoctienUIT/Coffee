@@ -1,9 +1,17 @@
-abstract class OrderEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends OrderEvent {}
+abstract class OrderEvent extends Equatable {}
+
+class FetchData extends OrderEvent {
+  @override
+  List<Object?> get props => [];
+}
 
 class RefreshData extends OrderEvent {
-  int index = 0;
+  final int index;
 
   RefreshData(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
