@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
@@ -30,10 +31,8 @@ class TagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => TagBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<TagBloc>()..add(FetchData()),
       child: TagView(onPick: onPick, listTag: listTag),
     );
   }

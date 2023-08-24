@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/remote/response/recommend/recommend_response.dart';
@@ -27,10 +28,8 @@ class RecommendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => RecommendBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<RecommendBloc>()..add(FetchData()),
       child: const RecommendView(),
     );
   }

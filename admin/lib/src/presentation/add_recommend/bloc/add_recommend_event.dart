@@ -1,25 +1,41 @@
 import 'package:coffee_admin/src/data/models/recommend.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class AddRecommendEvent {}
+abstract class AddRecommendEvent extends Equatable {}
 
-class ChangeTagEvent extends AddRecommendEvent {}
+class ChangeTagEvent extends AddRecommendEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeWeatherEvent extends AddRecommendEvent {}
+class ChangeWeatherEvent extends AddRecommendEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SaveButtonEvent extends AddRecommendEvent {
-  bool isContinue;
+  final bool isContinue;
 
   SaveButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class CreateRecommendEvent extends AddRecommendEvent {
-  Recommend recommend;
+  final Recommend recommend;
 
   CreateRecommendEvent(this.recommend);
+
+  @override
+  List<Object?> get props => [recommend];
 }
 
 class UpdateRecommendEvent extends AddRecommendEvent {
-  Recommend recommend;
+  final Recommend recommend;
 
   UpdateRecommendEvent(this.recommend);
+
+  @override
+  List<Object?> get props => [recommend];
 }

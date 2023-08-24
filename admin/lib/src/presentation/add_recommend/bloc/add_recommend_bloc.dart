@@ -1,15 +1,19 @@
-import 'package:coffee_admin/src/data/models/recommend.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_event.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/recommend_use_case/create_recommend.dart';
+import '../../../domain/use_cases/recommend_use_case/update_recommend.dart';
 
+@injectable
 class AddRecommendBloc extends Bloc<AddRecommendEvent, AddRecommendState> {
-  PreferencesModel preferencesModel;
+  final CreateRecommendUseCase _createRecommendUseCase;
+  final UpdateRecommendUseCase _updateRecommendUseCase;
 
-  AddRecommendBloc(this.preferencesModel) : super(InitState()) {
+  AddRecommendBloc(this._createRecommendUseCase, this._updateRecommendUseCase)
+      : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -17,46 +21,30 @@ class AddRecommendBloc extends Bloc<AddRecommendEvent, AddRecommendState> {
 
     on<ChangeWeatherEvent>((event, emit) => emit(ChangeWeatherState()));
 
-    on<CreateRecommendEvent>(
-        (event, emit) => createRecommend(event.recommend, emit));
+    on<CreateRecommendEvent>(_createRecommend);
 
-    on<UpdateRecommendEvent>(
-        (event, emit) => updateRecommend(event.recommend, emit));
+    on<UpdateRecommendEvent>(_updateRecommend);
   }
 
-  Future createRecommend(Recommend recommend, Emitter emit) async {
-    try {
-      emit(AddRecommendLoading());
-      await preferencesModel.apiService.createNewRecommendation(
-          'Bearer ${preferencesModel.token}', recommend.toJson());
+  Future _createRecommend(CreateRecommendEvent event, Emitter emit) async {
+    emit(AddRecommendLoading());
+    final response =
+        await _createRecommendUseCase.call(params: event.recommend);
+    if (response is DataSuccess) {
       emit(AddRecommendSuccess());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddRecommendError(error));
-      print(error);
-    } catch (e) {
-      emit(AddRecommendError(e.toString()));
-      print(e);
+    } else {
+      emit(AddRecommendError(response.error ?? ""));
     }
   }
 
-  Future updateRecommend(Recommend recommend, Emitter emit) async {
-    try {
-      emit(AddRecommendLoading());
-      await preferencesModel.apiService.updateExistingRecommendation(
-          'Bearer ${preferencesModel.token}',
-          recommend.id!,
-          recommend.toJson());
+  Future _updateRecommend(UpdateRecommendEvent event, Emitter emit) async {
+    emit(AddRecommendLoading());
+    final response =
+        await _updateRecommendUseCase.call(params: event.recommend);
+    if (response is DataSuccess) {
       emit(AddRecommendSuccess());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddRecommendError(error));
-      print(error);
-    } catch (e) {
-      emit(AddRecommendError(e.toString()));
-      print(e);
+    } else {
+      emit(AddRecommendError(response.error ?? ""));
     }
   }
 }

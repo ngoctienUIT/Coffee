@@ -1,13 +1,27 @@
-abstract class TagEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends TagEvent {}
+abstract class TagEvent extends Equatable {}
 
-class UpdateData extends TagEvent {}
-
-class DeleteEvent extends TagEvent {
-  String id;
-
-  DeleteEvent(this.id);
+class FetchData extends TagEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class PickEvent extends TagEvent {}
+class UpdateData extends TagEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class DeleteEvent extends TagEvent {
+  final String id;
+
+  DeleteEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
+class PickEvent extends TagEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

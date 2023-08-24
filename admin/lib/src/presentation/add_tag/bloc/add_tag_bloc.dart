@@ -1,15 +1,22 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
+import '../../../domain/use_cases/tag_use_case/create_tag.dart';
+import '../../../domain/use_cases/tag_use_case/update_tag.dart';
 import 'add_tag_event.dart';
 import 'add_tag_state.dart';
 
+@injectable
 class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
-  PreferencesModel preferencesModel;
+  final CreateTagUseCase _createTagUseCase;
+  final UpdateTagUseCase _updateTagUseCase;
 
-  AddTagBloc(this.preferencesModel) : super(InitState()) {
+  AddTagBloc(
+    this._createTagUseCase,
+    this._updateTagUseCase,
+  ) : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -21,36 +28,22 @@ class AddTagBloc extends Bloc<AddTagEvent, AddTagState> {
   }
 
   Future createTag(Tag tag, Emitter emit) async {
-    try {
-      emit(AddTagLoadingState());
-      await preferencesModel.apiService
-          .createNewTag('Bearer ${preferencesModel.token}', tag.toJson());
+    emit(AddTagLoadingState());
+    final response = await _createTagUseCase.call(params: tag);
+    if (response is DataSuccess) {
       emit(AddTagSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddTagErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddTagErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddTagErrorState(response.error ?? ""));
     }
   }
 
   Future updateTag(Tag tag, Emitter emit) async {
-    try {
-      emit(AddTagLoadingState());
-      await preferencesModel.apiService.updateExistingTag(
-          'Bearer ${preferencesModel.token}', tag.toJson(), tag.tagId!);
+    emit(AddTagLoadingState());
+    final response = await _updateTagUseCase.call(params: tag);
+    if (response is DataSuccess) {
       emit(AddTagSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddTagErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddTagErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddTagErrorState(response.error ?? ""));
     }
   }
 }

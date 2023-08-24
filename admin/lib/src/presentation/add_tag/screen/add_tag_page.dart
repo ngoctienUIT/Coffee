@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/tag.dart';
@@ -10,8 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
@@ -26,10 +25,8 @@ class AddTagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddTagBloc(preferencesModel),
+      create: (context) => getIt<AddTagBloc>(),
       child: Scaffold(
         appBar:
             AppBarGeneral(elevation: 0, title: "add_tags".translate(context)),
