@@ -1,21 +1,41 @@
-abstract class AddProductCataloguesState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends AddProductCataloguesState {}
+abstract class AddProductCataloguesState extends Equatable {}
 
-class SaveButtonState extends AddProductCataloguesState {
-  bool isContinue;
-
-  SaveButtonState(this.isContinue);
+class InitState extends AddProductCataloguesState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class ChangeImageState extends AddProductCataloguesState {}
+class SaveButtonState extends AddProductCataloguesState {
+  final bool isContinue;
 
-class AddProductCataloguesLoadingState extends AddProductCataloguesState {}
+  SaveButtonState(this.isContinue);
 
-class AddProductCataloguesSuccessState extends AddProductCataloguesState {}
+  @override
+  List<Object?> get props => [isContinue];
+}
+
+class ChangeImageState extends AddProductCataloguesState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddProductCataloguesLoadingState extends AddProductCataloguesState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddProductCataloguesSuccessState extends AddProductCataloguesState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddProductCataloguesErrorState extends AddProductCataloguesState {
-  String status;
+  final String status;
 
   AddProductCataloguesErrorState(this.status);
+
+  @override
+  List<Object?> get props => [status];
 }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
@@ -18,9 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
@@ -43,10 +42,8 @@ class AddProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddProductBloc(preferencesModel),
+      create: (context) => getIt<AddProductBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBar(

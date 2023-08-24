@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:retrofit/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -78,4 +81,14 @@ Future<String> getTokenFCM(String userID) async {
   var data = docData.data();
   if (data != null) return data["token"];
   return "";
+}
+
+Future<String> uploadImage({
+  required String folder,
+  required String name,
+  required String image,
+}) async {
+  Reference upload = FirebaseStorage.instance.ref().child("$folder/$name");
+  await upload.putFile(File(image));
+  return await upload.getDownloadURL();
 }

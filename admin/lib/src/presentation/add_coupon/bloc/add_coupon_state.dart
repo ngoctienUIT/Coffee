@@ -1,25 +1,51 @@
-abstract class AddCouponState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends AddCouponState {}
+abstract class AddCouponState extends Equatable {}
 
-class ChangeImageState extends AddCouponState {}
-
-class ChangeTypeState extends AddCouponState {}
-
-class ChangeDateState extends AddCouponState {}
-
-class SaveButtonState extends AddCouponState {
-  bool isContinue;
-
-  SaveButtonState(this.isContinue);
+class InitState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class AddCouponLoadingState extends AddCouponState {}
+class ChangeImageState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class AddCouponSuccessState extends AddCouponState {}
+class ChangeTypeState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class ChangeDateState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SaveButtonState extends AddCouponState {
+  final bool isContinue;
+
+  SaveButtonState(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
+}
+
+class AddCouponLoadingState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddCouponSuccessState extends AddCouponState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddCouponErrorState extends AddCouponState {
-  String status;
+  final String status;
 
   AddCouponErrorState(this.status);
+
+  @override
+  List<Object?> get props => [status];
 }

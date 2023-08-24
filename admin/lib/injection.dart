@@ -4,6 +4,9 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'src/data/local/dao/store_dao.dart';
+import 'src/data/local/dao/user_dao.dart';
+import 'src/data/local/database/coffee_database.dart';
 import 'src/data/remote/api_service/api_service.dart';
 import 'src/data/remote/firebase/firebase_service.dart';
 
@@ -18,14 +21,23 @@ abstract class InjectionModule {
   @preResolve
   Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
 
-  // @lazySingleton
-  // Dio get dio => Dio(BaseOptions(contentType: "application/json"));
+  @lazySingleton
+  @preResolve
+  Future<CoffeeDatabase> get database =>
+      $FloorCoffeeDatabase.databaseBuilder('coffee_admin_database.db').build();
 
   @lazySingleton
-  ApiService get apiService =>
-      ApiService(Dio(BaseOptions(contentType: "application/json")));
+  UserDao get userDao => getIt<CoffeeDatabase>().userDao;
 
   @lazySingleton
-  FirebaseService get firebaseService =>
-      FirebaseService(Dio(BaseOptions(contentType: "application/json")));
+  StoreDao get storeDao => getIt<CoffeeDatabase>().storeDao;
+
+  @lazySingleton
+  Dio get dio => Dio(BaseOptions(contentType: "application/json"));
+
+  @lazySingleton
+  ApiService get apiService => ApiService(getIt<Dio>());
+
+  @lazySingleton
+  FirebaseService get firebaseService => FirebaseService(getIt<Dio>());
 }

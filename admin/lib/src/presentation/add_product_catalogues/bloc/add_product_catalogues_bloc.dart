@@ -1,20 +1,24 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:coffee_admin/src/core/request/product_catalogues_request/product_catalogues_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/product_catalogues.dart';
+import '../../../domain/use_cases/product_catalogues_use_case/create_product_catalogues.dart';
+import '../../../domain/use_cases/product_catalogues_use_case/update_product_catalogues.dart';
 import 'add_product_catalogues_event.dart';
 import 'add_product_catalogues_state.dart';
 
+@injectable
 class AddProductCataloguesBloc
     extends Bloc<AddProductCataloguesEvent, AddProductCataloguesState> {
   String image = "";
-  PreferencesModel preferencesModel;
+  final CreateProductCataloguesUseCase _createProductCataloguesUseCase;
+  final UpdateProductCataloguesUseCase _updateProductCataloguesUseCase;
 
-  AddProductCataloguesBloc(this.preferencesModel) : super(InitState()) {
+  AddProductCataloguesBloc(
+    this._createProductCataloguesUseCase,
+    this._updateProductCataloguesUseCase,
+  ) : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -23,64 +27,38 @@ class AddProductCataloguesBloc
       emit(ChangeImageState());
     });
 
-    on<CreateProductCataloguesEvent>((event, emit) =>
-        createProductCatalogues(event.productCatalogues, emit));
+    on<CreateProductCataloguesEvent>(_createProductCatalogues);
 
-    on<UpdateProductCataloguesEvent>((event, emit) =>
-        updateProductCatalogues(event.productCatalogues, emit));
+    on<UpdateProductCataloguesEvent>(_updateProductCatalogues);
   }
 
-  Future createProductCatalogues(
-      ProductCatalogues productCatalogues, Emitter emit) async {
-    try {
-      emit(AddProductCataloguesLoadingState());
-      if (image.isNotEmpty) {
-        productCatalogues.image = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService.createNewProductCatalogue(
-        'Bearer ${preferencesModel.token}',
-        productCatalogues.toJson(),
-      );
+  Future _createProductCatalogues(
+      CreateProductCataloguesEvent event, Emitter emit) async {
+    emit(AddProductCataloguesLoadingState());
+    final response = await _createProductCataloguesUseCase.call(
+        params: ProductCataloguesRequest(
+      image: image,
+      productCatalogues: event.productCatalogues,
+    ));
+    if (response is DataSuccess) {
       emit(AddProductCataloguesSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddProductCataloguesErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddProductCataloguesErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddProductCataloguesErrorState(response.error ?? ""));
     }
   }
 
-  Future updateProductCatalogues(
-      ProductCatalogues productCatalogues, Emitter emit) async {
-    try {
-      emit(AddProductCataloguesLoadingState());
-      if (image.isNotEmpty) {
-        productCatalogues.image = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService.updateExistingProductCatalogue(
-        'Bearer ${preferencesModel.token}',
-        productCatalogues.toJson(),
-        productCatalogues.id!,
-      );
+  Future _updateProductCatalogues(
+      UpdateProductCataloguesEvent event, Emitter emit) async {
+    emit(AddProductCataloguesLoadingState());
+    final response = await _updateProductCataloguesUseCase.call(
+        params: ProductCataloguesRequest(
+      image: image,
+      productCatalogues: event.productCatalogues,
+    ));
+    if (response is DataSuccess) {
       emit(AddProductCataloguesSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddProductCataloguesErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddProductCataloguesErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddProductCataloguesErrorState(response.error ?? ""));
     }
-  }
-
-  Future<String> uploadImage(String name) async {
-    Reference upload =
-        FirebaseStorage.instance.ref().child("ProductCatalogues/$name");
-    await upload.putFile(File(image));
-    return await upload.getDownloadURL();
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart';
@@ -26,10 +27,8 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => CouponBloc(preferencesModel)..add(FetchData()),
+    return BlocProvider<CouponBloc>(
+      create: (context) => getIt<CouponBloc>()..add(FetchData()),
       child: const CouponView(),
     );
   }

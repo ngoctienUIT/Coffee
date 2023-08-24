@@ -1,27 +1,41 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/product_catalogues.dart';
 
-abstract class AddProductCataloguesEvent {}
+abstract class AddProductCataloguesEvent extends Equatable {}
 
 class CreateProductCataloguesEvent extends AddProductCataloguesEvent {
-  ProductCatalogues productCatalogues;
+  final ProductCatalogues productCatalogues;
 
   CreateProductCataloguesEvent(this.productCatalogues);
+
+  @override
+  List<Object?> get props => [productCatalogues];
 }
 
 class ChangeImageEvent extends AddProductCataloguesEvent {
-  String image;
+  final String image;
 
   ChangeImageEvent(this.image);
+
+  @override
+  List<Object?> get props => [image];
 }
 
 class SaveButtonEvent extends AddProductCataloguesEvent {
-  bool isContinue;
+  final bool isContinue;
 
   SaveButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class UpdateProductCataloguesEvent extends AddProductCataloguesEvent {
-  ProductCatalogues productCatalogues;
+  final ProductCatalogues productCatalogues;
 
   UpdateProductCataloguesEvent(this.productCatalogues);
+
+  @override
+  List<Object?> get props => [productCatalogues];
 }

@@ -1,11 +1,22 @@
-abstract class ProductCataloguesEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends ProductCataloguesEvent {}
+abstract class ProductCataloguesEvent extends Equatable {}
 
-class UpdateData extends ProductCataloguesEvent {}
+class FetchData extends ProductCataloguesEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class UpdateData extends ProductCataloguesEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class DeleteEvent extends ProductCataloguesEvent {
-  String id;
+  final String id;
 
   DeleteEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

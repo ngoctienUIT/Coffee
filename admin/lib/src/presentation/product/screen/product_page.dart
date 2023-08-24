@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +18,8 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ProductBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<ProductBloc>()..add(FetchData()),
       child: const ProductView(),
     );
   }

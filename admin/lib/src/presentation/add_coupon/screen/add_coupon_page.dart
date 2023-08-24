@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
@@ -13,9 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -34,10 +33,8 @@ class AddCouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => AddCouponBloc(preferencesModel),
+    return BlocProvider<AddCouponBloc>(
+      create: (context) => getIt<AddCouponBloc>(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,

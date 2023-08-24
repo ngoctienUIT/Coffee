@@ -1,106 +1,76 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
+import 'package:coffee_admin/src/core/utils/extensions/list_extension.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/account_management_use_case/delete_account.dart';
+import '../../../domain/use_cases/account_management_use_case/get_all_account.dart';
 import 'account_event.dart';
 import 'account_state.dart';
 
+@injectable
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  PreferencesModel preferencesModel;
+  final DeleteAccountUseCase _deleteAccountUseCase;
+  final GetAllAccountUseCase _getAllAccountUseCase;
 
-  AccountBloc(this.preferencesModel) : super(InitState()) {
-    on<FetchData>((event, emit) => getData(emit));
+  AccountBloc(this._deleteAccountUseCase, this._getAllAccountUseCase)
+      : super(InitState()) {
+    on<FetchData>(_getData);
 
     on<UpdateData>((event, emit) => getDataAccount(false, event.index, emit));
 
-    on<DeleteEvent>(
-        (event, emit) => deleteAccount(event.id, event.index, emit));
+    on<DeleteEvent>(_deleteAccount);
 
     on<RefreshData>((event, emit) => getDataAccount(true, event.index, emit));
   }
 
-  Future getData(Emitter emit) async {
-    try {
-      emit(AccountLoading());
-      final response = await preferencesModel.apiService
-          .getAllUsers('Bearer ${preferencesModel.token}');
-      final listAccount = response.data
-          .where((element) =>
-              element.email != preferencesModel.user!.email &&
-              (element.userRole == "ADMIN" || element.userRole == "STAFF"))
-          .toList();
-
+  Future _getData(FetchData event, Emitter emit) async {
+    emit(AccountLoading());
+    final response = await _getAllAccountUseCase.call();
+    User user = getIt<User>();
+    if (response is DataSuccess) {
+      final listAccount = response.data!.filterAdminAndStaff(user.email);
       emit(AccountLoaded(0, listAccount));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AccountError(error));
-      print(error);
-    } catch (e) {
-      emit(AccountError(e.toString()));
-      print(e);
+    } else {
+      emit(AccountError(response.error));
     }
   }
 
   Future getDataAccount(bool check, int index, Emitter emit) async {
-    try {
-      if (check) emit(AccountLoading());
-      String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      final response = await preferencesModel.apiService
-          .getAllUsers('Bearer ${preferencesModel.token}');
+    if (check) emit(AccountLoading());
+    String type = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
+    final response = await _getAllAccountUseCase.call();
+    User user = getIt<User>();
+    if (response is DataSuccess) {
       final listAccount = index == 0
-          ? response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  (element.userRole == "ADMIN" || element.userRole == "STAFF"))
-              .toList()
-          : response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  element.userRole == status)
-              .toList();
-
-      emit(AccountLoaded(index, listAccount));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AccountError(error));
-      print(error);
-    } catch (e) {
-      emit(AccountError(e.toString()));
-      print(e);
+          ? response.data!.filterAdminAndStaff(user.email)
+          : response.data!.filter(type: type, email: user.email);
+      emit(AccountLoaded(0, listAccount));
+    } else {
+      emit(AccountError(response.error));
     }
   }
 
-  Future deleteAccount(String id, int index, Emitter emit) async {
-    try {
-      emit(AccountLoading(false));
-      String status = index == 0 ? "" : (index == 1 ? "ADMIN" : "STAFF");
-      await preferencesModel.apiService
-          .removeUserByID('Bearer ${preferencesModel.token}', id);
-      final response = await preferencesModel.apiService
-          .getAllUsers('Bearer ${preferencesModel.token}');
-      final listAccount = index == 0
-          ? response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  (element.userRole == "ADMIN" || element.userRole == "STAFF"))
-              .toList()
-          : response.data
-              .where((element) =>
-                  element.email != preferencesModel.user!.email &&
-                  element.userRole == status)
-              .toList();
-
-      emit(AccountLoaded(index, listAccount, false));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AccountError(error));
-      print(error);
-    } catch (e) {
-      emit(AccountError(e.toString()));
-      print(e);
+  Future _deleteAccount(DeleteEvent event, Emitter emit) async {
+    emit(AccountLoading(false));
+    String type =
+        event.index == 0 ? "" : (event.index == 1 ? "ADMIN" : "STAFF");
+    final responseDelete = await _deleteAccountUseCase.call(params: event.id);
+    User user = getIt<User>();
+    if (responseDelete is DataSuccess) {
+      final response = await _getAllAccountUseCase.call();
+      if (response is DataSuccess) {
+        final listAccount = event.index == 0
+            ? response.data!.filterAdminAndStaff(user.email)
+            : response.data!.filter(type: type, email: user.email);
+        emit(AccountLoaded(event.index, listAccount, false));
+      } else {
+        emit(AccountError(response.error));
+      }
+    } else {
+      emit(AccountError(responseDelete.error));
     }
   }
 }

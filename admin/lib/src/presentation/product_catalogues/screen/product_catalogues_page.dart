@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
@@ -33,11 +34,8 @@ class ProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) =>
-          ProductCataloguesBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<ProductCataloguesBloc>()..add(FetchData()),
       child: ProductCataloguesView(id: id, onPick: onPick),
     );
   }

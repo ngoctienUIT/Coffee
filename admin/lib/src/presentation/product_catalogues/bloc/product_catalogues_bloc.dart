@@ -1,54 +1,47 @@
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_event.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/product_catalogues_use_case/delete_product_catalogues.dart';
+import '../../../domain/use_cases/product_catalogues_use_case/get_product_catalogues.dart';
 
+@injectable
 class ProductCataloguesBloc
     extends Bloc<ProductCataloguesEvent, ProductCataloguesState> {
-  PreferencesModel preferencesModel;
+  final GetProductCataloguesUseCase _getProductCataloguesUseCase;
+  final DeleteProductCataloguesUseCase _deleteProductCataloguesUseCase;
 
-  ProductCataloguesBloc(this.preferencesModel) : super(InitState()) {
+  ProductCataloguesBloc(
+    this._getProductCataloguesUseCase,
+    this._deleteProductCataloguesUseCase,
+  ) : super(InitState()) {
     on<FetchData>((event, emit) => getData(true, emit));
 
     on<UpdateData>((event, emit) => getData(false, emit));
 
-    on<DeleteEvent>((event, emit) => deleteProductCatalogues(event.id, emit));
+    on<DeleteEvent>(_deleteProductCatalogues);
   }
 
   Future getData(bool check, Emitter emit) async {
-    try {
-      if (check) emit(ProductCataloguesLoading());
-      final response =
-          await preferencesModel.apiService.getAllProductCatalogues();
-      emit(ProductCataloguesLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductCataloguesError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductCataloguesError(e.toString()));
-      print(e);
+    if (check) emit(ProductCataloguesLoading());
+    final response = await _getProductCataloguesUseCase.call();
+    if (response is DataSuccess) {
+      emit(ProductCataloguesLoaded(response.data!));
+    } else {
+      emit(ProductCataloguesError(response.error));
     }
   }
 
-  Future deleteProductCatalogues(String id, Emitter emit) async {
-    try {
-      emit(ProductCataloguesLoading(false));
-      await preferencesModel.apiService
-          .removeProductCataloguesByID("Bearer ${preferencesModel.token}", id);
-      // final response = await apiService.getAllProductCatalogues();
-      emit(DeleteSuccess(id));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductCataloguesError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductCataloguesError(e.toString()));
-      print(e);
+  Future _deleteProductCatalogues(DeleteEvent event, Emitter emit) async {
+    emit(ProductCataloguesLoading(false));
+    final response =
+        await _deleteProductCataloguesUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(DeleteSuccess(event.id));
+    } else {
+      emit(ProductCataloguesError(response.error));
     }
   }
 }
