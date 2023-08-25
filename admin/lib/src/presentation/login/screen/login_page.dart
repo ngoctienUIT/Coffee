@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: BlocProvider<LoginBloc>(
-              create: (_) => LoginBloc(),
+              create: (_) => getIt<LoginBloc>(),
               child: LoginView(id: widget.id),
             ),
           ),

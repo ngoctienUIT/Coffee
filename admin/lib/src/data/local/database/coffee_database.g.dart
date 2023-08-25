@@ -87,7 +87,7 @@ class _$CoffeeDatabase extends CoffeeDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `User` (`id` TEXT NOT NULL, `username` TEXT NOT NULL, `displayName` TEXT NOT NULL, `isMale` INTEGER NOT NULL, `birthOfDate` TEXT NOT NULL, `email` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `hashedPassword` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `userRole` TEXT NOT NULL, `provider` TEXT NOT NULL, `google` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `User` (`id` TEXT NOT NULL, `username` TEXT NOT NULL, `displayName` TEXT NOT NULL, `isMale` INTEGER NOT NULL, `birthOfDate` TEXT NOT NULL, `email` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `hashedPassword` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `userRole` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Store` (`storeId` TEXT NOT NULL, `storeName` TEXT, `address1` TEXT, `address2` TEXT, `address3` TEXT, `address4` TEXT, `openingHour` TEXT NOT NULL, `closingHour` TEXT NOT NULL, `latitude` TEXT, `longitude` TEXT, `imageUrl` TEXT, `hotlineNumber` TEXT, `googleMapUrl` TEXT, `registrationDate` TEXT, `lastUpdateDate` TEXT, PRIMARY KEY (`storeId`))');
 
@@ -126,9 +126,7 @@ class _$UserDao extends UserDao {
                   'phoneNumber': item.phoneNumber,
                   'hashedPassword': item.hashedPassword,
                   'imageUrl': item.imageUrl,
-                  'userRole': item.userRole,
-                  'provider': item.provider,
-                  'google': item.google
+                  'userRole': item.userRole
                 },
             changeListener),
         _userEntityUpdateAdapter = UpdateAdapter(
@@ -145,9 +143,7 @@ class _$UserDao extends UserDao {
                   'phoneNumber': item.phoneNumber,
                   'hashedPassword': item.hashedPassword,
                   'imageUrl': item.imageUrl,
-                  'userRole': item.userRole,
-                  'provider': item.provider,
-                  'google': item.google
+                  'userRole': item.userRole
                 },
             changeListener);
 
@@ -174,9 +170,7 @@ class _$UserDao extends UserDao {
             row['phoneNumber'] as String,
             row['hashedPassword'] as String,
             row['imageUrl'] as String,
-            row['userRole'] as String,
-            row['provider'] as String,
-            row['google'] as String),
+            row['userRole'] as String),
         arguments: [id],
         queryableName: 'User',
         isView: false);

@@ -1,3 +1,4 @@
+import 'package:coffee_admin/src/data/local/entity/user_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_response.g.dart';
@@ -51,4 +52,19 @@ class UserResponse {
       _$UserResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
+
+  UserEntity toUserEntity() {
+    return UserEntity(
+      id,
+      username,
+      displayName,
+      isMale,
+      birthOfDate ?? "",
+      email,
+      phoneNumber,
+      hashedPassword,
+      imageUrl ?? "",
+      userRole,
+    );
+  }
 }

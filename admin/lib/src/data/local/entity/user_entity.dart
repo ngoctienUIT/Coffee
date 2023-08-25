@@ -34,12 +34,6 @@ class UserEntity {
   @ColumnInfo(name: "userRole")
   final String userRole;
 
-  @ColumnInfo(name: "provider")
-  final String provider;
-
-  @ColumnInfo(name: "google")
-  final String google;
-
   UserEntity(
     this.id,
     this.username,
@@ -51,8 +45,6 @@ class UserEntity {
     this.hashedPassword,
     this.imageUrl,
     this.userRole,
-    this.provider,
-    this.google,
   );
 
   User toUser() {

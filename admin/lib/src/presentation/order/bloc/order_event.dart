@@ -1,21 +1,35 @@
-abstract class OrderEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends OrderEvent {}
+abstract class OrderEvent extends Equatable {}
+
+class FetchData extends OrderEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class UpdateData extends OrderEvent {
-  int index = 0;
+  final int index;
 
   UpdateData(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class RefreshData extends OrderEvent {
-  int index = 0;
+  final int index;
 
   RefreshData(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class ChangeOrderListEvent extends OrderEvent {
-  String id;
+  final String id;
 
   ChangeOrderListEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

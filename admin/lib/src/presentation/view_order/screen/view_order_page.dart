@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
@@ -6,8 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../../data/models/user.dart';
 import '../../../data/remote/response/item_order/item_order_response.dart';
@@ -32,13 +31,10 @@ class ViewOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
+    return BlocProvider<ViewOrderBloc>(
       create: order == null
-          ? (context) =>
-              ViewOrderBloc(preferencesModel)..add(GetOrderEvent(id!))
-          : (context) => ViewOrderBloc(preferencesModel),
+          ? (context) => getIt<ViewOrderBloc>()..add(GetOrderEvent(id!))
+          : (context) => getIt<ViewOrderBloc>(),
       child: ViewOrderView(id: id, order: order, onPress: onPress, user: user),
     );
   }
