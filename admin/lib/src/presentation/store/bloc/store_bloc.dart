@@ -1,73 +1,55 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/store_use_case/delete_store.dart';
+import '../../../domain/use_cases/store_use_case/get_store.dart';
 import 'store_event.dart';
 import 'store_state.dart';
 
+@injectable
 class StoreBloc extends Bloc<StoreEvent, StoreState> {
-  PreferencesModel preferencesModel;
+  final DeleteStoreUseCase _deleteStoreUseCase;
+  final GetStoreUseCase _getStoreUseCase;
 
-  StoreBloc(this.preferencesModel) : super(InitState()) {
+  StoreBloc(this._deleteStoreUseCase, this._getStoreUseCase)
+      : super(InitState()) {
     on<FetchData>((event, emit) => getData(true, "", emit));
 
     on<UpdateData>((event, emit) => getData(false, event.query, emit));
 
-    on<DeleteEvent>((event, emit) => deleteStore(event.id, emit));
+    on<DeleteEvent>(_deleteStore);
 
-    on<SearchStore>((event, emit) => searchStore(emit, event.storeName));
+    on<SearchStore>(_searchStore);
   }
 
   Future getData(bool check, String query, Emitter emit) async {
-    try {
-      if (check) emit(StoreLoading());
-      // final response = await apiService.getAllStores();
-      final response =
-          await preferencesModel.apiService.searchStoresByName(query);
-      emit(StoreLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
+    if (check) emit(StoreLoading());
+    final response = await _getStoreUseCase.call(params: query);
+    if (response is DataSuccess) {
+      emit(StoreLoaded(response.data!));
+    } else {
+      emit(StoreError(response.error));
     }
   }
 
-  Future deleteStore(String id, Emitter emit) async {
-    try {
-      emit(StoreLoading(false));
-      await preferencesModel.apiService
-          .removeStoreByID(id, "Bearer ${preferencesModel.token}");
-      // final response = await apiService.searchStoresByName(query);
-      emit(DeleteSuccess(id));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
+  Future _deleteStore(DeleteEvent event, Emitter emit) async {
+    emit(StoreLoading(false));
+    final response = await _deleteStoreUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(DeleteSuccess(event.id));
+    } else {
+      emit(StoreError(response.error));
     }
   }
 
-  Future searchStore(Emitter emit, String query) async {
-    try {
-      emit(StoreLoading());
-      final response =
-          await preferencesModel.apiService.searchStoresByName(query);
-      emit(StoreLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(StoreError(error));
-      print(error);
-    } catch (e) {
-      emit(StoreError(e.toString()));
-      print(e);
+  Future _searchStore(SearchStore event, Emitter emit) async {
+    emit(StoreLoading());
+    final response = await _getStoreUseCase.call(params: event.storeName);
+    if (response is DataSuccess) {
+      emit(StoreLoaded(response.data!));
+    } else {
+      emit(StoreError(response.error));
     }
   }
 }

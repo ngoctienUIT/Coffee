@@ -1,19 +1,21 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:coffee_admin/src/core/request/topping_request/topping_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/topping.dart';
+import '../../../domain/use_cases/topping_use_case/create_topping.dart';
+import '../../../domain/use_cases/topping_use_case/update_topping.dart';
 import 'add_topping_event.dart';
 import 'add_topping_state.dart';
 
+@injectable
 class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
   String image = "";
-  PreferencesModel preferencesModel;
+  final CreateToppingUseCase _createToppingUseCase;
+  final UpdateToppingUseCase _updateToppingUseCase;
 
-  AddToppingBloc(this.preferencesModel) : super(InitState()) {
+  AddToppingBloc(this._createToppingUseCase, this._updateToppingUseCase)
+      : super(InitState()) {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
@@ -22,56 +24,30 @@ class AddToppingBloc extends Bloc<AddToppingEvent, AddToppingState> {
       emit(ChangeImageState());
     });
 
-    on<CreateToppingEvent>((event, emit) => createTopping(event.topping, emit));
+    on<CreateToppingEvent>(_createTopping);
 
-    on<UpdateToppingEvent>((event, emit) => updateTopping(event.topping, emit));
+    on<UpdateToppingEvent>(_updateTopping);
   }
 
-  Future createTopping(Topping topping, Emitter emit) async {
-    try {
-      emit(AddToppingLoadingState());
-      if (image.isNotEmpty) {
-        topping.imageUrl = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService.createNewTopping(
-          'Bearer ${preferencesModel.token}', topping.toJson());
+  Future _createTopping(CreateToppingEvent event, Emitter emit) async {
+    emit(AddToppingLoadingState());
+    final response = await _createToppingUseCase.call(
+        params: ToppingRequest(topping: event.topping, image: image));
+    if (response is DataSuccess) {
       emit(AddToppingSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddToppingErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddToppingErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddToppingErrorState(response.error ?? ""));
     }
   }
 
-  Future updateTopping(Topping topping, Emitter emit) async {
-    try {
-      emit(AddToppingLoadingState());
-      if (image.isNotEmpty) {
-        topping.imageUrl = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService.updateExistingTopping(
-          topping.toppingId!,
-          'Bearer ${preferencesModel.token}',
-          topping.toJson());
+  Future _updateTopping(UpdateToppingEvent event, Emitter emit) async {
+    emit(AddToppingLoadingState());
+    final response = await _updateToppingUseCase.call(
+        params: ToppingRequest(topping: event.topping, image: image));
+    if (response is DataSuccess) {
       emit(AddToppingSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddToppingErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddToppingErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddToppingErrorState(response.error ?? ""));
     }
-  }
-
-  Future<String> uploadImage(String name) async {
-    Reference upload = FirebaseStorage.instance.ref().child("topping/$name");
-    await upload.putFile(File(image));
-    return await upload.getDownloadURL();
   }
 }

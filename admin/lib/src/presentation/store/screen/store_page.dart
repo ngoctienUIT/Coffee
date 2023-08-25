@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:coffee_admin/src/presentation/add_store/screen/add_store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +17,6 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
 import '../../../data/models/preferences_model.dart';
-import '../../../data/remote/response/store/store_response.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/store_bloc.dart';
@@ -28,10 +29,8 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
+      create: (_) => getIt<StoreBloc>()..add(FetchData()),
       child: const StoreView(),
     );
   }
@@ -112,7 +111,7 @@ class _StoreViewState extends State<StoreView> {
   Widget bodyStore() {
     PreferencesModel preferencesModel =
         context.read<ServiceBloc>().preferencesModel;
-    List<StoreResponse> listStore = [];
+    List<StoreEntity> listStore = [];
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
@@ -233,7 +232,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget itemStore(StoreResponse store) {
+  Widget itemStore(StoreEntity store) {
     return Card(
       elevation: 1,
       child: Padding(
@@ -257,7 +256,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget infoStore(StoreResponse store) {
+  Widget infoStore(StoreEntity store) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -282,7 +281,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget isOpenStore(StoreResponse store) {
+  Widget isOpenStore(StoreEntity store) {
     return Row(
       children: [
         Container(

@@ -1,21 +1,41 @@
-abstract class AddToppingState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends AddToppingState {}
+abstract class AddToppingState extends Equatable {}
 
-class SaveButtonState extends AddToppingState {
-  bool isContinue;
-
-  SaveButtonState(this.isContinue);
+class InitState extends AddToppingState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class ChangeImageState extends AddToppingState {}
+class SaveButtonState extends AddToppingState {
+  final bool isContinue;
 
-class AddToppingLoadingState extends AddToppingState {}
+  SaveButtonState(this.isContinue);
 
-class AddToppingSuccessState extends AddToppingState {}
+  @override
+  List<Object?> get props => [isContinue];
+}
+
+class ChangeImageState extends AddToppingState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddToppingLoadingState extends AddToppingState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddToppingSuccessState extends AddToppingState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddToppingErrorState extends AddToppingState {
-  String status;
+  final String status;
 
   AddToppingErrorState(this.status);
+
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }

@@ -1,4 +1,7 @@
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
 import 'package:floor/floor.dart';
+import 'package:flutter/material.dart';
 
 import '../../models/store.dart';
 
@@ -66,6 +69,10 @@ class StoreEntity {
     this.registrationDate,
     this.lastUpdateDate,
   );
+
+  bool checkOpen() =>
+      openingHour.toTime().toInt() <= TimeOfDay.now().toInt() &&
+      TimeOfDay.now().toInt() <= closingHour.toTime().toInt();
 
   Store toStore() {
     return Store(

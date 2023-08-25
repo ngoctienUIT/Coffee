@@ -1,19 +1,21 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:coffee_admin/src/core/request/store_request/store_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/store.dart';
+import '../../../domain/use_cases/store_use_case/create_store.dart';
+import '../../../domain/use_cases/store_use_case/update_store.dart';
 import 'add_store_event.dart';
 import 'add_store_state.dart';
 
+@injectable
 class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
   String image = "";
-  PreferencesModel preferencesModel;
+  final CreateStoreUseCase _createStoreUseCase;
+  final UpdateStoreUseCase _updateStoreUseCase;
 
-  AddStoreBloc(this.preferencesModel) : super(InitState()) {
+  AddStoreBloc(this._createStoreUseCase, this._updateStoreUseCase)
+      : super(InitState()) {
     on<ChangeImageEvent>((event, emit) {
       image = event.image;
       emit(ChangeImageState());
@@ -28,54 +30,30 @@ class AddStoreBloc extends Bloc<AddStoreEvent, AddStoreState> {
     on<SaveButtonEvent>(
         (event, emit) => emit(SaveButtonState(event.isContinue)));
 
-    on<CreateStoreEvent>((event, emit) => createStore(event.store, emit));
+    on<CreateStoreEvent>(_createStore);
 
-    on<UpdateStoreEvent>((event, emit) => updateStore(event.store, emit));
+    on<UpdateStoreEvent>(_updateStore);
   }
 
-  Future createStore(Store store, Emitter emit) async {
-    try {
-      emit(AddStoreLoadingState());
-      if (image.isNotEmpty) {
-        store.imageUrl = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService
-          .registerNewStore('Bearer ${preferencesModel.token}', store.toJson());
+  Future _createStore(CreateStoreEvent event, Emitter emit) async {
+    emit(AddStoreLoadingState());
+    final response = await _createStoreUseCase.call(
+        params: StoreRequest(store: event.store, image: image));
+    if (response is DataSuccess) {
       emit(AddStoreSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddStoreErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddStoreErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddStoreErrorState(response.error ?? ""));
     }
   }
 
-  Future updateStore(Store store, Emitter emit) async {
-    try {
-      emit(AddStoreLoadingState());
-      if (image.isNotEmpty) {
-        store.imageUrl = await uploadImage(image.split("/").last);
-      }
-      await preferencesModel.apiService.updateExistingStore(
-          store.storeId!, 'Bearer ${preferencesModel.token}', store.toJson());
+  Future _updateStore(UpdateStoreEvent event, Emitter emit) async {
+    emit(AddStoreLoadingState());
+    final response = await _updateStoreUseCase.call(
+        params: StoreRequest(store: event.store, image: image));
+    if (response is DataSuccess) {
       emit(AddStoreSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(AddStoreErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(AddStoreErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(AddStoreErrorState(response.error ?? ""));
     }
-  }
-
-  Future<String> uploadImage(String name) async {
-    Reference upload = FirebaseStorage.instance.ref().child("Store/$name");
-    await upload.putFile(File(image));
-    return await upload.getDownloadURL();
   }
 }

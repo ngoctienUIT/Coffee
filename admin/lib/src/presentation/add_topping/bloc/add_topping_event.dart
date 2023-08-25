@@ -1,27 +1,41 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/topping.dart';
 
-abstract class AddToppingEvent {}
+abstract class AddToppingEvent extends Equatable {}
 
 class CreateToppingEvent extends AddToppingEvent {
-  Topping topping;
+  final Topping topping;
 
   CreateToppingEvent(this.topping);
+
+  @override
+  List<Object?> get props => [topping];
 }
 
 class ChangeImageEvent extends AddToppingEvent {
-  String image;
+  final String image;
 
   ChangeImageEvent(this.image);
+
+  @override
+  List<Object?> get props => [image];
 }
 
 class SaveButtonEvent extends AddToppingEvent {
-  bool isContinue;
+  final bool isContinue;
 
   SaveButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class UpdateToppingEvent extends AddToppingEvent {
-  Topping topping;
+  final Topping topping;
 
   UpdateToppingEvent(this.topping);
+
+  @override
+  List<Object?> get props => [topping];
 }

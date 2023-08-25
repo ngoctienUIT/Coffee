@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
+import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:coffee_admin/src/data/models/address.dart';
 import 'package:coffee_admin/src/data/models/store.dart';
-import 'package:coffee_admin/src/data/remote/response/store/store_response.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/district_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/province_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.dart';
@@ -17,10 +18,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -37,14 +36,12 @@ class AddStorePage extends StatelessWidget {
       : super(key: key);
 
   final VoidCallback onChange;
-  final StoreResponse? store;
+  final StoreEntity? store;
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddStoreBloc(preferencesModel),
+      create: (context) => getIt<AddStoreBloc>(),
       child: Scaffold(
         appBar:
             AppBarGeneral(elevation: 0, title: "add_stores".translate(context)),
@@ -59,7 +56,7 @@ class AddStoreView extends StatefulWidget {
       : super(key: key);
 
   final VoidCallback onChange;
-  final StoreResponse? store;
+  final StoreEntity? store;
 
   @override
   State<AddStoreView> createState() => _AddStoreViewState();
