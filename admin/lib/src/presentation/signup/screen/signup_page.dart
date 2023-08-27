@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:crypto/crypto.dart';
@@ -42,8 +43,8 @@ class SignUpPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: BlocProvider(
-            create: (context) => SignUpBloc(),
+          child: BlocProvider<SignUpBloc>(
+            create: (context) => getIt<SignUpBloc>(),
             child: SignUpView(role: role),
           ),
         ),

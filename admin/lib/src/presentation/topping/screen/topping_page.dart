@@ -16,10 +16,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/topping_bloc.dart';
 import '../bloc/topping_event.dart';
@@ -57,29 +56,27 @@ class _ToppingViewState extends State<ToppingView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Topping", elevation: 0),
       body: bodyTopping(),
-      floatingActionButton:
-          preferencesModel.user!.userRole == "ADMIN" && widget.onPick == null
-              ? FloatingActionButton(
-                  onPressed: () {
-                    Navigator.of(context).push(createRoute(
-                      screen: AddToppingPage(
-                        onChange: () {
-                          context.read<ToppingBloc>().add(UpdateData());
-                        },
-                      ),
-                      begin: const Offset(0, 1),
-                    ));
-                  },
-                  backgroundColor: AppColors.statusBarColor,
-                  child: const Icon(Icons.add),
-                )
-              : null,
+      floatingActionButton: user.userRole == "ADMIN" && widget.onPick == null
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(createRoute(
+                  screen: AddToppingPage(
+                    onChange: () {
+                      context.read<ToppingBloc>().add(UpdateData());
+                    },
+                  ),
+                  begin: const Offset(0, 1),
+                ));
+              },
+              backgroundColor: AppColors.statusBarColor,
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -161,8 +158,7 @@ class _ToppingViewState extends State<ToppingView> {
   }
 
   Widget listToppingWidget(List<Topping> listTopping) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return ListView.builder(
       physics: widget.onPick == null
           ? const BouncingScrollPhysics(
@@ -175,7 +171,7 @@ class _ToppingViewState extends State<ToppingView> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: preferencesModel.user!.userRole != "ADMIN"
+          child: user.userRole != "ADMIN"
               ? itemTopping(listTopping[index])
               : widget.onPick != null
                   ? Row(

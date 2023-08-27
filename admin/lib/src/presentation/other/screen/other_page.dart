@@ -3,9 +3,7 @@ import 'package:coffee_admin/src/presentation/other/bloc/other_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../widgets/body_other.dart';
 import '../widgets/header_other.dart';
 
@@ -21,10 +19,8 @@ class _OtherPageState extends State<OtherPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => OtherBloc(preferencesModel)..add(FetchData()),
+      create: (context) => OtherBloc(), //..add(FetchData()),
       child: const Scaffold(
         backgroundColor: AppColors.statusBarColor,
         body: SafeArea(

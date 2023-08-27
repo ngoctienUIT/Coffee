@@ -1,35 +1,24 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../data/remote/api_service/api_service.dart';
+import '../../../domain/use_cases/setting_use_case/delete_account.dart';
 import 'setting_event.dart';
 import 'setting_state.dart';
 
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
-  SettingBloc() : super(InitState()) {
-    on<DeleteAccountEvent>((event, emit) => deleteAccount(emit));
+  final DeleteAccountUseCase _useCase;
+
+  SettingBloc(this._useCase) : super(InitState()) {
+    on<DeleteAccountEvent>(_deleteAccount);
   }
 
-  Future deleteAccount(Emitter emit) async {
-    try {
-      emit(DeleteLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("userID") ?? "";
-      String token = prefs.getString("token") ?? "";
-      await apiService.removeUserByID("Bearer $token", id);
-      prefs.setBool("isLogin", false);
+  Future _deleteAccount(DeleteAccountEvent event, Emitter emit) async {
+    emit(DeleteLoadingState());
+    final response = await _useCase.call();
+    if (response is DataSuccess) {
       emit(DeleteSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(DeleteErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(DeleteErrorState(e.toString()));
-      print(e);
+    } else {
+      emit(DeleteErrorState(response.error ?? ""));
     }
   }
 }

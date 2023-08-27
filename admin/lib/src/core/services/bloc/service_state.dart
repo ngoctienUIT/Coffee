@@ -1,13 +1,33 @@
-abstract class ServiceState {}
+import 'package:equatable/equatable.dart';
 
-class InitServiceState extends ServiceState {}
+abstract class ServiceState extends Equatable {}
 
-class ChangeUserInfoState extends ServiceState {}
+class InitServiceState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeOrderState extends ServiceState {}
+class ChangeUserInfoState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeStoreState extends ServiceState {}
+class ChangeOrderState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class PlacedOrderState extends ServiceState {}
+class ChangeStoreState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class LogOutState extends ServiceState {}
+class PlacedOrderState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class LogOutState extends ServiceState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

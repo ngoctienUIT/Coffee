@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +16,8 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SearchBloc()..add(SearchProduct(query: "")),
+    return BlocProvider<SearchBloc>(
+      create: (context) => getIt<SearchBloc>()..add(SearchProduct(query: "")),
       child: const SearchView(),
     );
   }

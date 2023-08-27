@@ -16,10 +16,9 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 
@@ -40,14 +39,13 @@ class RecommendView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar:
           AppBarGeneral(title: "recommend".translate(context), elevation: 0),
       body: SafeArea(child: bodyRecommend()),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(

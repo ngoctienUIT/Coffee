@@ -1,12 +1,12 @@
 import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/user.dart';
 import '../../../domain/use_cases/login/login_email_password.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
+@injectable
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginEmailPasswordUseCase _useCase;
 
@@ -27,10 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(LoginLoadingState());
     final response = await _useCase.call(params: event);
     if (response is DataSuccess) {
-      emit(LoginSuccessState(PreferencesModel(
-        token: response.data!.accessToken,
-        user: User.fromUserResponse(response.data!.userResponse),
-      )));
+      emit(LoginSuccessState(response.data!));
     } else {
       emit(LoginErrorState(status: response.error ?? ""));
     }

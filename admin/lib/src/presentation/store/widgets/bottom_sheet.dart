@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../../injection.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../add_store/screen/add_store_page.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -18,8 +17,7 @@ void showStoreBottomSheet(
   StoreEntity store,
   VoidCallback onChange,
 ) {
-  PreferencesModel preferencesModel =
-      context.read<ServiceBloc>().preferencesModel;
+  User user = getIt<User>();
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -56,7 +54,7 @@ void showStoreBottomSheet(
                 ),
               ),
             ),
-            if (preferencesModel.user!.userRole == "ADMIN")
+            if (user.userRole == "ADMIN")
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: customButton(

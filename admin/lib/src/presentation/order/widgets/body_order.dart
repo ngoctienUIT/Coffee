@@ -1,18 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:coffee_admin/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/local/dao/user_dao.dart';
+import 'package:coffee_admin/src/data/local/entity/user_entity.dart';
 import 'package:coffee_admin/src/data/remote/response/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../../data/remote/api_service/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
@@ -126,30 +128,20 @@ class BodyOrder extends StatelessWidget {
   }
 
   Future<User?> getUserInfo(BuildContext context, String id) async {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     try {
-      User? user = preferencesModel.getUser(id);
+      UserDao userDao = getIt<UserDao>();
+      UserEntity? user = await userDao.findUserById(id).first;
       if (user == null) {
-        ApiService apiService =
-            ApiService(Dio(BaseOptions(contentType: "application/json")));
-        // final prefs = await SharedPreferences.getInstance();
-        // String token = prefs.getString("token") ?? "";
-        final response = await apiService.getUserByID(
-            'Bearer ${preferencesModel.token}', id);
-        user = User.fromUserResponse(response.data);
-        List<User> list = [user];
-        list.addAll(preferencesModel.listUser);
-        if (context.mounted) {
-          context
-              .read<ServiceBloc>()
-              .add(SetDataEvent(preferencesModel.copyWith(listUser: list)));
-        }
+        ApiService apiService = getIt<ApiService>();
+        SharedPreferences sharedPref = getIt<SharedPreferences>();
+        final token = sharedPref.get("token") ?? "";
+        final response = await apiService.getUserByID('Bearer $token', id);
+        await userDao.insertUser(response.data.toUserEntity());
+        return User.fromUserResponse(response.data);
       }
-      return user;
+      return user.toUser();
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
     } catch (e) {
       print(e);

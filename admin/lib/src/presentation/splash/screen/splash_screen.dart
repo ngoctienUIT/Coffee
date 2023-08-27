@@ -3,14 +3,10 @@ import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/store.dart';
+import '../../../data/local/dao/store_dao.dart';
 import '../../../data/remote/api_service/api_service.dart';
 import '../../login/screen/login_page.dart';
 
@@ -28,24 +24,24 @@ class SplashScreen extends StatelessWidget {
           if (context.mounted) {
             customToast(context, "no_internet_connection".translate(context));
           }
+          return const LoginPage();
         } else {
-          ApiService apiService = getIt<ApiService>();
-          final storeResponse = apiService.getAllStores();
-
-          PreferencesModel preferencesModel = PreferencesModel(
-            token: "",
-            listStore: (await storeResponse)
-                .data
-                .map((e) => Store.fromStoreResponse(e))
-                .toList(),
-          );
-          if (context.mounted) {
-            context.read<ServiceBloc>().add(SetDataEvent(preferencesModel));
-          }
+          upsertStore();
         }
 
         return const LoginPage();
       },
     );
+  }
+
+  Future upsertStore() async {
+    ApiService apiService = getIt<ApiService>();
+    StoreDao storeDao = getIt<StoreDao>();
+    final numberStore = await storeDao.getNumberStore();
+    if (numberStore == null || numberStore == 0) {
+      final storeResponse = await apiService.getAllStores();
+      storeDao.insertListStore(
+          storeResponse.data.map((e) => e.toStoreEntity()).toList());
+    }
   }
 }

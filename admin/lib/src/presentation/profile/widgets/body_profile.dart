@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -96,20 +96,19 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   }
 
   void onSave() {
+    User userIt = getIt<User>();
     if (isEdit) {
-      PreferencesModel preferencesModel =
-          context.read<ServiceBloc>().preferencesModel;
       if (_formKey.currentState!.validate()) {
         User user = widget.user.copyWith(
           displayName: nameController.text,
           isMale: isMale,
           birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
         );
-        if (user == preferencesModel.user) {
+        if (user == userIt) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
         } else {
           context.read<ProfileBloc>().add(SaveProfileEvent(user));
-          if (user.email == preferencesModel.user!.email) {
+          if (user.email == userIt.email) {
             context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
           }
         }

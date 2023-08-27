@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/core/utils/extensions/dio_extension.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 
 import 'package:coffee_admin/src/data/remote/response/login/login_response.dart';
 
@@ -36,6 +38,11 @@ class LoginRepositoryImpl extends LoginRepository {
       } else {
         _sharedPref.setString("userID", user.userResponse.id);
         _sharedPref.setString("token", user.accessToken);
+        if (getIt.isRegistered<User>()) {
+          getIt.unregister<User>();
+        }
+        getIt.registerSingleton<User>(
+            User.fromUserResponse(response.data.userResponse));
         print(user.accessToken);
         return DataSuccess(response.data);
       }

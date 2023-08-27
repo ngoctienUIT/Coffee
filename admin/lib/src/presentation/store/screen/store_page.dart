@@ -13,10 +13,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/store_bloc.dart';
@@ -54,13 +53,12 @@ class _StoreViewState extends State<StoreView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: appBar(),
       body: SafeArea(child: bodyStore()),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -109,8 +107,7 @@ class _StoreViewState extends State<StoreView> {
   }
 
   Widget bodyStore() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     List<StoreEntity> listStore = [];
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
@@ -157,7 +154,7 @@ class _StoreViewState extends State<StoreView> {
                           SearchStore(storeName: searchStoreController.text));
                     },
                   ),
-                  child: preferencesModel.user!.userRole != "ADMIN"
+                  child: user.userRole != "ADMIN"
                       ? itemStore(listStore[index])
                       : Slidable(
                           endActionPane: ActionPane(

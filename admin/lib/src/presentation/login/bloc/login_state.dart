@@ -1,6 +1,5 @@
+import 'package:coffee_admin/src/data/remote/response/login/login_response.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../../data/models/preferences_model.dart';
 
 abstract class LoginState extends Equatable {}
 
@@ -10,12 +9,12 @@ class InitState extends LoginState {
 }
 
 class LoginSuccessState extends LoginState {
-  final PreferencesModel preferencesModel;
+  final LoginResponse loginResponse;
 
-  LoginSuccessState(this.preferencesModel);
+  LoginSuccessState(this.loginResponse);
 
   @override
-  List<Object?> get props => [preferencesModel];
+  List<Object?> get props => [loginResponse];
 }
 
 class LoginLoadingState extends LoginState {

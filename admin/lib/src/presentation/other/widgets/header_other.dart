@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +13,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_state.dart';
 import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/title_bottom_sheet.dart';
@@ -31,11 +32,9 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
 
   @override
   void initState() {
-    SharedPreferences.getInstance().then((value) {
-      setState(() {
-        language = value.getInt('language') ??
-            (Platform.localeName.split('_')[0] == "vi" ? 0 : 1);
-      });
+    setState(() {
+      language = getIt<SharedPreferences>().getInt('language') ??
+          (Platform.localeName.split('_')[0] == "vi" ? 0 : 1);
     });
     super.initState();
   }
@@ -121,17 +120,16 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
     return BlocBuilder<ServiceBloc, ServiceState>(
       buildWhen: (previous, current) => current is ChangeUserInfoState,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
+        User user = getIt<User>();
         return Column(
           children: [
             ClipOval(
-              child: (preferencesModel.user!.imageUrl == null
+              child: (user.imageUrl == null
                   ? Image.asset(AppImages.imgNonAvatar, height: 100)
                   : CachedNetworkImage(
                       height: 80,
                       width: 80,
-                      imageUrl: preferencesModel.user!.imageUrl!,
+                      imageUrl: user.imageUrl!,
                       placeholder: (context, url) => itemLoading(80, 80, 90),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.error),
@@ -139,7 +137,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              preferencesModel.user!.displayName,
+              user.displayName,
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -148,7 +146,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
             ),
             const SizedBox(height: 10),
             Text(
-              preferencesModel.user!.userRole,
+              user.userRole,
               style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
@@ -227,16 +225,16 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
     );
   }
 
-  // Widget _buildLoading() {
-  //   var rng = Random();
-  //   return Column(
-  //     children: [
-  //       itemLoading(100, 100, 90),
-  //       const SizedBox(height: 10),
-  //       itemLoading(20, rng.nextDouble() * 50 + 100, 10),
-  //       const SizedBox(height: 10),
-  //       itemLoading(25, 100, 15),
-  //     ],
-  //   );
-  // }
+// Widget _buildLoading() {
+//   var rng = Random();
+//   return Column(
+//     children: [
+//       itemLoading(100, 100, 90),
+//       const SizedBox(height: 10),
+//       itemLoading(20, rng.nextDouble() * 50 + 100, 10),
+//       const SizedBox(height: 10),
+//       itemLoading(25, 100, 15),
+//     ],
+//   );
+// }
 }

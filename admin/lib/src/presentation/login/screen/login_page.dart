@@ -1,6 +1,7 @@
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/remote/response/login/login_response.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,11 +11,8 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
 import '../../main/screen/main_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -79,9 +77,8 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.inactive) {
-      SharedPreferences.getInstance().then((value) {
-        value.setBool("isOpen", false);
-      });
+      final prefs = getIt<SharedPreferences>();
+      prefs.setBool("isOpen", false);
     }
     print("is open: $state");
   }
@@ -103,13 +100,12 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
           break;
       }
     });
-    SharedPreferences.getInstance().then((value) {
-      isRemember = value.getBool("isRemember") ?? false;
-      phoneController.text = isRemember ? value.getString("username")! : "";
-      passwordController.text = isRemember ? value.getString("password")! : "";
-      context.read<LoginBloc>().add(ClickLoginEvent(isContinue: isRemember));
-      context.read<LoginBloc>().add(RememberLoginEvent());
-    });
+    final prefs = getIt<SharedPreferences>();
+    isRemember = prefs.getBool("isRemember") ?? false;
+    phoneController.text = isRemember ? prefs.getString("username")! : "";
+    passwordController.text = isRemember ? prefs.getString("password")! : "";
+    context.read<LoginBloc>().add(ClickLoginEvent(isContinue: isRemember));
+    context.read<LoginBloc>().add(RememberLoginEvent());
     passwordController.addListener(() => checkEmpty());
     phoneController.addListener(() => checkEmpty());
     super.initState();
@@ -133,20 +129,14 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
   }
 
   Future saveLogin() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = getIt<SharedPreferences>();
     prefs.setBool("isLogin", true);
     prefs.setBool('isRemember', isRemember);
     prefs.setString('username', phoneController.text);
     prefs.setString('password', passwordController.text);
   }
 
-  void loginSuccess(PreferencesModel newModel) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    context.read<ServiceBloc>().add(SetDataEvent(
-        preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
-    final prefs = getIt<SharedPreferences>();
-    prefs.setBool('isLogin', true);
+  void loginSuccess(LoginResponse response) {
     customToast(context, "logged_in_successfully".translate(context));
     saveLogin();
     Navigator.of(context).pushReplacement(createRoute(
@@ -160,7 +150,7 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
     return BlocListener<LoginBloc, LoginState>(
       listener: (_, state) {
         if (state is LoginLoadingState) loadingAnimation(context);
-        if (state is LoginSuccessState) loginSuccess(state.preferencesModel);
+        if (state is LoginSuccessState) loginSuccess(state.loginResponse);
         if (state is LoginErrorState) {
           customToast(context, state.status);
           Navigator.pop(context);

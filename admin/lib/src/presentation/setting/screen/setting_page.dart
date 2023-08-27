@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,8 +24,8 @@ class SettingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingBloc(),
+    return BlocProvider<SettingBloc>(
+      create: (context) => getIt<SettingBloc>(),
       child: SettingView(user: user),
     );
   }

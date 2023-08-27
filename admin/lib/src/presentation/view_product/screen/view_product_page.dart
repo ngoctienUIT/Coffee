@@ -7,10 +7,10 @@ import 'package:coffee_admin/src/presentation/view_product/widgets/body_product.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../injection.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
+import '../../../data/models/user.dart';
 import '../../add_product/screen/add_product_page.dart';
 import '../../product/widgets/list_product_loading.dart';
 import '../bloc/view_product_bloc.dart';
@@ -48,8 +48,7 @@ class _ViewProductPageState extends State<ViewProductPage> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return BlocProvider(
       create: (context) => ViewProductBloc()
         ..add(DataTransmissionEvent(
@@ -64,23 +63,23 @@ class _ViewProductPageState extends State<ViewProductPage> {
               AppBarProduct(
                 isTop: isTop,
                 name: widget.product.name,
-                onEdit: widget.productCatalogues == null ||
-                        preferencesModel.user!.userRole != "ADMIN"
-                    ? null
-                    : () {
-                        Navigator.of(context).push(createRoute(
-                          screen: AddProductPage(
-                            productCatalogues: widget.productCatalogues,
-                            onChange: () {
-                              widget.onChange();
-                              Navigator.pop(context);
-                            },
-                            product:
-                                Product.fromProductResponse(widget.product),
-                          ),
-                          begin: const Offset(0, 1),
-                        ));
-                      },
+                onEdit:
+                    widget.productCatalogues == null || user.userRole != "ADMIN"
+                        ? null
+                        : () {
+                            Navigator.of(context).push(createRoute(
+                              screen: AddProductPage(
+                                productCatalogues: widget.productCatalogues,
+                                onChange: () {
+                                  widget.onChange();
+                                  Navigator.pop(context);
+                                },
+                                product:
+                                    Product.fromProductResponse(widget.product),
+                              ),
+                              begin: const Offset(0, 1),
+                            ));
+                          },
               ),
               SliverToBoxAdapter(
                 child: widget.product.image == null

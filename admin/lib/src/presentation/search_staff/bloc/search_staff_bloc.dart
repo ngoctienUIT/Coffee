@@ -1,36 +1,24 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/search_use_case/search_staff.dart';
 import 'search_staff_event.dart';
 import 'search_staff_state.dart';
 
 class SearchStaffBloc extends Bloc<SearchStaffEvent, SearchStaffState> {
-  PreferencesModel preferencesModel;
+  final SearchStaffUseCase _useCase;
 
-  SearchStaffBloc(this.preferencesModel) : super(InitState()) {
-    on<SearchStaff>((event, emit) => search(event.query, emit));
+  SearchStaffBloc(this._useCase) : super(InitState()) {
+    on<SearchStaff>(_search);
   }
 
-  Future search(String query, Emitter emit) async {
-    try {
-      emit(SearchLoading());
-      final response =
-          await preferencesModel.apiService.searchUserByName(query);
-      final listAccount = response.data
-          .where((element) =>
-              element.email != preferencesModel.user!.email &&
-              (element.userRole == "ADMIN" || element.userRole == "STAFF"))
-          .toList();
-      emit(SearchLoaded(listAccount));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(SearchError(error));
-      print(error);
-    } catch (e) {
-      emit(SearchError(e.toString()));
-      print(e);
+  Future _search(SearchStaff event, Emitter emit) async {
+    emit(SearchLoading());
+    final response = await _useCase.call(params: event.query);
+    if (response is DataSuccess) {
+      emit(SearchLoaded(response.data!));
+    } else {
+      emit(SearchError(response.error));
     }
   }
 }

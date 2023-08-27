@@ -12,11 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../bloc/tag_bloc.dart';
@@ -53,13 +52,12 @@ class _TagViewState extends State<TagView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN" &&
+      floatingActionButton: user.userRole == "ADMIN" &&
               widget.onPick == null
           ? FloatingActionButton(
               onPressed: () {
@@ -153,8 +151,7 @@ class _TagViewState extends State<TagView> {
   }
 
   Widget listTagWidget(List<Tag> listTag) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return ListView.builder(
       physics: widget.onPick == null
           ? const BouncingScrollPhysics(
@@ -167,7 +164,7 @@ class _TagViewState extends State<TagView> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: preferencesModel.user!.userRole != "ADMIN"
+          child: user.userRole != "ADMIN"
               ? tagItem(listTag[index])
               : widget.onPick != null
                   ? Row(
