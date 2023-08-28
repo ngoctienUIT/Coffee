@@ -176,7 +176,7 @@ class _AddToppingViewState extends State<AddToppingView> {
             this.image = image;
             context
                 .read<AddToppingBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: image == null
               ? (imageNetwork != null

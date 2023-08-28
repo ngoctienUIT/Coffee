@@ -1,10 +1,12 @@
 import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../domain/use_cases/setting_use_case/delete_account.dart';
 import 'setting_event.dart';
 import 'setting_state.dart';
 
+@injectable
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
   final DeleteAccountUseCase _useCase;
 

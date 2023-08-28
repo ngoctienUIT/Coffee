@@ -9,7 +9,7 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:coffee_admin/injection.dart' as _i109;
+import 'package:coffee_admin/injection.dart' as _i110;
 import 'package:coffee_admin/src/data/local/dao/store_dao.dart' as _i13;
 import 'package:coffee_admin/src/data/local/dao/user_dao.dart' as _i23;
 import 'package:coffee_admin/src/data/local/database/coffee_database.dart'
@@ -175,11 +175,11 @@ import 'package:coffee_admin/src/presentation/account_management/bloc/account_bl
 import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_bloc.dart'
     as _i70;
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_bloc.dart'
-    as _i103;
-import 'package:coffee_admin/src/presentation/add_product_catalogues/bloc/add_product_catalogues_bloc.dart'
     as _i104;
-import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_bloc.dart'
+import 'package:coffee_admin/src/presentation/add_product_catalogues/bloc/add_product_catalogues_bloc.dart'
     as _i105;
+import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_bloc.dart'
+    as _i106;
 import 'package:coffee_admin/src/presentation/add_store/bloc/add_store_bloc.dart'
     as _i71;
 import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_bloc.dart'
@@ -187,13 +187,13 @@ import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_bloc.dart'
 import 'package:coffee_admin/src/presentation/add_topping/bloc/add_topping_bloc.dart'
     as _i73;
 import 'package:coffee_admin/src/presentation/change_password/bloc/change_password_bloc.dart'
-    as _i106;
+    as _i107;
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart'
     as _i76;
 import 'package:coffee_admin/src/presentation/forgot_password/bloc/forgot_password_bloc.dart'
-    as _i107;
-import 'package:coffee_admin/src/presentation/login/bloc/login_bloc.dart'
     as _i108;
+import 'package:coffee_admin/src/presentation/login/bloc/login_bloc.dart'
+    as _i109;
 import 'package:coffee_admin/src/presentation/new_password/bloc/new_password_bloc.dart'
     as _i94;
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart'
@@ -206,15 +206,17 @@ import 'package:coffee_admin/src/presentation/profile/bloc/profile_bloc.dart'
     as _i99;
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_bloc.dart'
     as _i100;
-import 'package:coffee_admin/src/presentation/signup/bloc/signup_bloc.dart'
+import 'package:coffee_admin/src/presentation/setting/bloc/setting_bloc.dart'
     as _i101;
+import 'package:coffee_admin/src/presentation/signup/bloc/signup_bloc.dart'
+    as _i102;
 import 'package:coffee_admin/src/presentation/store/bloc/store_bloc.dart'
     as _i62;
 import 'package:coffee_admin/src/presentation/tag/bloc/tag_bloc.dart' as _i63;
 import 'package:coffee_admin/src/presentation/topping/bloc/topping_bloc.dart'
     as _i64;
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart'
-    as _i102;
+    as _i103;
 import 'package:dio/dio.dart' as _i5;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
@@ -460,34 +462,36 @@ extension GetItInjectableX on _i1.GetIt {
           gh<_i91.GetRecommendUseCase>(),
           gh<_i85.DeleteRecommendUseCase>(),
         ));
-    gh.factory<_i101.SignUpBloc>(
-        () => _i101.SignUpBloc(gh<_i61.SignUpEmailPasswordUseCase>()));
-    gh.factory<_i102.ViewOrderBloc>(() => _i102.ViewOrderBloc(
+    gh.factory<_i101.SettingBloc>(
+        () => _i101.SettingBloc(gh<_i81.DeleteAccountUseCase>()));
+    gh.factory<_i102.SignUpBloc>(
+        () => _i102.SignUpBloc(gh<_i61.SignUpEmailPasswordUseCase>()));
+    gh.factory<_i103.ViewOrderBloc>(() => _i103.ViewOrderBloc(
           gh<_i74.CancelOrderUseCase>(),
           gh<_i96.OrderCompletedUseCase>(),
           gh<_i88.GetOrderByIDUseCase>(),
         ));
-    gh.factory<_i103.AddProductBloc>(() => _i103.AddProductBloc(
+    gh.factory<_i104.AddProductBloc>(() => _i104.AddProductBloc(
           gh<_i79.CreateProductUseCase>(),
           gh<_i67.UpdateProductUseCase>(),
         ));
-    gh.factory<_i104.AddProductCataloguesBloc>(
-        () => _i104.AddProductCataloguesBloc(
+    gh.factory<_i105.AddProductCataloguesBloc>(
+        () => _i105.AddProductCataloguesBloc(
               gh<_i78.CreateProductCataloguesUseCase>(),
               gh<_i66.UpdateProductCataloguesUseCase>(),
             ));
-    gh.factory<_i105.AddRecommendBloc>(() => _i105.AddRecommendBloc(
+    gh.factory<_i106.AddRecommendBloc>(() => _i106.AddRecommendBloc(
           gh<_i80.CreateRecommendUseCase>(),
           gh<_i68.UpdateRecommendUseCase>(),
         ));
-    gh.factory<_i106.ChangePasswordBloc>(
-        () => _i106.ChangePasswordBloc(gh<_i75.ChangePasswordUseCase>()));
-    gh.factory<_i107.ForgotPasswordBloc>(
-        () => _i107.ForgotPasswordBloc(gh<_i86.ForgotPasswordUseCase>()));
-    gh.factory<_i108.LoginBloc>(
-        () => _i108.LoginBloc(gh<_i93.LoginEmailPasswordUseCase>()));
+    gh.factory<_i107.ChangePasswordBloc>(
+        () => _i107.ChangePasswordBloc(gh<_i75.ChangePasswordUseCase>()));
+    gh.factory<_i108.ForgotPasswordBloc>(
+        () => _i108.ForgotPasswordBloc(gh<_i86.ForgotPasswordUseCase>()));
+    gh.factory<_i109.LoginBloc>(
+        () => _i109.LoginBloc(gh<_i93.LoginEmailPasswordUseCase>()));
     return this;
   }
 }
 
-class _$InjectionModule extends _i109.InjectionModule {}
+class _$InjectionModule extends _i110.InjectionModule {}

@@ -273,14 +273,13 @@ class _AddProductViewState extends State<AddProductView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: catalogues == null
-              ? AppLocalizations.of(context)!.productCatalogues
-              : catalogues!.name,
+          text: catalogues?.name ??
+              AppLocalizations.of(context)!.productCatalogues,
           onPress: () {
             Navigator.of(context).push(
               createRoute(
                   screen: ProductCataloguesPage(
-                    id: catalogues != null ? catalogues!.id : null,
+                    id: catalogues?.id,
                     onPick: (catalogue) {
                       catalogues = catalogue;
                       context
@@ -306,7 +305,7 @@ class _AddProductViewState extends State<AddProductView> {
             this.image = image;
             context
                 .read<AddProductBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: image == null
               ? (imageNetwork == null

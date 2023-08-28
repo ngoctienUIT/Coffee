@@ -43,18 +43,22 @@ class BodyOtherPage extends StatelessWidget {
             groupItemOther(AppLocalizations.of(context)!.account, [
               itemOther(AppLocalizations.of(context)!.profile, Icons.person,
                   () {
-                Navigator.of(context).push(createRoute(
-                  screen: ProfilePage(user: getIt<User>()),
-                  begin: const Offset(1, 0),
-                ));
+                if (getIt.isRegistered<User>()) {
+                  Navigator.of(context).push(createRoute(
+                    screen: ProfilePage(user: getIt<User>()),
+                    begin: const Offset(1, 0),
+                  ));
+                }
               }),
               const Divider(),
               itemOther(AppLocalizations.of(context)!.setting, Icons.settings,
                   () {
-                Navigator.of(context).push(createRoute(
-                  screen: SettingPage(user: getIt<User>()),
-                  begin: const Offset(1, 0),
-                ));
+                if (getIt.isRegistered<User>()) {
+                  Navigator.of(context).push(createRoute(
+                    screen: SettingPage(user: getIt<User>()),
+                    begin: const Offset(1, 0),
+                  ));
+                }
               })
             ]),
             groupItemOther(AppLocalizations.of(context)!.manage, [

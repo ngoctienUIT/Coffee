@@ -159,8 +159,7 @@ class RecommendView extends StatelessWidget {
             Row(
               children: [
                 Image.asset(
-                  getIconWeather(
-                      recommend.weather == null ? "" : recommend.weather!),
+                  getIconWeather(recommend.weather ?? ""),
                   width: 30,
                 ),
                 const SizedBox(width: 10),

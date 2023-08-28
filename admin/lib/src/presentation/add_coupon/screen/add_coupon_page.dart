@@ -336,7 +336,7 @@ class _AddCouponViewState extends State<AddCouponView> {
             this.image = image;
             context
                 .read<AddCouponBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: image == null
               ? (imageNetWork == null

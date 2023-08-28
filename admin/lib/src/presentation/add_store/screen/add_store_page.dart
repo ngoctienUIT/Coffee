@@ -223,9 +223,7 @@ class _AddStoreViewState extends State<AddStoreView> {
             descriptionLine(text: AppLocalizations.of(context)!.provinceCity),
             const SizedBox(height: 10),
             ProvinceDropdown(
-              selectedValue: addressAPI.province != null
-                  ? addressAPI.province!.name
-                  : null,
+              selectedValue: addressAPI.province?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                     province: value, district: null, ward: null);
@@ -236,11 +234,8 @@ class _AddStoreViewState extends State<AddStoreView> {
             descriptionLine(text: AppLocalizations.of(context)!.district),
             const SizedBox(height: 10),
             DistrictDropdown(
-              provinceID:
-                  addressAPI.province != null ? addressAPI.province!.id : null,
-              selectedValue: addressAPI.district != null
-                  ? addressAPI.district!.name
-                  : null,
+              provinceID: addressAPI.province?.id,
+              selectedValue: addressAPI.district?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                     province: addressAPI.province, district: value, ward: null);
@@ -251,12 +246,9 @@ class _AddStoreViewState extends State<AddStoreView> {
             descriptionLine(text: AppLocalizations.of(context)!.ward),
             const SizedBox(height: 10),
             WardDropdown(
-              provinceID:
-                  addressAPI.province != null ? addressAPI.province!.id : null,
-              districtID:
-                  addressAPI.district != null ? addressAPI.district!.id : null,
-              selectedValue:
-                  addressAPI.ward != null ? addressAPI.ward!.name : null,
+              provinceID: addressAPI.province?.id,
+              districtID: addressAPI.district?.id,
+              selectedValue: addressAPI.ward?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                   province: addressAPI.province,
@@ -278,9 +270,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: open == null
-              ? AppLocalizations.of(context)!.open
-              : open!.toTimeString(),
+          text: open?.toTimeString() ?? AppLocalizations.of(context)!.open,
           onPress: () async {
             open = await selectedTime(open);
             if (mounted) context.read<AddStoreBloc>().add(ChangeOpenEvent());
@@ -296,9 +286,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: close == null
-              ? AppLocalizations.of(context)!.close
-              : close!.toTimeString(),
+          text: close?.toTimeString() ?? AppLocalizations.of(context)!.close,
           onPress: () async {
             close = await selectedTime(close);
             if (mounted) context.read<AddStoreBloc>().add(ChangeCloseEvent());

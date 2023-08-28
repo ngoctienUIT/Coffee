@@ -45,7 +45,7 @@ class ListItemProduct extends StatelessWidget {
               screen: ViewProductPage(
                 productCatalogues: productCatalogues,
                 product: listProduct[index],
-                onChange: onChange == null ? () {} : onChange!,
+                onChange: onChange ?? () {},
               ),
               begin: const Offset(0, 1),
             ));

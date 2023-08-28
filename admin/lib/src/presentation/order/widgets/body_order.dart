@@ -153,7 +153,7 @@ class BodyOrder extends StatelessWidget {
     return Row(
       children: [
         ClipOval(
-          child: user == null || user.imageUrl == null
+          child: user == null || user.imageUrl == null || user.imageUrl!.isEmpty
               ? Image.asset(AppImages.imgNonAvatar, height: 100)
               : CachedNetworkImage(
                   height: 100,
@@ -169,9 +169,7 @@ class BodyOrder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user != null
-                    ? user.displayName
-                    : AppLocalizations.of(context)!.coffeeUsers,
+                user?.displayName ?? AppLocalizations.of(context)!.coffeeUsers,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

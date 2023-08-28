@@ -57,9 +57,8 @@ class InfoCart extends StatelessWidget {
                 const Icon(FontAwesomeIcons.fileLines),
                 const SizedBox(width: 5),
                 Expanded(
-                  child: Text(order.orderCustomerNote == null
-                      ? AppLocalizations.of(context)!.notHave
-                      : order.orderCustomerNote!),
+                  child: Text(order.orderCustomerNote ??
+                      AppLocalizations.of(context)!.notHave),
                 ),
               ],
             ),
@@ -72,8 +71,7 @@ class InfoCart extends StatelessWidget {
   Widget userInfo() {
     return Column(
       children: [
-        itemInfo(Icons.person,
-            user != null ? user!.displayName : "Người dùng Coffee"),
+        itemInfo(Icons.person, user?.displayName ?? "Người dùng Coffee"),
         const Divider(),
         GestureDetector(
           onTap: () async {
@@ -81,7 +79,7 @@ class InfoCart extends StatelessWidget {
               await launchUrlString('tel:${user!.phoneNumber}');
             }
           },
-          child: itemInfo(Icons.phone, user != null ? user!.phoneNumber : ""),
+          child: itemInfo(Icons.phone, user?.phoneNumber ?? ""),
         ),
       ],
     );
@@ -99,9 +97,7 @@ class InfoCart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  order.selectedPickupStore != null
-                      ? order.selectedPickupStore!.storeName!
-                      : "",
+                  order.selectedPickupStore?.storeName! ?? "",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

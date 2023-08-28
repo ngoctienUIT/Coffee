@@ -167,7 +167,7 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
             this.image = image;
             context
                 .read<AddProductCataloguesBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: (image == null
               ? (imageNetwork != null

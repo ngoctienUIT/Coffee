@@ -88,9 +88,7 @@ class ViewOrderView extends StatelessWidget {
   Widget buildOrder(BuildContext context, OrderResponse order, User? user) {
     return Scaffold(
       appBar: AppBarGeneral(
-        title: user != null
-            ? user.displayName
-            : AppLocalizations.of(context)!.coffeeUsers,
+        title: user?.displayName ?? AppLocalizations.of(context)!.coffeeUsers,
         elevation: 0,
       ),
       body: Padding(

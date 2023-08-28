@@ -153,7 +153,7 @@ class _AddTagViewState extends State<AddTagView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: textColor == null ? "" : textColor!,
+          text: textColor ?? "",
           onPress: () => showPickColor(),
         );
       },
