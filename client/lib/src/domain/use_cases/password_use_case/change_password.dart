@@ -1,16 +1,16 @@
-import 'package:coffee/src/core/use_cases/use_case.dart';
-import 'package:coffee/src/data/models/user.dart';
-import 'package:coffee/src/domain/repositories/change_password_repository.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/resources/data_state.dart';
+import '../../../core/use_cases/use_case.dart';
+import '../../../data/models/user.dart';
 import '../../../data/remote/response/user/user_response.dart';
+import '../../repositories/password_repository.dart';
 
 @lazySingleton
 class ChangePasswordUseCase extends UseCase<DataState<UserResponse>, User> {
-  ChangePasswordUseCase(this._repository);
+  final PasswordRepository _repository;
 
-  final ChangePasswordRepository _repository;
+  ChangePasswordUseCase(this._repository);
 
   @override
   Future<DataState<UserResponse>> call({required User params}) {

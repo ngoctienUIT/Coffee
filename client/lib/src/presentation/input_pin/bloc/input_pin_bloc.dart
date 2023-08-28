@@ -2,7 +2,7 @@ import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../domain/use_cases/input_pin_use_case/input_pin.dart';
+import '../../../domain/use_cases/password_use_case/input_pin.dart';
 import 'input_pin_event.dart';
 import 'input_pin_state.dart';
 

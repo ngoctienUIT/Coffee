@@ -1,16 +1,14 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../core/resources/data_state.dart';
-import '../../../data/remote/api_service/api_service.dart';
-import '../../../domain/use_cases/new_password_use_case/new_password.dart';
+import '../../../domain/use_cases/password_use_case/create_new_password.dart';
 import 'new_password_event.dart';
 import 'new_password_state.dart';
 
 @injectable
 class NewPasswordBloc extends Bloc<NewPasswordEvent, NewPasswordState> {
-  final NewPasswordUseCase _useCase;
+  final CreateNewPasswordUseCase _useCase;
 
   NewPasswordBloc(this._useCase) : super(InitState()) {
     on<HidePasswordEvent>((event, emit) => emit(HidePasswordState()));

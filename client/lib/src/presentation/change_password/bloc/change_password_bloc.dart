@@ -2,7 +2,7 @@ import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../../domain/use_cases/change_password_use_case/change_password.dart';
+import '../../../domain/use_cases/password_use_case/change_password.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
 
