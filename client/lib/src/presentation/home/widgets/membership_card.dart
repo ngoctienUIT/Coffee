@@ -1,18 +1,18 @@
 import 'dart:math';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
 import 'package:coffee/src/core/utils/constants/app_images.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/home/bloc/home_bloc.dart';
 import 'package:coffee/src/presentation/home/bloc/home_state.dart';
 import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../data/models/preferences_model.dart';
 
 class MembershipCard extends StatelessWidget {
   const MembershipCard({Key? key}) : super(key: key);
@@ -58,8 +58,7 @@ class MembershipCard extends StatelessWidget {
                     Row(
                       children: [
                         Image.asset(
-                          getIconWeather(
-                              state.weather == null ? "" : state.weather!.main),
+                          getIconWeather(state.weather?.main ?? ""),
                           width: 30,
                         ),
                         const SizedBox(width: 10),
@@ -78,8 +77,8 @@ class MembershipCard extends StatelessWidget {
                     const Spacer(),
                     Text(
                       state.address ??
-                          "please_enable_location_accurate_product_recommendations_for_you"
-                              .translate(context),
+                          AppLocalizations.of(context)
+                              .pleaseEnableLocationAccurateProductRecommendationsForYou,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -93,9 +92,7 @@ class MembershipCard extends StatelessWidget {
                         builder: (context, serviceState) {
                           String name = state.user.displayName;
                           if (serviceState is ChangeUserInfoState) {
-                            PreferencesModel preferencesModel =
-                                context.read<ServiceBloc>().preferencesModel;
-                            name = preferencesModel.user!.displayName;
+                            name = getIt<User>().displayName;
                           }
                           return Text(
                             name,
@@ -108,7 +105,7 @@ class MembershipCard extends StatelessWidget {
                         }),
                     const Spacer(),
                     Text(
-                      "member".translate(context),
+                      AppLocalizations.of(context).member,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.white,

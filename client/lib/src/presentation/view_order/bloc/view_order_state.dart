@@ -1,4 +1,4 @@
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:coffee/src/data/remote/response/order/order_response.dart';
 
 abstract class ViewOrderState {}
 

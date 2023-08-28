@@ -1,33 +1,56 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/store.dart';
 
-abstract class AddStoreEvent {}
+abstract class AddStoreEvent extends Equatable {}
 
 class CreateStoreEvent extends AddStoreEvent {
-  Store store;
+  final Store store;
 
   CreateStoreEvent(this.store);
+
+  @override
+  List<Object?> get props => [store];
 }
 
 class ChangeImageEvent extends AddStoreEvent {
-  String image;
+  final String image;
 
   ChangeImageEvent(this.image);
+
+  @override
+  List<Object?> get props => [image];
 }
 
 class SaveButtonEvent extends AddStoreEvent {
-  bool isContinue;
+  final bool isContinue;
 
   SaveButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class UpdateStoreEvent extends AddStoreEvent {
-  Store store;
+  final Store store;
 
   UpdateStoreEvent(this.store);
+
+  @override
+  List<Object?> get props => [store];
 }
 
-class ChangeAddressEvent extends AddStoreEvent {}
+class ChangeAddressEvent extends AddStoreEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeOpenEvent extends AddStoreEvent {}
+class ChangeOpenEvent extends AddStoreEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeCloseEvent extends AddStoreEvent {}
+class ChangeCloseEvent extends AddStoreEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

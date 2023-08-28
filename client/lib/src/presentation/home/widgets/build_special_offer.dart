@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee/src/presentation/store/widgets/item_loading.dart';
 import 'package:coffee/src/presentation/view_special_offer/screen/view_special_offer_page.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 
@@ -21,27 +22,31 @@ class BuildListSpecialOffer extends StatelessWidget {
           current is CouponLoaded || current is HomeLoading && current.check,
       builder: (context, state) {
         if (state is CouponLoaded) {
-          return SizedBox(
-            height: 250,
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: state.listCoupon.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  borderRadius: BorderRadius.circular(15),
-                  onTap: () {
-                    Navigator.of(context).push(createRoute(
-                      screen:
-                          ViewSpecialOfferPage(coupon: state.listCoupon[index]),
-                      begin: const Offset(0, 1),
-                    ));
-                  },
-                  child: buildSpecialOffer(state.listCoupon[index]),
-                );
-              },
-            ),
-          );
+          if (state.listCoupon.isNotEmpty) {
+            return SizedBox(
+              height: 250,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                itemCount: state.listCoupon.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(15),
+                    onTap: () {
+                      Navigator.of(context).push(createRoute(
+                        screen: ViewSpecialOfferPage(
+                            coupon: state.listCoupon[index]),
+                        begin: const Offset(0, 1),
+                      ));
+                    },
+                    child: buildSpecialOffer(state.listCoupon[index]),
+                  );
+                },
+              ),
+            );
+          } else {
+            return  Text(AppLocalizations.of(context).noData);
+          }
         }
         return _buildLoading();
       },

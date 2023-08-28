@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_event.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_state.dart';
@@ -12,11 +14,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../../add_coupon/screen/add_coupon_page.dart';
 import '../../order/widgets/item_loading.dart';
 import '../widgets/ticket_widget.dart';
@@ -26,10 +26,8 @@ class CouponPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => CouponBloc(preferencesModel)..add(FetchData()),
+    return BlocProvider<CouponBloc>(
+      create: (context) => getIt<CouponBloc>()..add(FetchData()),
       child: const CouponView(),
     );
   }
@@ -49,8 +47,7 @@ class _CouponViewState extends State<CouponView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -59,12 +56,12 @@ class _CouponViewState extends State<CouponView>
         centerTitle: true,
         leading: const SizedBox(),
         title: Text(
-          "all_vouchers".translate(context),
+          AppLocalizations.of(context)!.allVouchers,
           style: const TextStyle(color: Colors.black),
         ),
       ),
       body: buildBody(),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -84,6 +81,7 @@ class _CouponViewState extends State<CouponView>
   }
 
   Widget buildBody() {
+    User user = getIt<User>();
     return BlocConsumer<CouponBloc, CouponState>(
       listener: (context, state) {
         if (state is CouponError) {
@@ -94,14 +92,12 @@ class _CouponViewState extends State<CouponView>
         }
         if (state is DeleteCouponSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
           !(current is CouponLoading && !current.check),
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         if (state is CouponLoaded || state is DeleteCouponSuccess) {
           if (state is CouponLoaded) {
             listCoupon = [];
@@ -123,7 +119,7 @@ class _CouponViewState extends State<CouponView>
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: preferencesModel.user!.userRole == "ADMIN"
+                  child: user.userRole == "ADMIN"
                       ? Slidable(
                           endActionPane: ActionPane(
                             motion: const ScrollMotion(),
@@ -271,9 +267,9 @@ class _CouponViewState extends State<CouponView>
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_voucher'.translate(context),
-          content:
-              'are_you_sure_you_want_to_delete_this_voucher'.translate(context),
+          title: AppLocalizations.of(context)!.deleteVoucher,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisVoucher,
           onOK: onOK,
         );
       },

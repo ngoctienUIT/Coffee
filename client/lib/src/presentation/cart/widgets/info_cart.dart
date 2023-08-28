@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_info.dart';
@@ -8,11 +10,10 @@ import 'package:coffee/src/presentation/store/screen/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/store.dart';
 import '../../add_address/screen/add_address_page.dart';
 import '../bloc/cart_bloc.dart';
@@ -40,6 +41,7 @@ class _InfoCartState extends State<InfoCart> {
   TextEditingController noteController = TextEditingController();
   Color selectedColor = AppColors.statusBarColor;
   Color unselectedColor = AppColors.unselectedColor;
+  final sharedPref = getIt<SharedPreferences>();
   bool isBringBack = false;
   Address? address;
   Store? store;
@@ -70,7 +72,7 @@ class _InfoCartState extends State<InfoCart> {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Text("${"method".translate(context)}:"),
+                Text("${AppLocalizations.of(context).method}:"),
                 const Spacer(),
                 SizedBox(
                   height: 45,
@@ -93,7 +95,7 @@ class _InfoCartState extends State<InfoCart> {
                         }, isBringBack);
                       }
                     },
-                    child: Text("at_table".translate(context)),
+                    child: Text(AppLocalizations.of(context).atTable),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -118,7 +120,7 @@ class _InfoCartState extends State<InfoCart> {
                         }, isBringBack);
                       }
                     },
-                    child: Text("bring_back".translate(context)),
+                    child: Text(AppLocalizations.of(context).bringBack),
                   ),
                 )
               ],
@@ -138,7 +140,7 @@ class _InfoCartState extends State<InfoCart> {
                     onChanged: _onChangeHandler,
                     controller: noteController,
                     decoration: InputDecoration(
-                      hintText: "order_notes".translate(context),
+                      hintText: AppLocalizations.of(context).orderNotes,
                       border: InputBorder.none,
                     ),
                   ),
@@ -163,11 +165,9 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget atTable() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    if (!isBringBack && store == null && preferencesModel.storeID != null) {
+    if (store == null && sharedPref.getString("storeID") != null) {
       setState(() {
-        store = preferencesModel.getStore();
+        store = getIt.isRegistered<Store>() ? getIt<Store>() : null;
       });
     }
     return InkWell(
@@ -197,7 +197,7 @@ class _InfoCartState extends State<InfoCart> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    store != null ? store!.storeName! : "",
+                    store?.storeName! ?? "",
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -205,9 +205,9 @@ class _InfoCartState extends State<InfoCart> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
-                  Text(store != null ? store!.hotlineNumber! : ""),
+                  Text(store?.hotlineNumber! ?? ""),
                   const SizedBox(height: 5),
-                  Text(store == null ? "" : store!.getAddress()),
+                  Text(store?.getAddress() ?? ""),
                 ],
               ),
             ),
@@ -219,12 +219,9 @@ class _InfoCartState extends State<InfoCart> {
   }
 
   Widget bringBack() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    if (!isBringBack && address == null && preferencesModel.address != null) {
-      setState(() {
-        address = preferencesModel.address!.toAddressAPI().toAddress();
-      });
+    String? addressStr = sharedPref.getString("address");
+    if (!isBringBack && address == null && addressStr != null) {
+      setState(() => address = addressStr.toAddressAPI().toAddress());
     }
     return InkWell(
       onTap: () {
@@ -241,10 +238,7 @@ class _InfoCartState extends State<InfoCart> {
           begin: const Offset(1, 0),
         ));
       },
-      child: itemInfo(
-        Icons.location_on,
-        address == null ? "" : address!.getAddress(),
-      ),
+      child: itemInfo(Icons.location_on, address?.getAddress() ?? ""),
     );
   }
 
@@ -259,9 +253,9 @@ class _InfoCartState extends State<InfoCart> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "confirm".translate(context),
+          title: AppLocalizations.of(context).confirm,
           content:
-              "${"you_want_change_method_from".translate(context)} ${isBring ? "bring_back".translate(context) : "at_table".translate(context)} thành ${isBring ? "at_table".translate(context) : "bring_back".translate(context)}",
+              "${AppLocalizations.of(context).youWantChangeMethodFrom} ${isBring ? AppLocalizations.of(context).bringBack : AppLocalizations.of(context).atTable} thành ${isBring ? AppLocalizations.of(context).atTable : AppLocalizations.of(context).bringBack}",
           onOK: () {
             okPress();
             Navigator.pop(context);

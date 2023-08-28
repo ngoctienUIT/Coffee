@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class GenderWidget extends StatelessWidget {
@@ -59,7 +59,7 @@ class GenderWidget extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    "current_selection".translate(context),
+                    AppLocalizations.of(context).currentSelection,
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),

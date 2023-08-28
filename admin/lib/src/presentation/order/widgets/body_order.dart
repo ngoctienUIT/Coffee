@@ -1,20 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:coffee_admin/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/repositories/order/order_response.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/local/dao/user_dao.dart';
+import 'package:coffee_admin/src/data/local/entity/user_entity.dart';
+import 'package:coffee_admin/src/data/remote/response/order/order_response.dart';
 import 'package:coffee_admin/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/list_order_loading.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/api_service.dart';
+import '../../../data/remote/api_service/api_service.dart';
 import '../../view_order/screen/view_order_page.dart';
 import '../bloc/order_event.dart';
 import '../bloc/order_state.dart';
@@ -126,30 +128,20 @@ class BodyOrder extends StatelessWidget {
   }
 
   Future<User?> getUserInfo(BuildContext context, String id) async {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     try {
-      User? user = preferencesModel.getUser(id);
+      UserDao userDao = getIt<UserDao>();
+      UserEntity? user = await userDao.findUserById(id).first;
       if (user == null) {
-        ApiService apiService =
-            ApiService(Dio(BaseOptions(contentType: "application/json")));
-        // final prefs = await SharedPreferences.getInstance();
-        // String token = prefs.getString("token") ?? "";
-        final response = await apiService.getUserByID(
-            'Bearer ${preferencesModel.token}', id);
-        user = User.fromUserResponse(response.data);
-        List<User> list = [user];
-        list.addAll(preferencesModel.listUser);
-        if (context.mounted) {
-          context
-              .read<ServiceBloc>()
-              .add(SetDataEvent(preferencesModel.copyWith(listUser: list)));
-        }
+        ApiService apiService = getIt<ApiService>();
+        SharedPreferences sharedPref = getIt<SharedPreferences>();
+        final token = sharedPref.get("token") ?? "";
+        final response = await apiService.getUserByID('Bearer $token', id);
+        await userDao.insertUser(response.data.toUserEntity());
+        return User.fromUserResponse(response.data);
       }
-      return user;
+      return user.toUser();
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       print(error);
     } catch (e) {
       print(e);
@@ -161,7 +153,7 @@ class BodyOrder extends StatelessWidget {
     return Row(
       children: [
         ClipOval(
-          child: user == null || user.imageUrl == null
+          child: user == null || user.imageUrl == null || user.imageUrl!.isEmpty
               ? Image.asset(AppImages.imgNonAvatar, height: 100)
               : CachedNetworkImage(
                   height: 100,
@@ -177,9 +169,7 @@ class BodyOrder extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user != null
-                    ? user.displayName
-                    : "coffee_users".translate(context),
+                user?.displayName ?? AppLocalizations.of(context)!.coffeeUsers,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -189,19 +179,19 @@ class BodyOrder extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "${"date_created".translate(context)}: ${order.createdDate}"),
+                    "${AppLocalizations.of(context)!.dateCreated}: ${order.createdDate}"),
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "${"delivery_date".translate(context)}: ${order.lastUpdated}"),
+                    "${AppLocalizations.of(context)!.deliveryDate}: ${order.lastUpdated}"),
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                  "${AppLocalizations.of(context)!.totalOrder}: ${order.orderAmount!.toCurrency()}",
                 ),
               ),
             ],
@@ -234,7 +224,7 @@ class BodyOrder extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "×$number ${"product".translate(context)}",
+                  "×$number ${AppLocalizations.of(context)!.product}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -243,7 +233,7 @@ class BodyOrder extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "${"into_money".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                  "${AppLocalizations.of(context)!.intoMoney}: ${order.orderAmount!.toCurrency()}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -253,7 +243,7 @@ class BodyOrder extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("delivery_status".translate(context)),
+                Text(AppLocalizations.of(context)!.deliveryStatus),
                 const Spacer(),
                 Text(
                   order.orderStatus.toString(),

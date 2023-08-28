@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_colors.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 AlertDialog customAlertDialog({
@@ -18,7 +18,7 @@ AlertDialog customAlertDialog({
             const Spacer(),
             TextButton(
               child: Text(
-                'cancel'.translate(context),
+                AppLocalizations.of(context).cancel,
                 style: const TextStyle(
                   color: AppColors.statusBarColor,
                   fontSize: 16,
@@ -37,7 +37,7 @@ AlertDialog customAlertDialog({
             TextButton(
               onPressed: onOK,
               child: Text(
-                'ok'.translate(context),
+                AppLocalizations.of(context).ok,
                 style: const TextStyle(
                   color: AppColors.statusBarColor,
                   fontSize: 16,

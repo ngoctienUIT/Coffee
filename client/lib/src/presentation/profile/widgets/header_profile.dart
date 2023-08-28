@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/view_image/screen/view_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,6 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../store/widgets/item_loading.dart';
 import '../bloc/profile_bloc.dart';
@@ -47,7 +47,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
               imageWidget(),
               const SizedBox(height: 15),
               Text(
-                "member".translate(context).toUpperCase(),
+                AppLocalizations.of(context).member.toUpperCase(),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -68,13 +68,12 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           current is ChangeAvatarState ||
           current is DeleteAvatarState,
       builder: (context, state) {
-        PreferencesModel preferencesModel =
-            context.read<ServiceBloc>().preferencesModel;
         if (state is EditProfileSate) isEdit = state.isEdit;
         if (state is DeleteAvatarState) {
           widget.user.imageUrl = null;
-          context.read<ServiceBloc>().add(ChangeUserInfoEvent(
-              preferencesModel.user!.copyWith(imageUrl: null)));
+          context
+              .read<ServiceBloc>()
+              .add(ChangeUserInfoEvent(getIt<User>().copyWith(imageUrl: null)));
         }
         return InkWell(
           onTap: widget.user.imageUrl != null || isEdit
@@ -114,7 +113,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           child: Column(
             children: [
               if (isEdit)
-                itemAction("take_photo".translate(context), () async {
+                itemAction(AppLocalizations.of(context).takePhoto, () async {
                   Navigator.pop(context);
                   var status = await Permission.camera.status.isGranted;
                   if (!status) {
@@ -123,7 +122,8 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                   if (status) pickAvatar(true);
                 }),
               if (isEdit)
-                itemAction("select_image_gallery".translate(context), () async {
+                itemAction(AppLocalizations.of(context).selectImageGallery,
+                    () async {
                   Navigator.pop(context);
                   bool isStoragePermission = false;
                   bool isPhotosPermission = false;
@@ -147,7 +147,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                     if (isStoragePermission) pickAvatar(false);
                   }
                 }),
-              itemAction("view_profile_picture".translate(context), () {
+              itemAction(AppLocalizations.of(context).viewProfilePicture, () {
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -157,14 +157,15 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                     ));
               }),
               if (isEdit)
-                itemAction("delete_profile_picture".translate(context), () {
+                itemAction(AppLocalizations.of(context).deleteProfilePicture,
+                    () {
                   Navigator.pop(context);
                   context
                       .read<ProfileBloc>()
                       .add(DeleteAvatarEvent(widget.user));
                 }),
               itemAction(
-                "cancel".translate(context),
+                AppLocalizations.of(context).cancel,
                 () => Navigator.pop(context),
               ),
             ],

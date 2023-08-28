@@ -1,25 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../../injection.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/store/store_response.dart';
+import '../../../data/models/user.dart';
 import '../../add_store/screen/add_store_page.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
 
 void showStoreBottomSheet(
   BuildContext context,
-  StoreResponse store,
+  StoreEntity store,
   VoidCallback onChange,
 ) {
-  PreferencesModel preferencesModel =
-      context.read<ServiceBloc>().preferencesModel;
+  User user = getIt<User>();
   showModalBottomSheet(
     isScrollControlled: true,
     useSafeArea: true,
@@ -56,11 +54,11 @@ void showStoreBottomSheet(
                 ),
               ),
             ),
-            if (preferencesModel.user!.userRole == "ADMIN")
+            if (user.userRole == "ADMIN")
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: customButton(
-                  text: "edit".translate(context),
+                  text: AppLocalizations.of(context)!.edit,
                   isOnPress: true,
                   onPress: () {
                     Navigator.of(context).push(createRoute(
@@ -83,7 +81,7 @@ void showStoreBottomSheet(
   );
 }
 
-Widget nameAndAddress(StoreResponse store) {
+Widget nameAndAddress(StoreEntity store) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -103,7 +101,7 @@ Widget nameAndAddress(StoreResponse store) {
   );
 }
 
-Widget phoneAndHour(BuildContext context, StoreResponse store) {
+Widget phoneAndHour(BuildContext context, StoreEntity store) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -127,7 +125,7 @@ Widget phoneAndHour(BuildContext context, StoreResponse store) {
       const Divider(),
       const SizedBox(height: 10),
       Text(
-        "hour".translate(context),
+        AppLocalizations.of(context)!.hour,
         style: const TextStyle(
           color: Color(0xff4F2C1F),
           fontSize: 18,
@@ -138,7 +136,7 @@ Widget phoneAndHour(BuildContext context, StoreResponse store) {
   );
 }
 
-Widget timeline(StoreResponse store) {
+Widget timeline(StoreEntity store) {
   return ListView.builder(
     physics: const NeverScrollableScrollPhysics(),
     padding: const EdgeInsets.symmetric(vertical: 20),

@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
 
 class ProductCatalogues {
   String? id;

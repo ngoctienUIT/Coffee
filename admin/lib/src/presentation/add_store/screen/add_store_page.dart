@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/core/utils/extensions/time_of_date_extension.dart';
+import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:coffee_admin/src/data/models/address.dart';
 import 'package:coffee_admin/src/data/models/store.dart';
-import 'package:coffee_admin/src/domain/repositories/store/store_response.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/district_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/province_dropdown.dart';
 import 'package:coffee_admin/src/presentation/add_store/widgets/ward_dropdown.dart';
@@ -17,10 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -37,17 +36,15 @@ class AddStorePage extends StatelessWidget {
       : super(key: key);
 
   final VoidCallback onChange;
-  final StoreResponse? store;
+  final StoreEntity? store;
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddStoreBloc(preferencesModel),
+      create: (context) => getIt<AddStoreBloc>(),
       child: Scaffold(
-        appBar:
-            AppBarGeneral(elevation: 0, title: "add_stores".translate(context)),
+        appBar: AppBarGeneral(
+            elevation: 0, title: AppLocalizations.of(context)!.addStores),
         body: AddStoreView(store: store, onChange: onChange),
       ),
     );
@@ -59,7 +56,7 @@ class AddStoreView extends StatefulWidget {
       : super(key: key);
 
   final VoidCallback onChange;
-  final StoreResponse? store;
+  final StoreEntity? store;
 
   @override
   State<AddStoreView> createState() => _AddStoreViewState();
@@ -133,9 +130,11 @@ class _AddStoreViewState extends State<AddStoreView> {
         if (state is AddStoreSuccessState) {
           widget.onChange();
           if (widget.store == null) {
-            customToast(context, "successfully_added_store".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.successfullyAddedStore);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -163,43 +162,58 @@ class _AddStoreViewState extends State<AddStoreView> {
             children: [
               storeImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "name_the_store".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.nameTheStore),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "name_the_store".translate(context),
-                title: "name_the_store".translate(context),
+                hint: AppLocalizations.of(context)!.nameTheStore,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.nameTheStore}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "phone_number".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.phoneNumber),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: phoneController,
-                hint: "phone_number".translate(context),
-                title: "phone_number".translate(context),
-                typeInput: const [TypeInput.phone],
+                hint: AppLocalizations.of(context)!.phoneNumber,
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
                 ],
+                validator: (value) {
+                  if (!value!.isValidPhone() && value.isOnlyNumbers() ||
+                      value.isEmpty) {
+                    return AppLocalizations.of(context)!.pleaseEnterPhoneNumber;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "opening_hours".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.openingHours),
               const SizedBox(height: 10),
               openStore(),
               const SizedBox(height: 10),
-              descriptionLine(text: "closing_time".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.closingTime),
               const SizedBox(height: 10),
               closeStore(),
               const SizedBox(height: 10),
               pickAddress(),
               const SizedBox(height: 10),
-              descriptionLine(text: "address".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.address),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: addressController,
-                hint: "address".translate(context),
-                title: "address".translate(context),
+                hint: AppLocalizations.of(context)!.address,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.address}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),
@@ -216,16 +230,14 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return Column(
           children: [
-            descriptionLine(text: "country".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.country),
             const SizedBox(height: 10),
             const CountryDropdown(),
             const SizedBox(height: 10),
-            descriptionLine(text: "province_city".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.provinceCity),
             const SizedBox(height: 10),
             ProvinceDropdown(
-              selectedValue: addressAPI.province != null
-                  ? addressAPI.province!.name
-                  : null,
+              selectedValue: addressAPI.province?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                     province: value, district: null, ward: null);
@@ -233,14 +245,11 @@ class _AddStoreViewState extends State<AddStoreView> {
               },
             ),
             const SizedBox(height: 10),
-            descriptionLine(text: "district".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.district),
             const SizedBox(height: 10),
             DistrictDropdown(
-              provinceID:
-                  addressAPI.province != null ? addressAPI.province!.id : null,
-              selectedValue: addressAPI.district != null
-                  ? addressAPI.district!.name
-                  : null,
+              provinceID: addressAPI.province?.id,
+              selectedValue: addressAPI.district?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                     province: addressAPI.province, district: value, ward: null);
@@ -248,15 +257,12 @@ class _AddStoreViewState extends State<AddStoreView> {
               },
             ),
             const SizedBox(height: 10),
-            descriptionLine(text: "ward".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.ward),
             const SizedBox(height: 10),
             WardDropdown(
-              provinceID:
-                  addressAPI.province != null ? addressAPI.province!.id : null,
-              districtID:
-                  addressAPI.district != null ? addressAPI.district!.id : null,
-              selectedValue:
-                  addressAPI.ward != null ? addressAPI.ward!.name : null,
+              provinceID: addressAPI.province?.id,
+              districtID: addressAPI.district?.id,
+              selectedValue: addressAPI.ward?.name,
               onChange: (value) {
                 addressAPI = addressAPI.copyWith(
                   province: addressAPI.province,
@@ -278,7 +284,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: open == null ? "open".translate(context) : open!.toTimeString(),
+          text: open?.toTimeString() ?? AppLocalizations.of(context)!.open,
           onPress: () async {
             open = await selectedTime(open);
             if (mounted) context.read<AddStoreBloc>().add(ChangeOpenEvent());
@@ -294,9 +300,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text: close == null
-              ? "close".translate(context)
-              : close!.toTimeString(),
+          text: close?.toTimeString() ?? AppLocalizations.of(context)!.close,
           onPress: () async {
             close = await selectedTime(close);
             if (mounted) context.read<AddStoreBloc>().add(ChangeCloseEvent());
@@ -340,7 +344,7 @@ class _AddStoreViewState extends State<AddStoreView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

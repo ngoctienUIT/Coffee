@@ -1,21 +1,41 @@
-abstract class AddTagState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends AddTagState {}
+abstract class AddTagState extends Equatable {}
+
+class InitState extends AddTagState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SaveButtonState extends AddTagState {
-  bool isContinue;
+  final bool isContinue;
 
   SaveButtonState(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
-class AddTagLoadingState extends AddTagState {}
+class AddTagLoadingState extends AddTagState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class AddTagSuccessState extends AddTagState {}
+class AddTagSuccessState extends AddTagState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddTagErrorState extends AddTagState {
-  String status;
+  final String status;
 
   AddTagErrorState(this.status);
+
+  @override
+  List<Object?> get props => [status];
 }
 
-class ChangeColorState extends AddTagState {}
+class ChangeColorState extends AddTagState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

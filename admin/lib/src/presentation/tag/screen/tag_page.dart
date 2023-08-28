@@ -1,7 +1,8 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../bloc/tag_bloc.dart';
@@ -30,10 +30,8 @@ class TagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => TagBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<TagBloc>()..add(FetchData()),
       child: TagView(onPick: onPick, listTag: listTag),
     );
   }
@@ -54,14 +52,12 @@ class _TagViewState extends State<TagView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN" &&
-              widget.onPick == null
+      floatingActionButton: user.userRole == "ADMIN" && widget.onPick == null
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -90,7 +86,8 @@ class _TagViewState extends State<TagView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -140,7 +137,7 @@ class _TagViewState extends State<TagView> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: customButton(
-            text: "save".translate(context),
+            text: AppLocalizations.of(context)!.save,
             isOnPress: true,
             onPress: () {
               widget.onPick!(
@@ -154,8 +151,7 @@ class _TagViewState extends State<TagView> {
   }
 
   Widget listTagWidget(List<Tag> listTag) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return ListView.builder(
       physics: widget.onPick == null
           ? const BouncingScrollPhysics(
@@ -168,7 +164,7 @@ class _TagViewState extends State<TagView> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 5),
-          child: preferencesModel.user!.userRole != "ADMIN"
+          child: user.userRole != "ADMIN"
               ? tagItem(listTag[index])
               : widget.onPick != null
                   ? Row(
@@ -332,9 +328,9 @@ class _TagViewState extends State<TagView> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'remove_tag'.translate(context),
+          title: AppLocalizations.of(context)!.removeTag,
           content:
-              'are_you_sure_you_want_to_remove_this_tag'.translate(context),
+              AppLocalizations.of(context)!.areYouSureYouWantToRemoveThisTag,
           onOK: onOK,
         );
       },

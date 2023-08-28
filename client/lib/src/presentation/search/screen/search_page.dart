@@ -1,3 +1,4 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/presentation/order/widgets/list_product_loading.dart';
 import 'package:coffee/src/presentation/search/bloc/search_bloc.dart';
 import 'package:coffee/src/presentation/search/bloc/search_event.dart';
@@ -23,9 +24,9 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          SearchBloc()..add(SearchProduct(query: searchFoodController.text)),
+    return BlocProvider<SearchBloc>(
+      create: (context) => getIt<SearchBloc>()
+        ..add(SearchProduct(query: searchFoodController.text)),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBarSearch(controller: searchFoodController),

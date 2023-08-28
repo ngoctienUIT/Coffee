@@ -1,4 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -29,16 +30,16 @@ class CustomPasswordInput extends StatelessWidget {
       keyboardType: keyboardType,
       validator: (value) {
         if (confirmPassword != null && confirmPassword != value) {
-          return "confirmation_password_not_match".translate(context);
+          return AppLocalizations.of(context)!.confirmationPasswordNotMatch;
         }
         if (!value!.isSpecialCharacters()) {
-          return "requires_special_characters".translate(context);
+          return AppLocalizations.of(context)!.requiresSpecialCharacters;
         }
         if (value.isEmpty) {
-          return "please_enter_password".translate(context);
+          return AppLocalizations.of(context)!.pleaseEnterPassword;
         }
         if (value.length < 8) {
-          return "password_length_least_characters".translate(context);
+          return AppLocalizations.of(context)!.passwordLengthLeastCharacters;
         }
         return null;
       },

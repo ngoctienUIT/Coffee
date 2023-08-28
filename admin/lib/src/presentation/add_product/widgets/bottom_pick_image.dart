@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +22,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
         ),
         child: Column(
           children: [
-            itemAction("take_photo".translate(context), () async {
+            itemAction(AppLocalizations.of(context)!.takePhoto, () async {
               Navigator.pop(context);
               var status = await Permission.camera.status;
               if (status.isDenied) {
@@ -31,7 +31,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
               status = await Permission.camera.status;
               if (status.isGranted) onPick(await pickAvatar(true));
             }),
-            itemAction("select_image_gallery".translate(context), () async {
+            itemAction(AppLocalizations.of(context)!.selectImageGallery, () async {
               Navigator.pop(context);
               bool isStoragePermission = false;
               bool isPhotosPermission = false;
@@ -54,7 +54,7 @@ void showMyBottomSheet(BuildContext context, Function(File? image) onPick) {
               }
             }),
             itemAction(
-                "cancel".translate(context), () => Navigator.pop(context)),
+                AppLocalizations.of(context)!.cancel, () => Navigator.pop(context)),
           ],
         ),
       );

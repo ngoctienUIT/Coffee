@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../domain/repositories/product/product_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';

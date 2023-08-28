@@ -1,4 +1,6 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee/injection.dart';
+import 'package:coffee/src/core/request/input_pin_request/input_pin_request.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +8,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../new_password/screen/new_password_page.dart';
@@ -23,8 +24,8 @@ class InputPinPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => InputPinBloc(),
+    return BlocProvider<InputPinBloc>(
+      create: (context) => getIt<InputPinBloc>(),
       child: InputPinView(resetCredential: resetCredential),
     );
   }
@@ -79,7 +80,8 @@ class _InputPinViewState extends State<InputPinView> {
               begin: const Offset(1, 0),
             ));
           } else {
-            customToast(context, "PIN_code_is_not_correct".translate(context));
+            customToast(
+                context, AppLocalizations.of(context).pinCodeIsNotCorrect);
           }
         }
       },
@@ -100,16 +102,21 @@ class _InputPinViewState extends State<InputPinView> {
                       height: 200,
                     ),
                   ),
-                  Text("enter_the_PIN_code".translate(context)),
+                  Text(AppLocalizations.of(context).enterThePINCode),
                   const SizedBox(height: 20),
                   CustomTextInput(
                     controller: controller,
                     hint: "PIN",
                     maxLength: 6,
-                    typeInput: const [TypeInput.text],
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "${AppLocalizations.of(context).pleaseEnter} PIN";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-                  Text("enter_PIN_that_sent_your_email".translate(context)),
+                  Text(AppLocalizations.of(context).enterPINThatSentYourEmail),
                   const SizedBox(height: 50),
                   continueButton(),
                 ],
@@ -126,12 +133,13 @@ class _InputPinViewState extends State<InputPinView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text: AppLocalizations.of(context).continue1,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context
-                  .read<InputPinBloc>()
-                  .add(SendEvent(widget.resetCredential, controller.text));
+              context.read<InputPinBloc>().add(SendEvent(InputPinRequest(
+                    resetCredential: widget.resetCredential,
+                    pin: controller.text,
+                  )));
             }
           },
           isOnPress: state is ContinueState ? state.isContinue : false,

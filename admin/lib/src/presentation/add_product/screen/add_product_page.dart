@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
-import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_event.dart';
 import 'package:coffee_admin/src/presentation/add_product/bloc/add_product_state.dart';
@@ -18,9 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/tag.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product_catalogues/screen/product_catalogues_page.dart';
@@ -43,17 +42,15 @@ class AddProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddProductBloc(preferencesModel),
+      create: (context) => getIt<AddProductBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            "add_products".translate(context),
+            AppLocalizations.of(context)!.addProducts,
             style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
@@ -152,9 +149,11 @@ class _AddProductViewState extends State<AddProductView> {
         if (state is AddProductSuccessState) {
           widget.onChange();
           if (widget.product == null) {
-            customToast(context, "add_successful_products".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.addSuccessfulProducts);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -183,24 +182,35 @@ class _AddProductViewState extends State<AddProductView> {
               const SizedBox(height: 10),
               productImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "product_catalogues".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.productCatalogues),
               const SizedBox(height: 10),
               productCatalogue(),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_name".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.productName),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "product_name".translate(context),
-                title: "product_name".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.productName,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productName.toLowerCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_price".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.productPrice),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: "product_price".translate(context).toLowerCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productPrice.toLowerCase()}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -212,7 +222,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: sController,
                 hint: "100.000đ",
-                title: "S",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} S";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -224,7 +239,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: mController,
                 hint: "100.000đ",
-                title: "M",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} M";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -236,19 +256,30 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: lController,
                 hint: "100.000đ",
-                title: "L",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} L";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_description".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.productDescription),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "product_description".translate(context),
-                title: "product_description".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.productDescription,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productDescription.toLowerCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               addTopping(),
@@ -270,14 +301,13 @@ class _AddProductViewState extends State<AddProductView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: catalogues == null
-              ? 'product_catalogues'.translate(context)
-              : catalogues!.name,
+          text: catalogues?.name ??
+              AppLocalizations.of(context)!.productCatalogues,
           onPress: () {
             Navigator.of(context).push(
               createRoute(
                   screen: ProductCataloguesPage(
-                    id: catalogues != null ? catalogues!.id : null,
+                    id: catalogues?.id,
                     onPick: (catalogue) {
                       catalogues = catalogue;
                       context
@@ -303,7 +333,7 @@ class _AddProductViewState extends State<AddProductView> {
             this.image = image;
             context
                 .read<AddProductBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: image == null
               ? (imageNetwork == null
@@ -327,7 +357,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "add_topping".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.addTopping),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -342,7 +372,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: Text("add".translate(context)),
+              child: Text(AppLocalizations.of(context)!.add),
             )
           ],
         ),
@@ -351,7 +381,7 @@ class _AddProductViewState extends State<AddProductView> {
           builder: (context, state) {
             return listTopping.isEmpty
                 ? Text(
-                    "no_toppings".translate(context),
+                    AppLocalizations.of(context)!.noToppings,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
@@ -412,7 +442,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "add_tags".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.addTags),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -427,7 +457,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: Text("add".translate(context)),
+              child: Text(AppLocalizations.of(context)!.add),
             )
           ],
         ),
@@ -436,7 +466,7 @@ class _AddProductViewState extends State<AddProductView> {
           builder: (context, state) {
             return listTag.isEmpty
                 ? Text(
-                    "no_tags".translate(context),
+                    AppLocalizations.of(context)!.noTags,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
@@ -507,7 +537,7 @@ class _AddProductViewState extends State<AddProductView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

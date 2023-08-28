@@ -1,13 +1,27 @@
-abstract class ToppingEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends ToppingEvent {}
+abstract class ToppingEvent extends Equatable {}
 
-class UpdateData extends ToppingEvent {}
+class FetchData extends ToppingEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class PickEvent extends ToppingEvent {}
+class UpdateData extends ToppingEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class PickEvent extends ToppingEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class DeleteEvent extends ToppingEvent {
-  String id;
+  final String id;
 
   DeleteEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

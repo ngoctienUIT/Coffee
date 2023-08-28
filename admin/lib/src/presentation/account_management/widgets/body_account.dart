@@ -1,8 +1,7 @@
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
 import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
+import '../../../data/remote/response/user/user_response.dart';
 import '../../profile/screen/profile_page.dart';
 import '../bloc/account_bloc.dart';
 import '../bloc/account_event.dart';
@@ -33,7 +33,8 @@ class BodyAccount extends StatelessWidget {
         }
         if (state is AccountLoaded && !state.check) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -111,9 +112,9 @@ class BodyAccount extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_account'.translate(context),
-          content:
-              'are_you_sure_you_want_to_delete_this_account'.translate(context),
+          title: AppLocalizations.of(context)!.deleteAccount,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisAccount,
           onOK: onOK,
         );
       },

@@ -1,4 +1,4 @@
-import '../../domain/repositories/store/store_response.dart';
+import '../../data/remote/response/store/store_response.dart';
 
 class Store {
   String? storeId;

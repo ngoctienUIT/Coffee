@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -17,7 +17,7 @@ class _PolicyPageState extends State<PolicyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarGeneral(title: "policy".translate(context)),
+      appBar: AppBarGeneral(title: AppLocalizations.of(context)?.policy),
       body: Stack(
         children: [
           isLoading

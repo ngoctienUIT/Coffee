@@ -1,30 +1,60 @@
-abstract class InputInfoState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends InputInfoState {}
+abstract class InputInfoState extends Equatable {}
 
-class SubmitLoadingState extends InputInfoState {}
+class InitState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class SubmitSuccessState extends InputInfoState {}
+class SubmitLoadingState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SubmitSuccessState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SubmitErrorState extends InputInfoState {
-  String status;
+  final String status;
+
   SubmitErrorState({required this.status});
+
+  @override
+  List<Object?> get props => [status];
 }
 
 class ContinueState extends InputInfoState {
-  bool isContinue;
+  final bool isContinue;
 
   ContinueState({required this.isContinue});
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class HidePasswordState extends InputInfoState {
-  bool isHide;
+  final bool isHide;
 
   HidePasswordState({required this.isHide});
+
+  @override
+  List<Object?> get props => [isHide];
 }
 
-class TextChangeState extends InputInfoState {}
+class TextChangeState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeBirthdayState extends InputInfoState {}
+class ChangeBirthdayState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ChangeGenderState extends InputInfoState {}
+class ChangeGenderState extends InputInfoState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

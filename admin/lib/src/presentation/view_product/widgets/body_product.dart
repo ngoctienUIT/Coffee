@@ -1,5 +1,5 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,7 +51,7 @@ class BodyProduct extends StatelessWidget {
             children: [
               const Divider(),
               Text(
-                "add".translate(context),
+                AppLocalizations.of(context)!.add,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

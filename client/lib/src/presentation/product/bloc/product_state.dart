@@ -1,31 +1,54 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/order.dart';
 
-abstract class ProductState {
-  Order? order;
+abstract class ProductState extends Equatable {
+  final Order? order;
 
-  ProductState([this.order]);
+  const ProductState([this.order]);
 }
 
-class InitState extends ProductState {}
+class InitState extends ProductState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class DataTransmissionState extends ProductState {}
+class DataTransmissionState extends ProductState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class ProductLoadingState extends ProductState {}
+class ProductLoadingState extends ProductState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddProductToOrderSuccessState extends ProductState {
-  AddProductToOrderSuccessState([super.order]);
+  const AddProductToOrderSuccessState([super.order]);
+
+  @override
+  List<Object?> get props => [super.order];
 }
 
 class UpdateSuccessState extends ProductState {
-  UpdateSuccessState([super.order]);
+  const UpdateSuccessState([super.order]);
+
+  @override
+  List<Object?> get props => [super.order];
 }
 
 class DeleteSuccessState extends ProductState {
-  DeleteSuccessState([super.order]);
+  const DeleteSuccessState([super.order]);
+
+  @override
+  List<Object?> get props => [super.order];
 }
 
 class ProductErrorState extends ProductState {
-  String error;
+  final String error;
 
-  ProductErrorState(this.error);
+  const ProductErrorState(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

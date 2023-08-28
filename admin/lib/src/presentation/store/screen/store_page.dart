@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:coffee_admin/src/presentation/add_store/screen/add_store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,11 +13,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/store/store_response.dart';
+import '../../../data/models/user.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../signup/widgets/custom_text_input.dart';
 import '../bloc/store_bloc.dart';
@@ -28,10 +28,8 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<StoreBloc>(
-      create: (_) => StoreBloc(preferencesModel)..add(FetchData()),
+      create: (_) => getIt<StoreBloc>()..add(FetchData()),
       child: const StoreView(),
     );
   }
@@ -55,13 +53,12 @@ class _StoreViewState extends State<StoreView> {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: appBar(),
       body: SafeArea(child: bodyStore()),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -95,7 +92,7 @@ class _StoreViewState extends State<StoreView> {
             context.read<StoreBloc>().add(SearchStore(storeName: value));
           },
           controller: searchStoreController,
-          hint: "address_search".translate(context),
+          hint: AppLocalizations.of(context)!.addressSearch,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textInputAction: TextInputAction.search,
@@ -110,9 +107,8 @@ class _StoreViewState extends State<StoreView> {
   }
 
   Widget bodyStore() {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    List<StoreResponse> listStore = [];
+    User user = getIt<User>();
+    List<StoreEntity> listStore = [];
     return BlocConsumer<StoreBloc, StoreState>(
       listener: (context, state) {
         if (state is StoreError) {
@@ -123,7 +119,8 @@ class _StoreViewState extends State<StoreView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -158,7 +155,7 @@ class _StoreViewState extends State<StoreView> {
                           SearchStore(storeName: searchStoreController.text));
                     },
                   ),
-                  child: preferencesModel.user!.userRole != "ADMIN"
+                  child: user.userRole != "ADMIN"
                       ? itemStore(listStore[index])
                       : Slidable(
                           endActionPane: ActionPane(
@@ -233,7 +230,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget itemStore(StoreResponse store) {
+  Widget itemStore(StoreEntity store) {
     return Card(
       elevation: 1,
       child: Padding(
@@ -257,7 +254,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget infoStore(StoreResponse store) {
+  Widget infoStore(StoreEntity store) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -282,7 +279,7 @@ class _StoreViewState extends State<StoreView> {
     );
   }
 
-  Widget isOpenStore(StoreResponse store) {
+  Widget isOpenStore(StoreEntity store) {
     return Row(
       children: [
         Container(
@@ -293,8 +290,8 @@ class _StoreViewState extends State<StoreView> {
           ),
           child: Text(
             store.checkOpen()
-                ? "open".translate(context)
-                : "close".translate(context),
+                ? AppLocalizations.of(context)!.open
+                : AppLocalizations.of(context)!.close,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -314,9 +311,9 @@ class _StoreViewState extends State<StoreView> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_store'.translate(context),
+          title: AppLocalizations.of(context)!.deleteStore,
           content:
-              'are_you_sure_you_want_to_delete_this_store'.translate(context),
+              AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisStore,
           onOK: onOK,
         );
       },

@@ -1,11 +1,11 @@
+import 'package:coffee_admin/injection.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../add_product/screen/add_product_page.dart';
 import '../bloc/product_bloc.dart';
 import '../bloc/product_event.dart';
@@ -17,10 +17,8 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ProductBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<ProductBloc>()..add(FetchData()),
       child: const ProductView(),
     );
   }
@@ -38,8 +36,7 @@ class _ProductViewState extends State<ProductView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       body: const SafeArea(
@@ -51,7 +48,7 @@ class _ProductViewState extends State<ProductView>
           ],
         ),
       ),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 final state = context.read<ProductBloc>().state;

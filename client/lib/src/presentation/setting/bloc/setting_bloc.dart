@@ -1,43 +1,26 @@
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:coffee/src/presentation/setting/bloc/setting_event.dart';
 import 'package:coffee/src/presentation/setting/bloc/setting_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../domain/use_cases/setting_use_case/delete_account.dart';
 
+@injectable
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
-  SettingBloc() : super(InitState()) {
-    on<DeleteAccountEvent>((event, emit) => deleteAccount(emit));
+  final DeleteAccountUseCase _useCase;
+
+  SettingBloc(this._useCase) : super(InitState()) {
+    on<DeleteAccountEvent>(_deleteAccount);
   }
 
-  Future deleteAccount(Emitter emit) async {
-    try {
-      emit(DeleteLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String id = prefs.getString("userID") ?? "";
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
-      final response =
-          await apiService.getAllOrders("Bearer $token", email, "PLACED");
-      if (response.data.isEmpty) {
-        await apiService.removeUserByID("Bearer $token", id);
-        prefs.setBool("isLogin", false);
-        emit(DeleteSuccessState());
-      } else {
-        emit(DeleteErrorState(
-            "Bạn vẫn còn ${response.data.length} đơn hàng chưa hoàn tất"));
-      }
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(DeleteErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(DeleteErrorState(e.toString()));
-      print(e);
+  Future _deleteAccount(DeleteAccountEvent event, Emitter emit) async {
+    emit(DeleteLoadingState());
+    final response = await _useCase.call();
+    if (response is DataSuccess) {
+      emit(DeleteSuccessState());
+    } else {
+      emit(DeleteErrorState(response.error ?? ""));
     }
   }
 }

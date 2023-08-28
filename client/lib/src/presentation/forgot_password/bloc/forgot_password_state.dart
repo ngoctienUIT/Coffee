@@ -1,22 +1,40 @@
-abstract class ForgotPasswordState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends ForgotPasswordState {}
+abstract class ForgotPasswordState extends Equatable {}
 
-class LoadingState extends ForgotPasswordState {}
+class InitState extends ForgotPasswordState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class LoadingState extends ForgotPasswordState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SuccessState extends ForgotPasswordState {
-  String resetCredential;
+  final String resetCredential;
 
   SuccessState(this.resetCredential);
+
+  @override
+  List<Object?> get props => [resetCredential];
 }
 
 class ErrorState extends ForgotPasswordState {
-  String status;
+  final String status;
+
   ErrorState(this.status);
+
+  @override
+  List<Object?> get props => [status];
 }
 
 class ContinueState extends ForgotPasswordState {
-  bool isContinue = false;
+  final bool isContinue;
 
   ContinueState(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }

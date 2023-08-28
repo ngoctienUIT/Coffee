@@ -1,26 +1,43 @@
-import '../../../domain/repositories/order/order_response.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class OrderState {}
+import '../../../data/remote/response/order/order_response.dart';
 
-class InitState extends OrderState {}
+abstract class OrderState extends Equatable {}
 
-class OrderLoading extends OrderState {}
+class InitState extends OrderState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class OrderLoading extends OrderState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class OrderLoaded extends OrderState {
   final int index;
   final List<OrderResponse> listOrder;
 
   OrderLoaded(this.index, this.listOrder);
+
+  @override
+  List<Object?> get props => [index, listOrder];
 }
 
 class OrderError extends OrderState {
   final String? message;
 
   OrderError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class ChangeOrderListState extends OrderState {
-  String id;
+  final String id;
 
   ChangeOrderListState(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

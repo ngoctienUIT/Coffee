@@ -1,4 +1,6 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,7 +8,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../input_pin/screen/input_pin.dart';
 import '../../login/widgets/custom_button.dart';
@@ -20,8 +21,8 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ForgotPasswordBloc(),
+    return BlocProvider<ForgotPasswordBloc>(
+      create: (context) => getIt<ForgotPasswordBloc>(),
       child: const ForgotPasswordView(),
     );
   }
@@ -90,15 +91,22 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       height: 200,
                     ),
                   ),
-                  Text("forgot_your_password".translate(context)),
+                  Text(AppLocalizations.of(context).forgotYourPassword),
                   const SizedBox(height: 20),
                   CustomTextInput(
                     controller: controller,
                     hint: "Email",
-                    typeInput: const [TypeInput.email],
+                    validator: (value) {
+                      if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                          value.isEmpty) {
+                        return AppLocalizations.of(context).pleaseEnterEmail;
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
-                  Text("enter_email_phone_reset_password".translate(context)),
+                  Text(AppLocalizations.of(context)
+                      .enterEmailPhoneResetPassword),
                   const SizedBox(height: 50),
                   continueButton(),
                 ],
@@ -115,7 +123,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text: AppLocalizations.of(context).continue1,
           onPress: () {
             if (_formKey.currentState!.validate()) {
               context

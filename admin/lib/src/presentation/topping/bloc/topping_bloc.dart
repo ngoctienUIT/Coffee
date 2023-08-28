@@ -1,53 +1,47 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/topping_use_case/delete_topping.dart';
+import '../../../domain/use_cases/topping_use_case/get_topping.dart';
 import 'topping_event.dart';
 import 'topping_state.dart';
 
+@injectable
 class ToppingBloc extends Bloc<ToppingEvent, ToppingState> {
-  PreferencesModel preferencesModel;
+  final GetToppingUseCase _getToppingUseCase;
+  final DeleteToppingUseCase _deleteToppingUseCase;
 
-  ToppingBloc(this.preferencesModel) : super(InitState()) {
+  ToppingBloc(
+    this._getToppingUseCase,
+    this._deleteToppingUseCase,
+  ) : super(InitState()) {
     on<FetchData>((event, emit) => getData(true, emit));
 
     on<UpdateData>((event, emit) => getData(false, emit));
 
     on<PickEvent>((event, emit) => emit(PickState()));
 
-    on<DeleteEvent>((event, emit) => deleteTopping(event.id, emit));
+    on<DeleteEvent>(_deleteTopping);
   }
 
   Future getData(bool check, Emitter emit) async {
-    try {
-      if (check) emit(ToppingLoading());
-      final response = await preferencesModel.apiService.getAllToppings();
-      emit(ToppingLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ToppingError(error));
-    } catch (e) {
-      emit(ToppingError(e.toString()));
-      print(e);
+    if (check) emit(ToppingLoading());
+    final response = await _getToppingUseCase.call();
+    if (response is DataSuccess) {
+      emit(ToppingLoaded(response.data!));
+    } else {
+      emit(ToppingError(response.error));
     }
   }
 
-  Future deleteTopping(String id, Emitter emit) async {
-    try {
-      emit(ToppingLoading(false));
-      await preferencesModel.apiService
-          .removeToppingByID("Bearer ${preferencesModel.token}", id);
-      // final response = await apiService.getAllToppings();
-      emit(DeleteSuccess(id));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ToppingError(error));
-      print(error);
-    } catch (e) {
-      emit(ToppingError(e.toString()));
-      print(e);
+  Future _deleteTopping(DeleteEvent event, Emitter emit) async {
+    emit(ToppingLoading(false));
+    final response = await _deleteToppingUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(DeleteSuccess(event.id));
+    } else {
+      emit(ToppingError(response.error));
     }
   }
 }

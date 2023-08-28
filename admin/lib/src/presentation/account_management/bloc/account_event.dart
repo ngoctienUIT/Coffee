@@ -1,22 +1,36 @@
-abstract class AccountEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends AccountEvent {}
+abstract class AccountEvent extends Equatable {}
+
+class FetchData extends AccountEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class UpdateData extends AccountEvent {
-  int index = 0;
+  final int index;
 
   UpdateData(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class DeleteEvent extends AccountEvent {
-  String id;
-  int index = 0;
+  final String id;
+  final int index;
 
   DeleteEvent(this.id, this.index);
+
+  @override
+  List<Object?> get props => [id, index];
 }
 
 class RefreshData extends AccountEvent {
-  int index = 0;
+  final int index;
 
   RefreshData(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }

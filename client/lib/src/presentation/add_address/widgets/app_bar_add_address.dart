@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -12,7 +12,7 @@ class AppBarAddAddress extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColors.bgColor,
       elevation: 1,
       title: Text(
-        "edit_address".translate(context),
+        AppLocalizations.of(context).editAddress,
         style: const TextStyle(color: Colors.black),
       ),
       centerTitle: true,

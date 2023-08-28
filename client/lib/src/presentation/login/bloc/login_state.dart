@@ -1,45 +1,81 @@
-import 'package:coffee/src/data/models/preferences_model.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class LoginState {}
+import '../../../data/models/user.dart';
 
-class InitState extends LoginState {}
+abstract class LoginState extends Equatable {}
 
-class LoginLoadingState extends LoginState {}
+class InitState extends LoginState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class LoginLoadingState extends LoginState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class LoginSuccessState extends LoginState {
-  PreferencesModel preferencesModel;
+  final User user;
+  final String token;
 
-  LoginSuccessState(this.preferencesModel);
+  LoginSuccessState({required this.user, required this.token});
+
+  @override
+  List<Object?> get props => [user, token];
 }
 
 class LoginErrorState extends LoginState {
-  String status;
+  final String status;
+
   LoginErrorState({required this.status});
+
+  @override
+  List<Object?> get props => [status];
 }
 
-class LoginGoogleLoadingState extends LoginState {}
+class LoginGoogleLoadingState extends LoginState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class LoginGoogleSuccessState extends LoginState {
-  PreferencesModel preferencesModel;
+  final User user;
+  final String token;
 
-  LoginGoogleSuccessState(this.preferencesModel);
+  LoginGoogleSuccessState({required this.user, required this.token});
+
+  @override
+  List<Object?> get props => [user, token];
 }
 
 class LoginGoogleErrorState extends LoginState {
-  String status;
+  final String status;
+
   LoginGoogleErrorState({required this.status});
+
+  @override
+  List<Object?> get props => [status];
 }
 
-class RememberState extends LoginState {}
+class RememberState extends LoginState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class ContinueState extends LoginState {
-  bool isContinue;
+  final bool isContinue;
 
   ContinueState({required this.isContinue});
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class HidePasswordState extends LoginState {
-  bool isHide;
+  final bool isHide;
 
   HidePasswordState({required this.isHide});
+
+  @override
+  List<Object?> get props => [isHide];
 }

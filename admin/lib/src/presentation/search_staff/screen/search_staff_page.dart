@@ -1,3 +1,4 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/presentation/account_management/widgets/list_account_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,9 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../account_management/widgets/item_account.dart';
 import '../../profile/screen/profile_page.dart';
@@ -22,11 +21,8 @@ class SearchStaffPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) =>
-          SearchStaffBloc(preferencesModel)..add(SearchStaff("")),
+    return BlocProvider<SearchStaffBloc>(
+      create: (context) => getIt<SearchStaffBloc>()..add(SearchStaff("")),
       child: const SearchStaffView(),
     );
   }

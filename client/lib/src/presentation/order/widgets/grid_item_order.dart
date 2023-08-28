@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/app_colors.dart';
-import '../../../domain/repositories/product/product_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
 import '../../product/screen/product_page.dart';
 import 'list_product_loading.dart';
 

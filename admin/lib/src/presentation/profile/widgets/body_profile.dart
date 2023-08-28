@@ -1,5 +1,7 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +10,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -59,7 +59,8 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
       listener: (context, state) {
         if (state is SaveProfileLoaded) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
-          customToast(context, "save_changes_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.saveChangesSuccessfully);
           if (widget.onChange != null) {
             widget.onChange!.call();
           }
@@ -96,20 +97,19 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
   }
 
   void onSave() {
+    User userIt = getIt<User>();
     if (isEdit) {
-      PreferencesModel preferencesModel =
-          context.read<ServiceBloc>().preferencesModel;
       if (_formKey.currentState!.validate()) {
         User user = widget.user.copyWith(
           displayName: nameController.text,
           isMale: isMale,
           birthOfDate: DateFormat("dd/MM/yyyy").format(selectedDate!),
         );
-        if (user == preferencesModel.user) {
+        if (user == userIt) {
           context.read<ProfileBloc>().add(EditProfileEvent(isEdit: !isEdit));
         } else {
           context.read<ProfileBloc>().add(SaveProfileEvent(user));
-          if (user.email == preferencesModel.user!.email) {
+          if (user.email == userIt.email) {
             context.read<ServiceBloc>().add(ChangeUserInfoEvent(user));
           }
         }
@@ -125,28 +125,35 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         const SizedBox(height: 10),
         Row(
           children: [
-            descriptionLine(text: "general_info".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.generalInfo),
             const Spacer(),
             TextButton(
               onPressed: onSave,
               child: Text(
-                (isEdit ? "save" : "edit").translate(context),
+                isEdit
+                    ? AppLocalizations.of(context)!.save
+                    : AppLocalizations.of(context)!.edit,
               ),
             ),
           ],
         ),
         CustomTextInput(
           controller: nameController,
-          hint: "name".translate(context),
-          title: "name".translate(context).toLowerCase(),
-          typeInput: const [TypeInput.text],
+          hint: AppLocalizations.of(context)!.name,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.name.toLowerCase()}";
+            }
+            return null;
+          },
           checkEdit: isEdit,
         ),
         const SizedBox(height: 10),
         CustomPickerWidget(
           checkEdit: isEdit,
-          text:
-              isMale ? "male".translate(context) : "female".translate(context),
+          text: isMale
+              ? AppLocalizations.of(context)!.male
+              : AppLocalizations.of(context)!.female,
           onPress: () => showMyBottomSheet(
             context: context,
             isMale: isMale,
@@ -160,16 +167,16 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomPickerWidget(
           checkEdit: isEdit,
           text: selectedDate == null
-              ? "birthday".translate(context)
+              ? AppLocalizations.of(context)!.birthday
               : DateFormat("dd/MM/yyyy").format(selectedDate!),
           onPress: () => selectDate(),
         ),
         const SizedBox(height: 10),
-        descriptionLine(text: "phone_number".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context)!.phoneNumber),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: phoneController,
-          hint: "phone_number".translate(context),
+          hint: AppLocalizations.of(context)!.phoneNumber,
           checkEdit: false,
         ),
         const SizedBox(height: 10),

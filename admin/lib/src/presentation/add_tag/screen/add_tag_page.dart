@@ -1,5 +1,6 @@
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/tag.dart';
 import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_bloc.dart';
 import 'package:coffee_admin/src/presentation/add_tag/bloc/add_tag_event.dart';
@@ -10,8 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../product/widgets/description_line.dart';
 import '../../profile/widgets/custom_picker_widget.dart';
@@ -26,13 +25,11 @@ class AddTagPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddTagBloc(preferencesModel),
+      create: (context) => getIt<AddTagBloc>(),
       child: Scaffold(
-        appBar:
-            AppBarGeneral(elevation: 0, title: "add_tags".translate(context)),
+        appBar: AppBarGeneral(
+            elevation: 0, title: AppLocalizations.of(context)!.addTags),
         body: AddTagView(onChange: onChange, tag: tag),
       ),
     );
@@ -92,9 +89,11 @@ class _AddTagViewState extends State<AddTagView> {
         if (state is AddTagSuccessState) {
           widget.onChange();
           if (widget.tag == null) {
-            customToast(context, "add_successful_tag".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.addSuccessfulTag);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -118,23 +117,33 @@ class _AddTagViewState extends State<AddTagView> {
           child: Column(
             children: [
               const SizedBox(height: 30),
-              descriptionLine(text: "name".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.name),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "name".translate(context),
-                title: "name".translate(context),
+                hint: AppLocalizations.of(context)!.name,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.name}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "description".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.description),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "description".translate(context),
-                title: "description".translate(context),
+                hint: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "color".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.color),
               const SizedBox(height: 10),
               pickColor(),
               const SizedBox(height: 10),
@@ -154,7 +163,7 @@ class _AddTagViewState extends State<AddTagView> {
         checkEmpty();
         return CustomPickerWidget(
           checkEdit: true,
-          text: textColor == null ? "" : textColor!,
+          text: textColor ?? "",
           onPress: () => showPickColor(),
         );
       },
@@ -169,7 +178,7 @@ class _AddTagViewState extends State<AddTagView> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('pick_a_color'.translate(context)),
+          title: Text(AppLocalizations.of(context)!.pickAColor),
           content: SingleChildScrollView(
             child: ColorPicker(
               pickerColor: pickerColor,
@@ -178,7 +187,7 @@ class _AddTagViewState extends State<AddTagView> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('ok'.translate(context)),
+              child: Text(AppLocalizations.of(context)!.ok),
               onPressed: () {
                 textColor =
                     "#${pickerColor.toString().substring(10, 16).toUpperCase()}";
@@ -197,7 +206,7 @@ class _AddTagViewState extends State<AddTagView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

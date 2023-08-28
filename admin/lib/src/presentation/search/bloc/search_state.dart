@@ -1,19 +1,33 @@
-import '../../../domain/repositories/product/product_response.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class SearchState {}
+import '../../../data/remote/response/product/product_response.dart';
 
-class InitState extends SearchState {}
+abstract class SearchState extends Equatable {}
 
-class SearchLoading extends SearchState {}
+class InitState extends SearchState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SearchLoading extends SearchState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SearchLoaded extends SearchState {
   final List<ProductResponse> listProduct;
 
   SearchLoaded(this.listProduct);
+
+  @override
+  List<Object?> get props => [listProduct];
 }
 
 class SearchError extends SearchState {
   final String? message;
 
   SearchError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

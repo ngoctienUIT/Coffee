@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -49,9 +49,9 @@ class _HeaderAccountPageState extends State<HeaderAccountPage>
               unselectedLabelStyle: const TextStyle(fontSize: 16),
               indicatorColor: AppColors.statusBarColor,
               tabs: [
-                Tab(text: "all".translate(context)),
-                Tab(text: "admin".translate(context)),
-                Tab(text: "staff".translate(context)),
+                Tab(text: AppLocalizations.of(context)!.all),
+                Tab(text: AppLocalizations.of(context)!.admin),
+                Tab(text: AppLocalizations.of(context)!.staff),
               ],
             ),
           ),
@@ -66,7 +66,7 @@ class _HeaderAccountPageState extends State<HeaderAccountPage>
       child: SizedBox(
         height: 40,
         child: CustomTextInput(
-          hint: "looking_for_employees".translate(context),
+          hint: AppLocalizations.of(context)!.lookingForEmployees,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textStyle: const TextStyle(fontSize: 13),

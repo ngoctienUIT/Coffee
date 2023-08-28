@@ -1,17 +1,16 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -31,13 +30,11 @@ class AddToppingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => AddToppingBloc(preferencesModel),
+    return BlocProvider<AddToppingBloc>(
+      create: (context) => getIt<AddToppingBloc>(),
       child: Scaffold(
         appBar: AppBarGeneral(
-            elevation: 0, title: "add_topping".translate(context)),
+            elevation: 0, title: AppLocalizations.of(context)!.addTopping),
         body: AddToppingView(onChange: onChange, topping: topping),
       ),
     );
@@ -102,10 +99,11 @@ class _AddToppingViewState extends State<AddToppingView> {
       listener: (context, state) {
         if (state is AddToppingSuccessState) {
           if (widget.topping == null) {
-            customToast(
-                context, "successfully_added_topping".translate(context));
+            customToast(context,
+                AppLocalizations.of(context)!.successfullyAddedTopping);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           widget.onChange();
           Navigator.pop(context);
@@ -132,32 +130,47 @@ class _AddToppingViewState extends State<AddToppingView> {
               const SizedBox(height: 10),
               toppingImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "name_topping".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.nameTopping),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "name_topping".translate(context),
-                title: "name_topping".translate(context),
+                hint: AppLocalizations.of(context)!.nameTopping,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.nameTopping}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "topping_price".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.toppingPrice),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: "topping_price".translate(context),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.toppingPrice}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "description".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.description),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "description".translate(context),
-                title: "description".translate(context),
+                hint: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),
@@ -178,7 +191,7 @@ class _AddToppingViewState extends State<AddToppingView> {
             this.image = image;
             context
                 .read<AddToppingBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: image == null
               ? (imageNetwork != null
@@ -202,7 +215,7 @@ class _AddToppingViewState extends State<AddToppingView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

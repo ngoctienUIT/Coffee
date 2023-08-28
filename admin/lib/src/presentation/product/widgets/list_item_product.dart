@@ -1,19 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/product/product_response.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 import '../../view_product/screen/view_product_page.dart';
 
 class ListItemProduct extends StatelessWidget {
@@ -32,8 +31,7 @@ class ListItemProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return ListView.builder(
       physics: const BouncingScrollPhysics(
         parent: AlwaysScrollableScrollPhysics(),
@@ -47,12 +45,12 @@ class ListItemProduct extends StatelessWidget {
               screen: ViewProductPage(
                 productCatalogues: productCatalogues,
                 product: listProduct[index],
-                onChange: onChange == null ? () {} : onChange!,
+                onChange: onChange ?? () {},
               ),
               begin: const Offset(0, 1),
             ));
           },
-          child: preferencesModel.user!.userRole == "ADMIN"
+          child: user.userRole == "ADMIN"
               ? Slidable(
                   endActionPane: ActionPane(
                     motion: const ScrollMotion(),
@@ -85,9 +83,9 @@ class ListItemProduct extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_product'.translate(context),
-          content:
-              'are_you_sure_you_want_to_delete_this_product'.translate(context),
+          title: AppLocalizations.of(context)!.deleteProduct,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisProduct,
           onOK: onOK,
         );
       },

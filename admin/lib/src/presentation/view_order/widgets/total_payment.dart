@@ -1,8 +1,8 @@
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 class TotalPayment extends StatelessWidget {
   const TotalPayment({Key? key, required this.order}) : super(key: key);
@@ -18,13 +18,13 @@ class TotalPayment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "prepare_bill".translate(context),
+              AppLocalizations.of(context)!.prepareBill,
               style: const TextStyle(fontSize: 16),
             ),
             const Divider(),
             Row(
               children: [
-                Text("subtotal".translate(context)),
+                Text(AppLocalizations.of(context)!.subtotal),
                 const Spacer(),
                 Text(order.getTotal().toCurrency()),
               ],
@@ -32,7 +32,7 @@ class TotalPayment extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("discount_code".translate(context)),
+                Text(AppLocalizations.of(context)!.discountCode),
                 const Spacer(),
                 Text((order.getTotal() - order.orderAmount!).toCurrency())
               ],
@@ -40,7 +40,7 @@ class TotalPayment extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("total".translate(context)),
+                Text(AppLocalizations.of(context)!.total),
                 const Spacer(),
                 Text(order.orderAmount!.toCurrency()),
               ],

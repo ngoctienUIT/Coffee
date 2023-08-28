@@ -1,27 +1,56 @@
-abstract class AddStoreState {}
+import 'package:equatable/equatable.dart';
 
-class InitState extends AddStoreState {}
+abstract class AddStoreState extends Equatable {}
 
-class ChangeImageState extends AddStoreState {}
-
-class ChangeAddressState extends AddStoreState {}
-
-class ChangeOpenState extends AddStoreState {}
-
-class ChangeCloseState extends AddStoreState {}
-
-class SaveButtonState extends AddStoreState {
-  bool isContinue;
-
-  SaveButtonState(this.isContinue);
+class InitState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class AddStoreLoadingState extends AddStoreState {}
+class ChangeImageState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class AddStoreSuccessState extends AddStoreState {}
+class ChangeAddressState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class ChangeOpenState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class ChangeCloseState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SaveButtonState extends AddStoreState {
+  final bool isContinue;
+
+  SaveButtonState(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
+}
+
+class AddStoreLoadingState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class AddStoreSuccessState extends AddStoreState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddStoreErrorState extends AddStoreState {
-  String status;
+  final String status;
 
   AddStoreErrorState(this.status);
+
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }

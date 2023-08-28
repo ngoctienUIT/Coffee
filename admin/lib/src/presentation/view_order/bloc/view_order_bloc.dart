@@ -1,88 +1,61 @@
+import 'package:coffee_admin/src/core/request/order_request/order_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../data/models/user.dart';
-import '../../../domain/firebase/firebase_service.dart';
+import '../../../domain/use_cases/order_use_case/cancel_order.dart';
+import '../../../domain/use_cases/order_use_case/get_order_by_id.dart';
+import '../../../domain/use_cases/order_use_case/order_completed.dart';
 
+@injectable
 class ViewOrderBloc extends Bloc<ViewOrderEvent, ViewOrderState> {
-  PreferencesModel preferencesModel;
+  final CancelOrderUseCase _cancelOrderUseCase;
+  final OrderCompletedUseCase _orderCompletedUseCase;
+  final GetOrderByIDUseCase _getOrderByIDUseCase;
 
-  ViewOrderBloc(this.preferencesModel) : super(InitState()) {
-    on<CancelOrderEvent>(
-        (event, emit) => cancelOrder(event.id, event.userID, emit));
+  ViewOrderBloc(
+    this._cancelOrderUseCase,
+    this._orderCompletedUseCase,
+    this._getOrderByIDUseCase,
+  ) : super(InitState()) {
+    on<CancelOrderEvent>(_cancelOrder);
 
-    on<OrderCompletedEvent>(
-        (event, emit) => orderCompleted(event.id, event.userID, emit));
+    on<OrderCompletedEvent>(_orderCompleted);
 
-    on<GetOrderEvent>((event, emit) => getOrder(event.id, emit));
+    on<GetOrderEvent>(_getOrder);
   }
 
-  Future cancelOrder(String id, String userID, Emitter emit) async {
-    try {
-      emit(LoadingState());
-      await preferencesModel.apiService
-          .cancelOrder("Bearer ${preferencesModel.token}", id);
+  Future _cancelOrder(CancelOrderEvent event, Emitter emit) async {
+    emit(LoadingState());
+    final response = await _cancelOrderUseCase.call(
+        params: OrderRequest(id: event.id, userID: event.userID));
+    if (response is DataSuccess) {
       emit(CancelSuccessState());
-      sendPushMessage(
-        token: await getTokenFCM(userID),
-        orderID: id,
-        body: "Đơn hàng $id đã được hủy thành công",
-        title: "Đơn hàng bị hủy",
-      );
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      ErrorState(error);
-      print(error);
-    } catch (e) {
-      ErrorState(e.toString());
-      print(e);
+    } else {
+      ErrorState(response.error ?? "");
     }
   }
 
-  Future orderCompleted(String id, String userID, Emitter emit) async {
-    try {
-      emit(LoadingState());
-      await preferencesModel.apiService
-          .closeSuccessOrder("Bearer ${preferencesModel.token}", id);
+  Future _orderCompleted(OrderCompletedEvent event, Emitter emit) async {
+    emit(LoadingState());
+    final response = await _orderCompletedUseCase.call(
+        params: OrderRequest(id: event.id, userID: event.userID));
+    if (response is DataSuccess) {
       emit(CompletedSuccessState());
-      sendPushMessage(
-        token: await getTokenFCM(userID),
-        orderID: id,
-        body: "Đơn hàng $id đã được xác nhận thành công",
-        title: "Đơn hàng đã xác nhận",
-      );
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      ErrorState(error);
-      print(error);
-    } catch (e) {
-      ErrorState(e.toString());
-      print(e);
+    } else {
+      ErrorState(response.error ?? "");
     }
   }
 
-  Future getOrder(String id, Emitter emit) async {
-    try {
-      emit(LoadingState());
-      final orderResponse = await preferencesModel.apiService
-          .getOrderByID("Bearer ${preferencesModel.token}", id);
-      final userResponse = await preferencesModel.apiService.getUserByID(
-          "Bearer ${preferencesModel.token}", orderResponse.data.userId!);
-      emit(GetOrderSuccessState(
-          User.fromUserResponse(userResponse.data), orderResponse.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      ErrorState(error);
-      print(error);
-    } catch (e) {
-      ErrorState(e.toString());
-      print(e);
+  Future _getOrder(GetOrderEvent event, Emitter emit) async {
+    emit(LoadingState());
+    final response = await _getOrderByIDUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(GetOrderSuccessState(response.data!.user, response.data!.order));
+    } else {
+      ErrorState(response.error ?? "");
     }
   }
 }

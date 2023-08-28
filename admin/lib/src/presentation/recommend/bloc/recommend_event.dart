@@ -1,11 +1,22 @@
-abstract class RecommendEvent {}
+import 'package:equatable/equatable.dart';
 
-class FetchData extends RecommendEvent {}
+abstract class RecommendEvent extends Equatable {}
 
-class UpdateData extends RecommendEvent {}
+class FetchData extends RecommendEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class UpdateData extends RecommendEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class DeleteEvent extends RecommendEvent {
-  String id;
+  final String id;
 
   DeleteEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

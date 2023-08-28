@@ -1,4 +1,5 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/repositories/item_order/item_order_response.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/item_order/item_order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../bloc/view_order_event.dart';
 import '../widgets/add_coupons.dart';
@@ -32,13 +31,10 @@ class ViewOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
+    return BlocProvider<ViewOrderBloc>(
       create: order == null
-          ? (context) =>
-              ViewOrderBloc(preferencesModel)..add(GetOrderEvent(id!))
-          : (context) => ViewOrderBloc(preferencesModel),
+          ? (context) => getIt<ViewOrderBloc>()..add(GetOrderEvent(id!))
+          : (context) => getIt<ViewOrderBloc>(),
       child: ViewOrderView(id: id, order: order, onPress: onPress, user: user),
     );
   }
@@ -61,13 +57,13 @@ class ViewOrderView extends StatelessWidget {
         if (state is LoadingState) loadingAnimation(context);
         if (state is CancelSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "order_canceled".translate(context));
+          customToast(context, AppLocalizations.of(context)!.orderCanceled);
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is CompletedSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "complete_orders".translate(context));
+          customToast(context, AppLocalizations.of(context)!.completeOrders);
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -92,8 +88,7 @@ class ViewOrderView extends StatelessWidget {
   Widget buildOrder(BuildContext context, OrderResponse order, User? user) {
     return Scaffold(
       appBar: AppBarGeneral(
-        title:
-            user != null ? user.displayName : "coffee_users".translate(context),
+        title: user?.displayName ?? AppLocalizations.of(context)!.coffeeUsers,
         elevation: 0,
       ),
       body: Padding(

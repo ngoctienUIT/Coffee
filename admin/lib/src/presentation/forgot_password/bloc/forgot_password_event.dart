@@ -1,13 +1,21 @@
-abstract class ForgotPasswordEvent {}
+import 'package:equatable/equatable.dart';
+
+abstract class ForgotPasswordEvent extends Equatable {}
 
 class ShowButtonEvent extends ForgotPasswordEvent {
-  bool isContinue = false;
+  final bool isContinue;
 
   ShowButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class SendForgotPasswordEvent extends ForgotPasswordEvent {
-  String email;
+  final String email;
 
   SendForgotPasswordEvent(this.email);
+
+  @override
+  List<Object?> get props => [email];
 }

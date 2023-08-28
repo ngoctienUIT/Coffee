@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_images.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -26,7 +26,7 @@ class InfoPage extends StatelessWidget {
           const SizedBox(height: 10),
           const Text("Version 1.0.3"),
           const SizedBox(height: 5),
-          Text("${'developed_by'.translate(context)} UIT team"),
+          Text("${AppLocalizations.of(context).developedBy} UIT team"),
           const SizedBox(height: 15),
           const Divider(color: Colors.black45, height: 1),
           const SizedBox(height: 20),
@@ -49,7 +49,7 @@ class InfoPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    "${'contact_me_via'.translate(context)} Facebook",
+                    "${AppLocalizations.of(context).contactMeVia} Facebook",
                     style: const TextStyle(fontSize: 16),
                   )
                 ],
@@ -82,7 +82,7 @@ class InfoPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    "${'contact_me_via'.translate(context)} Twitter",
+                    "${AppLocalizations.of(context).contactMeVia} Twitter",
                     style: const TextStyle(fontSize: 16),
                   )
                 ],
@@ -109,7 +109,7 @@ class InfoPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    "${'contact_me_via'.translate(context)} Telegram",
+                    "${AppLocalizations.of(context).contactMeVia} Telegram",
                     style: const TextStyle(fontSize: 16),
                   )
                 ],
@@ -146,7 +146,7 @@ class InfoPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    "${'contact_me_via'.translate(context)} Email",
+                    "${AppLocalizations.of(context).contactMeVia} Email",
                     style: const TextStyle(fontSize: 16),
                   )
                 ],

@@ -1,7 +1,7 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-import '../../../domain/repositories/coupon/coupon_response.dart';
+import '../../../data/remote/response/coupon/coupon_response.dart';
 import '../../coupon/widgets/ticket_widget.dart';
 
 class AddCoupons extends StatelessWidget {
@@ -19,7 +19,7 @@ class AddCoupons extends StatelessWidget {
               children: [
                 const Icon(Icons.local_activity, color: Colors.red),
                 const SizedBox(width: 10),
-                Text("promo_code".translate(context)),
+                Text(AppLocalizations.of(context).promoCode),
                 const Spacer(),
                 const Icon(Icons.arrow_forward_ios_outlined),
               ],

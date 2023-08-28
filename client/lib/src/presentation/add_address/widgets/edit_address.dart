@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +67,7 @@ class EditAddress extends StatelessWidget {
             CustomTextInput(
               contentPadding: const EdgeInsets.only(left: 15),
               controller: addressController,
-              hint: "address".translate(context),
+              hint: AppLocalizations.of(context).address,
               isBorder: false,
             ),
             const Divider(color: Colors.black26, height: 1),

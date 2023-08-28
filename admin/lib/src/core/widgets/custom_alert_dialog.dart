@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/constants/constants.dart';
@@ -19,7 +19,7 @@ AlertDialog customAlertDialog({
             const Spacer(),
             TextButton(
               child: Text(
-                'cancel'.translate(context),
+                AppLocalizations.of(context)!.cancel,
                 style: const TextStyle(
                   color: AppColors.statusBarColor,
                   fontSize: 16,
@@ -41,7 +41,7 @@ AlertDialog customAlertDialog({
                 Navigator.pop(context);
               },
               child: Text(
-                'ok'.translate(context),
+                AppLocalizations.of(context)!.ok,
                 style: const TextStyle(
                   color: AppColors.statusBarColor,
                   fontSize: 16,

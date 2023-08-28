@@ -1,54 +1,44 @@
-import 'package:dio/dio.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/tag_use_case/delete_tag.dart';
+import '../../../domain/use_cases/tag_use_case/get_tag.dart';
 import 'tag_event.dart';
 import 'tag_state.dart';
 
+@injectable
 class TagBloc extends Bloc<TagEvent, TagState> {
-  PreferencesModel preferencesModel;
+  final GetTagUseCase _getTagUseCase;
+  final DeleteTagUseCase _deleteTagUseCase;
 
-  TagBloc(this.preferencesModel) : super(InitState()) {
+  TagBloc(this._getTagUseCase, this._deleteTagUseCase) : super(InitState()) {
     on<FetchData>((event, emit) => getData(true, emit));
 
     on<UpdateData>((event, emit) => getData(false, emit));
 
     on<PickEvent>((event, emit) => emit(PickState()));
 
-    on<DeleteEvent>((event, emit) => deleteTag(event.id, emit));
+    on<DeleteEvent>(_deleteTag);
   }
 
   Future getData(bool check, Emitter emit) async {
-    try {
-      if (check) emit(TagLoading());
-      final response = await preferencesModel.apiService.getAllTags();
-      emit(TagLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(TagError(error));
-      print(error);
-    } catch (e) {
-      emit(TagError(e.toString()));
-      print(e);
+    if (check) emit(TagLoading());
+    final response = await _getTagUseCase.call();
+    if (response is DataSuccess) {
+      emit(TagLoaded(response.data!));
+    } else {
+      emit(TagError(response.error));
     }
   }
 
-  Future deleteTag(String id, Emitter emit) async {
-    try {
-      emit(TagLoading(false));
-      await preferencesModel.apiService
-          .removeTagByID('Bearer ${preferencesModel.token}', id);
-      // final response = await apiService.getAllTags();
-      emit(DeleteSuccess(id));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(TagError(error));
-      print(error);
-    } catch (e) {
-      emit(TagError(e.toString()));
-      print(e);
+  Future _deleteTag(DeleteEvent event, Emitter emit) async {
+    emit(TagLoading(false));
+    final response = await _deleteTagUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(DeleteSuccess(event.id));
+    } else {
+      emit(TagError(response.error));
     }
   }
 }

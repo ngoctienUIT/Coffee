@@ -1,4 +1,5 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,12 +19,12 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileBloc(),
+    return BlocProvider<ProfileBloc>(
+      create: (context) => getIt<ProfileBloc>(),
       child: Scaffold(
         backgroundColor: AppColors.statusBarColor,
         appBar:
-            AppBarGeneral(title: "profile".translate(context), elevation: 0),
+            AppBarGeneral(title: AppLocalizations.of(context)!.profile, elevation: 0),
         body: Column(
           children: [
             HeaderProfilePage(user: user),

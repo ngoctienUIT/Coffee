@@ -1,34 +1,28 @@
-import 'package:dio/dio.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../domain/use_cases/password_use_case/input_pin.dart';
 import 'input_pin_event.dart';
 import 'input_pin_state.dart';
 
+@injectable
 class InputPinBloc extends Bloc<InputPinEvent, InputPinState> {
-  InputPinBloc() : super(InitState()) {
-    on<SendEvent>(
-        (event, emit) => sendApi(event.resetCredential, event.pin, emit));
+  final InputPinUseCase _useCase;
+
+  InputPinBloc(this._useCase) : super(InitState()) {
+    on<SendEvent>(_sendApi);
 
     on<ShowButtonEvent>((event, emit) => emit(ContinueState(event.isContinue)));
   }
 
-  Future sendApi(String resetCredential, String pin, Emitter emit) async {
-    try {
-      emit(LoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final response =
-          await apiService.validateResetTokenClient(resetCredential, pin);
-      emit(SuccessState(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ErrorState(error));
-      print(error);
-    } catch (e) {
-      emit(ErrorState(e.toString()));
-      print(e);
+  Future _sendApi(SendEvent event, Emitter emit) async {
+    emit(LoadingState());
+    final response = await _useCase.call(params: event.request);
+    if (response is DataSuccess) {
+      emit(SuccessState(response.data!));
+    } else {
+      emit(ErrorState(response.error ?? ""));
     }
   }
 }

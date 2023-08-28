@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../order/widgets/item_loading.dart';
@@ -106,7 +106,7 @@ class TicketWidget extends StatelessWidget {
                             ),
                           const Spacer(),
                           Text(
-                            "${"expired".translate(context)} $date",
+                            "${AppLocalizations.of(context)!.expired} $date",
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],

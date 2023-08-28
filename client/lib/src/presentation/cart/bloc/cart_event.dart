@@ -1,44 +1,63 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/address.dart';
-import '../../../data/models/preferences_model.dart';
 
-abstract class CartEvent {}
+abstract class CartEvent extends Equatable {}
 
-class GetOrderSpending extends CartEvent {}
-
-class SetPreferencesModel extends CartEvent {
-  PreferencesModel preferencesModel;
-
-  SetPreferencesModel(this.preferencesModel);
+class GetOrderSpending extends CartEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
 }
 
-class DeleteOrderEvent extends CartEvent {}
+class DeleteOrderEvent extends CartEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class DeleteProductEvent extends CartEvent {
-  int index;
+  final int index;
 
   DeleteProductEvent(this.index);
+
+  @override
+  List<Object?> get props => [index];
 }
 
 class AttachCouponToOrder extends CartEvent {
-  String id;
+  final String id;
 
   AttachCouponToOrder(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }
 
-class DeleteCouponOrder extends CartEvent {}
+class DeleteCouponOrder extends CartEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class ChangeMethod extends CartEvent {
-  bool isBringBack;
-  Address? address;
-  String? storeID;
+  final bool isBringBack;
+  final Address? address;
+  final String? storeID;
 
   ChangeMethod({required this.isBringBack, this.address, this.storeID});
+
+  @override
+  List<Object?> get props => [isBringBack, address, storeID];
 }
 
-class PlaceOrder extends CartEvent {}
+class PlaceOrder extends CartEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class AddNote extends CartEvent {
-  String note;
+  final String note;
 
   AddNote(this.note);
+
+  @override
+  List<Object?> get props => [note];
 }

@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class GenderWidget extends StatelessWidget {
@@ -58,7 +58,7 @@ class GenderWidget extends StatelessWidget {
                       bottomLeft: Radius.circular(10),
                     ),
                   ),
-                  child: Text("current_selection".translate(context)),
+                  child: Text(AppLocalizations.of(context)!.currentSelection),
                 ),
               ),
           ],

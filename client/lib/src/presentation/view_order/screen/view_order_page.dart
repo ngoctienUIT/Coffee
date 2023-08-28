@@ -1,18 +1,18 @@
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_event.dart';
 import 'package:coffee/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../injection.dart';
 import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product.dart';
-import '../../../domain/repositories/item_order/item_order_response.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/item_order/item_order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../widgets/add_coupons.dart';
 import '../widgets/bottom_cart_page.dart';
@@ -31,13 +31,10 @@ class ViewOrderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
+    return BlocProvider<ViewOrderBloc>(
       create: order == null
-          ? (context) =>
-              ViewOrderBloc(preferencesModel)..add(GetOrderEvent(id!))
-          : (context) => ViewOrderBloc(preferencesModel),
+          ? (context) => getIt<ViewOrderBloc>()..add(GetOrderEvent(id!))
+          : (context) => getIt<ViewOrderBloc>(),
       child: ViewOrderView(index: index, id: id, order: order),
     );
   }
@@ -84,7 +81,8 @@ class ViewOrderView extends StatelessWidget {
 
   Widget buildOrder(BuildContext context, OrderResponse order) {
     return Scaffold(
-      appBar: AppBarGeneral(title: "order2".translate(context), elevation: 0),
+      appBar: AppBarGeneral(
+          title: AppLocalizations.of(context).order2, elevation: 0),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(

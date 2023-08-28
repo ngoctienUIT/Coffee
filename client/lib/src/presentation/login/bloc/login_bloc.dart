@@ -1,23 +1,25 @@
-import 'dart:convert';
-
-import 'package:coffee/src/data/models/preferences_model.dart';
+import 'package:coffee/src/core/request/login_request/login_google_request.dart';
 import 'package:coffee/src/data/models/user.dart';
-import 'package:crypto/crypto.dart';
-import 'package:dio/dio.dart';
+import 'package:coffee/src/domain/use_cases/login_use_case/login_email_password.dart';
+import 'package:coffee/src/domain/use_cases/login_use_case/login_google.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../domain/api_service.dart';
+import '../../../core/resources/data_state.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
+@injectable
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(InitState()) {
-    on<LoginWithEmailPasswordEvent>(
-        (event, emit) => loginWithEmailPassword(event, emit));
+  final LoginEmailPasswordUseCase _loginEmailPasswordUseCase;
+  final LoginGoogleUseCase _loginGoogleUseCase;
 
-    on<LoginWithGoogleEvent>((event, emit) => loginWithGoogle(emit));
+  LoginBloc(this._loginEmailPasswordUseCase, this._loginGoogleUseCase)
+      : super(InitState()) {
+    on<LoginWithEmailPasswordEvent>(_loginWithEmailPassword);
+
+    on<LoginWithGoogleEvent>(_loginWithGoogle);
 
     on<RememberLoginEvent>((event, emit) => emit(RememberState()));
 
@@ -28,82 +30,43 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         (event, emit) => emit(HidePasswordState(isHide: event.isHide)));
   }
 
-  Future loginWithEmailPassword(
+  Future _loginWithEmailPassword(
     LoginWithEmailPasswordEvent event,
     Emitter emit,
   ) async {
-    try {
-      emit(LoginLoadingState());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      var bytes = utf8.encode(event.password);
-      var digest = sha256.convert(bytes);
-      print("Digest as hex string: $digest");
-      final response = await apiService.login(
-          {"loginIdentity": event.email, "hashedPassword": digest.toString()});
-      final user = response.data;
-      SharedPreferences.getInstance().then((value) {
-        value.setString("userID", user.userResponse.id);
-        value.setString("token", user.accessToken);
-      });
-      print(user.accessToken);
-      emit(LoginSuccessState(PreferencesModel(
-        token: user.accessToken,
-        user: User.fromUserResponse(user.userResponse),
-      )));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(LoginErrorState(status: error));
-      print(error);
-    } catch (e) {
-      emit(LoginErrorState(status: e.toString()));
-      print(e);
+    emit(LoginLoadingState());
+    final response =
+        await _loginEmailPasswordUseCase.call(params: event.request);
+    if (response is DataSuccess && response.data != null) {
+      emit(LoginSuccessState(
+        token: response.data!.accessToken,
+        user: User.fromUserResponse(response.data!.userResponse),
+      ));
+    } else {
+      emit(LoginErrorState(status: response.error ?? ""));
     }
   }
 
-  Future loginWithGoogle(Emitter emit) async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  Future _loginWithGoogle(LoginWithGoogleEvent event, Emitter emit) async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      if (googleUser != null) {
-        emit(LoginGoogleLoadingState());
+    if (googleUser != null) {
+      emit(LoginGoogleLoadingState());
 
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        ApiService apiService =
-            ApiService(Dio(BaseOptions(contentType: "application/json")));
-        final response = await apiService.loginCredentialTokenOAuth2({
-          "oauth2ProviderUserId": googleUser.id,
-          "oauth2ProviderUserIdentity": googleUser.email,
-          "oauth2ProviderAccessToken": googleAuth.accessToken,
-          "oauth2ProviderProviderName": "GOOGLE"
-        });
-        print("token: ${googleAuth.accessToken}");
-        SharedPreferences.getInstance().then((value) {
-          value.setString("userID", response.data.userResponse.id);
-          value.setString("token", response.data.accessToken);
-          value.setString("username", googleUser.email);
-          value.setBool("isLogin", true);
-        });
-        emit(LoginGoogleSuccessState(PreferencesModel(
-          token: response.data.accessToken,
-          user: User.fromUserResponse(response.data.userResponse),
-        )));
+      final response = await _loginGoogleUseCase.call(
+          params: LoginGoogleRequest(googleUser));
+      if (response is DataSuccess && response.data != null) {
+        emit(LoginGoogleSuccessState(
+          token: response.data!.accessToken,
+          user: User.fromUserResponse(response.data!.userResponse),
+        ));
       } else {
-        emit(LoginGoogleErrorState(status: ""));
+        emit(LoginGoogleErrorState(status: response.error ?? ""));
         GoogleSignIn().signOut();
       }
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+    } else {
+      emit(LoginGoogleErrorState(status: ""));
       GoogleSignIn().signOut();
-      emit(LoginGoogleErrorState(status: error));
-      print(error);
-    } catch (e) {
-      GoogleSignIn().signOut();
-      emit(LoginGoogleErrorState(status: e.toString()));
-      print(e);
     }
   }
 }

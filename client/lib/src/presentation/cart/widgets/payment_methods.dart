@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/constants/app_images.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/cart/widgets/item_payment.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class PaymentMethods extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
             child: Text(
-              "payment_methods".translate(context),
+              AppLocalizations.of(context).paymentMethods,
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -25,11 +25,11 @@ class PaymentMethods extends StatelessWidget {
           itemPayment(
             onChange: (value) {},
             onPress: () => customToast(context,
-                "momo_payment_feature_not_yet_launched".translate(context)),
+                AppLocalizations.of(context).momoPaymentFeatureNotYetLaunched),
             value: 0,
             groupValue: 1,
             image: AppImages.imgMomo,
-            title: "momo_wallet".translate(context),
+            title: AppLocalizations.of(context).momoWallet,
           ),
           itemPayment(
             onChange: (value) {},
@@ -37,7 +37,7 @@ class PaymentMethods extends StatelessWidget {
             value: 1,
             groupValue: 1,
             image: AppImages.imgCOD,
-            title: "payment_delivery".translate(context),
+            title: AppLocalizations.of(context).paymentDelivery,
           ),
           const SizedBox(height: 5),
         ],

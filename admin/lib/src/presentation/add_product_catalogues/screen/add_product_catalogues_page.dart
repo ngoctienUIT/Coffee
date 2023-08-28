@@ -1,15 +1,14 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/app_images.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/product_catalogues.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
@@ -31,13 +30,13 @@ class AddProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => AddProductCataloguesBloc(preferencesModel),
+      create: (context) => getIt<AddProductCataloguesBloc>(),
       child: Scaffold(
         appBar: AppBarGeneral(
-            elevation: 0, title: "add_product_catalog".translate(context)),
+          elevation: 0,
+          title: AppLocalizations.of(context)!.addProductCatalog,
+        ),
         body: AddProductCataloguesView(
           onChange: onChange,
           productCatalogues: productCatalogues,
@@ -103,9 +102,10 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
         if (state is AddProductCataloguesSuccessState) {
           if (widget.productCatalogues == null) {
             customToast(context,
-                "add_successful_product_categories".translate(context));
+                AppLocalizations.of(context)!.addSuccessfulProductCategories);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           widget.onChange();
           Navigator.pop(context);
@@ -132,20 +132,31 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
               const SizedBox(height: 10),
               productCataloguesImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "product_category_name".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.productCategoryName),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "product_category_name".translate(context),
-                title: "product_category_name".translate(context),
+                hint: AppLocalizations.of(context)!.productCategoryName,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productCategoryName}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "description".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.description),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "description".translate(context),
-                title: "description".translate(context),
+                hint: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),
@@ -166,7 +177,7 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
             this.image = image;
             context
                 .read<AddProductCataloguesBloc>()
-                .add(ChangeImageEvent(image == null ? "" : image.path));
+                .add(ChangeImageEvent(image?.path ?? ""));
           }),
           child: (image == null
               ? (imageNetwork != null
@@ -190,7 +201,7 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

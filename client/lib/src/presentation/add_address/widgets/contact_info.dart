@@ -1,4 +1,4 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../signup/widgets/custom_text_input.dart';
@@ -19,7 +19,7 @@ class ContactInfo extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "contact_info".translate(context),
+          AppLocalizations.of(context).contactInfo,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
@@ -33,13 +33,13 @@ class ContactInfo extends StatelessWidget {
               children: [
                 CustomTextInput(
                   controller: nameController,
-                  hint: "full_name".translate(context),
+                  hint: AppLocalizations.of(context).fullName,
                   isBorder: false,
                 ),
                 const Divider(color: Colors.black26, height: 1),
                 CustomTextInput(
                   controller: phoneController,
-                  hint: "phone_number".translate(context),
+                  hint: AppLocalizations.of(context).phoneNumber,
                   isBorder: false,
                 ),
                 const Divider(color: Colors.black26, height: 1),

@@ -1,8 +1,10 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/data/models/preferences_model.dart';
-import 'package:coffee/src/domain/firebase/firebase_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee/src/data/models/user.dart';
+import 'package:coffee/src/data/remote/firebase/firebase_service.dart';
 import 'package:coffee/src/presentation/login/bloc/login_bloc.dart';
 import 'package:coffee/src/presentation/login/bloc/login_event.dart';
 import 'package:coffee/src/presentation/login/bloc/login_state.dart';
@@ -14,10 +16,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
+import '../../../core/request/login_request/login_email_password_request.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
 import '../../main/screen/main_page.dart';
 import '../../signup/screen/signup_page.dart';
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: BlocProvider<LoginBloc>(
-              create: (_) => LoginBloc(),
+              create: (_) => getIt<LoginBloc>(),
               child: const LoginView(),
             ),
           ),
@@ -97,11 +99,12 @@ class _LoginViewState extends State<LoginView> {
       switch (source) {
         case ConnectivityResult.mobile:
         case ConnectivityResult.wifi:
-          customToast(
-              context, "internet_connection_is_available".translate(context));
+          customToast(context,
+              AppLocalizations.of(context).internetConnectionIsAvailable);
           break;
         case ConnectivityResult.none:
-          customToast(context, "no_internet_connection".translate(context));
+          customToast(
+              context, AppLocalizations.of(context).noInternetConnection);
           break;
       }
     });
@@ -137,13 +140,13 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  void loginSuccess(PreferencesModel newModel) {
+  void loginSuccess(User user, String token) {
     saveNewTokenFCM();
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    context.read<ServiceBloc>().add(SetDataEvent(
-        preferencesModel.copyWith(token: newModel.token, user: newModel.user)));
-    customToast(context, "logged_in_successfully".translate(context));
+    if (getIt.isRegistered<User>()) {
+      getIt.unregister<User>();
+    }
+    getIt.registerSingleton<User>(user);
+    customToast(context, AppLocalizations.of(context).loggedInSuccessfully);
     context.read<ServiceBloc>().add(SaveTimeEvent(const Duration(hours: 1)));
     Navigator.of(context).pushReplacement(createRoute(
         screen: const MainPage(checkConnect: true), begin: const Offset(0, 1)));
@@ -155,10 +158,10 @@ class _LoginViewState extends State<LoginView> {
       listener: (context, state) {
         if (state is LoginSuccessState) {
           saveLogin();
-          loginSuccess(state.preferencesModel);
+          loginSuccess(state.user, state.token);
         }
         if (state is LoginGoogleSuccessState) {
-          loginSuccess(state.preferencesModel);
+          loginSuccess(state.user, state.token);
         }
         if (state is LoginLoadingState || state is LoginGoogleLoadingState) {
           loadingAnimation(context);
@@ -200,7 +203,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         Text(
-          "welcome_back".translate(context),
+          AppLocalizations.of(context).welcomeBack,
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
@@ -217,7 +220,13 @@ class _LoginViewState extends State<LoginView> {
             controller: phoneController,
             hint: "Email",
             keyboardType: TextInputType.emailAddress,
-            typeInput: const [TypeInput.email],
+            validator: (value) {
+              if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                  value.isEmpty) {
+                return AppLocalizations.of(context).pleaseEnterEmail;
+              }
+              return null;
+            },
             // inputFormatters: [
             //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
             // ],
@@ -229,7 +238,7 @@ class _LoginViewState extends State<LoginView> {
           builder: (context, state) {
             return CustomPasswordInput(
               controller: passwordController,
-              hint: "password".translate(context),
+              hint: AppLocalizations.of(context).password,
               onPress: () {
                 context.read<LoginBloc>().add(HidePasswordEvent(isHide: !hide));
                 hide = !hide;
@@ -257,7 +266,7 @@ class _LoginViewState extends State<LoginView> {
             );
           },
         ),
-        Text("remember_login".translate(context)),
+        Text(AppLocalizations.of(context).rememberLogin),
         const Spacer(),
         TextButton(
           onPressed: () {
@@ -266,7 +275,7 @@ class _LoginViewState extends State<LoginView> {
               begin: const Offset(1, 0),
             ));
           },
-          child: Text("${"forgot_password".translate(context)}?"),
+          child: Text("${AppLocalizations.of(context).forgotPassword}?"),
         )
       ],
     );
@@ -277,14 +286,16 @@ class _LoginViewState extends State<LoginView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context).toUpperCase(),
+          text: AppLocalizations.of(context).continue1,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
-              context.read<LoginBloc>().add(LoginWithEmailPasswordEvent(
+              context
+                  .read<LoginBloc>()
+                  .add(LoginWithEmailPasswordEvent(LoginEmailPasswordRequest(
                     email: phoneController.text,
                     password: passwordController.text,
-                  ));
+                  )));
             }
           },
         );
@@ -301,7 +312,7 @@ class _LoginViewState extends State<LoginView> {
               child: Divider(thickness: 1, color: Colors.black54),
             ),
             const SizedBox(width: 10),
-            Text("or".translate(context)),
+            Text(AppLocalizations.of(context).or),
             const SizedBox(width: 10),
             const Expanded(
               child: Divider(thickness: 1, color: Colors.black54),
@@ -310,7 +321,7 @@ class _LoginViewState extends State<LoginView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "login_with_google".translate(context),
+          text: AppLocalizations.of(context).loginWithGoogle,
           onPress: () {
             context.read<LoginBloc>().add(LoginWithGoogleEvent());
           },
@@ -323,7 +334,7 @@ class _LoginViewState extends State<LoginView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("${"new_customer".translate(context)}?"),
+        Text("${AppLocalizations.of(context).newCustomer}?"),
         TextButton(
           onPressed: () {
             Navigator.of(context).pushReplacement(createRoute(
@@ -331,7 +342,7 @@ class _LoginViewState extends State<LoginView> {
               begin: const Offset(0, 1),
             ));
           },
-          child: Text("create_account".translate(context)),
+          child: Text(AppLocalizations.of(context).createAccount),
         )
       ],
     );

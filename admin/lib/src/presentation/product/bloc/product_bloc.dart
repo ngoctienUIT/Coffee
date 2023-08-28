@@ -1,16 +1,27 @@
+import 'package:coffee_admin/src/core/request/product_request/delete_product_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee_admin/src/presentation/product/bloc/product_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
+import '../../../domain/use_cases/product_catalogues_use_case/get_product_catalogues.dart';
+import '../../../domain/use_cases/product_use_case/delete_product.dart';
+import '../../../domain/use_cases/product_use_case/get_product.dart';
 
+@injectable
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   List<ProductCataloguesResponse> listProductCatalogues = [];
-  PreferencesModel preferencesModel;
+  final DeleteProductUseCase _deleteProductUseCase;
+  final GetProductUseCase _getProductUseCase;
+  final GetProductCataloguesUseCase _getProductCataloguesUseCase;
 
-  ProductBloc(this.preferencesModel) : super(InitState()) {
+  ProductBloc(
+    this._deleteProductUseCase,
+    this._getProductUseCase,
+    this._getProductCataloguesUseCase,
+  ) : super(InitState()) {
     on<FetchData>((event, emit) => getData(emit));
 
     on<RefreshData>((event, emit) => getDataProduct(event.index, emit));
@@ -22,94 +33,66 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future getData(Emitter emit) async {
-    try {
-      emit(ProductLoading());
+    emit(ProductLoading());
+    final cataloguesResponse = await _getProductCataloguesUseCase.call();
+    if (cataloguesResponse is DataSuccess) {
+      listProductCatalogues = cataloguesResponse.data!;
       final response =
-          await preferencesModel.apiService.getAllProductCatalogues();
-      listProductCatalogues = response.data;
-      final productResponse = await preferencesModel.apiService
-          .getAllProductsFromProductCatalogueID(listProductCatalogues[0].id);
-      final listProduct = productResponse.data;
-      emit(ProductLoaded(0, listProduct, listProductCatalogues));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductError(e.toString()));
-      print(e);
+          await _getProductUseCase.call(params: cataloguesResponse.data![0].id);
+      if (response is DataSuccess) {
+        emit(ProductLoaded(0, response.data!, listProductCatalogues));
+      } else {
+        emit(ProductError(response.error ?? ""));
+      }
+    } else {
+      emit(ProductError(cataloguesResponse.error ?? ""));
     }
   }
 
   Future getDataProduct(int index, Emitter emit) async {
-    try {
-      emit(RefreshLoading());
-      final productResponse = await preferencesModel.apiService
-          .getAllProductsFromProductCatalogueID(
-              listProductCatalogues[index].id);
-      final listProduct = productResponse.data;
-      final response =
-          await preferencesModel.apiService.getAllProductCatalogues();
-      if (response.data.length != listProductCatalogues.length) {
-        listProductCatalogues = response.data;
+    emit(RefreshLoading());
+    final productResponse =
+        await _getProductUseCase.call(params: listProductCatalogues[index].id);
+    if (productResponse is DataSuccess) {
+      final response = await _getProductCataloguesUseCase.call();
+      if (response is DataSuccess) {
+        if (response.data!.length != listProductCatalogues.length) {
+          listProductCatalogues = response.data!;
+        }
+        emit(
+            ProductLoaded(index, productResponse.data!, listProductCatalogues));
+      } else {
+        emit(ProductError(response.error ?? ""));
       }
-      emit(ProductLoaded(index, listProduct, listProductCatalogues));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductError(e.toString()));
-      print(e);
+    } else {
+      emit(ProductError(productResponse.error ?? ""));
     }
   }
 
   Future updateDataProduct(int index, Emitter emit) async {
-    try {
-      final response = await preferencesModel.apiService
-          .getAllProductsFromProductCatalogueID(
-              listProductCatalogues[index].id);
-      final listProduct = response.data;
-      emit(RefreshLoaded(index, listProduct));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductError(e.toString()));
-      print(e);
+    final response =
+        await _getProductUseCase.call(params: listProductCatalogues[index].id);
+    if (response is DataSuccess) {
+      emit(RefreshLoaded(index, response.data!));
+    } else {
+      emit(ProductError(response.error));
     }
   }
 
   Future deleteProduct(String id, int index, Emitter emit) async {
-    try {
-      emit(ProductLoading(false));
-      final catalogueResponse = await preferencesModel.apiService
-          .getProductCatalogueByID(listProductCatalogues[index].id);
-      List<String> list = catalogueResponse.data.associatedProductIds!;
-      list.remove(id);
-      await preferencesModel.apiService.updateProductIdsProductCatalogues(
-        'Bearer ${preferencesModel.token}',
-        list,
-        listProductCatalogues[index].id,
-      );
-      await preferencesModel.apiService
-          .removeProductByID('Bearer ${preferencesModel.token}', id);
-      final response = await preferencesModel.apiService
-          .getAllProductsFromProductCatalogueID(
-              listProductCatalogues[index].id);
-      emit(RefreshLoaded(index, response.data, false));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProductError(error));
-      print(error);
-    } catch (e) {
-      emit(ProductError(e.toString()));
-      print(e);
+    emit(ProductLoading(false));
+    final response = await _deleteProductUseCase.call(
+        params: DeleteProductRequest(id, listProductCatalogues[index].id));
+    if (response is DataSuccess) {
+      final responseProduct = await _getProductUseCase.call(
+          params: listProductCatalogues[index].id);
+      if (response is DataSuccess) {
+        emit(RefreshLoaded(index, responseProduct.data!, false));
+      } else {
+        emit(ProductError(responseProduct.error));
+      }
+    } else {
+      emit(ProductError(response.error));
     }
   }
 }

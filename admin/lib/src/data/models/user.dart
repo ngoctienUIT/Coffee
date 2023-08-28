@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../domain/entities/user/user_response.dart';
+import '../../data/remote/response/user/user_response.dart';
 
 class User extends Equatable {
   String? id;

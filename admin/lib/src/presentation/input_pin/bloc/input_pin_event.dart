@@ -1,14 +1,22 @@
-abstract class InputPinEvent {}
+import 'package:equatable/equatable.dart';
+
+abstract class InputPinEvent extends Equatable {}
 
 class SendEvent extends InputPinEvent {
-  String resetCredential;
-  String pin;
+  final String resetCredential;
+  final String pin;
 
   SendEvent(this.resetCredential, this.pin);
+
+  @override
+  List<Object?> get props => [resetCredential, pin];
 }
 
 class ShowButtonEvent extends InputPinEvent {
-  bool isContinue = false;
+  final bool isContinue;
 
   ShowButtonEvent(this.isContinue);
+
+  @override
+  List<Object?> get props => [isContinue];
 }

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../../domain/repositories/product/product_response.dart';
-import '../../../domain/repositories/product_catalogues/product_catalogues_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
+import '../../../data/remote/response/product_catalogues/product_catalogues_response.dart';
 import '../../home/widgets/description_line.dart';
 import 'list_item_order.dart';
 

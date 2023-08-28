@@ -1,7 +1,8 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/function/loading_animation.dart';
 import 'package:coffee/src/core/utils/enum/enums.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/core/widgets/custom_alert_dialog.dart';
 import 'package:coffee/src/data/models/address.dart';
 import 'package:coffee/src/presentation/cart/bloc/cart_bloc.dart';
@@ -22,17 +23,14 @@ import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/services/bloc/service_state.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
-    return BlocProvider(
-      create: (context) => CartBloc(preferencesModel)..add(GetOrderSpending()),
+    return BlocProvider<CartBloc>(
+      create: (context) => getIt<CartBloc>()..add(GetOrderSpending()),
       child: const CartView(),
     );
   }
@@ -46,9 +44,6 @@ class CartView extends StatelessWidget {
     return BlocListener<ServiceBloc, ServiceState>(
       listener: (context, state) {
         if (state is ChangeOrderState) {
-          PreferencesModel preferencesModel =
-              context.read<ServiceBloc>().preferencesModel;
-          context.read<CartBloc>().add(SetPreferencesModel(preferencesModel));
           context.read<CartBloc>().add(GetOrderSpending());
         }
       },
@@ -58,10 +53,10 @@ class CartView extends StatelessWidget {
             if (state.status != null) {
               if (state.status == OrderStatus.placed) {
                 context.read<ServiceBloc>().add(PlacedOrderEvent());
-                customToast(context, "order_success".translate(context));
+                customToast(context, AppLocalizations.of(context).orderSuccess);
               } else {
-                customToast(
-                    context, "cart_cleared_successfully".translate(context));
+                customToast(context,
+                    AppLocalizations.of(context).cartClearedSuccessfully);
               }
               context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
             }
@@ -85,7 +80,7 @@ class CartView extends StatelessWidget {
             if (state.order == null) {
               return emptyCart(context);
             } else {
-              print(state.order != null ? state.order!.toJson() : null);
+              print(state.order?.toJson());
               return buildBody(context, state);
             }
           }
@@ -119,12 +114,10 @@ class CartView extends StatelessWidget {
           child: Column(
             children: [
               InfoCart(
-                store: state.order != null
-                    ? state.order!.selectedPickupStore
-                    : null,
+                store: state.order?.selectedPickupStore,
                 address: address,
-                note: state.order!.orderNote,
-                selectedPickupOption: state.order!.selectedPickupOption!,
+                note: state.order?.orderNote,
+                selectedPickupOption: state.order?.selectedPickupOption! ?? "",
               ),
               const SizedBox(height: 10),
               ListProduct(
@@ -158,14 +151,14 @@ class CartView extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Text(
-          "your_shopping_cart_is_empty".translate(context),
+          AppLocalizations.of(context).yourShoppingCartIsEmpty,
           style: const TextStyle(fontSize: 16),
         ),
       ),
       bottomSheet: Container(
         padding: const EdgeInsets.all(10),
         child: customButton(
-          text: "ORDER_NOW".translate(context),
+          text: AppLocalizations.of(context).orderNow,
           isOnPress: true,
           onPress: () => Navigator.pop(context),
         ),
@@ -180,8 +173,8 @@ class CartView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: "confirm".translate(context),
-          content: "do_you_want_delete_all_items_your_cart".translate(context),
+          title: AppLocalizations.of(context).confirm,
+          content: AppLocalizations.of(context).doYouWantDeleteAllItemsYourCart,
           onOK: () {
             onPress();
             Navigator.pop(context);

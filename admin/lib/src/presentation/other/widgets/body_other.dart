@@ -1,4 +1,6 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/login/screen/login_page.dart';
 import 'package:coffee_admin/src/presentation/login/widgets/custom_button.dart';
 import 'package:coffee_admin/src/presentation/policy/screen/policy_page.dart';
@@ -14,15 +16,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../core/utils/language/bloc/language_cubit.dart';
 import '../../info/screen/info_page.dart';
 import '../../profile/screen/profile_page.dart';
 import '../../setting/screen/setting_page.dart';
-import '../bloc/other_bloc.dart';
-import '../bloc/other_state.dart';
 import 'group_item_other.dart';
 import 'item_other.dart';
 
@@ -31,8 +29,7 @@ class BodyOtherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
@@ -43,56 +40,55 @@ class BodyOtherPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            groupItemOther("account".translate(context), [
-              itemOther("profile".translate(context), Icons.person, () {
-                PreferencesModel preferencesModel =
-                    context.read<ServiceBloc>().preferencesModel;
-                Navigator.of(context).push(createRoute(
-                  screen: ProfilePage(user: preferencesModel.user!),
-                  begin: const Offset(1, 0),
-                ));
+            groupItemOther(AppLocalizations.of(context)!.account, [
+              itemOther(AppLocalizations.of(context)!.profile, Icons.person,
+                  () {
+                if (getIt.isRegistered<User>()) {
+                  Navigator.of(context).push(createRoute(
+                    screen: ProfilePage(user: getIt<User>()),
+                    begin: const Offset(1, 0),
+                  ));
+                }
               }),
               const Divider(),
-              itemOther("setting".translate(context), Icons.settings, () {
-                OtherState otherState = context.read<OtherBloc>().state;
-                if (otherState is OtherLoaded) {
+              itemOther(AppLocalizations.of(context)!.setting, Icons.settings,
+                  () {
+                if (getIt.isRegistered<User>()) {
                   Navigator.of(context).push(createRoute(
-                    screen: SettingPage(user: otherState.user),
+                    screen: SettingPage(user: getIt<User>()),
                     begin: const Offset(1, 0),
                   ));
                 }
               })
             ]),
-            groupItemOther("manage".translate(context), [
-              if (preferencesModel.user!.userRole == "ADMIN")
-                itemOther("create_account".translate(context),
+            groupItemOther(AppLocalizations.of(context)!.manage, [
+              if (user.userRole == "ADMIN")
+                itemOther(AppLocalizations.of(context)!.createAccount,
                     Icons.account_circle_outlined, () {
-                  OtherState otherState = context.read<OtherBloc>().state;
-                  if (otherState is OtherLoaded) {
-                    Navigator.of(context).push(createRoute(
-                      screen: SignUpPage(role: otherState.user.userRole),
-                      begin: const Offset(1, 0),
-                    ));
-                  }
+                  Navigator.of(context).push(createRoute(
+                    screen: SignUpPage(role: user.userRole),
+                    begin: const Offset(1, 0),
+                  ));
                 }),
-              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
-              if (preferencesModel.user!.userRole == "ADMIN")
-                itemOther("recommend".translate(context), Icons.cloud, () {
+              if (user.userRole == "ADMIN") const Divider(),
+              if (user.userRole == "ADMIN")
+                itemOther(AppLocalizations.of(context)!.recommend, Icons.cloud,
+                    () {
                   Navigator.of(context).push(createRoute(
                     screen: const RecommendPage(),
                     begin: const Offset(1, 0),
                   ));
                 }),
-              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
-              if (preferencesModel.user!.userRole == "ADMIN")
-                itemOther("store".translate(context), Icons.store, () {
+              if (user.userRole == "ADMIN") const Divider(),
+              if (user.userRole == "ADMIN")
+                itemOther(AppLocalizations.of(context)!.store, Icons.store, () {
                   Navigator.of(context).push(createRoute(
                     screen: const StorePage(),
                     begin: const Offset(1, 0),
                   ));
                 }),
-              if (preferencesModel.user!.userRole == "ADMIN") const Divider(),
-              itemOther("product_catalogues".translate(context),
+              if (user.userRole == "ADMIN") const Divider(),
+              itemOther(AppLocalizations.of(context)!.productCatalogues,
                   FontAwesomeIcons.mugSaucer, () {
                 Navigator.of(context).push(createRoute(
                   screen: const ProductCataloguesPage(),
@@ -114,15 +110,16 @@ class BodyOtherPage extends StatelessWidget {
                 ));
               }),
             ]),
-            groupItemOther("general_info".translate(context), [
-              itemOther("policy".translate(context), Icons.file_copy, () {
+            groupItemOther(AppLocalizations.of(context)!.generalInfo, [
+              itemOther(AppLocalizations.of(context)!.policy, Icons.file_copy,
+                  () {
                 Navigator.of(context).push(createRoute(
                   screen: const PolicyPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("app_info".translate(context), Icons.info, () {
+              itemOther(AppLocalizations.of(context)!.appInfo, Icons.info, () {
                 Navigator.of(context).push(createRoute(
                   screen: const InfoPage(),
                   begin: const Offset(1, 0),
@@ -133,7 +130,7 @@ class BodyOtherPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: customButton(
-                text: "logout".translate(context),
+                text: AppLocalizations.of(context)!.logout,
                 isOnPress: true,
                 onPress: () {
                   context.read<LanguageCubit>().stopTimer();

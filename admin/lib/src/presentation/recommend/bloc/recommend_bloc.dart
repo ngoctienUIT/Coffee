@@ -1,53 +1,43 @@
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_event.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_state.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/recommend_use_case/delete_recommend.dart';
+import '../../../domain/use_cases/recommend_use_case/get_recommend.dart';
 
+@injectable
 class RecommendBloc extends Bloc<RecommendEvent, RecommendState> {
-  PreferencesModel preferencesModel;
+  final GetRecommendUseCase _getRecommendUseCase;
+  final DeleteRecommendUseCase _deleteRecommendUseCase;
 
-  RecommendBloc(this.preferencesModel) : super(InitState()) {
+  RecommendBloc(this._getRecommendUseCase, this._deleteRecommendUseCase)
+      : super(InitState()) {
     on<FetchData>((event, emit) => getData(true, emit));
 
-    on<DeleteEvent>((event, emit) => deleteRecommend(event.id, emit));
+    on<DeleteEvent>(_deleteRecommend);
 
     on<UpdateData>((event, emit) => getData(false, emit));
   }
 
   Future getData(bool check, Emitter emit) async {
-    try {
-      if (check) emit(RecommendLoading());
-      final response = await preferencesModel.apiService
-          .getListRecommendation('Bearer ${preferencesModel.token}');
-      emit(RecommendLoaded(response.data));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(RecommendError(error));
-    } catch (e) {
-      emit(RecommendError(e.toString()));
-      print(e);
+    if (check) emit(RecommendLoading());
+    final response = await _getRecommendUseCase.call();
+    if (response is DataSuccess) {
+      emit(RecommendLoaded(response.data!));
+    } else {
+      emit(RecommendError(response.error ?? ""));
     }
   }
 
-  Future deleteRecommend(String id, Emitter emit) async {
-    try {
-      emit(RecommendLoading(false));
-      await preferencesModel.apiService
-          .deleteRecommendation("Bearer ${preferencesModel.token}", id);
-      // final response = await apiService
-      //     .getListRecommendation('Bearer ${preferencesModel.token}');
-      emit(DeleteSuccess(id));
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(RecommendError(error));
-      print(error);
-    } catch (e) {
-      emit(RecommendError(e.toString()));
-      print(e);
+  Future _deleteRecommend(DeleteEvent event, Emitter emit) async {
+    emit(RecommendLoading(false));
+    final response = await _deleteRecommendUseCase.call(params: event.id);
+    if (response is DataSuccess) {
+      emit(DeleteSuccess(event.id));
+    } else {
+      emit(RecommendError(response.error ?? ""));
     }
   }
 }

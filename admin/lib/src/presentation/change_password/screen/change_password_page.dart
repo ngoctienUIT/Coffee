@@ -1,14 +1,13 @@
 import 'dart:convert';
 
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/injection.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
-import '../../../core/services/bloc/service_bloc.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
@@ -24,10 +23,8 @@ class ChangePasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => ChangePasswordBloc(preferencesModel),
+      create: (context) => getIt<ChangePasswordBloc>(),
       child: Scaffold(
         appBar: const AppBarGeneral(elevation: 0),
         body: Padding(
@@ -97,8 +94,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     return BlocListener<ChangePasswordBloc, ChangePasswordState>(
       listener: (context, state) {
         if (state is ChangePasswordSuccessState) {
-          customToast(
-              context, "change_password_successfully".translate(context));
+          customToast(context,
+              AppLocalizations.of(context)!.changePasswordSuccessfully);
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -114,11 +111,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "change_password".translate(context),
+            AppLocalizations.of(context)!.changePassword,
             style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
-          Text("password_needs_characters".translate(context)),
+          Text(AppLocalizations.of(context)!.passwordNeedsCharacters),
           const SizedBox(height: 10),
           passwordInput(),
           const Spacer(),
@@ -138,7 +135,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           children: [
             CustomPasswordInput(
               controller: oldPasswordController,
-              hint: "enter_old_password".translate(context),
+              hint: AppLocalizations.of(context)!.enterOldPassword,
               hide: state is HidePasswordState ? state.isHide : hide,
               onPress: () => changeHide(),
             ),
@@ -149,7 +146,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                 children: [
                   CustomPasswordInput(
                     controller: newPasswordController,
-                    hint: "enter_new_password".translate(context),
+                    hint: AppLocalizations.of(context)!.enterNewPassword,
                     hide: state is HidePasswordState ? state.isHide : hide,
                     onPress: () => changeHide(),
                   ),
@@ -157,7 +154,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   CustomPasswordInput(
                     controller: confirmPasswordController,
                     confirmPassword: newPasswordController.text,
-                    hint: "confirm_password".translate(context),
+                    hint: AppLocalizations.of(context)!.confirmPassword,
                     hide: state is HidePasswordState ? state.isHide : hide,
                     onPress: () => changeHide(),
                   ),
@@ -180,7 +177,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "change_password".translate(context),
+          text: AppLocalizations.of(context)!.changePassword,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
@@ -192,8 +189,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                 context.read<ChangePasswordBloc>().add(ClickChangePasswordEvent(
                     widget.user.copyWith(password: digest.toString())));
               } else {
-                customToast(
-                    context, "old_password_is_not_correct".translate(context));
+                customToast(context,
+                    AppLocalizations.of(context)!.oldPasswordIsNotCorrect);
               }
             }
           },

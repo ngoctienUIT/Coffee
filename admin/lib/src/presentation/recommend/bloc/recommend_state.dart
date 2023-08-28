@@ -1,29 +1,46 @@
-import '../../../domain/repositories/recommend/recommend_response.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class RecommendState {}
+import '../../../data/remote/response/recommend/recommend_response.dart';
 
-class InitState extends RecommendState {}
+abstract class RecommendState extends Equatable {}
+
+class InitState extends RecommendState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class DeleteSuccess extends RecommendState {
-  String id;
+  final String id;
 
   DeleteSuccess(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class RecommendLoading extends RecommendState {
-  bool check;
+  final bool check;
 
   RecommendLoading([this.check = true]);
+
+  @override
+  List<Object?> get props => [check];
 }
 
 class RecommendLoaded extends RecommendState {
-  List<RecommendResponse> listRecommend;
+  final List<RecommendResponse> listRecommend;
 
   RecommendLoaded(this.listRecommend);
+
+  @override
+  List<Object?> get props => [listRecommend];
 }
 
 class RecommendError extends RecommendState {
-  String error;
+  final String error;
 
   RecommendError(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

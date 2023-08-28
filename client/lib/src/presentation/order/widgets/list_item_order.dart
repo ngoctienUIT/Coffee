@@ -7,7 +7,7 @@ import 'package:coffee/src/presentation/product/screen/product_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/function/route_function.dart';
-import '../../../domain/repositories/product/product_response.dart';
+import '../../../data/remote/response/product/product_response.dart';
 
 class ListItemOrder extends StatelessWidget {
   const ListItemOrder({Key? key, required this.listProduct}) : super(key: key);

@@ -1,19 +1,33 @@
-import 'package:coffee_admin/src/domain/entities/user/user_response.dart';
+import 'package:equatable/equatable.dart';
 
-abstract class SearchStaffState {}
+import '../../../data/remote/response/user/user_response.dart';
 
-class InitState extends SearchStaffState {}
+abstract class SearchStaffState extends Equatable {}
 
-class SearchLoading extends SearchStaffState {}
+class InitState extends SearchStaffState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
+
+class SearchLoading extends SearchStaffState {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SearchLoaded extends SearchStaffState {
   final List<UserResponse> listUser;
 
   SearchLoaded(this.listUser);
+
+  @override
+  List<Object?> get props => [listUser];
 }
 
 class SearchError extends SearchStaffState {
   final String? message;
 
   SearchError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

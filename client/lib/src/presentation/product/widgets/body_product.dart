@@ -1,7 +1,7 @@
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/product.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
@@ -29,11 +29,10 @@ class BodyProduct extends StatelessWidget {
             state is UpdateSuccessState ||
             state is DeleteSuccessState) {
           print(state.order!.toJson());
-          context.read<ServiceBloc>().add(ChangeOrderEvent(
-              state.order != null ? state.order!.copyWith() : null));
+          context.read<ServiceBloc>().add(ChangeOrderEvent(state.order));
           if (state is AddProductToOrderSuccessState) {
-            customToast(
-                context, "product_added_cart_successfully".translate(context));
+            customToast(context,
+                AppLocalizations.of(context).productAddedCartSuccessfully);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -88,7 +87,7 @@ class BodyProduct extends StatelessWidget {
             children: [
               const Divider(),
               Text(
-                "add".translate(context),
+                AppLocalizations.of(context).add,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

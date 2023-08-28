@@ -1,8 +1,9 @@
 import 'dart:math';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee_admin/src/domain/repositories/recommend/recommend_response.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee_admin/src/data/remote/response/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/screen/add_recommend_page.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_bloc.dart';
 import 'package:coffee_admin/src/presentation/recommend/bloc/recommend_event.dart';
@@ -15,10 +16,9 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
+import '../../../data/models/user.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 
@@ -27,10 +27,8 @@ class RecommendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) => RecommendBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<RecommendBloc>()..add(FetchData()),
       child: const RecommendView(),
     );
   }
@@ -41,14 +39,13 @@ class RecommendView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
-      appBar:
-          AppBarGeneral(title: "recommend".translate(context), elevation: 0),
+      appBar: AppBarGeneral(
+          title: AppLocalizations.of(context)!.recommend, elevation: 0),
       body: SafeArea(child: bodyRecommend()),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN"
+      floatingActionButton: user.userRole == "ADMIN"
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -78,7 +75,8 @@ class RecommendView extends StatelessWidget {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -161,8 +159,7 @@ class RecommendView extends StatelessWidget {
             Row(
               children: [
                 Image.asset(
-                  getIconWeather(
-                      recommend.weather == null ? "" : recommend.weather!),
+                  getIconWeather(recommend.weather ?? ""),
                   width: 30,
                 ),
                 const SizedBox(width: 10),
@@ -178,13 +175,13 @@ class RecommendView extends StatelessWidget {
             if (recommend.minTemp != null) const SizedBox(height: 10),
             if (recommend.minTemp != null)
               Text(
-                "${"lowest_temperature".translate(context)}: ${recommend.minTemp.toString().split(".0").first}°C",
+                "${AppLocalizations.of(context)!.lowestTemperature}: ${recommend.minTemp.toString().split(".0").first}°C",
                 style: const TextStyle(fontSize: 16),
               ),
             if (recommend.maxTemp != null) const SizedBox(height: 10),
             if (recommend.maxTemp != null)
               Text(
-                "${"maximum_temperature".translate(context)}: ${recommend.maxTemp.toString().split(".0").first}°C",
+                "${AppLocalizations.of(context)!.maximumTemperature}: ${recommend.maxTemp.toString().split(".0").first}°C",
                 style: const TextStyle(fontSize: 16),
               ),
             if (recommend.tags != null && recommend.tags!.isNotEmpty)
@@ -312,9 +309,9 @@ class RecommendView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'remove_recommend'.translate(context),
-          content: 'are_you_sure_you_want_to_delete_this_recommend'
-              .translate(context),
+          title: AppLocalizations.of(context)!.removeRecommend,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisRecommend,
           onOK: onOK,
         );
       },

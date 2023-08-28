@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -107,7 +107,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
           child: Column(
             children: [
               if (isEdit)
-                itemAction("take_photo".translate(context), () async {
+                itemAction(AppLocalizations.of(context)!.takePhoto, () async {
                   Navigator.pop(context);
                   var status = await Permission.camera.status;
                   if (status.isDenied) {
@@ -117,7 +117,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                   if (status.isGranted) pickAvatar(true);
                 }),
               if (isEdit)
-                itemAction("select_image_gallery".translate(context), () async {
+                itemAction(AppLocalizations.of(context)!.selectImageGallery, () async {
                   Navigator.pop(context);
                   bool isStoragePermission = false;
                   bool isPhotosPermission = false;
@@ -141,7 +141,7 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                     if (isStoragePermission) pickAvatar(false);
                   }
                 }),
-              itemAction("view_profile_picture".translate(context), () {
+              itemAction(AppLocalizations.of(context)!.viewProfilePicture, () {
                 Navigator.pop(context);
                 Navigator.push(
                     context,
@@ -151,14 +151,14 @@ class _HeaderProfilePageState extends State<HeaderProfilePage> {
                     ));
               }),
               if (isEdit)
-                itemAction("delete_profile_picture".translate(context), () {
+                itemAction(AppLocalizations.of(context)!.deleteProfilePicture, () {
                   Navigator.pop(context);
                   context
                       .read<ProfileBloc>()
                       .add(DeleteAvatarEvent(widget.user));
                 }),
               itemAction(
-                "cancel".translate(context),
+                AppLocalizations.of(context)!.cancel,
                 () => Navigator.pop(context),
               ),
             ],

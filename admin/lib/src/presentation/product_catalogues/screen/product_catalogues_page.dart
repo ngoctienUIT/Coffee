@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
-import 'package:coffee_admin/src/domain/repositories/product_catalogues/product_catalogues_response.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
+import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
 import 'package:coffee_admin/src/presentation/add_product_catalogues/screen/add_product_catalogues_page.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:coffee_admin/src/presentation/product_catalogues/bloc/product_catalogues_bloc.dart';
@@ -15,10 +17,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/function/route_function.dart';
-import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
 import '../../../core/widgets/custom_alert_dialog.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../forgot_password/widgets/app_bar_general.dart';
 import '../../order/widgets/item_loading.dart';
 import '../bloc/product_catalogues_event.dart';
@@ -33,11 +33,8 @@ class ProductCataloguesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider(
-      create: (context) =>
-          ProductCataloguesBloc(preferencesModel)..add(FetchData()),
+      create: (context) => getIt<ProductCataloguesBloc>()..add(FetchData()),
       child: ProductCataloguesView(id: id, onPick: onPick),
     );
   }
@@ -52,15 +49,13 @@ class ProductCataloguesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBarGeneral(
-          title: "product_catalogues".translate(context), elevation: 0),
+          title: AppLocalizations.of(context)!.productCatalogues, elevation: 0),
       body: buildBody(context),
-      floatingActionButton: preferencesModel.user!.userRole == "ADMIN" &&
-              onPick == null
+      floatingActionButton: user.userRole == "ADMIN" && onPick == null
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -79,8 +74,7 @@ class ProductCataloguesView extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
+    User user = getIt<User>();
     List<ProductCataloguesResponse> listProductCatalogues = [];
     return BlocConsumer<ProductCataloguesBloc, ProductCataloguesState>(
       listener: (context, state) {
@@ -92,7 +86,8 @@ class ProductCataloguesView extends StatelessWidget {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -129,8 +124,7 @@ class ProductCataloguesView extends StatelessWidget {
                         : null,
                     child: Stack(
                       children: [
-                        preferencesModel.user!.userRole == "ADMIN" &&
-                                onPick == null
+                        user.userRole == "ADMIN" && onPick == null
                             ? Slidable(
                                 endActionPane: ActionPane(
                                   motion: const ScrollMotion(),
@@ -199,7 +193,7 @@ class ProductCataloguesView extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                "current_selection".translate(context),
+                                AppLocalizations.of(context)!.currentSelection,
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
@@ -291,9 +285,9 @@ class ProductCataloguesView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_product_catalogues'.translate(context),
-          content: 'are_you_sure_you_want_to_delete_this_product_category'
-              .translate(context),
+          title: AppLocalizations.of(context)!.deleteProductCatalogues,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisProductCategory,
           onOK: onOK,
         );
       },

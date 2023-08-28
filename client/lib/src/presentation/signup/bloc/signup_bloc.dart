@@ -1,18 +1,23 @@
-import 'package:coffee/src/data/models/user.dart';
-import 'package:coffee/src/domain/api_service.dart';
+import 'package:coffee/src/core/request/signup_request/signup_email_password_request.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
+import 'package:coffee/src/core/utils/extensions/dio_extension.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
+import '../../../domain/use_cases/signup_use_case/signup_email_password.dart';
 import 'signup_event.dart';
 import 'signup_state.dart';
 
+@injectable
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(InitState()) {
-    on<SignUpWithEmailPasswordEvent>(
-        (event, emit) => signUpWithEmailPassword(event.user, emit));
+  final SignupEmailPasswordUseCase _useCase;
 
-    on<SignUpWithGoogleEvent>((event, emit) => signUpWithGoogle(emit));
+  SignUpBloc(this._useCase) : super(InitState()) {
+    on<SignUpWithEmailPasswordEvent>(_signUpWithEmailPassword);
+
+    on<SignUpWithGoogleEvent>(_signUpWithGoogle);
 
     on<ClickSignUpEvent>(
         (event, emit) => emit(ContinueState(isContinue: event.isContinue)));
@@ -27,24 +32,18 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<ChangeGenderEvent>((event, emit) => emit(ChangeGenderState()));
   }
 
-  Future signUpWithEmailPassword(User user, Emitter emit) async {
-    try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      await apiService.signup(user.toJson());
+  Future _signUpWithEmailPassword(
+      SignUpWithEmailPasswordEvent event, Emitter emit) async {
+    var response =
+        await _useCase.call(params: SignupEmailPasswordRequest(event.user));
+    if (response is DataSuccess) {
       emit(SignUpSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(SignUpErrorState(status: error));
-      print(error);
-    } catch (e) {
-      emit(SignUpErrorState(status: e.toString()));
-      print(e);
+    } else {
+      emit(SignUpErrorState(status: response.error ?? ""));
     }
   }
 
-  Future signUpWithGoogle(Emitter emit) async {
+  Future _signUpWithGoogle(SignUpWithGoogleEvent event, Emitter emit) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -52,15 +51,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
         print("token: ${googleAuth.accessToken}");
-
         emit(SignUpGoogleSuccessState(googleUser));
       } else {
         GoogleSignIn().signOut();
         emit(SignUpGoogleErrorState(status: "Hủy đăng ký Google"));
       }
     } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
+      String error = e.getError();
       emit(SignUpGoogleErrorState(status: error));
       print(error);
     } catch (e) {

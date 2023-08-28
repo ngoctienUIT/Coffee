@@ -89,9 +89,9 @@ class AddressAPI {
       phone: phone ?? "",
       name: name ?? "",
       country: country ?? "Việt Nam",
-      province: province != null ? province!.name : "",
-      district: district != null ? district!.name : "",
-      ward: ward != null ? ward!.name : "",
+      province: province?.name ?? "",
+      district: district?.name ?? "",
+      ward: ward?.name ?? "",
     );
   }
 }

@@ -1,17 +1,18 @@
-import 'package:coffee/src/data/models/user.dart';
-import 'package:dio/dio.dart';
+import 'package:coffee/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/preferences_model.dart';
+import '../../../domain/use_cases/password_use_case/change_password.dart';
 import 'change_password_event.dart';
 import 'change_password_state.dart';
 
+@injectable
 class ChangePasswordBloc
     extends Bloc<ChangePasswordEvent, ChangePasswordState> {
-  PreferencesModel preferencesModel;
-  ChangePasswordBloc(this.preferencesModel) : super(InitState()) {
-    on<ClickChangePasswordEvent>(
-        (event, emit) => changePassword(event.user, emit));
+  final ChangePasswordUseCase _useCase;
+
+  ChangePasswordBloc(this._useCase) : super(InitState()) {
+    on<ClickChangePasswordEvent>(_changePassword);
 
     on<ShowChangeButtonEvent>(
         (event, emit) => emit(ContinueState(isContinue: event.isContinue)));
@@ -22,22 +23,13 @@ class ChangePasswordBloc
     on<TextChangeEvent>((event, emit) => emit(TextChangeState()));
   }
 
-  Future changePassword(User user, Emitter emit) async {
-    try {
-      emit(ChangePasswordLoadingState());
-      await preferencesModel.apiService.updateExistingUser(
-          "Bearer ${preferencesModel.token}",
-          preferencesModel.user!.email,
-          user.toJson());
+  Future _changePassword(ClickChangePasswordEvent event, Emitter emit) async {
+    emit(ChangePasswordLoadingState());
+    final response = await _useCase.call(params: event.user);
+    if (response is DataSuccess) {
       emit(ChangePasswordSuccessState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ChangePasswordErrorState(status: error));
-      print(error);
-    } catch (e) {
-      emit(ChangePasswordErrorState(status: e.toString()));
-      print(e);
+    } else {
+      emit(ChangePasswordErrorState(status: response.error ?? ""));
     }
   }
 }

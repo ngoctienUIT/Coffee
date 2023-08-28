@@ -1,8 +1,8 @@
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:coffee/src/domain/repositories/order/order_response.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee/src/data/remote/response/order/order_response.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_bloc.dart';
 import 'package:coffee/src/presentation/activity/bloc/activity_event.dart';
 import 'package:flutter/material.dart';
@@ -83,12 +83,13 @@ class ListActivity extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                      "${"date_created".translate(context)}: ${order.lastUpdated}"),
-                  const SizedBox(height: 10),
-                  Text("${"status".translate(context)}: ${order.orderStatus}"),
+                      "${AppLocalizations.of(context).dateCreated}: ${order.lastUpdated}"),
                   const SizedBox(height: 10),
                   Text(
-                    "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                      "${AppLocalizations.of(context).status}: ${order.orderStatus}"),
+                  const SizedBox(height: 10),
+                  Text(
+                    "${AppLocalizations.of(context).totalOrder}: ${order.orderAmount!.toCurrency()}",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

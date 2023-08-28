@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/order/bloc/order_bloc.dart';
 import 'package:coffee/src/presentation/order/bloc/order_state.dart';
 import 'package:coffee/src/presentation/order/widgets/list_product_loading.dart';
@@ -42,7 +42,7 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
       child: SizedBox(
         height: 40,
         child: CustomTextInput(
-          hint: "search_name_dish".translate(context),
+          hint: AppLocalizations.of(context).searchNameDish,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textStyle: const TextStyle(fontSize: 13),

@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/function/custom_toast.dart';
 import 'package:coffee/src/core/services/bloc/service_bloc.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
 import 'package:coffee/src/core/services/bloc/service_state.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/data/models/order.dart';
-import 'package:coffee/src/data/models/preferences_model.dart';
 import 'package:coffee/src/presentation/home/bloc/home_event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +29,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PreferencesModel preferencesModel =
-        context.read<ServiceBloc>().preferencesModel;
     return BlocProvider<HomeBloc>(
-      create: (context) => HomeBloc(preferencesModel)
+      create: (context) => getIt<HomeBloc>()
         ..add(FetchData())
         ..add(GetOrderSpendingEvent())
         ..add(GetCouponEvent()),
@@ -123,7 +121,7 @@ class _HomeViewState extends State<HomeView>
                 const MembershipCard(),
                 const SizedBox(height: 30),
                 descriptionLine(
-                  text: "promotion".translate(context),
+                  text: AppLocalizations.of(context).promotion,
                   color: AppColors.textColor,
                 ),
                 const SizedBox(height: 10),
@@ -132,7 +130,7 @@ class _HomeViewState extends State<HomeView>
                 buildBanner(),
                 const SizedBox(height: 20),
                 descriptionLine(
-                  text: "recommended_products".translate(context),
+                  text: AppLocalizations.of(context).recommendedProducts,
                   color: AppColors.textColor,
                 ),
                 const SizedBox(height: 10),
@@ -155,12 +153,8 @@ class _HomeViewState extends State<HomeView>
           buildWhen: (previous, current) =>
               current is ChangeOrderState || current is ChangeStoreState,
           builder: (context, state) {
-            PreferencesModel preferencesModel =
-                context.read<ServiceBloc>().preferencesModel;
-            return cartNumber(preferencesModel.order == null
-                ? 0
-                : preferencesModel.order!.orderItems.length);
-
+            Order? order = getIt.isRegistered<Order>() ? getIt<Order>() : null;
+            return cartNumber(order?.orderItems.length ?? 0);
             // return cartNumber(0);
           },
         ),

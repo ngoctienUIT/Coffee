@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../core/utils/constants/constants.dart';
 import '../../../data/models/user.dart';
-import '../../../domain/repositories/order/order_response.dart';
+import '../../../data/remote/response/order/order_response.dart';
 
 class InfoCart extends StatelessWidget {
   const InfoCart({
@@ -31,15 +31,15 @@ class InfoCart extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Text("${"method".translate(context)}:"),
+                Text("${AppLocalizations.of(context)!.method}:"),
                 const Spacer(),
                 itemType(
-                  "at_table".translate(context),
+                  AppLocalizations.of(context)!.atTable,
                   isBringBack ? unselectedColor : selectedColor,
                 ),
                 const SizedBox(width: 10),
                 itemType(
-                  "bring_back".translate(context),
+                  AppLocalizations.of(context)!.bringBack,
                   isBringBack ? selectedColor : unselectedColor,
                 ),
               ],
@@ -57,9 +57,8 @@ class InfoCart extends StatelessWidget {
                 const Icon(FontAwesomeIcons.fileLines),
                 const SizedBox(width: 5),
                 Expanded(
-                  child: Text(order.orderCustomerNote == null
-                      ? "not_have".translate(context)
-                      : order.orderCustomerNote!),
+                  child: Text(order.orderCustomerNote ??
+                      AppLocalizations.of(context)!.notHave),
                 ),
               ],
             ),
@@ -72,8 +71,7 @@ class InfoCart extends StatelessWidget {
   Widget userInfo() {
     return Column(
       children: [
-        itemInfo(Icons.person,
-            user != null ? user!.displayName : "Người dùng Coffee"),
+        itemInfo(Icons.person, user?.displayName ?? "Người dùng Coffee"),
         const Divider(),
         GestureDetector(
           onTap: () async {
@@ -81,7 +79,7 @@ class InfoCart extends StatelessWidget {
               await launchUrlString('tel:${user!.phoneNumber}');
             }
           },
-          child: itemInfo(Icons.phone, user != null ? user!.phoneNumber : ""),
+          child: itemInfo(Icons.phone, user?.phoneNumber ?? ""),
         ),
       ],
     );
@@ -99,9 +97,7 @@ class InfoCart extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  order.selectedPickupStore != null
-                      ? order.selectedPickupStore!.storeName!
-                      : "",
+                  order.selectedPickupStore?.storeName! ?? "",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

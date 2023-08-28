@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:dvhcvn/dvhcvn.dart' as dvhcvn;
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class ProvinceDropdown extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
           hint: Text(
-            'province_city'.translate(context),
+            AppLocalizations.of(context)!.provinceCity,
             style: const TextStyle(fontSize: 16),
           ),
           items: dvhcvn.level1s

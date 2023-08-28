@@ -1,5 +1,5 @@
 import 'package:coffee/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/product/bloc/product_bloc.dart';
 import 'package:coffee/src/presentation/product/bloc/product_event.dart';
 import 'package:coffee/src/presentation/product/bloc/product_state.dart';
@@ -71,9 +71,9 @@ class BottomWidget extends StatelessWidget {
                     child: Text(
                       isEdit
                           ? (product.number == 0
-                              ? "delete".translate(context)
-                              : "${"update".translate(context)} ${product.getTotal().toCurrency()}")
-                          : "${"add".translate(context)} ${product.getTotal().toCurrency()}",
+                              ? AppLocalizations.of(context).delete
+                              : "${AppLocalizations.of(context).update} ${product.getTotal().toCurrency()}")
+                          : "${AppLocalizations.of(context).add} ${product.getTotal().toCurrency()}",
                     ),
                   ),
                 ),

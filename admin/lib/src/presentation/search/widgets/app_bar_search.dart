@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +22,7 @@ class AppBarSearch extends StatelessWidget implements PreferredSizeWidget {
         height: 40,
         child: CustomTextInput(
           controller: controller,
-          hint: "search_name_dish".translate(context),
+          hint: AppLocalizations.of(context)!.searchNameDish,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textInputAction: TextInputAction.search,

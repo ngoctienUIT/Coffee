@@ -1,23 +1,37 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/user.dart';
 
-abstract class ChangePasswordEvent {}
+abstract class ChangePasswordEvent extends Equatable {}
 
 class ClickChangePasswordEvent extends ChangePasswordEvent {
-  User user;
+  final User user;
 
   ClickChangePasswordEvent(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class ShowChangeButtonEvent extends ChangePasswordEvent {
-  bool isContinue;
+  final bool isContinue;
 
   ShowChangeButtonEvent({required this.isContinue});
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class HidePasswordEvent extends ChangePasswordEvent {
-  bool isHide;
+  final bool isHide;
 
   HidePasswordEvent({required this.isHide});
+
+  @override
+  List<Object?> get props => [isHide];
 }
 
-class TextChangeEvent extends ChangePasswordEvent {}
+class TextChangeEvent extends ChangePasswordEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee/src/presentation/input_info/screen/input_info_page.dart';
 import 'package:coffee/src/presentation/login/screen/login_page.dart';
 import 'package:coffee/src/presentation/signup/bloc/signup_bloc.dart';
@@ -17,7 +19,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
@@ -49,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: BlocProvider(
-              create: (context) => SignUpBloc(),
+              create: (context) => getIt<SignUpBloc>(),
               child: const SignUpView(),
             ),
           ),
@@ -123,7 +124,7 @@ class _SignUpViewState extends State<SignUpView> {
       listener: (context, state) {
         if (state is SignUpSuccessState) {
           customToast(
-              context, "account_successfully_created".translate(context));
+              context, AppLocalizations.of(context).accountSuccessfullyCreated);
           Navigator.of(context).pushReplacement(createRoute(
             screen: const LoginPage(),
             begin: const Offset(0, 1),
@@ -173,7 +174,7 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         const SizedBox(height: 10),
         Text(
-          "start_journey".translate(context),
+          AppLocalizations.of(context).startJourney,
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 25,
@@ -205,8 +206,9 @@ class _SignUpViewState extends State<SignUpView> {
       builder: (context, state) {
         return CustomPickerWidget(
           checkEdit: true,
-          text:
-              isMale ? "male".translate(context) : "female".translate(context),
+          text: isMale
+              ? AppLocalizations.of(context).male
+              : AppLocalizations.of(context).female,
           onPress: () => showMyBottomSheet(
             context: context,
             isMale: isMale,
@@ -229,7 +231,7 @@ class _SignUpViewState extends State<SignUpView> {
         return CustomPickerWidget(
           checkEdit: true,
           text: selectedDate == null
-              ? "birthday".translate(context)
+              ? AppLocalizations.of(context).birthday
               : DateFormat("dd/MM/yyyy").format(selectedDate!),
           onPress: () => selectDate(),
         );
@@ -240,9 +242,13 @@ class _SignUpViewState extends State<SignUpView> {
   Widget registerName() {
     return CustomTextInput(
       controller: nameController,
-      hint: "name".translate(context),
-      title: "name".translate(context).toLowerCase(),
-      typeInput: const [TypeInput.text],
+      hint: AppLocalizations.of(context).name,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "${AppLocalizations.of(context).pleaseEnter} ${AppLocalizations.of(context).name}";
+        }
+        return null;
+      },
     );
   }
 
@@ -251,8 +257,14 @@ class _SignUpViewState extends State<SignUpView> {
       children: [
         CustomTextInput(
           controller: phoneController,
-          hint: "phone_number".translate(context),
-          typeInput: const [TypeInput.phone],
+          hint: AppLocalizations.of(context).phoneNumber,
+          validator: (value) {
+            if (!value!.isValidPhone() && value.isOnlyNumbers() ||
+                value.isEmpty) {
+              return AppLocalizations.of(context).pleaseEnterPhoneNumber;
+            }
+            return null;
+          },
           keyboardType: TextInputType.phone,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
@@ -262,7 +274,13 @@ class _SignUpViewState extends State<SignUpView> {
         const SizedBox(height: 10),
         CustomTextInput(
           controller: emailController,
-          typeInput: const [TypeInput.email],
+          validator: (value) {
+            if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                value.isEmpty) {
+              return AppLocalizations.of(context).pleaseEnterEmail;
+            }
+            return null;
+          },
           hint: "Email",
           keyboardType: TextInputType.emailAddress,
         ),
@@ -280,7 +298,7 @@ class _SignUpViewState extends State<SignUpView> {
             const SizedBox(height: 10),
             CustomPasswordInput(
               controller: passwordController,
-              hint: "password".translate(context),
+              hint: AppLocalizations.of(context).password,
               onPress: () {
                 context
                     .read<SignUpBloc>()
@@ -292,7 +310,7 @@ class _SignUpViewState extends State<SignUpView> {
             const SizedBox(height: 10),
             CustomPasswordInput(
               controller: confirmPasswordController,
-              hint: "confirm_password".translate(context),
+              hint: AppLocalizations.of(context).confirmPassword,
               confirmPassword: passwordController.text,
               onPress: () {
                 context
@@ -313,7 +331,7 @@ class _SignUpViewState extends State<SignUpView> {
       buildWhen: (previous, current) => current is ContinueState,
       builder: (context, state) {
         return customButton(
-          text: "continue".translate(context),
+          text: AppLocalizations.of(context).continue1,
           isOnPress: state is ContinueState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {
@@ -346,7 +364,7 @@ class _SignUpViewState extends State<SignUpView> {
               child: Divider(thickness: 1, color: Colors.black54),
             ),
             const SizedBox(width: 10),
-            Text("or".translate(context)),
+            Text(AppLocalizations.of(context).or),
             const SizedBox(width: 10),
             const Expanded(
               child: Divider(thickness: 1, color: Colors.black54),
@@ -355,7 +373,7 @@ class _SignUpViewState extends State<SignUpView> {
         ),
         const SizedBox(height: 20),
         SocialLoginButton(
-          text: "sign_up_with_google".translate(context),
+          text: AppLocalizations.of(context).signUpWithGoogle,
           onPress: () {
             context.read<SignUpBloc>().add(SignUpWithGoogleEvent());
           },
@@ -368,7 +386,7 @@ class _SignUpViewState extends State<SignUpView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text("${"already_have_account".translate(context)}?"),
+        Text("${AppLocalizations.of(context).alreadyHaveAccount}?"),
         TextButton(
           onPressed: () {
             Navigator.of(context).pushReplacement(createRoute(
@@ -376,7 +394,7 @@ class _SignUpViewState extends State<SignUpView> {
               begin: const Offset(0, 1),
             ));
           },
-          child: Text("login".translate(context)),
+          child: Text(AppLocalizations.of(context).login),
         )
       ],
     );

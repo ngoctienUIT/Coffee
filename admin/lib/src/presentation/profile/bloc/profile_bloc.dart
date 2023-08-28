@@ -1,25 +1,27 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:coffee_admin/src/core/request/profile_request/save_profile_request.dart';
+import 'package:coffee_admin/src/core/resources/data_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../data/models/user.dart';
-import '../../../domain/api_service.dart';
+import '../../../domain/use_cases/profile_use_case/delete_avatar.dart';
+import '../../../domain/use_cases/profile_use_case/save_profile.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
+@injectable
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   String image = "";
+  final DeleteAvatarUseCase _deleteAvatarUseCase;
+  final SaveProfileUseCase _saveProfileUseCase;
 
-  ProfileBloc() : super(InitState()) {
+  ProfileBloc(this._saveProfileUseCase, this._deleteAvatarUseCase)
+      : super(InitState()) {
     on<EditProfileEvent>(
         (event, emit) => emit(EditProfileSate(isEdit: event.isEdit)));
 
-    on<SaveProfileEvent>((event, emit) => saveProfile(event.user, emit));
+    on<SaveProfileEvent>(_saveProfile);
 
-    on<DeleteAvatarEvent>((event, emit) => deleteAvatar(event.user, emit));
+    on<DeleteAvatarEvent>(_deleteAvatar);
 
     on<ChangeBirthDayEvent>((event, emit) => emit(ChangeBirthDayState()));
 
@@ -29,56 +31,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     });
   }
 
-  Future saveProfile(User user, Emitter emit) async {
-    try {
-      emit(SaveProfileLoading());
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      if (image.isNotEmpty) {
-        user.imageUrl = await uploadImage(user.email);
-      }
-      await apiService.updateExistingUser(
-          "Bearer $token", user.email, user.toJson());
+  Future _saveProfile(SaveProfileEvent event, Emitter emit) async {
+    emit(SaveProfileLoading());
+    final response = await _saveProfileUseCase.call(
+        params: SaveProfileRequest(image: image, user: event.user));
+    if (response is DataSuccess) {
       emit(SaveProfileLoaded());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProfileError(error));
-      print(error);
-    } catch (e) {
-      emit(ProfileError(e.toString()));
-      print(e);
+    } else {
+      emit(ProfileError(response.error));
     }
   }
 
-  Future deleteAvatar(User user, Emitter emit) async {
-    try {
-      ApiService apiService =
-          ApiService(Dio(BaseOptions(contentType: "application/json")));
-      final prefs = await SharedPreferences.getInstance();
-      String token = prefs.getString("token") ?? "";
-      String email = prefs.getString("username") ?? "admin";
-      user.imageUrl = null;
-      await apiService.updateExistingUser(
-          "Bearer $token", email, user.toJson());
-
+  Future _deleteAvatar(DeleteAvatarEvent event, Emitter emit) async {
+    final response = await _deleteAvatarUseCase.call(params: event.user);
+    if (response is DataSuccess) {
       emit(DeleteAvatarState());
-    } on DioException catch (e) {
-      String error =
-          e.response != null ? e.response!.data.toString() : e.toString();
-      emit(ProfileError(error));
-      print(error);
-    } catch (e) {
-      emit(ProfileError(e.toString()));
-      print(e);
+    } else {
+      emit(ProfileError(response.error));
     }
-  }
-
-  Future<String> uploadImage(String name) async {
-    Reference upload = FirebaseStorage.instance.ref().child("avatar/$name");
-    await upload.putFile(File(image));
-    return await upload.getDownloadURL();
   }
 }

@@ -1,23 +1,20 @@
 import 'dart:async';
 
+import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../data/models/preferences_model.dart';
 import 'service_event.dart';
 import 'service_state.dart';
 
 class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
-  PreferencesModel preferencesModel = PreferencesModel();
   static Timer? _timer;
   String? timeStr;
 
   ServiceBloc() : super(InitServiceState()) {
-    on<SetDataEvent>(
-        (event, emit) => preferencesModel = event.preferencesModel.copyWith());
-
     on<SaveTimeEvent>((event, emit) => saveTime(event.duration));
 
     on<CheckLoginEvent>((event, emit) => checkLogin(emit));
@@ -25,7 +22,10 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     on<StopTimeEvent>((event, emit) => stopTimer());
 
     on<ChangeUserInfoEvent>((event, emit) {
-      preferencesModel = preferencesModel.copyWith(user: event.user.copyWith());
+      if (getIt.isRegistered<User>()) {
+        getIt.unregister<User>();
+      }
+      getIt.registerSingleton<User>(event.user);
       emit(ChangeUserInfoState());
     });
   }

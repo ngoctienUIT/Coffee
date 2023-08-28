@@ -1,43 +1,62 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/order.dart';
-import '../../../data/models/preferences_model.dart';
 import '../../../data/models/user.dart';
 
-abstract class ServiceEvent {}
-
-class SetDataEvent extends ServiceEvent {
-  PreferencesModel preferencesModel;
-
-  SetDataEvent(this.preferencesModel);
-}
+abstract class ServiceEvent extends Equatable {}
 
 class ChangeUserInfoEvent extends ServiceEvent {
-  User user;
+  final User user;
 
   ChangeUserInfoEvent(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class ChangeOrderEvent extends ServiceEvent {
-  Order? order;
+  final Order? order;
 
   ChangeOrderEvent([this.order]);
+
+  @override
+  List<Object?> get props => [order];
 }
 
-class ChangeStoreEvent extends ServiceEvent {}
+class ChangeStoreEvent extends ServiceEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class PlacedOrderEvent extends ServiceEvent {}
+class PlacedOrderEvent extends ServiceEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class CancelServiceOrderEvent extends ServiceEvent {
-  String id;
+  final String id;
 
   CancelServiceOrderEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }
 
-class CheckLoginEvent extends ServiceEvent {}
+class CheckLoginEvent extends ServiceEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class StopTimeEvent extends ServiceEvent {}
+class StopTimeEvent extends ServiceEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class SaveTimeEvent extends ServiceEvent {
-  Duration duration;
+  final Duration duration;
 
   SaveTimeEvent(this.duration);
+
+  @override
+  List<Object?> get props => [duration];
 }

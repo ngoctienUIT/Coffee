@@ -1,24 +1,42 @@
-abstract class LoginEvent {}
+import 'package:equatable/equatable.dart';
+
+import '../../../core/request/login_request/login_email_password_request.dart';
+
+abstract class LoginEvent extends Equatable {}
 
 class LoginWithEmailPasswordEvent extends LoginEvent {
-  final String email;
-  final String password;
+  final LoginEmailPasswordRequest request;
 
-  LoginWithEmailPasswordEvent({required this.email, required this.password});
+  LoginWithEmailPasswordEvent(this.request);
+
+  @override
+  List<Object?> get props => [request];
 }
 
-class LoginWithGoogleEvent extends LoginEvent {}
+class LoginWithGoogleEvent extends LoginEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
-class RememberLoginEvent extends LoginEvent {}
+class RememberLoginEvent extends LoginEvent {
+  @override
+  List<Object?> get props => [identityHashCode(this)];
+}
 
 class ClickLoginEvent extends LoginEvent {
-  bool isContinue;
+  final bool isContinue;
 
   ClickLoginEvent({required this.isContinue});
+
+  @override
+  List<Object?> get props => [isContinue];
 }
 
 class HidePasswordEvent extends LoginEvent {
-  bool isHide;
+  final bool isHide;
 
   HidePasswordEvent({required this.isHide});
+
+  @override
+  List<Object?> get props => [isHide];
 }

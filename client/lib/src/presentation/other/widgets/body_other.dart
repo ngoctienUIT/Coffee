@@ -1,5 +1,7 @@
+import 'package:coffee/injection.dart';
 import 'package:coffee/src/core/services/bloc/service_event.dart';
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:coffee/src/data/models/user.dart';
 import 'package:coffee/src/presentation/activity/screen/activity_page.dart';
 import 'package:coffee/src/presentation/policy/screen/policy_page.dart';
 import 'package:coffee/src/presentation/setting/screen/setting_page.dart';
@@ -11,8 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../data/models/preferences_model.dart';
-import '../../../domain/firebase/firebase_service.dart';
+import '../../../data/remote/firebase/firebase_service.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../info/screen/info_page.dart';
 import '../../login/screen/login_page.dart';
@@ -36,50 +37,49 @@ class BodyOtherPage extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            groupItemOther("account".translate(context), [
-              itemOther("profile".translate(context), Icons.person, () {
-                PreferencesModel preferencesModel =
-                    context.read<ServiceBloc>().preferencesModel;
+            groupItemOther(AppLocalizations.of(context).account, [
+              itemOther(AppLocalizations.of(context).profile, Icons.person, () {
                 Navigator.of(context).push(createRoute(
-                  screen: ProfilePage(user: preferencesModel.user!),
+                  screen: ProfilePage(user: getIt<User>()),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("setting".translate(context), Icons.settings, () {
-                PreferencesModel preferencesModel =
-                    context.read<ServiceBloc>().preferencesModel;
+              itemOther(AppLocalizations.of(context).setting, Icons.settings,
+                  () {
                 Navigator.of(context).push(createRoute(
-                  screen: SettingPage(user: preferencesModel.user!),
+                  screen: SettingPage(user: getIt<User>()),
                   begin: const Offset(1, 0),
                 ));
               })
             ]),
-            groupItemOther("interact".translate(context), [
-              itemOther("voucher".translate(context), Icons.local_activity, () {
+            groupItemOther(AppLocalizations.of(context).interact, [
+              itemOther(
+                  AppLocalizations.of(context).voucher, Icons.local_activity,
+                  () {
                 Navigator.of(context).push(createRoute(
                   screen: const CouponPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
-              itemOther(
-                  "activity".translate(context), Icons.card_giftcard_rounded,
-                  () {
+              itemOther(AppLocalizations.of(context).activity,
+                  Icons.card_giftcard_rounded, () {
                 Navigator.of(context).push(createRoute(
                   screen: const ActivityPage(isAppBar: true),
                   begin: const Offset(1, 0),
                 ));
               }),
             ]),
-            groupItemOther("general_info".translate(context), [
-              itemOther("policy".translate(context), Icons.file_copy, () {
+            groupItemOther(AppLocalizations.of(context).generalInfo, [
+              itemOther(AppLocalizations.of(context).policy, Icons.file_copy,
+                  () {
                 Navigator.of(context).push(createRoute(
                   screen: const PolicyPage(),
                   begin: const Offset(1, 0),
                 ));
               }),
               const Divider(),
-              itemOther("app_info".translate(context), Icons.info, () {
+              itemOther(AppLocalizations.of(context).appInfo, Icons.info, () {
                 Navigator.of(context).push(createRoute(
                   screen: const InfoPage(),
                   begin: const Offset(1, 0),
@@ -90,7 +90,7 @@ class BodyOtherPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: customButton(
-                text: "logout".translate(context),
+                text: AppLocalizations.of(context).logout,
                 isOnPress: true,
                 onPress: () {
                   GoogleSignIn().signOut();
