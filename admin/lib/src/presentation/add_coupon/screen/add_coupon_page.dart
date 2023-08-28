@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/coupon.dart';
 import 'package:coffee_admin/src/data/remote/response/coupon/coupon_response.dart';
 import 'package:coffee_admin/src/presentation/add_coupon/bloc/add_coupon_event.dart';
@@ -40,7 +40,7 @@ class AddCouponPage extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            "add_voucher".translate(context),
+            AppLocalizations.of(context)!.addVoucher,
             style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
@@ -137,9 +137,10 @@ class _AddCouponViewState extends State<AddCouponView> {
           widget.onChange();
           if (widget.coupon == null) {
             customToast(
-                context, "successfully_added_coupon".translate(context));
+                context, AppLocalizations.of(context)!.successfullyAddedCoupon);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -167,30 +168,31 @@ class _AddCouponViewState extends State<AddCouponView> {
               const SizedBox(height: 10),
               orderImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "voucher_title".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.voucherTitle),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: titleController,
-                hint: "voucher_title".translate(context),
-                title: "title".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.voucherTitle,
+                title: AppLocalizations.of(context)!.title.toLowerCase(),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "coupon_code".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.couponCode),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: couponCodeController,
-                hint: "coupon_code".translate(context),
-                title: "coupon_code".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.couponCode,
+                title: AppLocalizations.of(context)!.couponCode.toUpperCase(),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "expiration_date".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.expirationDate),
               const SizedBox(height: 10),
               orderDate(),
               const SizedBox(height: 10),
               typeCoupon(),
               const SizedBox(height: 10),
               const SizedBox(height: 10),
-              descriptionLine(text: "minimum".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.minimum),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: minApplyController,
@@ -199,15 +201,17 @@ class _AddCouponViewState extends State<AddCouponView> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                 ],
-                title: "promotion".translate(context).toLowerCase(),
+                title: AppLocalizations.of(context)!.promotion,
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "voucher_content".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.voucherContent),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: contentController,
-                hint: "voucher_content".translate(context),
-                title: "voucher_content".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.voucherContent,
+                title:
+                    AppLocalizations.of(context)!.voucherContent.toUpperCase(),
               ),
               const SizedBox(height: 20),
               saveButton(),
@@ -225,7 +229,7 @@ class _AddCouponViewState extends State<AddCouponView> {
       builder: (context, state) {
         return Column(
           children: [
-            descriptionLine(text: "coupon_type".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.couponType),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -236,7 +240,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                     context.read<AddCouponBloc>().add(ChangeTypeEvent());
                   },
                   child: itemType(
-                    "cash".translate(context),
+                    AppLocalizations.of(context)!.cash,
                     isRate ? unselectedColor : selectedColor,
                   ),
                 ),
@@ -247,7 +251,7 @@ class _AddCouponViewState extends State<AddCouponView> {
                     context.read<AddCouponBloc>().add(ChangeTypeEvent());
                   },
                   child: itemType(
-                    "rate".translate(context),
+                    AppLocalizations.of(context)!.rate,
                     isRate ? selectedColor : unselectedColor,
                   ),
                 ),
@@ -264,25 +268,25 @@ class _AddCouponViewState extends State<AddCouponView> {
   Widget rateType() {
     return Column(
       children: [
-        descriptionLine(text: "rate".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context)!.rate),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: rateController,
           hint: "10%",
           keyboardType: TextInputType.number,
-          title: "promotion".translate(context).toLowerCase(),
+          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.]")),
           ],
         ),
         const SizedBox(height: 10),
-        descriptionLine(text: "maximum".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context)!.maximum),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: capAmountController,
           hint: "100.000đ",
           keyboardType: TextInputType.number,
-          title: "promotion".translate(context).toLowerCase(),
+          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
           ],
@@ -294,13 +298,13 @@ class _AddCouponViewState extends State<AddCouponView> {
   Widget amountType() {
     return Column(
       children: [
-        descriptionLine(text: "promotion".translate(context)),
+        descriptionLine(text: AppLocalizations.of(context)!.promotion),
         const SizedBox(height: 10),
         CustomTextInput(
           controller: amountController,
           hint: "100.000đ",
           keyboardType: TextInputType.number,
-          title: "promotion".translate(context).toLowerCase(),
+          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
           ],
@@ -356,14 +360,15 @@ class _AddCouponViewState extends State<AddCouponView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-            text: "save".translate(context),
+            text: AppLocalizations.of(context)!.save,
             isOnPress: state is SaveButtonState ? state.isContinue : false,
             onPress: () {
               if (_formKey.currentState!.validate()) {
                 if (isRate) {
                   double rate = double.parse(rateController.text);
                   if (rate > 1 || rate == 0) {
-                    customToast(context, "invalid_rate".translate(context));
+                    customToast(
+                        context, AppLocalizations.of(context)!.invalidRate);
                     return;
                   }
                 }

@@ -229,6 +229,7 @@
   "startJourney": "Bắt đầu cuộc hành trình của bạn",
   "pleaseSelectStore": "Vui lòng chọn quán",
   "chooseDeliveryMethod": "Chọn phương thức giao hàng",
+  "oldPasswordIsNotCorrect": "Mật khẩu cũ chưa chính xác",
   "passwordLengthCharacters": "Độ dài mật khẩu ít nhất là 8 ký tự",
   "enterEmailPhoneResetPassword": "Nhập vào địa chỉ email hoặc số điện thoại bạn đã sử dụng để đăng nhập vào ứng dụng của chúng tôi để đặt lại mật khẩu"
 }

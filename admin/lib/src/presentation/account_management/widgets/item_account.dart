@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -51,7 +51,7 @@ class ItemAccount extends StatelessWidget {
                   Text("Email: ${user.email}"),
                   const SizedBox(height: 10),
                   Text(
-                      "${"phone_number".translate(context)}: ${user.phoneNumber}"),
+                      "${AppLocalizations.of(context)!.phoneNumber}: ${user.phoneNumber}"),
                   const SizedBox(height: 10),
                   Text(user.userRole)
                 ],

@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/dio_extension.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/local/dao/user_dao.dart';
 import 'package:coffee_admin/src/data/local/entity/user_entity.dart';
 import 'package:coffee_admin/src/data/remote/response/order/order_response.dart';
@@ -171,7 +171,7 @@ class BodyOrder extends StatelessWidget {
               Text(
                 user != null
                     ? user.displayName
-                    : "coffee_users".translate(context),
+                    : AppLocalizations.of(context)!.coffeeUsers,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -181,19 +181,19 @@ class BodyOrder extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "${"date_created".translate(context)}: ${order.createdDate}"),
+                    "${AppLocalizations.of(context)!.dateCreated}: ${order.createdDate}"),
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                    "${"delivery_date".translate(context)}: ${order.lastUpdated}"),
+                    "${AppLocalizations.of(context)!.deliveryDate}: ${order.lastUpdated}"),
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "${"total_order".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                  "${AppLocalizations.of(context)!.totalOrder}: ${order.orderAmount!.toCurrency()}",
                 ),
               ),
             ],
@@ -226,7 +226,7 @@ class BodyOrder extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  "×$number ${"product".translate(context)}",
+                  "×$number ${AppLocalizations.of(context)!.product}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -235,7 +235,7 @@ class BodyOrder extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "${"into_money".translate(context)}: ${order.orderAmount!.toCurrency()}",
+                  "${AppLocalizations.of(context)!.intoMoney}: ${order.orderAmount!.toCurrency()}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -245,7 +245,7 @@ class BodyOrder extends StatelessWidget {
             const SizedBox(height: 10),
             Row(
               children: [
-                Text("delivery_status".translate(context)),
+                Text(AppLocalizations.of(context)!.deliveryStatus),
                 const Spacer(),
                 Text(
                   order.orderStatus.toString(),

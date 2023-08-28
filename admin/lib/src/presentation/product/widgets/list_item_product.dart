@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/utils/extensions/int_extension.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +83,9 @@ class ListItemProduct extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_product'.translate(context),
-          content:
-              'are_you_sure_you_want_to_delete_this_product'.translate(context),
+          title: AppLocalizations.of(context)!.deleteProduct,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisProduct,
           onOK: onOK,
         );
       },

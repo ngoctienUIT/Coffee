@@ -1,5 +1,5 @@
 import 'package:coffee_admin/injection.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_bloc.dart';
 import 'package:coffee_admin/src/presentation/view_order/bloc/view_order_state.dart';
 import 'package:flutter/material.dart';
@@ -57,13 +57,13 @@ class ViewOrderView extends StatelessWidget {
         if (state is LoadingState) loadingAnimation(context);
         if (state is CancelSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "order_canceled".translate(context));
+          customToast(context, AppLocalizations.of(context)!.orderCanceled);
           Navigator.pop(context);
           Navigator.pop(context);
         }
         if (state is CompletedSuccessState) {
           if (onPress != null) onPress!.call();
-          customToast(context, "complete_orders".translate(context));
+          customToast(context, AppLocalizations.of(context)!.completeOrders);
           Navigator.pop(context);
           Navigator.pop(context);
         }
@@ -88,8 +88,9 @@ class ViewOrderView extends StatelessWidget {
   Widget buildOrder(BuildContext context, OrderResponse order, User? user) {
     return Scaffold(
       appBar: AppBarGeneral(
-        title:
-            user != null ? user.displayName : "coffee_users".translate(context),
+        title: user != null
+            ? user.displayName
+            : AppLocalizations.of(context)!.coffeeUsers,
         elevation: 0,
       ),
       body: Padding(

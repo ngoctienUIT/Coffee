@@ -1,5 +1,5 @@
 import 'package:coffee_admin/injection.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/account_management/screen/account_management_page.dart';
 import 'package:coffee_admin/src/presentation/order/screen/order_page.dart';
@@ -11,7 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../core/function/notification_services.dart';
 import '../../../core/function/on_will_pop.dart';
-import '../../../core/services/language/bloc/language_cubit.dart';
+import '../../../core/utils/language/bloc/language_cubit.dart';
 import '../../coupon/screen/coupon_page.dart';
 import '../../other/screen/other_page.dart';
 import '../../view_order/screen/view_order_page.dart';
@@ -91,30 +91,30 @@ class _MainPageState extends State<MainPage> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.cartShopping),
-            label: 'order'.translate(context),
+            label: AppLocalizations.of(context)!.order,
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.productHunt),
-            label: 'product'.translate(context),
+            label: AppLocalizations.of(context)!.product,
           ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.gift),
-            label: 'voucher'.translate(context),
+            label: AppLocalizations.of(context)?.voucher,
           ),
           user.userRole == "ADMIN"
               ? BottomNavigationBarItem(
                   icon: currentTab == 3
                       ? const Icon(FontAwesomeIcons.userLarge)
                       : const Icon(FontAwesomeIcons.user),
-                  label: 'staff'.translate(context),
+                  label: AppLocalizations.of(context)!.staff,
                 )
               : BottomNavigationBarItem(
                   icon: const Icon(FontAwesomeIcons.store),
-                  label: 'store'.translate(context),
+                  label: AppLocalizations.of(context)!.store,
                 ),
           BottomNavigationBarItem(
             icon: const Icon(FontAwesomeIcons.bars),
-            label: 'other'.translate(context),
+            label: AppLocalizations.of(context)!.other,
           ),
         ],
         type: BottomNavigationBarType.fixed,

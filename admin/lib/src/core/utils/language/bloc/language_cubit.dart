@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -54,7 +55,7 @@ class LanguageCubit extends Cubit<LanguageState> {
     _timer = Timer.periodic(duration, (_) {
       _timedOut();
       customToast(
-          context, "login_expired_please_login_again".translate(context));
+          context, AppLocalizations.of(context)!.loginExpiredPleaseLoginAgain);
       Navigator.of(context).pushAndRemoveUntil(
         createRoute(
           screen: const LoginPage(),

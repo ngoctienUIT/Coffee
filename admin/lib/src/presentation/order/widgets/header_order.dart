@@ -1,5 +1,5 @@
 import 'package:coffee_admin/src/core/utils/constants/app_colors.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,10 +46,10 @@ class _HeaderOrderPageState extends State<HeaderOrderPage>
           unselectedLabelStyle: const TextStyle(fontSize: 16),
           indicatorColor: AppColors.statusBarColor,
           tabs: [
-            Tab(text: "placed".translate(context)),
-            Tab(text: "completed".translate(context)),
-            Tab(text: "cancelled".translate(context)),
-            Tab(text: "all".translate(context)),
+            Tab(text: AppLocalizations.of(context)!.placed),
+            Tab(text: AppLocalizations.of(context)!.completed),
+            Tab(text: AppLocalizations.of(context)!.cancelled),
+            Tab(text: AppLocalizations.of(context)!.all),
           ],
         ),
       ),

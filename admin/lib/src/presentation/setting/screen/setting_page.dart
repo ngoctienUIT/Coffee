@@ -1,5 +1,5 @@
 import 'package:coffee_admin/injection.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,8 +48,8 @@ class SettingView extends StatelessWidget {
           loadingAnimation(context);
         }
         if (state is DeleteSuccessState) {
-          customToast(
-              context, "account_deleted_successfully".translate(context));
+          customToast(context,
+              AppLocalizations.of(context)!.accountDeletedSuccessfully);
           Navigator.of(context).pushAndRemoveUntil(
             createRoute(
               screen: const LoginPage(),
@@ -60,15 +60,15 @@ class SettingView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar:
-            AppBarGeneral(title: "setting".translate(context), elevation: 0),
+        appBar: AppBarGeneral(
+            title: AppLocalizations.of(context)?.setting, elevation: 0),
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              groupItemOther("account_settings".translate(context), [
+              groupItemOther(AppLocalizations.of(context)!.accountSettings, [
                 itemOther(
-                  "delete_account".translate(context),
+                  AppLocalizations.of(context)!.deleteAccount,
                   Icons.delete_forever,
                   () => _showAlertDialog(context, () {
                     Navigator.pop(context);
@@ -77,9 +77,9 @@ class SettingView extends StatelessWidget {
                 ),
               ]),
               if (user.password.isNotEmpty)
-                groupItemOther("security".translate(context), [
+                groupItemOther(AppLocalizations.of(context)!.security, [
                   itemOther(
-                    "change_password".translate(context),
+                    AppLocalizations.of(context)!.changePassword,
                     Icons.lock,
                     () {
                       Navigator.of(context).push(createRoute(
@@ -103,8 +103,8 @@ class SettingView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_account'.translate(context),
-          content: 'you_want_delete_your_account'.translate(context),
+          title: AppLocalizations.of(context)!.deleteAccount,
+          content: AppLocalizations.of(context)!.youWantDeleteYourAccount,
           onOK: onOK,
         );
       },

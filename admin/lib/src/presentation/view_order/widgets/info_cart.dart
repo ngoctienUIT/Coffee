@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/view_order/widgets/item_type.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -31,15 +31,15 @@ class InfoCart extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
-                Text("${"method".translate(context)}:"),
+                Text("${AppLocalizations.of(context)!.method}:"),
                 const Spacer(),
                 itemType(
-                  "at_table".translate(context),
+                  AppLocalizations.of(context)!.atTable,
                   isBringBack ? unselectedColor : selectedColor,
                 ),
                 const SizedBox(width: 10),
                 itemType(
-                  "bring_back".translate(context),
+                  AppLocalizations.of(context)!.bringBack,
                   isBringBack ? selectedColor : unselectedColor,
                 ),
               ],
@@ -58,7 +58,7 @@ class InfoCart extends StatelessWidget {
                 const SizedBox(width: 5),
                 Expanded(
                   child: Text(order.orderCustomerNote == null
-                      ? "not_have".translate(context)
+                      ? AppLocalizations.of(context)!.notHave
                       : order.orderCustomerNote!),
                 ),
               ],

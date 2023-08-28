@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/services/bloc/service_bloc.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_state.dart';
-import '../../../core/services/language/bloc/language_cubit.dart';
 import '../../../core/utils/constants/constants.dart';
+import '../../../core/utils/language/bloc/language_cubit.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
 import '../../product/widgets/title_bottom_sheet.dart';
@@ -180,7 +180,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                 children: [
                   const SizedBox(height: 10),
                   titleBottomSheet(
-                    "language_selection".translate(context),
+                    AppLocalizations.of(context)!.languageSelection,
                     () => Navigator.pop(context),
                   ),
                   const SizedBox(height: 10),
@@ -211,7 +211,7 @@ class _HeaderOtherPageState extends State<HeaderOtherPage> {
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: customButton(
-                      text: 'ok'.translate(context),
+                      text: AppLocalizations.of(context)!.ok,
                       isOnPress: true,
                       onPress: () => changeLanguage(isVN ? 0 : 1),
                     ),

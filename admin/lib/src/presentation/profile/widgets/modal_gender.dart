@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -25,18 +25,18 @@ void showMyBottomSheet({
           children: [
             const SizedBox(height: 10),
             titleBottomSheet(
-              "choose_gender".translate(context),
+              AppLocalizations.of(context)!.chooseGender,
               () => Navigator.pop(context),
             ),
             const Divider(color: Colors.black),
             GenderWidget(
-              gender: "male".translate(context),
+              gender: AppLocalizations.of(context)!.male,
               image: AppImages.imgMale,
               onPress: () => onPress(true),
               isPick: isMale,
             ),
             GenderWidget(
-              gender: "female".translate(context),
+              gender: AppLocalizations.of(context)!.female,
               image: AppImages.imgFemale,
               onPress: () => onPress(false),
               isPick: !isMale,

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:coffee_admin/src/presentation/add_store/screen/add_store_page.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +92,7 @@ class _StoreViewState extends State<StoreView> {
             context.read<StoreBloc>().add(SearchStore(storeName: value));
           },
           controller: searchStoreController,
-          hint: "address_search".translate(context),
+          hint: AppLocalizations.of(context)!.addressSearch,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textInputAction: TextInputAction.search,
@@ -119,7 +119,8 @@ class _StoreViewState extends State<StoreView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -289,8 +290,8 @@ class _StoreViewState extends State<StoreView> {
           ),
           child: Text(
             store.checkOpen()
-                ? "open".translate(context)
-                : "close".translate(context),
+                ? AppLocalizations.of(context)!.open
+                : AppLocalizations.of(context)!.close,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -310,9 +311,9 @@ class _StoreViewState extends State<StoreView> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_store'.translate(context),
+          title: AppLocalizations.of(context)!.deleteStore,
           content:
-              'are_you_sure_you_want_to_delete_this_store'.translate(context),
+              AppLocalizations.of(context)!.areYouSureYouWantToDeleteThisStore,
           onOK: onOK,
         );
       },

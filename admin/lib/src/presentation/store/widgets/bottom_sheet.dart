@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/local/entity/store_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -58,7 +58,7 @@ void showStoreBottomSheet(
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: customButton(
-                  text: "edit".translate(context),
+                  text: AppLocalizations.of(context)!.edit,
                   isOnPress: true,
                   onPress: () {
                     Navigator.of(context).push(createRoute(
@@ -125,7 +125,7 @@ Widget phoneAndHour(BuildContext context, StoreEntity store) {
       const Divider(),
       const SizedBox(height: 10),
       Text(
-        "hour".translate(context),
+        AppLocalizations.of(context)!.hour,
         style: const TextStyle(
           color: Color(0xff4F2C1F),
           fontSize: 18,

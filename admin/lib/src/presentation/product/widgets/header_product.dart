@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/product/widgets/list_product_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +42,7 @@ class _HeaderProductPageState extends State<HeaderProductPage>
       child: SizedBox(
         height: 40,
         child: CustomTextInput(
-          hint: "search_name_dish".translate(context),
+          hint: AppLocalizations.of(context)!.searchNameDish,
           radius: 90,
           contentPadding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           textStyle: const TextStyle(fontSize: 13),

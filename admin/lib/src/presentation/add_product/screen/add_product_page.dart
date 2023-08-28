@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/product.dart';
 import 'package:coffee_admin/src/data/models/topping.dart';
 import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
@@ -50,7 +50,7 @@ class AddProductPage extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            "add_products".translate(context),
+            AppLocalizations.of(context)!.addProducts,
             style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
@@ -149,9 +149,11 @@ class _AddProductViewState extends State<AddProductView> {
         if (state is AddProductSuccessState) {
           widget.onChange();
           if (widget.product == null) {
-            customToast(context, "add_successful_products".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.addSuccessfulProducts);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -180,24 +182,25 @@ class _AddProductViewState extends State<AddProductView> {
               const SizedBox(height: 10),
               productImage(),
               const SizedBox(height: 30),
-              descriptionLine(text: "product_catalogues".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.productCatalogues),
               const SizedBox(height: 10),
               productCatalogue(),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_name".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.productName),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: nameController,
-                hint: "product_name".translate(context),
-                title: "product_name".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.productName,
+                title: AppLocalizations.of(context)!.productName.toLowerCase(),
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_price".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.productPrice),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: "product_price".translate(context).toLowerCase(),
+                title: AppLocalizations.of(context)!.productPrice.toLowerCase(),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -240,12 +243,15 @@ class _AddProductViewState extends State<AddProductView> {
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "product_description".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.productDescription),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: descriptionController,
-                hint: "product_description".translate(context),
-                title: "product_description".translate(context).toLowerCase(),
+                hint: AppLocalizations.of(context)!.productDescription,
+                title: AppLocalizations.of(context)!
+                    .productDescription
+                    .toLowerCase(),
               ),
               const SizedBox(height: 10),
               addTopping(),
@@ -268,7 +274,7 @@ class _AddProductViewState extends State<AddProductView> {
         return CustomPickerWidget(
           checkEdit: true,
           text: catalogues == null
-              ? 'product_catalogues'.translate(context)
+              ? AppLocalizations.of(context)!.productCatalogues
               : catalogues!.name,
           onPress: () {
             Navigator.of(context).push(
@@ -324,7 +330,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "add_topping".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.addTopping),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -339,7 +345,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: Text("add".translate(context)),
+              child: Text(AppLocalizations.of(context)!.add),
             )
           ],
         ),
@@ -348,7 +354,7 @@ class _AddProductViewState extends State<AddProductView> {
           builder: (context, state) {
             return listTopping.isEmpty
                 ? Text(
-                    "no_toppings".translate(context),
+                    AppLocalizations.of(context)!.noToppings,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
@@ -409,7 +415,7 @@ class _AddProductViewState extends State<AddProductView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "add_tags".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.addTags),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -424,7 +430,7 @@ class _AddProductViewState extends State<AddProductView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: Text("add".translate(context)),
+              child: Text(AppLocalizations.of(context)!.add),
             )
           ],
         ),
@@ -433,7 +439,7 @@ class _AddProductViewState extends State<AddProductView> {
           builder: (context, state) {
             return listTag.isEmpty
                 ? Text(
-                    "no_tags".translate(context),
+                    AppLocalizations.of(context)!.noTags,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
@@ -504,7 +510,7 @@ class _AddProductViewState extends State<AddProductView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class CountryDropdown extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
           hint: Text(
-            'country'.translate(context),
+            AppLocalizations.of(context)!.country,
             style: const TextStyle(fontSize: 16),
           ),
           items: ["Việt Nam"]

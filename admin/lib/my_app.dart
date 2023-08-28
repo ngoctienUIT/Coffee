@@ -1,3 +1,5 @@
+import 'package:coffee_admin/src/core/utils/language/bloc/language_cubit.dart';
+import 'package:coffee_admin/src/core/utils/language/bloc/language_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,9 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'injection.dart';
 import 'src/core/services/bloc/service_bloc.dart';
-import 'src/core/services/language/bloc/language_cubit.dart';
-import 'src/core/services/language/bloc/language_state.dart';
-import 'src/core/services/language/localization/app_localizations_setup.dart';
+import 'src/core/utils/config/app_localizations_setup.dart';
 import 'src/core/utils/constants/constants.dart';
 import 'src/presentation/splash/screen/splash_screen.dart';
 

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/product_catalogues.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/data/remote/response/product_catalogues/product_catalogues_response.dart';
@@ -53,7 +53,7 @@ class ProductCataloguesView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBarGeneral(
-          title: "product_catalogues".translate(context), elevation: 0),
+          title: AppLocalizations.of(context)!.productCatalogues, elevation: 0),
       body: buildBody(context),
       floatingActionButton: user.userRole == "ADMIN" && onPick == null
           ? FloatingActionButton(
@@ -86,7 +86,8 @@ class ProductCataloguesView extends StatelessWidget {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -192,7 +193,7 @@ class ProductCataloguesView extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                "current_selection".translate(context),
+                                AppLocalizations.of(context)!.currentSelection,
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
@@ -284,9 +285,9 @@ class ProductCataloguesView extends StatelessWidget {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_product_catalogues'.translate(context),
-          content: 'are_you_sure_you_want_to_delete_this_product_category'
-              .translate(context),
+          title: AppLocalizations.of(context)!.deleteProductCatalogues,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisProductCategory,
           onOK: onOK,
         );
       },

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/add_tag/screen/add_tag_page.dart';
 import 'package:coffee_admin/src/presentation/order/widgets/item_loading.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +57,7 @@ class _TagViewState extends State<TagView> {
       backgroundColor: AppColors.bgColor,
       appBar: const AppBarGeneral(title: "Tag", elevation: 0),
       body: buildBody(),
-      floatingActionButton: user.userRole == "ADMIN" &&
-              widget.onPick == null
+      floatingActionButton: user.userRole == "ADMIN" && widget.onPick == null
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(createRoute(
@@ -87,7 +86,8 @@ class _TagViewState extends State<TagView> {
         }
         if (state is DeleteSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(
+              context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -137,7 +137,7 @@ class _TagViewState extends State<TagView> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: customButton(
-            text: "save".translate(context),
+            text: AppLocalizations.of(context)!.save,
             isOnPress: true,
             onPress: () {
               widget.onPick!(
@@ -328,9 +328,9 @@ class _TagViewState extends State<TagView> {
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'remove_tag'.translate(context),
+          title: AppLocalizations.of(context)!.removeTag,
           content:
-              'are_you_sure_you_want_to_remove_this_tag'.translate(context),
+              AppLocalizations.of(context)!.areYouSureYouWantToRemoveThisTag,
           onOK: onOK,
         );
       },

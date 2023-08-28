@@ -228,6 +228,7 @@
   "startJourney": "Start your journey",
   "pleaseSelectStore": "Please select a store",
   "chooseDeliveryMethod": "Choose a delivery method",
+  "oldPasswordIsNotCorrect": "Old password is not correct",
   "passwordLengthCharacters": "Password length is at least 8 characters",
   "enterEmailPhoneResetPassword": "Enter the email address or phone number you used to log in to our app to reset your password"
 }

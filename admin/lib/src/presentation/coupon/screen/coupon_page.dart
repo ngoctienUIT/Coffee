@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/user.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_bloc.dart';
 import 'package:coffee_admin/src/presentation/coupon/bloc/coupon_event.dart';
@@ -56,7 +56,7 @@ class _CouponViewState extends State<CouponView>
         centerTitle: true,
         leading: const SizedBox(),
         title: Text(
-          "all_vouchers".translate(context),
+          AppLocalizations.of(context)!.allVouchers,
           style: const TextStyle(color: Colors.black),
         ),
       ),
@@ -92,7 +92,7 @@ class _CouponViewState extends State<CouponView>
         }
         if (state is DeleteCouponSuccess) {
           Navigator.pop(context);
-          customToast(context, "delete_successfully".translate(context));
+          customToast(context, AppLocalizations.of(context)!.deleteSuccessfully);
         }
       },
       buildWhen: (previous, current) =>
@@ -267,9 +267,9 @@ class _CouponViewState extends State<CouponView>
       builder: (BuildContext context) {
         return customAlertDialog(
           context: context,
-          title: 'delete_voucher'.translate(context),
-          content:
-              'are_you_sure_you_want_to_delete_this_voucher'.translate(context),
+          title: AppLocalizations.of(context)!.deleteVoucher,
+          content: AppLocalizations.of(context)!
+              .areYouSureYouWantToDeleteThisVoucher,
           onOK: onOK,
         );
       },

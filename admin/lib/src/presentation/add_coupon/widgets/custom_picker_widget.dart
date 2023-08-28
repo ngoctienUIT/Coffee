@@ -1,4 +1,4 @@
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/constants/constants.dart';
@@ -32,7 +32,7 @@ class CustomPickerWidget extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "select".translate(context),
+              AppLocalizations.of(context)!.select,
               style: const TextStyle(color: Colors.blue),
             ),
           ],

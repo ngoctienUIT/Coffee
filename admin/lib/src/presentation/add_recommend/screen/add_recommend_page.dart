@@ -1,5 +1,5 @@
 import 'package:coffee_admin/injection.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/models/recommend.dart';
 import 'package:coffee_admin/src/data/remote/response/recommend/recommend_response.dart';
 import 'package:coffee_admin/src/presentation/add_recommend/bloc/add_recommend_bloc.dart';
@@ -37,7 +37,7 @@ class AddRecommendPage extends StatelessWidget {
           backgroundColor: Colors.white,
           elevation: 0,
           title: Text(
-            "add_recommend".translate(context),
+            AppLocalizations.of(context)!.addRecommend,
             style: const TextStyle(color: Colors.black),
           ),
           centerTitle: true,
@@ -114,9 +114,11 @@ class _AddRecommendViewState extends State<AddRecommendView> {
         if (state is AddRecommendSuccess) {
           widget.onChange();
           if (widget.recommend == null) {
-            customToast(context, "add_successful_recommend".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.addSuccessfulRecommend);
           } else {
-            customToast(context, "update_successful".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.updateSuccessful);
           }
           Navigator.pop(context);
           Navigator.pop(context);
@@ -140,28 +142,30 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              descriptionLine(text: "weather".translate(context)),
+              descriptionLine(text: AppLocalizations.of(context)!.weather),
               const SizedBox(height: 10),
               pickWeather(),
               const SizedBox(height: 10),
-              descriptionLine(text: "lowest_temperature".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.lowestTemperature),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: minTempController,
                 hint: "20°C",
-                title: "lowest_temperature".translate(context),
+                title: AppLocalizations.of(context)!.lowestTemperature,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
                 ],
               ),
               const SizedBox(height: 10),
-              descriptionLine(text: "maximum_temperature".translate(context)),
+              descriptionLine(
+                  text: AppLocalizations.of(context)!.maximumTemperature),
               const SizedBox(height: 10),
               CustomTextInput(
                 controller: maxTempController,
                 hint: "30°C",
-                title: "maximum_temperature".translate(context),
+                title: AppLocalizations.of(context)!.maximumTemperature,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
@@ -191,7 +195,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
               hint: Text(
-                'weather'.translate(context),
+                AppLocalizations.of(context)!.weather,
                 style: const TextStyle(fontSize: 16),
               ),
               items: listWeather
@@ -227,7 +231,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
       children: [
         Row(
           children: [
-            descriptionLine(text: "add_tags".translate(context)),
+            descriptionLine(text: AppLocalizations.of(context)!.addTags),
             const Spacer(),
             TextButton(
               onPressed: () {
@@ -242,7 +246,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
                   begin: const Offset(0, 1),
                 ));
               },
-              child: Text("add".translate(context)),
+              child: Text(AppLocalizations.of(context)!.add),
             )
           ],
         ),
@@ -251,7 +255,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
           builder: (context, state) {
             return listTag.isEmpty
                 ? Text(
-                    "no_tags".translate(context),
+                    AppLocalizations.of(context)!.noTags,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.statusBarColor,
@@ -322,7 +326,7 @@ class _AddRecommendViewState extends State<AddRecommendView> {
       buildWhen: (previous, current) => current is SaveButtonState,
       builder: (context, state) {
         return customButton(
-          text: "save".translate(context),
+          text: AppLocalizations.of(context)!.save,
           isOnPress: state is SaveButtonState ? state.isContinue : false,
           onPress: () {
             if (_formKey.currentState!.validate()) {

@@ -1,6 +1,6 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:coffee_admin/injection.dart';
-import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,8 @@ class SplashScreen extends StatelessWidget {
         var connectivityResult = await Connectivity().checkConnectivity();
         if (connectivityResult == ConnectivityResult.none) {
           if (context.mounted) {
-            customToast(context, "no_internet_connection".translate(context));
+            customToast(
+                context, AppLocalizations.of(context)!.noInternetConnection);
           }
           return const LoginPage();
         } else {
