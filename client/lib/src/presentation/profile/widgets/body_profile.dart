@@ -16,7 +16,6 @@ import 'package:intl/intl.dart';
 import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import 'modal_gender.dart';
 
 class BodyProfilePage extends StatefulWidget {
@@ -217,8 +216,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomTextInput(
           controller: nameController,
           hint: AppLocalizations.of(context).name,
-          title: AppLocalizations.of(context).name.toUpperCase(),
-          typeInput: const [TypeInput.text],
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context).pleaseEnter} ${AppLocalizations.of(context).name.toUpperCase()}";
+            }
+            return null;
+          },
           checkEdit: isEdit,
         ),
         const SizedBox(height: 10),

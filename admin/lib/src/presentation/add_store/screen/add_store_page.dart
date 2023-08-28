@@ -20,7 +20,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../add_product/widgets/bottom_pick_image.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../order/widgets/item_loading.dart';
@@ -168,7 +167,12 @@ class _AddStoreViewState extends State<AddStoreView> {
               CustomTextInput(
                 controller: nameController,
                 hint: AppLocalizations.of(context)!.nameTheStore,
-                title: AppLocalizations.of(context)!.nameTheStore,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.nameTheStore}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.phoneNumber),
@@ -176,12 +180,17 @@ class _AddStoreViewState extends State<AddStoreView> {
               CustomTextInput(
                 controller: phoneController,
                 hint: AppLocalizations.of(context)!.phoneNumber,
-                title: AppLocalizations.of(context)!.phoneNumber,
-                typeInput: const [TypeInput.phone],
                 keyboardType: TextInputType.phone,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
                 ],
+                validator: (value) {
+                  if (!value!.isValidPhone() && value.isOnlyNumbers() ||
+                      value.isEmpty) {
+                    return AppLocalizations.of(context)!.pleaseEnterPhoneNumber;
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.openingHours),
@@ -199,7 +208,12 @@ class _AddStoreViewState extends State<AddStoreView> {
               CustomTextInput(
                 controller: addressController,
                 hint: AppLocalizations.of(context)!.address,
-                title: AppLocalizations.of(context)!.address,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.address}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),

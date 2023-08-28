@@ -1,24 +1,20 @@
-import 'package:coffee/src/core/utils/extensions/string_extension.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 
 class CustomTextInput extends StatelessWidget {
   const CustomTextInput({
     Key? key,
-    this.title,
     this.radius,
     this.suffixIcon,
     this.textStyle,
     this.isBorder = true,
     required this.hint,
     this.checkEdit = true,
+    this.validator,
     this.onPress,
     this.maxLength,
-    this.typeInput,
     this.keyboardType,
     this.textInputAction,
     this.onChanged,
@@ -31,7 +27,6 @@ class CustomTextInput extends StatelessWidget {
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 10),
   }) : super(key: key);
 
-  final String? title;
   final double? radius;
   final Widget? suffixIcon;
   final TextStyle? textStyle;
@@ -40,7 +35,6 @@ class CustomTextInput extends StatelessWidget {
   final int? maxLength;
   final bool checkEdit;
   final VoidCallback? onPress;
-  final List<TypeInput>? typeInput;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final TextEditingController? controller;
@@ -51,6 +45,7 @@ class CustomTextInput extends StatelessWidget {
   final EdgeInsetsGeometry contentPadding;
   final Function(String value)? onFieldSubmitted;
   final Function(String value)? onChanged;
+  final String? Function(String? value)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +62,7 @@ class CustomTextInput extends StatelessWidget {
       readOnly: onPress == null ? false : true,
       onFieldSubmitted: onFieldSubmitted,
       maxLength: maxLength,
+      validator: validator,
       decoration: InputDecoration(
         filled: true,
         hintText: hint,
@@ -102,49 +98,6 @@ class CustomTextInput extends StatelessWidget {
                 borderSide: BorderSide(color: colorBorder, width: 0.7),
               ),
       ),
-      validator: (value) {
-        if (typeInput != null) {
-          return showError(context, value, title, typeInput!);
-        }
-        return null;
-      },
     );
-  }
-
-  String? showError(
-    BuildContext context,
-    String? value,
-    String? title,
-    List<TypeInput> typeInput,
-  ) {
-    String? error;
-    for (TypeInput input in typeInput) {
-      switch (input) {
-        case TypeInput.text:
-          if (value!.isNotEmpty) {
-            return null;
-          } else {
-            error = "${AppLocalizations.of(context).pleaseEnter} $title";
-          }
-          break;
-        case TypeInput.email:
-          if (value!.isValidEmail()) {
-            return null;
-          } else if (!value.isValidEmail() && !value.isOnlyNumbers() ||
-              value.isEmpty) {
-            error = AppLocalizations.of(context).pleaseEnterEmail;
-          }
-          break;
-        case TypeInput.phone:
-          if (value!.isValidPhone()) {
-            return null;
-          } else if (!value.isValidPhone() && value.isOnlyNumbers() ||
-              value.isEmpty) {
-            error = AppLocalizations.of(context).pleaseEnterPhoneNumber;
-          }
-          break;
-      }
-    }
-    return error;
   }
 }

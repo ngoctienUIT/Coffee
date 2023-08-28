@@ -10,7 +10,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/services/bloc/service_bloc.dart';
 import '../../../core/services/bloc/service_event.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
 import '../../product/widgets/description_line.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -141,8 +140,12 @@ class _BodyProfilePageState extends State<BodyProfilePage> {
         CustomTextInput(
           controller: nameController,
           hint: AppLocalizations.of(context)!.name,
-          title: AppLocalizations.of(context)!.name.toLowerCase(),
-          typeInput: const [TypeInput.text],
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.name.toLowerCase()}";
+            }
+            return null;
+          },
           checkEdit: isEdit,
         ),
         const SizedBox(height: 10),

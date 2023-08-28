@@ -1,5 +1,6 @@
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/data/remote/response/login/login_response.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -12,7 +13,6 @@ import '../../../core/function/network_connectivity.dart';
 import '../../../core/function/on_will_pop.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../forgot_password/screen/forgot_password_page.dart';
 import '../../main/screen/main_page.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -200,7 +200,13 @@ class _LoginViewState extends State<LoginView> with WidgetsBindingObserver {
             controller: phoneController,
             hint: "Email",
             keyboardType: TextInputType.emailAddress,
-            typeInput: const [TypeInput.email],
+            validator: (value) {
+              if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                  value.isEmpty) {
+                return AppLocalizations.of(context)!.pleaseEnterEmail;
+              }
+              return null;
+            },
             // inputFormatters: [
             //   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
             // ],

@@ -122,7 +122,12 @@ class _AddTagViewState extends State<AddTagView> {
               CustomTextInput(
                 controller: nameController,
                 hint: AppLocalizations.of(context)!.name,
-                title: AppLocalizations.of(context)!.name,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.name}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.description),
@@ -130,7 +135,12 @@ class _AddTagViewState extends State<AddTagView> {
               CustomTextInput(
                 controller: descriptionController,
                 hint: AppLocalizations.of(context)!.description,
-                title: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.color),

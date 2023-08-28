@@ -135,7 +135,12 @@ class _AddToppingViewState extends State<AddToppingView> {
               CustomTextInput(
                 controller: nameController,
                 hint: AppLocalizations.of(context)!.nameTopping,
-                title: AppLocalizations.of(context)!.nameTopping,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.nameTopping}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.toppingPrice),
@@ -143,7 +148,12 @@ class _AddToppingViewState extends State<AddToppingView> {
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: AppLocalizations.of(context)!.toppingPrice,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.toppingPrice}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -155,7 +165,12 @@ class _AddToppingViewState extends State<AddToppingView> {
               CustomTextInput(
                 controller: descriptionController,
                 hint: AppLocalizations.of(context)!.description,
-                title: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),

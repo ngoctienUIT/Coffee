@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -12,7 +13,6 @@ import 'package:intl/intl.dart';
 
 import '../../../core/function/custom_toast.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../../data/models/user.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../login/widgets/custom_password_input.dart';
@@ -247,8 +247,12 @@ class _SignUpViewState extends State<SignUpView> {
     return CustomTextInput(
       controller: nameController,
       hint: AppLocalizations.of(context)!.name,
-      title: AppLocalizations.of(context)!.name.toLowerCase(),
-      typeInput: const [TypeInput.text],
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.name.toLowerCase()}";
+        }
+        return null;
+      },
     );
   }
 
@@ -258,7 +262,13 @@ class _SignUpViewState extends State<SignUpView> {
         CustomTextInput(
           controller: phoneController,
           hint: AppLocalizations.of(context)!.phoneNumber,
-          typeInput: const [TypeInput.phone],
+          validator: (value) {
+            if (!value!.isValidPhone() && value.isOnlyNumbers() ||
+                value.isEmpty) {
+              return AppLocalizations.of(context)!.pleaseEnterPhoneNumber;
+            }
+            return null;
+          },
           keyboardType: TextInputType.phone,
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9+]")),
@@ -268,7 +278,13 @@ class _SignUpViewState extends State<SignUpView> {
         const SizedBox(height: 10),
         CustomTextInput(
           controller: emailController,
-          typeInput: const [TypeInput.email],
+          validator: (value) {
+            if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                value.isEmpty) {
+              return AppLocalizations.of(context)!.pleaseEnterEmail;
+            }
+            return null;
+          },
           hint: "Email",
           keyboardType: TextInputType.emailAddress,
         ),

@@ -173,7 +173,12 @@ class _AddCouponViewState extends State<AddCouponView> {
               CustomTextInput(
                 controller: titleController,
                 hint: AppLocalizations.of(context)!.voucherTitle,
-                title: AppLocalizations.of(context)!.title.toLowerCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.title.toLowerCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.couponCode),
@@ -181,7 +186,12 @@ class _AddCouponViewState extends State<AddCouponView> {
               CustomTextInput(
                 controller: couponCodeController,
                 hint: AppLocalizations.of(context)!.couponCode,
-                title: AppLocalizations.of(context)!.couponCode.toUpperCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.couponCode.toUpperCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(
@@ -201,7 +211,12 @@ class _AddCouponViewState extends State<AddCouponView> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
                 ],
-                title: AppLocalizations.of(context)!.promotion,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.promotion}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(
@@ -210,8 +225,12 @@ class _AddCouponViewState extends State<AddCouponView> {
               CustomTextInput(
                 controller: contentController,
                 hint: AppLocalizations.of(context)!.voucherContent,
-                title:
-                    AppLocalizations.of(context)!.voucherContent.toUpperCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.voucherContent.toUpperCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 20),
               saveButton(),
@@ -274,7 +293,12 @@ class _AddCouponViewState extends State<AddCouponView> {
           controller: rateController,
           hint: "10%",
           keyboardType: TextInputType.number,
-          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.promotion.toLowerCase()}";
+            }
+            return null;
+          },
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z.]")),
           ],
@@ -286,7 +310,12 @@ class _AddCouponViewState extends State<AddCouponView> {
           controller: capAmountController,
           hint: "100.000đ",
           keyboardType: TextInputType.number,
-          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.promotion.toLowerCase()}";
+            }
+            return null;
+          },
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
           ],
@@ -304,7 +333,12 @@ class _AddCouponViewState extends State<AddCouponView> {
           controller: amountController,
           hint: "100.000đ",
           keyboardType: TextInputType.number,
-          title: AppLocalizations.of(context)!.promotion.toLowerCase(),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.promotion.toLowerCase()}";
+            }
+            return null;
+          },
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
           ],

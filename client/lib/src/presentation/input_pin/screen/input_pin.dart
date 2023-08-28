@@ -8,7 +8,6 @@ import '../../../core/function/custom_toast.dart';
 import '../../../core/function/loading_animation.dart';
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../coupon/widgets/app_bar_general.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../new_password/screen/new_password_page.dart';
@@ -109,7 +108,12 @@ class _InputPinViewState extends State<InputPinView> {
                     controller: controller,
                     hint: "PIN",
                     maxLength: 6,
-                    typeInput: const [TypeInput.text],
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "${AppLocalizations.of(context).pleaseEnter} PIN";
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   Text(AppLocalizations.of(context).enterPINThatSentYourEmail),

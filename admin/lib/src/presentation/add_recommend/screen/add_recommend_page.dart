@@ -152,7 +152,12 @@ class _AddRecommendViewState extends State<AddRecommendView> {
               CustomTextInput(
                 controller: minTempController,
                 hint: "20°C",
-                title: AppLocalizations.of(context)!.lowestTemperature,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.lowestTemperature}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),
@@ -165,7 +170,12 @@ class _AddRecommendViewState extends State<AddRecommendView> {
               CustomTextInput(
                 controller: maxTempController,
                 hint: "30°C",
-                title: AppLocalizations.of(context)!.maximumTemperature,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.maximumTemperature}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z-.]")),

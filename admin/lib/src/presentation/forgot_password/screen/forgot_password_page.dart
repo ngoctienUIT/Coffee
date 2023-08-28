@@ -1,6 +1,7 @@
 import 'package:coffee_admin/injection.dart';
 import 'package:coffee_admin/src/core/function/custom_toast.dart';
 import 'package:coffee_admin/src/core/function/loading_animation.dart';
+import 'package:coffee_admin/src/core/utils/extensions/string_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:coffee_admin/src/presentation/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:coffee_admin/src/presentation/forgot_password/bloc/forgot_password_event.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/function/route_function.dart';
 import '../../../core/utils/constants/constants.dart';
-import '../../../core/utils/enum/enums.dart';
 import '../../input_pin/screen/input_pin.dart';
 import '../../login/widgets/custom_button.dart';
 import '../../signup/widgets/custom_text_input.dart';
@@ -96,7 +96,13 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   CustomTextInput(
                     controller: controller,
                     hint: "Email",
-                    typeInput: const [TypeInput.email],
+                    validator: (value) {
+                      if (!value!.isValidEmail() && !value.isOnlyNumbers() ||
+                          value.isEmpty) {
+                        return AppLocalizations.of(context)!.pleaseEnterEmail;
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   Text(AppLocalizations.of(context)!

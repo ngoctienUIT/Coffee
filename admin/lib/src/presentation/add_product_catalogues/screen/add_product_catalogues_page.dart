@@ -138,7 +138,12 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
               CustomTextInput(
                 controller: nameController,
                 hint: AppLocalizations.of(context)!.productCategoryName,
-                title: AppLocalizations.of(context)!.productCategoryName,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productCategoryName}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.description),
@@ -146,7 +151,12 @@ class _AddProductCataloguesViewState extends State<AddProductCataloguesView> {
               CustomTextInput(
                 controller: descriptionController,
                 hint: AppLocalizations.of(context)!.description,
-                title: AppLocalizations.of(context)!.description,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.description}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               saveButton(),

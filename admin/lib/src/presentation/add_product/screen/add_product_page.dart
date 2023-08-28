@@ -192,7 +192,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: nameController,
                 hint: AppLocalizations.of(context)!.productName,
-                title: AppLocalizations.of(context)!.productName.toLowerCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productName.toLowerCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               descriptionLine(text: AppLocalizations.of(context)!.productPrice),
@@ -200,7 +205,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: priceController,
                 hint: "100.000đ",
-                title: AppLocalizations.of(context)!.productPrice.toLowerCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productPrice.toLowerCase()}";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -212,7 +222,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: sController,
                 hint: "100.000đ",
-                title: "S",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} S";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -224,7 +239,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: mController,
                 hint: "100.000đ",
-                title: "M",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} M";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -236,7 +256,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: lController,
                 hint: "100.000đ",
-                title: "L",
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} L";
+                  }
+                  return null;
+                },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp("[0-9a-zA-Z]")),
@@ -249,9 +274,12 @@ class _AddProductViewState extends State<AddProductView> {
               CustomTextInput(
                 controller: descriptionController,
                 hint: AppLocalizations.of(context)!.productDescription,
-                title: AppLocalizations.of(context)!
-                    .productDescription
-                    .toLowerCase(),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return "${AppLocalizations.of(context)!.pleaseEnter} ${AppLocalizations.of(context)!.productDescription.toLowerCase()}";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               addTopping(),
